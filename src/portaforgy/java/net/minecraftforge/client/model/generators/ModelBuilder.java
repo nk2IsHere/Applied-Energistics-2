@@ -125,9 +125,9 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
         } else {
             ResourceLocation asLoc;
             if (texture.contains(":")) {
-                asLoc = new ResourceLocation(texture);
+                asLoc = ResourceLocation.parse(texture);
             } else {
-                asLoc = new ResourceLocation(getLocation().getNamespace(), texture);
+                asLoc = ResourceLocation.fromNamespaceAndPath(getLocation().getNamespace(), texture);
             }
             return texture(key, asLoc);
         }
@@ -294,18 +294,18 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
                     if (face == null) continue;
 
                     JsonObject faceObj = new JsonObject();
-                    faceObj.addProperty("texture", serializeLocOrKey(face.texture));
-                    if (!Arrays.equals(face.uv.uvs, part.uvsByFace(dir))) {
-                        faceObj.add("uv", new Gson().toJsonTree(face.uv.uvs));
+                    faceObj.addProperty("texture", serializeLocOrKey(face.texture()));
+                    if (!Arrays.equals(face.uv().uvs, part.uvsByFace(dir))) {
+                        faceObj.add("uv", new Gson().toJsonTree(face.uv().uvs));
                     }
-                    if (face.cullForDirection != null) {
-                        faceObj.addProperty("cullface", face.cullForDirection.getSerializedName());
+                    if (face.cullForDirection() != null) {
+                        faceObj.addProperty("cullface", face.cullForDirection().getSerializedName());
                     }
-                    if (face.uv.rotation != 0) {
-                        faceObj.addProperty("rotation", face.uv.rotation);
+                    if (face.uv().rotation != 0) {
+                        faceObj.addProperty("rotation", face.uv().rotation);
                     }
-                    if (face.tintIndex != -1) {
-                        faceObj.addProperty("tintindex", face.tintIndex);
+                    if (face.tintIndex() != -1) {
+                        faceObj.addProperty("tintindex", face.tintIndex());
                     }
                     faces.add(dir.getSerializedName(), faceObj);
                 }
@@ -327,7 +327,7 @@ public class ModelBuilder<T extends ModelBuilder<T>> extends ModelFile {
         if (tex.charAt(0) == '#') {
             return tex;
         }
-        return new ResourceLocation(tex).toString();
+        return ResourceLocation.parse(tex).toString();
     }
 
     private JsonArray serializeVector3f(Vector3f vec) {

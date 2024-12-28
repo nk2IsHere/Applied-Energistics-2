@@ -77,7 +77,7 @@ public abstract class ModelProvider<T extends ModelBuilder<T>> implements DataPr
 
     public T getBuilder(String path) {
         Preconditions.checkNotNull(path, "Path must not be null");
-        ResourceLocation outputLoc = extendWithFolder(path.contains(":") ? new ResourceLocation(path) : new ResourceLocation(modid, path));
+        ResourceLocation outputLoc = extendWithFolder(path.contains(":") ? ResourceLocation.parse(path) : ResourceLocation.fromNamespaceAndPath(modid, path));
         this.existingFileHelper.trackGenerated(outputLoc, MODEL);
         return generatedModels.computeIfAbsent(outputLoc, factory);
     }
@@ -86,15 +86,15 @@ public abstract class ModelProvider<T extends ModelBuilder<T>> implements DataPr
         if (rl.getPath().contains("/")) {
             return rl;
         }
-        return new ResourceLocation(rl.getNamespace(), folder + "/" + rl.getPath());
+        return ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), folder + "/" + rl.getPath());
     }
 
     public ResourceLocation modLoc(String name) {
-        return new ResourceLocation(modid, name);
+        return ResourceLocation.fromNamespaceAndPath(modid, name);
     }
 
     public ResourceLocation mcLoc(String name) {
-        return new ResourceLocation(name);
+        return ResourceLocation.parse(name);
     }
 
     public T withExistingParent(String name, String parent) {
@@ -348,7 +348,7 @@ public abstract class ModelProvider<T extends ModelBuilder<T>> implements DataPr
      */
     public T nested()
     {
-        return factory.apply(new ResourceLocation("dummy:dummy"));
+        return factory.apply(ResourceLocation.parse("dummy:dummy"));
     }
 
     public ModelFile.ExistingModelFile getExistingFile(ResourceLocation path) {
