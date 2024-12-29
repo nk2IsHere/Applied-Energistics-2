@@ -1,8 +1,7 @@
 package appeng.helpers;
 
-import net.minecraft.world.level.Level;
-
 import appeng.parts.encoding.PatternEncodingLogic;
+import net.minecraft.world.level.Level;
 
 public interface IPatternTerminalLogicHost {
     PatternEncodingLogic getLogic();

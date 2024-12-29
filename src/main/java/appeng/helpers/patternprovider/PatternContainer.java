@@ -1,10 +1,9 @@
 package appeng.helpers.patternprovider;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGrid;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface implemented by machines connected to the network if they support storing

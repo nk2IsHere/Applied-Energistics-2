@@ -18,18 +18,17 @@
 
 package appeng.helpers.patternprovider;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.MEStorage;
 import appeng.helpers.externalstorage.GenericStackInv;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class PatternProviderReturnInventory extends GenericStackInv {
     public static int NUMBER_OF_SLOTS = 9;

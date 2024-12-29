@@ -18,16 +18,14 @@
 
 package appeng.helpers;
 
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerUnit;
+import appeng.blockentity.powersink.IExternalPowerSink;
+import appeng.me.energy.StoredEnergyAmount;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-
 import team.reborn.energy.api.EnergyStorage;
-
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerUnits;
-import appeng.blockentity.powersink.IExternalPowerSink;
-import appeng.me.energy.StoredEnergyAmount;
 
 /**
  * Adapts an {@link IExternalPowerSink} to TR Energy's {@link EnergyStorage} by buffering energy packets. Not ideal, but
@@ -54,7 +52,7 @@ public class ForgeEnergyAdapter extends SnapshotParticipant<Double> implements E
 
     @Override
     protected void onFinalCommit() {
-        buffer = sink.injectExternalPower(PowerUnits.TR, buffer, Actionable.MODULATE);
+        buffer = sink.injectExternalPower(PowerUnit.FE, buffer, Actionable.MODULATE);
         if (buffer < StoredEnergyAmount.MIN_AMOUNT) {
             // Prevent a small leftover amount from blocking further energy insertions.
             buffer = 0;
@@ -70,7 +68,7 @@ public class ForgeEnergyAdapter extends SnapshotParticipant<Double> implements E
         if (buffer == 0) {
             // Cap at the remaining capacity...
             maxAmount = (long) Math
-                    .floor(Math.min(maxAmount, this.sink.getExternalPowerDemand(PowerUnits.TR, maxAmount)));
+                    .floor(Math.min(maxAmount, this.sink.getExternalPowerDemand(PowerUnit.FE, maxAmount)));
             buffer = maxAmount;
             return maxAmount;
         }
@@ -80,12 +78,12 @@ public class ForgeEnergyAdapter extends SnapshotParticipant<Double> implements E
 
     @Override
     public final long getAmount() {
-        return (long) Math.floor(PowerUnits.AE.convertTo(PowerUnits.TR, this.sink.getAECurrentPower()));
+        return (long) Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, this.sink.getAECurrentPower()));
     }
 
     @Override
     public final long getCapacity() {
-        return (long) Math.floor(PowerUnits.AE.convertTo(PowerUnits.TR, this.sink.getAEMaxPower()));
+        return (long) Math.floor(PowerUnit.AE.convertTo(PowerUnit.FE, this.sink.getAEMaxPower()));
     }
 
     @Override

@@ -18,15 +18,82 @@
 
 package appeng.helpers.patternprovider;
 
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.IActionSource;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.storage.MEStorage;
+import appeng.me.storage.CompositeStorage;
+import appeng.parts.automation.StackWorldBehaviors;
+import com.google.common.util.concurrent.Runnables;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.IdentityHashMap;
 import java.util.Set;
 
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEKey;
+import static appeng.api.AECapabilities.ME_STORAGE;
 
 /**
  * Wrapper used by the pattern provider logic to interact with adjacent inventories.
  */
 public interface PatternProviderTarget {
+    @Nullable
+    static PatternProviderTarget get(Level l, BlockPos pos, @Nullable BlockEntity be, Direction side,
+            IActionSource src) {
+
+        // our capability first: allows any storage channel
+        MEStorage storage;
+        if (be != null) {
+            storage = ME_STORAGE.find(l, be.getBlockPos(), be.getBlockState(), be, side);
+        } else {
+            storage = ME_STORAGE.find(l, pos, side);
+        }
+        if (storage != null) {
+            return wrapMeStorage(storage, src);
+        }
+
+        // otherwise fall back to the platform capability
+        // TODO: possibly optimize this
+        var strategies = StackWorldBehaviors.createExternalStorageStrategies((ServerLevel) l, pos, side);
+        var externalStorages = new IdentityHashMap<AEKeyType, MEStorage>(2);
+        for (var entry : strategies.entrySet()) {
+            var wrapper = entry.getValue().createWrapper(false, Runnables.doNothing());
+            if (wrapper != null) {
+                externalStorages.put(entry.getKey(), wrapper);
+            }
+        }
+
+        if (!externalStorages.isEmpty()) {
+            return wrapMeStorage(new CompositeStorage(externalStorages), src);
+        }
+
+        return null;
+    }
+
+    private static PatternProviderTarget wrapMeStorage(MEStorage storage, IActionSource src) {
+        return new PatternProviderTarget() {
+            @Override
+            public long insert(AEKey what, long amount, Actionable type) {
+                return storage.insert(what, amount, type, src);
+            }
+
+            @Override
+            public boolean containsPatternInput(Set<AEKey> patternInputs) {
+                for (var stack : storage.getAvailableStacks()) {
+                    if (patternInputs.contains(stack.getKey().dropSecondary())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+    }
+
     long insert(AEKey what, long amount, Actionable type);
 
     boolean containsPatternInput(Set<AEKey> patternInputs);

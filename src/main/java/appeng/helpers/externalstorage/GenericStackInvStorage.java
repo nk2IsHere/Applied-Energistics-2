@@ -103,7 +103,7 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Sto
             long actuallyExtracted = Math.min(getAmount(), maxAmount);
 
             if (actuallyExtracted > 0) {
-                inv.updateSnapshots(slotIndex, transaction);
+//                inv.updateSnapshots(slotIndex, transaction);
                 var amount = getAmount() - actuallyExtracted;
                 inv.beginBatch();
                 if (amount <= 0) {
@@ -123,11 +123,11 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Sto
 
             var currentKey = inv.getKey(slotIndex);
             var key = conversion.getKey(resource);
-            if ((currentKey == null && inv.isAllowed(key)) || currentKey.equals(key)) {
+            if ((currentKey == null && inv.isAllowedIn(slotIndex, key)) || currentKey.equals(key)) {
                 long inserted = Math.min(maxAmount, inv.getMaxAmount(key) - getAmount());
 
                 if (inserted > 0) {
-                    inv.updateSnapshots(slotIndex, transaction);
+//                    inv.updateSnapshots(slotIndex, transaction);
                     inv.beginBatch();
                     inv.setStack(slotIndex, new GenericStack(key, getAmount() + inserted));
                     inv.endBatchSuppressed();

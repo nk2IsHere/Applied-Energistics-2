@@ -18,21 +18,6 @@
 
 package appeng.helpers;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-
-import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
@@ -63,8 +48,20 @@ import appeng.core.settings.TickRates;
 import appeng.me.helpers.MachineSource;
 import appeng.me.storage.DelegatingMEInventory;
 import appeng.util.ConfigInventory;
-import appeng.util.ConfigManager;
 import appeng.util.Platform;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * Contains behavior for interface blocks and parts, which is independent of the storage channel.
@@ -81,7 +78,7 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
     protected final IActionSource interfaceRequestSource;
     private final MultiCraftingTracker craftingTracker;
     private final IUpgradeInventory upgrades;
-    private final ConfigManager cm = new ConfigManager(this::onConfigChanged);
+    private final IConfigManager cm;
     /**
      * Work planned by {@link #updatePlan()} to be performed by {@link #usePlan}. Positive amounts mean restocking from
      * the network is required while negative amounts mean moving to the network is required.
@@ -104,8 +101,9 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
 
     public InterfaceLogic(IManagedGridNode gridNode, InterfaceLogicHost host, Item is, int slots) {
         this.host = host;
-        this.config = ConfigInventory.configStacks(null, slots, this::onConfigRowChanged, false);
-        this.storage = ConfigInventory.storage(slots, this::onStorageChanged);
+        this.config = ConfigInventory.configStacks(slots).changeListener(this::onConfigRowChanged).build();
+        this.storage = ConfigInventory.storage(slots).slotFilter(this::isAllowedInStorageSlot)
+                .changeListener(this::onStorageChanged).build();
         this.mainNode = gridNode
                 .setFlags(GridFlags.REQUIRE_CHANNEL)
                 .addService(IGridTickable.class, new Ticker());
@@ -116,11 +114,21 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
         gridNode.addService(ICraftingRequester.class, this);
         this.upgrades = UpgradeInventories.forMachine(is, 1, this::onUpgradesChanged);
         this.craftingTracker = new MultiCraftingTracker(this, slots);
-        this.cm.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+        cm = IConfigManager.builder(this::onConfigChanged)
+                .registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL)
+                .build();
         this.plannedWork = new GenericStack[slots];
 
         getConfig().useRegisteredCapacities();
         getStorage().useRegisteredCapacities();
+    }
+
+    private boolean isAllowedInStorageSlot(int slot, AEKey what) {
+        if (slot < config.size()) {
+            var configured = config.getKey(slot);
+            return configured == null || configured.equals(what);
+        }
+        return true;
     }
 
     public int getPriority() {
@@ -138,21 +146,21 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
         this.notifyNeighbors();
     }
 
-    public void writeToNBT(CompoundTag tag) {
-        this.config.writeToChildTag(tag, "config");
-        this.storage.writeToChildTag(tag, "storage");
-        this.upgrades.writeToNBT(tag, "upgrades");
-        this.cm.writeToNBT(tag);
+    public void writeToNBT(CompoundTag tag, HolderLookup.Provider registries) {
+        this.config.writeToChildTag(tag, "config", registries);
+        this.storage.writeToChildTag(tag, "storage", registries);
+        this.upgrades.writeToNBT(tag, "upgrades", registries);
+        this.cm.writeToNBT(tag, registries);
         this.craftingTracker.writeToNBT(tag);
         tag.putInt("priority", this.priority);
     }
 
-    public void readFromNBT(CompoundTag tag) {
+    public void readFromNBT(CompoundTag tag, HolderLookup.Provider registries) {
         this.craftingTracker.readFromNBT(tag);
-        this.upgrades.readFromNBT(tag, "upgrades");
-        this.config.readFromChildTag(tag, "config");
-        this.storage.readFromChildTag(tag, "storage");
-        this.cm.readFromNBT(tag);
+        this.upgrades.readFromNBT(tag, "upgrades", registries);
+        this.config.readFromChildTag(tag, "config", registries);
+        this.storage.readFromChildTag(tag, "storage", registries);
+        this.cm.readFromNBT(tag, registries);
         this.readConfig();
         this.priority = tag.getInt("priority");
     }
@@ -160,8 +168,7 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
     private class Ticker implements IGridTickable {
         @Override
         public TickingRequest getTickingRequest(IGridNode node) {
-            return new TickingRequest(TickRates.Interface, !hasWorkToDo(),
-                    true);
+            return new TickingRequest(TickRates.Interface, !hasWorkToDo());
         }
 
         @Override
@@ -591,5 +598,4 @@ public class InterfaceLogic implements ICraftingRequester, IUpgradeableObject, I
             return host.getMainMenuIcon().getHoverName();
         }
     }
-
 }
