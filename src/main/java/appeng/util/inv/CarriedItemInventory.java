@@ -18,12 +18,10 @@
 
 package appeng.util.inv;
 
+import appeng.api.inventories.InternalInventory;
 import com.google.common.base.Preconditions;
-
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-
-import appeng.api.inventories.InternalInventory;
 
 /**
  * Exposes the carried item stored in a menu as an {@link InternalInventory}.

@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -131,6 +132,10 @@ public final class AEItemKey extends AEKey {
 
     public ItemStack toStack() {
         return toStack(1);
+    }
+
+    public ItemVariant toVariant() {
+        return ItemVariant.of(stack);
     }
 
     public ItemStack toStack(int count) {

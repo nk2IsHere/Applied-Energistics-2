@@ -18,10 +18,10 @@
 
 package appeng.util.prioritylist;
 
+import appeng.api.stacks.AEKey;
+
 import java.util.ArrayList;
 import java.util.Collection;
-
-import appeng.api.stacks.AEKey;
 
 public final class MergedPriorityList implements IPartitionList {
 

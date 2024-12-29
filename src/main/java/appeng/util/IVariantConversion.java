@@ -46,7 +46,7 @@ public interface IVariantConversion<V extends TransferVariant<?>> {
 
         @Override
         public AEKey getKey(FluidVariant variant) {
-            return AEFluidKey.of(variant);
+            return AEFluidKey.of(variant.getFluid());
         }
 
         @Override
@@ -69,12 +69,12 @@ public interface IVariantConversion<V extends TransferVariant<?>> {
         @org.jetbrains.annotations.Nullable
         @Override
         public AEItemKey getKey(ItemVariant variant) {
-            return AEItemKey.of(variant);
+            return AEItemKey.of(variant.getItem());
         }
 
         @Override
         public long getBaseSlotSize(ItemVariant variant) {
-            return Math.min(64, variant.getItem().getMaxStackSize());
+            return Math.min(64, variant.getItem().getDefaultMaxStackSize());
         }
     }
 }

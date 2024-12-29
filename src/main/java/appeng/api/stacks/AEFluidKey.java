@@ -8,6 +8,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.architectury.fluid.FluidStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -166,6 +167,10 @@ public final class AEFluidKey extends AEKey {
 
     public FluidStack toStack(int amount) {
         return stack.copyWithAmount(amount);
+    }
+
+    public FluidVariant toVariant() {
+        return FluidVariant.of(stack.getFluid());
     }
 
     public Fluid getFluid() {

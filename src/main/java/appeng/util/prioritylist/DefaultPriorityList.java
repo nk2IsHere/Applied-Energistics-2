@@ -18,9 +18,9 @@
 
 package appeng.util.prioritylist;
 
-import java.util.Collections;
-
 import appeng.api.stacks.AEKey;
+
+import java.util.Collections;
 
 public class DefaultPriorityList implements IPartitionList {
     public static final DefaultPriorityList INSTANCE = new DefaultPriorityList();

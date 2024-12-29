@@ -18,30 +18,33 @@
 
 package appeng.util.inv;
 
-import java.util.Iterator;
-import java.util.function.Supplier;
-
+import appeng.api.inventories.InternalInventory;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
-import appeng.api.inventories.InternalInventory;
+import java.util.Iterator;
+import java.util.function.Supplier;
 
 /**
  * Wraps another {@link InternalInventory} in such a way that the underlying inventory is queried from a supplier, which
  * allows it to be changed at any time.
  */
-public class SupplierInternalInventory implements InternalInventory {
-    private final Supplier<InternalInventory> delegate;
+public class SupplierInternalInventory<T extends InternalInventory> implements InternalInventory {
+    private final Supplier<T> delegate;
 
-    public SupplierInternalInventory(Supplier<InternalInventory> delegate) {
+    public SupplierInternalInventory(Supplier<T> delegate) {
         this.delegate = delegate;
+    }
+
+    protected final T getDelegate() {
+        return this.delegate.get();
     }
 
     @Override
     public boolean isEmpty() {
-        return delegate.get().isEmpty();
+        return getDelegate().isEmpty();
     }
 
     @Override
@@ -51,76 +54,76 @@ public class SupplierInternalInventory implements InternalInventory {
 
     @Override
     public Container toContainer() {
-        return delegate.get().toContainer();
+        return getDelegate().toContainer();
     }
 
     @Override
     public int size() {
-        return delegate.get().size();
+        return getDelegate().size();
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        return delegate.get().getSlotLimit(slot);
+        return getDelegate().getSlotLimit(slot);
     }
 
     @Override
     public ItemStack getStackInSlot(int slotIndex) {
-        return delegate.get().getStackInSlot(slotIndex);
+        return getDelegate().getStackInSlot(slotIndex);
     }
 
     @Override
     public void setItemDirect(int slotIndex, ItemStack stack) {
-        delegate.get().setItemDirect(slotIndex, stack);
+        getDelegate().setItemDirect(slotIndex, stack);
     }
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return delegate.get().isItemValid(slot, stack);
+        return getDelegate().isItemValid(slot, stack);
     }
 
     @Override
     public InternalInventory getSubInventory(int fromSlotInclusive, int toSlotExclusive) {
-        return delegate.get().getSubInventory(fromSlotInclusive, toSlotExclusive);
+        return getDelegate().getSubInventory(fromSlotInclusive, toSlotExclusive);
     }
 
     @Override
     public InternalInventory getSlotInv(int slotIndex) {
-        return delegate.get().getSlotInv(slotIndex);
+        return getDelegate().getSlotInv(slotIndex);
     }
 
     @Override
     public int getRedstoneSignal() {
-        return delegate.get().getRedstoneSignal();
+        return getDelegate().getRedstoneSignal();
     }
 
     @Override
     public Iterator<ItemStack> iterator() {
-        return delegate.get().iterator();
+        return getDelegate().iterator();
     }
 
     @Override
     public ItemStack addItems(ItemStack stack) {
-        return delegate.get().addItems(stack);
+        return getDelegate().addItems(stack);
     }
 
     @Override
     public ItemStack addItems(ItemStack stack, boolean simulate) {
-        return delegate.get().addItems(stack, simulate);
+        return getDelegate().addItems(stack, simulate);
     }
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        return delegate.get().insertItem(slot, stack, simulate);
+        return getDelegate().insertItem(slot, stack, simulate);
     }
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return delegate.get().extractItem(slot, amount, simulate);
+        return getDelegate().extractItem(slot, amount, simulate);
     }
 
     @Override
     public void sendChangeNotification(int slot) {
-        delegate.get().sendChangeNotification(slot);
+        getDelegate().sendChangeNotification(slot);
     }
 }

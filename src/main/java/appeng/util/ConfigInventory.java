@@ -1,23 +1,17 @@
 package appeng.util;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-
 import appeng.api.config.Actionable;
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.api.storage.AEKeyFilter;
+import appeng.api.stacks.*;
+import appeng.api.storage.AEKeySlotFilter;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.me.helpers.BaseActionSource;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * Configuration inventories contain a set of {@link AEKey} references that configure how certain aspects of a machine
@@ -35,53 +29,121 @@ public class ConfigInventory extends GenericStackInv {
     /**
      * An empty config-type inventory.
      */
-    public static final ConfigInventory EMPTY_TYPES = ConfigInventory.configTypes(null, 0, null);
+    private static final ConfigInventory EMPTY_TYPES = ConfigInventory.configTypes(0).build();
 
-    protected ConfigInventory(@Nullable AEKeyFilter filter, Mode mode, int size, @Nullable Runnable listener,
+    /**
+     * @return A read-only, empty inventory that is in types mode.
+     */
+    public static ConfigInventory emptyTypes() {
+        return EMPTY_TYPES;
+    }
+
+    protected ConfigInventory(Set<AEKeyType> supportedTypes, @Nullable AEKeySlotFilter slotFilter,
+            Mode mode,
+            int size, @Nullable Runnable listener,
             boolean allowOverstacking) {
-        super(listener, mode, size);
+        super(supportedTypes, listener, mode, size);
         this.allowOverstacking = allowOverstacking;
-        setFilter(filter);
+        setFilter(slotFilter);
+    }
+
+    public final static class Builder {
+        private final Mode mode;
+        private final int size;
+        private Set<AEKeyType> supportedTypes = AEKeyTypes.getAll();
+        @Nullable
+        private AEKeySlotFilter slotFilter;
+        @Nullable
+        private Runnable changeListener;
+        private boolean allowOverstacking;
+
+        private Builder(Mode mode, int size) {
+            this.mode = mode;
+            this.size = size;
+        }
+
+        public Builder supportedType(AEKeyType type) {
+            this.supportedTypes = Set.of(type);
+            return this;
+        }
+
+        public Builder supportedTypes(AEKeyType type, AEKeyType... moreTypes) {
+            if (moreTypes.length == 0) {
+                return supportedType(type);
+            }
+            this.supportedTypes = new HashSet<>(1 + moreTypes.length);
+            this.supportedTypes.add(type);
+            Collections.addAll(this.supportedTypes, moreTypes);
+            return this;
+        }
+
+        public Builder supportedTypes(Collection<AEKeyType> types) {
+            if (types.isEmpty()) {
+                throw new IllegalArgumentException("Configuration inventories must support at least one key type");
+            }
+            this.supportedTypes = Set.copyOf(types);
+            return this;
+        }
+
+        /**
+         * Set a filter that limits what can be inserted to certain slots.
+         */
+        public Builder slotFilter(AEKeySlotFilter slotFilter) {
+            this.slotFilter = slotFilter;
+            return this;
+        }
+
+        /**
+         * Set a filter that applies to all slots at once.
+         */
+        public Builder slotFilter(Predicate<AEKey> filter) {
+            this.slotFilter = (slot, what) -> filter.apply(what);
+            return this;
+        }
+
+        public Builder changeListener(Runnable changeListener) {
+            this.changeListener = changeListener;
+            return this;
+        }
+
+        /**
+         * Allow slots to exceed the natural stack size limits of items. This is false by default.
+         */
+        public Builder allowOverstacking(boolean enable) {
+            this.allowOverstacking = enable;
+            return this;
+        }
+
+        public ConfigInventory build() {
+            return new ConfigInventory(
+                    supportedTypes,
+                    slotFilter,
+                    mode,
+                    size,
+                    changeListener,
+                    allowOverstacking);
+        }
     }
 
     /**
-     * When in types mode, the config inventory will ignore all amounts and always return amount 1 for stacks in the
-     * inventory.
+     * @param size The number of slots in this inventory.
      */
-    public static ConfigInventory configTypes(int size, @Nullable Runnable changeListener) {
-        return new ConfigInventory(null, Mode.CONFIG_TYPES, size, changeListener, false);
+    public static Builder configTypes(int size) {
+        return new Builder(Mode.CONFIG_TYPES, size);
     }
 
     /**
-     * When in types mode, the config inventory will ignore all amounts and always return amount 1 for stacks in the
-     * inventory.
+     * @param size The number of slots in this inventory.
      */
-    public static ConfigInventory configTypes(@Nullable AEKeyFilter filter, int size,
-            @Nullable Runnable changeListener) {
-        return new ConfigInventory(filter, Mode.CONFIG_TYPES, size, changeListener, false);
+    public static Builder configStacks(int size) {
+        return new Builder(Mode.CONFIG_STACKS, size);
     }
 
     /**
-     * When in stack mode, the config inventory will respect amounts and drop stacks with amounts of 0 or less.
+     * @param size The number of slots in this inventory.
      */
-    public static ConfigInventory configStacks(@Nullable AEKeyFilter filter, int size,
-            @Nullable Runnable changeListener, boolean allowOverstacking) {
-        return new ConfigInventory(filter, Mode.CONFIG_STACKS, size, changeListener, allowOverstacking);
-    }
-
-    /**
-     * When in stack mode, the config inventory will respect amounts and drop stacks with amounts of 0 or less.
-     */
-    public static ConfigInventory storage(int size, @Nullable Runnable changeListener) {
-        return new ConfigInventory(null, Mode.STORAGE, size, changeListener, false);
-    }
-
-    /**
-     * When in stack mode, the config inventory will respect amounts and drop stacks with amounts of 0 or less.
-     */
-    public static ConfigInventory storage(@Nullable AEKeyFilter filter, int size,
-            @Nullable Runnable changeListener) {
-        return new ConfigInventory(filter, Mode.STORAGE, size, changeListener, false);
+    public static Builder storage(int size) {
+        return new Builder(Mode.STORAGE, size);
     }
 
     @Nullable
@@ -89,7 +151,7 @@ public class ConfigInventory extends GenericStackInv {
     public GenericStack getStack(int slot) {
         var stack = super.getStack(slot);
         // Filter and clear stacks not supported by the underlying storage channel
-        if (stack != null && !isAllowed(stack.what())) {
+        if (stack != null && !isSupportedType(stack.what())) {
             setStack(slot, null);
             stack = null;
         }
@@ -104,7 +166,7 @@ public class ConfigInventory extends GenericStackInv {
             return null;
         }
         // Filter and clear stacks not supported by the underlying storage channel
-        if (!isAllowed(key)) {
+        if (!isSupportedType(key)) {
             setStack(slot, null);
             key = null;
         }
@@ -124,10 +186,10 @@ public class ConfigInventory extends GenericStackInv {
 
     @Override
     public void setStack(int slot, @Nullable GenericStack stack) {
-        if (stack != null && !isAllowed(stack.what())) {
-            return;
-        }
         if (stack != null) {
+            if (!isSupportedType(stack.what())) {
+                return;
+            }
             boolean typesOnly = mode == Mode.CONFIG_TYPES;
             if (typesOnly && stack.amount() != 0) {
                 // force amount to 0 in types-only mode

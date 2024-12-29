@@ -18,12 +18,11 @@
 
 package appeng.util.prioritylist;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.IncludeExclude;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
+import org.jetbrains.annotations.Nullable;
 
 public interface IPartitionList {
     boolean isListed(AEKey input);

@@ -18,18 +18,14 @@
 
 package appeng.util.fluid;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import appeng.api.stacks.AEFluidKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-
-import appeng.api.stacks.AEFluidKey;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Helps with playing fill/empty sounds for fluids to players.
@@ -65,7 +61,7 @@ public final class FluidSoundHelper {
     }
 
     /**
-     * @see net.minecraftforge.fluids.FluidUtil#tryFillContainer(ItemStack, Storage<FluidVariant>, int, Player, boolean)
+     * @see net.neoforged.neoforge.fluids.FluidUtil#tryFillContainer(ItemStack, IFluidHandler, int, Player, boolean)
      */
     private static void playSound(Player player, SoundEvent fillSound) {
         // This should just play the sound for the player themselves

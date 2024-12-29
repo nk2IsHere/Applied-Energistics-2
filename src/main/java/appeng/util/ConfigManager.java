@@ -18,20 +18,21 @@
 
 package appeng.util;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
-
+import appeng.api.config.Setting;
+import appeng.api.util.IConfigManager;
+import appeng.api.util.IConfigManagerListener;
+import appeng.api.util.UnsupportedSettingException;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-
-import appeng.api.config.Setting;
-import appeng.api.util.IConfigManager;
-import appeng.api.util.UnsupportedSettingException;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public final class ConfigManager implements IConfigManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigManager.class);
@@ -53,7 +54,6 @@ public final class ConfigManager implements IConfigManager {
         return this.settings.keySet();
     }
 
-    @Override
     public <T extends Enum<T>> void registerSetting(Setting<T> setting, T defaultValue) {
         this.settings.put(setting, defaultValue);
     }
@@ -84,9 +84,10 @@ public final class ConfigManager implements IConfigManager {
      * save all settings using config manager.
      *
      * @param tagCompound to be written to compound
+     * @param registries
      */
     @Override
-    public void writeToNBT(CompoundTag tagCompound) {
+    public void writeToNBT(CompoundTag tagCompound, HolderLookup.Provider registries) {
         for (var entry : this.settings.entrySet()) {
             tagCompound.putString(entry.getKey().getName(), this.settings.get(entry.getKey()).toString());
         }
@@ -96,9 +97,10 @@ public final class ConfigManager implements IConfigManager {
      * read all settings using config manager.
      *
      * @param tagCompound to be read from compound
+     * @param registries
      */
     @Override
-    public boolean readFromNBT(CompoundTag tagCompound) {
+    public boolean readFromNBT(CompoundTag tagCompound, HolderLookup.Provider registries) {
         boolean anythingRead = false;
         for (var setting : this.settings.keySet()) {
             if (tagCompound.contains(setting.getName(), Tag.TAG_STRING)) {
@@ -112,5 +114,34 @@ public final class ConfigManager implements IConfigManager {
             }
         }
         return anythingRead;
+    }
+
+    @Override
+    public boolean importSettings(Map<String, String> settings) {
+        boolean anythingRead = false;
+        for (var setting : this.settings.keySet()) {
+            String value = settings.get(setting.getName());
+            if (value != null) {
+                try {
+                    setting.setFromString(this, value);
+                    anythingRead = true;
+                } catch (IllegalArgumentException e) {
+                    LOG.warn("Failed to load setting {} from value '{}': {}", setting, value, e.getMessage());
+                }
+            }
+        }
+        return anythingRead;
+    }
+
+    @Override
+    public Map<String, String> exportSettings() {
+        Map<String, String> result = null;
+        for (var entry : this.settings.entrySet()) {
+            if (result == null) {
+                result = new HashMap<>();
+            }
+            result.put(entry.getKey().getName(), this.settings.get(entry.getKey()).toString());
+        }
+        return result == null ? Map.of() : Map.copyOf(result);
     }
 }

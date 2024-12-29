@@ -1,24 +1,21 @@
 package appeng.util;
 
-import java.util.Objects;
-
-import com.google.common.primitives.Ints;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.inventories.InternalInventory;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
 import appeng.helpers.externalstorage.GenericStackInv;
+import com.google.common.primitives.Ints;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
- * Wraps this configuration inventory as an {@link net.minecraft.world.item.ItemStack} based inventory for use in a
- * menu. It will automatically convert appropriately from {@link net.minecraft.world.item.ItemStack}s set by the player
- * to the internal key-based representation with the help of a matching {@link AEKeyType}.
+ * Wraps this configuration inventory as an {@link ItemStack} based inventory for use in a menu. It will automatically
+ * convert appropriately from {@link ItemStack}s set by the player to the internal key-based representation with the
+ * help of a matching {@link AEKeyType}.
  */
 public class ConfigMenuInventory implements InternalInventory {
     private final GenericStackInv inv;
@@ -42,7 +39,8 @@ public class ConfigMenuInventory implements InternalInventory {
             return true; // Clearing filters is always allowed
         }
 
-        return convertToSuitableStack(stack) != null;
+        var genericStack = convertToSuitableStack(stack);
+        return genericStack != null && inv.isAllowedIn(slot, genericStack.what());
     }
 
     @Override
@@ -95,7 +93,7 @@ public class ConfigMenuInventory implements InternalInventory {
                 stack = itemKey.toStack(Math.max(1, Ints.saturatedCast(unwrapped.amount())));
             } else {
                 // In all other cases the channel must match
-                if (inv.isAllowed(unwrapped.what())) {
+                if (inv.isSupportedType(unwrapped.what())) {
                     return unwrapped;
                 } else {
                     return null;
@@ -104,9 +102,11 @@ public class ConfigMenuInventory implements InternalInventory {
         }
 
         // Try items last
-        var what = AEItemKey.of(stack);
-        if (inv.isAllowed(what)) {
-            return new GenericStack(what, stack.getCount());
+        if (inv.isSupportedType(AEKeyType.items())) {
+            var what = AEItemKey.of(stack);
+            if (what != null) {
+                return new GenericStack(what, stack.getCount());
+            }
         }
 
         return null;

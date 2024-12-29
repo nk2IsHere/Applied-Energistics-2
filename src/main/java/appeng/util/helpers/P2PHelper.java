@@ -18,12 +18,10 @@
 
 package appeng.util.helpers;
 
+import appeng.api.util.AEColor;
 import com.google.common.base.Preconditions;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
-import appeng.api.util.AEColor;
 
 public class P2PHelper {
 
@@ -74,8 +72,8 @@ public class P2PHelper {
 
         for (var i = 0; i < 4; i++) {
             var nibble = getFrequencyNibble(frequency, i);
-            var hex = Component.literal(HEX_DIGITS[nibble]);
-            parent.append(hex.setStyle(hex.getStyle().withColor(AEColor.values()[nibble].mediumVariant)));
+            parent.append(Component.literal(HEX_DIGITS[nibble])
+                    .withColor(AEColor.values()[nibble].whiteVariant));
         }
 
         return parent;
