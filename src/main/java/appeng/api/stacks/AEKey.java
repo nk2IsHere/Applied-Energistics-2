@@ -51,7 +51,7 @@ public abstract class AEKey {
         // Handle tags where the mod that provided the channel has been uninstalled
         AEKeyType channel;
         try {
-            channel = AEKeyTypes.get(new ResourceLocation(channelId));
+            channel = AEKeyTypes.get(ResourceLocation.parse(channelId));
         } catch (IllegalArgumentException | ResourceLocationException e) {
             AELog.warn("Cannot deserialize generic key from %s because channel '%s' is missing.", tag, channelId);
             return null;

@@ -24,7 +24,7 @@ public interface GenericInternalInventory {
      * Use this lookup to access instances of generic inventories. Use a fallback to wrap them on-the-fly.
      */
     BlockApiLookup<GenericInternalInventory, Direction> SIDED = BlockApiLookup.get(
-            new ResourceLocation(AEConstants.MOD_ID, "genericinternalinventory"), GenericInternalInventory.class,
+            ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "genericinternalinventory"), GenericInternalInventory.class,
             Direction.class);
 
     /**

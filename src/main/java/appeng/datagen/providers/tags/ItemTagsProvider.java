@@ -157,11 +157,11 @@ public class ItemTagsProvider extends net.minecraft.data.tags.ItemTagsProvider i
         tag(AETags.METAL_INGOTS)
                 .addOptionalTag(ConventionTags.IRON_INGOT.location())
                 .addOptionalTag(ConventionTags.GOLD_INGOT.location())
-                .addOptionalTag(new ResourceLocation("c:copper_ingots"))
-                .addOptionalTag(new ResourceLocation("c:tin_ingots"))
-                .addOptionalTag(new ResourceLocation("c:brass_ingots"))
-                .addOptionalTag(new ResourceLocation("c:nickel_ingots"))
-                .addOptionalTag(new ResourceLocation("c:aluminium_ingots"));
+                .addOptionalTag(ResourceLocation.parse("c:copper_ingots"))
+                .addOptionalTag(ResourceLocation.parse("c:tin_ingots"))
+                .addOptionalTag(ResourceLocation.parse("c:brass_ingots"))
+                .addOptionalTag(ResourceLocation.parse("c:nickel_ingots"))
+                .addOptionalTag(ResourceLocation.parse("c:aluminium_ingots"));
 
         tag(ConventionTags.PATTERN_PROVIDER)
                 .add(AEParts.PATTERN_PROVIDER.asItem())
@@ -274,8 +274,8 @@ public class ItemTagsProvider extends net.minecraft.data.tags.ItemTagsProvider i
     // Copy the entries AE2 added to certain block tags over to item tags of the same name
     // Assumes that items or item tags generally have the same name as the block equivalent.
     private void copyBlockTags() {
-        mirrorBlockTag(new ResourceLocation("c:storage_blocks"));
-        mirrorBlockTag(new ResourceLocation("c:certus_quartz_blocks"));
+        mirrorBlockTag(ResourceLocation.parse("c:storage_blocks"));
+        mirrorBlockTag(ResourceLocation.parse("c:certus_quartz_blocks"));
     }
 
     private void mirrorBlockTag(ResourceLocation tagName) {

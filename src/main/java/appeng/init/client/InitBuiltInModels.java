@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 
@@ -50,53 +50,55 @@ public final class InitBuiltInModels {
     }
 
     public static void init() {
-        addBuiltInModel("block/cable_bus", CableBusModel::new);
-        addBuiltInModel("block/quartz_glass", GlassModel::new);
-        addBuiltInModel("item/meteorite_compass", MeteoriteCompassModel::new);
-        addBuiltInModel("item/memory_card", MemoryCardModel::new);
-        addBuiltInModel("block/drive", DriveModel::new);
-        addBuiltInModel("color_applicator", ColorApplicatorModel::new);
-        addBuiltInModel("block/spatial_pylon", SpatialPylonModel::new);
-        addBuiltInModel("block/paint", PaintSplotchesModel::new);
-        addBuiltInModel("block/qnb/qnb_formed", QnbFormedModel::new);
-        addBuiltInModel("part/p2p/p2p_tunnel_frequency", P2PTunnelFrequencyModel::new);
-        addBuiltInModel("item/facade", FacadeItemModel::new);
+        ModelLoadingPlugin.register(pluginContext -> {
+            addBuiltInModel(pluginContext, "block/cable_bus", CableBusModel::new);
+            addBuiltInModel(pluginContext, "block/quartz_glass", GlassModel::new);
+            addBuiltInModel(pluginContext, "item/meteorite_compass", MeteoriteCompassModel::new);
+            addBuiltInModel(pluginContext, "item/memory_card", MemoryCardModel::new);
+            addBuiltInModel(pluginContext, "block/drive", DriveModel::new);
+            addBuiltInModel(pluginContext, "color_applicator", ColorApplicatorModel::new);
+            addBuiltInModel(pluginContext, "block/spatial_pylon", SpatialPylonModel::new);
+            addBuiltInModel(pluginContext, "block/paint", PaintSplotchesModel::new);
+            addBuiltInModel(pluginContext, "block/qnb/qnb_formed", QnbFormedModel::new);
+            addBuiltInModel(pluginContext, "part/p2p/p2p_tunnel_frequency", P2PTunnelFrequencyModel::new);
+            addBuiltInModel(pluginContext, "item/facade", FacadeItemModel::new);
 
-        // Fabric doesn't have model-loaders, so we register the models by hand instead
-        addPlaneModel("part/annihilation_plane", "part/annihilation_plane");
-        addPlaneModel("part/annihilation_plane_on", "part/annihilation_plane_on");
-        addPlaneModel("part/identity_annihilation_plane", "part/identity_annihilation_plane");
-        addPlaneModel("part/identity_annihilation_plane_on", "part/identity_annihilation_plane_on");
-        addPlaneModel("part/formation_plane", "part/formation_plane");
-        addPlaneModel("part/formation_plane_on", "part/formation_plane_on");
+            // Fabric doesn't have model-loaders, so we register the models by hand instead
+            addPlaneModel(pluginContext, "part/annihilation_plane", "part/annihilation_plane");
+            addPlaneModel(pluginContext, "part/annihilation_plane_on", "part/annihilation_plane_on");
+            addPlaneModel(pluginContext, "part/identity_annihilation_plane", "part/identity_annihilation_plane");
+            addPlaneModel(pluginContext, "part/identity_annihilation_plane_on", "part/identity_annihilation_plane_on");
+            addPlaneModel(pluginContext, "part/formation_plane", "part/formation_plane");
+            addPlaneModel(pluginContext, "part/formation_plane_on", "part/formation_plane_on");
 
-        addBuiltInModel("block/crafting/1k_storage_formed",
+            addBuiltInModel(pluginContext, "block/crafting/1k_storage_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_1K)));
-        addBuiltInModel("block/crafting/4k_storage_formed",
+            addBuiltInModel(pluginContext, "block/crafting/4k_storage_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_4K)));
-        addBuiltInModel("block/crafting/16k_storage_formed",
+            addBuiltInModel(pluginContext, "block/crafting/16k_storage_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_16K)));
-        addBuiltInModel("block/crafting/64k_storage_formed",
+            addBuiltInModel(pluginContext, "block/crafting/64k_storage_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_64K)));
-        addBuiltInModel("block/crafting/256k_storage_formed",
+            addBuiltInModel(pluginContext, "block/crafting/256k_storage_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_256K)));
-        addBuiltInModel("block/crafting/accelerator_formed",
+            addBuiltInModel(pluginContext, "block/crafting/accelerator_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.ACCELERATOR)));
-        addBuiltInModel("block/crafting/monitor_formed",
+            addBuiltInModel(pluginContext, "block/crafting/monitor_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.MONITOR)));
-        addBuiltInModel("block/crafting/unit_formed",
+            addBuiltInModel(pluginContext, "block/crafting/unit_formed",
                 () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.UNIT)));
+        });
     }
 
-    private static void addPlaneModel(String planeName, String frontTexture) {
+    private static void addPlaneModel(ModelLoadingPlugin.Context context, String planeName, String frontTexture) {
         ResourceLocation frontTextureId = AppEng.makeId(frontTexture);
         ResourceLocation sidesTextureId = AppEng.makeId("part/plane_sides");
         ResourceLocation backTextureId = AppEng.makeId("part/transition_plane_back");
-        addBuiltInModel(planeName, () -> new PlaneModel(frontTextureId, sidesTextureId, backTextureId));
+        addBuiltInModel(context, planeName, () -> new PlaneModel(frontTextureId, sidesTextureId, backTextureId));
     }
 
-    private static <T extends UnbakedModel> void addBuiltInModel(String id, Supplier<T> modelFactory) {
-        ModelLoadingRegistry.INSTANCE
-                .registerResourceProvider(resourceManager -> new SimpleModelLoader<>(AppEng.makeId(id), modelFactory));
+    private static <T extends UnbakedModel> void addBuiltInModel(ModelLoadingPlugin.Context context, String id, Supplier<T> modelFactory) {
+        context.resolveModel()
+                .register(new SimpleModelLoader<>(AppEng.makeId(id), modelFactory));
     }
 }

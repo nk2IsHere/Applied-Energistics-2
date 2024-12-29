@@ -831,7 +831,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
     }
 
     private boolean loadPart(Direction side, CompoundTag data) {
-        var itemId = new ResourceLocation(data.getString("id"));
+        var itemId = ResourceLocation.parse(data.getString("id"));
         var partItem = IPartItem.byId(itemId);
         if (partItem == null) {
             AELog.warn("Ignoring persisted part with non-part-item %s", itemId);

@@ -18,11 +18,13 @@
 
 package appeng.datagen.providers.recipes;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 
@@ -32,12 +34,19 @@ import appeng.datagen.providers.tags.ConventionTags;
 import appeng.recipes.mattercannon.MatterCannonAmmo;
 
 public class MatterCannonAmmoProvider extends AE2RecipeProvider {
-    public MatterCannonAmmoProvider(PackOutput output) {
-        super(output);
+
+    public MatterCannonAmmoProvider(
+        PackOutput packOutput,
+        CompletableFuture<HolderLookup.Provider> completableFuture
+    ) {
+        super(
+            packOutput,
+            completableFuture
+        );
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    public void buildRecipes(RecipeOutput consumer) {
         tag(consumer, "nuggets/meatraw", "c:meatraw_nuggets", 32);
         tag(consumer, "nuggets/meatcooked", "c:meatcooked_nuggets", 32);
         tag(consumer, "nuggets/meat", "c:meat_nuggets", 32);
@@ -115,8 +124,8 @@ public class MatterCannonAmmoProvider extends AE2RecipeProvider {
         MatterCannonAmmo.ammo(consumer, AppEng.makeId("matter_cannon/matter_ball"), AEItems.MATTER_BALL, 32.0f);
     }
 
-    private static void tag(Consumer<FinishedRecipe> consumer, String recipeId, String tagId, float weight) {
+    private static void tag(RecipeOutput consumer, String recipeId, String tagId, float weight) {
         MatterCannonAmmo.ammo(consumer, AppEng.makeId("matter_cannon/" + recipeId),
-                TagKey.create(Registries.ITEM, new ResourceLocation(tagId)), weight);
+                TagKey.create(Registries.ITEM, ResourceLocation.parse(tagId)), weight);
     }
 }

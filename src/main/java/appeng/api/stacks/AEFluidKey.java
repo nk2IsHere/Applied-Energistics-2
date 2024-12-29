@@ -98,7 +98,7 @@ public final class AEFluidKey extends AEKey {
 
     public static AEFluidKey fromTag(CompoundTag tag) {
         try {
-            var fluid = BuiltInRegistries.FLUID.getOptional(new ResourceLocation(tag.getString("id")))
+            var fluid = BuiltInRegistries.FLUID.getOptional(ResourceLocation.parse(tag.getString("id")))
                     .orElseThrow(() -> new IllegalArgumentException("Unknown fluid id."));
             var extraTag = tag.contains("tag") ? tag.getCompound("tag") : null;
             return of(fluid, extraTag);

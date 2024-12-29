@@ -43,7 +43,7 @@ import appeng.api.stacks.KeyCounter;
 public interface ICraftingMachine {
 
     BlockApiLookup<ICraftingMachine, Direction> SIDED = BlockApiLookup.get(
-            new ResourceLocation(AEConstants.MOD_ID, "icraftingmachine"), ICraftingMachine.class, Direction.class);
+            ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "icraftingmachine"), ICraftingMachine.class, Direction.class);
 
     @Nullable
     static ICraftingMachine of(@Nullable BlockEntity blockEntity, Direction side) {

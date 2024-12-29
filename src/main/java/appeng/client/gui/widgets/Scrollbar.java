@@ -295,7 +295,7 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
     }
 
     public static final Style DEFAULT = Style.create(
-            new ResourceLocation("minecraft", "textures/gui/container/creative_inventory/tabs.png"),
+            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/creative_inventory/tabs.png"),
             12,
             15,
             232, 0,

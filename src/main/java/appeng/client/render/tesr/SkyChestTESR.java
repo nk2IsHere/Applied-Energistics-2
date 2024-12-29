@@ -56,9 +56,9 @@ public class SkyChestTESR implements BlockEntityRenderer<SkyChestBlockEntity> {
 
     // The textures are in the block sheet due to the item model requiring them there
     public static final Material TEXTURE_STONE = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/skychest"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/skychest"));
     public static final Material TEXTURE_BLOCK = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/skyblockchest"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/skyblockchest"));
 
     public static final ImmutableList<Material> SPRITES = ImmutableList.of(TEXTURE_STONE, TEXTURE_BLOCK);
 

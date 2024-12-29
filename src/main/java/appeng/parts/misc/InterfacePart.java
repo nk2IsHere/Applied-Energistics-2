@@ -49,7 +49,7 @@ import appeng.parts.PartModel;
 
 public class InterfacePart extends AEBasePart implements InterfaceLogicHost {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID, "part/interface_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_base");
 
     private static final IGridNodeListener<InterfacePart> NODE_LISTENER = new AEBasePart.NodeListener<>() {
         @Override
@@ -61,15 +61,15 @@ public class InterfacePart extends AEBasePart implements InterfaceLogicHost {
 
     @PartModels
     public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/interface_off"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_off"));
 
     @PartModels
     public static final PartModel MODELS_ON = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/interface_on"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_on"));
 
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/interface_has_channel"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_has_channel"));
 
     private final InterfaceLogic logic = createLogic();
 

@@ -22,13 +22,16 @@ import java.util.function.Supplier;
 
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A quaint model provider that provides a single model with a single given resource identifier.
  */
-public class SimpleModelLoader<T extends UnbakedModel> implements ModelResourceProvider {
+public class SimpleModelLoader<T extends UnbakedModel> implements ModelResolver {
 
     private final ResourceLocation identifier;
 
@@ -40,12 +43,11 @@ public class SimpleModelLoader<T extends UnbakedModel> implements ModelResourceP
     }
 
     @Override
-    public UnbakedModel loadModelResource(ResourceLocation identifier, ModelProviderContext modelProviderContext) {
-        if (identifier.equals(this.identifier)) {
+    public @Nullable UnbakedModel resolveModel(Context context) {
+        if (context.id().equals(this.identifier)) {
             return factory.get();
         } else {
             return null;
         }
     }
-
 }

@@ -60,19 +60,19 @@ import appeng.util.prioritylist.DefaultPriorityList;
  */
 public class ExportBusPart extends IOBusPart implements ICraftingRequester {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID, "part/export_bus_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_base");
 
     @PartModels
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_off"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_off"));
 
     @PartModels
     public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_on"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_on"));
 
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            new ResourceLocation(AppEng.MOD_ID, "part/export_bus_has_channel"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_has_channel"));
 
     private final MultiCraftingTracker craftingTracker;
     private int nextSlot = 0;

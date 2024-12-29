@@ -34,16 +34,16 @@ import appeng.core.AppEng;
 public class SmartCableTextures {
 
     public static final Material[] SMART_CHANNELS_TEXTURES = Arrays
-            .stream(new ResourceLocation[] { new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_00"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_01"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_02"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_03"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_04"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_10"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_11"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_12"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_13"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/smart/channels_14")//
+            .stream(new ResourceLocation[] { ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_00"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_01"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_02"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_03"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_04"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_10"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_11"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_12"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_13"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/smart/channels_14")//
             }).map(e -> new Material(TextureAtlas.LOCATION_BLOCKS, e)).toArray(Material[]::new);
 
     // Textures used to display channels on smart cables. There's two sets of 5
@@ -52,16 +52,16 @@ public class SmartCableTextures {
     private final TextureAtlasSprite[] textures;
 
     public static final Material[] DENSE_SMART_CHANNELS_TEXTURES = Arrays
-            .stream(new ResourceLocation[] { new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_00"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_01"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_02"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_03"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_04"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_10"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_11"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_12"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_13"), //
-                    new ResourceLocation(AppEng.MOD_ID, "part/cable/dense_smart/channels_14")//
+            .stream(new ResourceLocation[] { ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_00"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_01"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_02"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_03"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_04"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_10"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_11"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_12"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_13"), //
+                    ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/dense_smart/channels_14")//
             }).map(e -> new Material(TextureAtlas.LOCATION_BLOCKS, e)).toArray(Material[]::new);
 
     // Textures used to display channels on dense smart cables. There's two sets of 5

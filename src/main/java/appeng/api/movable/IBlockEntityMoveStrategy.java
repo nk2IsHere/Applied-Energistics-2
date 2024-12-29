@@ -23,6 +23,7 @@
 
 package appeng.api.movable;
 
+import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -50,10 +51,10 @@ public interface IBlockEntityMoveStrategy {
      *         entity at the target position. Return null to prevent the block entity from being moved.
      */
     @Nullable
-    CompoundTag beginMove(BlockEntity blockEntity);
+    CompoundTag beginMove(BlockEntity blockEntity, HolderLookup.Provider registries);
 
     /**
-     * Complete moving a block entity for which a move was initiated successfully with {@link #beginMove(BlockEntity)}.
+     * Complete moving a block entity for which a move was initiated successfully with {@link #beginMove(BlockEntity, HolderLookup.Provider)}.
      * The block entity has already been invalidated, and the blocks have already been fully moved.
      * <p/>
      * You are responsible for adding the new block entity to the target level, i.e. using
@@ -62,7 +63,7 @@ public interface IBlockEntityMoveStrategy {
      * @param entity      The block entity being moved, which has already been removed from the original chunk and
      *                    should not be reused.
      * @param state       The original block state of the block entity being moved.
-     * @param savedData   Data saved by this strategy in {@link #beginMove(BlockEntity)}.
+     * @param savedData   Data saved by this strategy in {@link #beginMove(BlockEntity, HolderLookup.Provider)}.
      * @param newLevel    Level to moved to
      * @param newPosition Position to move to
      * @return True if moving succeeded. If false is returned, AE2 will attempt to recover the original entity.

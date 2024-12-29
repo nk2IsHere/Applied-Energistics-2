@@ -1,9 +1,10 @@
 package appeng.datagen.providers.recipes;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Items;
 
 import appeng.core.AppEng;
@@ -11,21 +12,28 @@ import appeng.core.definitions.AEItems;
 import appeng.recipes.handlers.ChargerRecipeBuilder;
 
 public class ChargerRecipes extends AE2RecipeProvider {
-    public ChargerRecipes(PackOutput output) {
-        super(output);
+
+    public ChargerRecipes(
+        PackOutput packOutput,
+        CompletableFuture<HolderLookup.Provider> completableFuture
+    ) {
+        super(
+            packOutput,
+            completableFuture
+        );
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> consumer) {
-        ChargerRecipeBuilder.charge(consumer,
-                AppEng.makeId("charger/charged_certus_quartz_crystal"),
-                AEItems.CERTUS_QUARTZ_CRYSTAL, AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED);
-        ChargerRecipeBuilder.charge(consumer,
-                AppEng.makeId("charger/meteorite_compass"),
-                Items.COMPASS, AEItems.METEORITE_COMPASS);
-        ChargerRecipeBuilder.charge(consumer,
-                AppEng.makeId("charger/guide"),
-                Items.BOOK, AEItems.TABLET);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        ChargerRecipeBuilder.charge(recipeOutput,
+            AppEng.makeId("charger/charged_certus_quartz_crystal"),
+            AEItems.CERTUS_QUARTZ_CRYSTAL, AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED);
+        ChargerRecipeBuilder.charge(recipeOutput,
+            AppEng.makeId("charger/meteorite_compass"),
+            Items.COMPASS, AEItems.METEORITE_COMPASS);
+        ChargerRecipeBuilder.charge(recipeOutput,
+            AppEng.makeId("charger/guide"),
+            Items.BOOK, AEItems.TABLET);
     }
 
     @Override

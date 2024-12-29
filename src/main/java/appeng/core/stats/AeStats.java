@@ -32,7 +32,7 @@ public enum AeStats {
     private final ResourceLocation registryName;
 
     AeStats(String id) {
-        this.registryName = new ResourceLocation(AppEng.MOD_ID, id);
+        this.registryName = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, id);
     }
 
     public void addToPlayer(Player player, int howMany) {

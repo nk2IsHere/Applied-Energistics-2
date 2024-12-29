@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +92,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
     int size();
 
     default int getSlotLimit(int slot) {
-        return Container.LARGE_MAX_STACK_SIZE;
+        return Item.ABSOLUTE_MAX_STACK_SIZE;
     }
 
     ItemStack getStackInSlot(int slotIndex);
@@ -207,7 +208,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
 
         for (int slot = 0; slot < slots && amount > 0; slot++) {
             final ItemStack is = getStackInSlot(slot);
-            if (is.isEmpty() || !filter.isEmpty() && !ItemStack.isSameItemSameTags(is, filter)) {
+            if (is.isEmpty() || !filter.isEmpty() && !ItemStack.isSameItemSameComponents(is, filter)) {
                 continue;
             }
 
@@ -249,7 +250,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
 
         for (int slot = 0; slot < slots && amount > 0; slot++) {
             final ItemStack is = getStackInSlot(slot);
-            if (!is.isEmpty() && (filter.isEmpty() || ItemStack.isSameItemSameTags(is, filter))) {
+            if (!is.isEmpty() && (filter.isEmpty() || ItemStack.isSameItemSameComponents(is, filter))) {
                 ItemStack extracted = extractItem(slot, amount, true);
 
                 if (extracted.isEmpty()) {
@@ -354,7 +355,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
 
         // Check merging stacks after checking if the slot is full, as NBT comparisons are expensive and cap comparisons
         // even more so.
-        if (!inSlot.isEmpty() && !ItemStack.isSameItemSameTags(inSlot, stack)) {
+        if (!inSlot.isEmpty() && !ItemStack.isSameItemSameComponents(inSlot, stack)) {
             return stack;
         }
 

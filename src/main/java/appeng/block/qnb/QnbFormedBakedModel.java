@@ -55,18 +55,18 @@ import appeng.core.definitions.AEBlocks;
 class QnbFormedBakedModel implements BakedModel, FabricBakedModel {
 
     private static final Material TEXTURE_LINK = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/quantum_link"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_link"));
     private static final Material TEXTURE_RING = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/quantum_ring"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring"));
     private static final Material TEXTURE_RING_LIGHT = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/quantum_ring_light"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring_light"));
     private static final Material TEXTURE_RING_LIGHT_CORNER = new Material(
             TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/quantum_ring_light_corner"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring_light_corner"));
     private static final Material TEXTURE_CABLE_GLASS = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "part/cable/glass/transparent"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/glass/transparent"));
     private static final Material TEXTURE_COVERED_CABLE = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "part/cable/covered/transparent"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/covered/transparent"));
 
     private static final float DEFAULT_RENDER_MIN = 2.0f;
     private static final float DEFAULT_RENDER_MAX = 14.0f;
@@ -115,7 +115,8 @@ class QnbFormedBakedModel implements BakedModel, FabricBakedModel {
         QnbFormedState formedState = getState(blockView, pos);
 
         if (formedState == null) {
-            context.bakedModelConsumer().accept(this.baseModel);
+//            context.bakedModelConsumer().accept(this.baseModel);
+            BakedModel.super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
             return;
         }
 

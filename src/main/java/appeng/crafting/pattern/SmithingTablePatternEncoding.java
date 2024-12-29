@@ -67,7 +67,7 @@ class SmithingTablePatternEncoding {
     public static ResourceLocation getRecipeId(CompoundTag nbt) {
         Objects.requireNonNull(nbt, "Pattern must have a tag.");
 
-        return new ResourceLocation(nbt.getString(NBT_RECIPE_ID));
+        return ResourceLocation.parse(nbt.getString(NBT_RECIPE_ID));
     }
 
     public static void encode(CompoundTag tag, SmithingRecipe recipe, AEItemKey template, AEItemKey base,

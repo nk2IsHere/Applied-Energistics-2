@@ -56,11 +56,11 @@ import appeng.helpers.Splotch;
 class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
 
     private static final Material TEXTURE_PAINT1 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/paint1"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint1"));
     private static final Material TEXTURE_PAINT2 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/paint2"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint2"));
     private static final Material TEXTURE_PAINT3 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            new ResourceLocation(AppEng.MOD_ID, "block/paint3"));
+            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint3"));
 
     private final TextureAtlasSprite[] textures;
 

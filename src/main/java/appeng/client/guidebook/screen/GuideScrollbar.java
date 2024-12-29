@@ -51,14 +51,14 @@ public class GuideScrollbar extends AbstractWidget {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferBuilder.vertex(left, bottom, 0.0).color(128, 128, 128, 255).endVertex();
-        bufferBuilder.vertex(right, bottom, 0.0).color(128, 128, 128, 255).endVertex();
-        bufferBuilder.vertex(right, top, 0.0).color(128, 128, 128, 255).endVertex();
-        bufferBuilder.vertex(left, top, 0.0).color(128, 128, 128, 255).endVertex();
-        bufferBuilder.vertex(left, bottom - 1, 0.0).color(192, 192, 192, 255).endVertex();
-        bufferBuilder.vertex(right - 1, bottom - 1, 0.0).color(192, 192, 192, 255).endVertex();
-        bufferBuilder.vertex(right - 1, top, 0.0).color(192, 192, 192, 255).endVertex();
-        bufferBuilder.vertex(left, top, 0.0).color(192, 192, 192, 255).endVertex();
+        bufferBuilder.addVertex(left, bottom, 0.0).setColor(128, 128, 128, 255);
+        bufferBuilder.addVertex(right, bottom, 0.0).setColor(128, 128, 128, 255);
+        bufferBuilder.addVertex(right, top, 0.0).setColor(128, 128, 128, 255);
+        bufferBuilder.addVertex(left, top, 0.0).setColor(128, 128, 128, 255);
+        bufferBuilder.addVertex(left, bottom - 1, 0.0).setColor(192, 192, 192, 255);
+        bufferBuilder.addVertex(right - 1, bottom - 1, 0.0).setColor(192, 192, 192, 255);
+        bufferBuilder.addVertex(right - 1, top, 0.0).setColor(192, 192, 192, 255);
+        bufferBuilder.addVertex(left, top, 0.0).setColor(192, 192, 192, 255);
         tesselator.end();
     }
 

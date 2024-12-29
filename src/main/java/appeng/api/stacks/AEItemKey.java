@@ -137,7 +137,7 @@ public final class AEItemKey extends AEKey {
     @Nullable
     public static AEItemKey fromTag(CompoundTag tag) {
         try {
-            var item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(tag.getString("id")))
+            var item = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(tag.getString("id")))
                     .orElseThrow(() -> new IllegalArgumentException("Unknown item id."));
             var extraTag = tag.contains("tag") ? tag.getCompound("tag") : null;
             return of(item, extraTag);

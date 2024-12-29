@@ -21,16 +21,13 @@ package appeng.datagen;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 
-import net.minecraft.Util;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import appeng.core.definitions.AEDamageTypes;
@@ -61,19 +58,19 @@ import appeng.datagen.providers.tags.PoiTypeTagsProvider;
 import appeng.init.worldgen.InitBiomes;
 import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 public class AE2DataGenerators {
-    public static void onGatherData(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        // for use on Forge
-        onGatherData(generator, existingFileHelper, generator.getVanillaPack(true));
-    }
 
-    public static void onGatherData(DataGenerator generator, ExistingFileHelper existingFileHelper,
-            DataGenerator.PackGenerator pack) {
-        var registryAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-        var registries = createAppEngProvider(registryAccess);
+    public static void onGatherData(
+        FabricDataGenerator generator, ExistingFileHelper existingFileHelper,
+        DataGenerator.PackGenerator pack) {
+        var registries = generator.getRegistries();
 
         var localization = new LocalizationProvider(generator);
+
+        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
+            createDatapackEntriesBuilder()));
 
         // Worldgen et al
         pack.addProvider(bindRegistries(WorldGenProvider::new, registries));
@@ -100,16 +97,16 @@ public class AE2DataGenerators {
         pack.addProvider(packOutput -> new AdvancementGenerator(packOutput, localization));
 
         // Recipes
-        pack.addProvider(DecorationRecipes::new);
-        pack.addProvider(DecorationBlockRecipes::new);
-        pack.addProvider(MatterCannonAmmoProvider::new);
-        pack.addProvider(EntropyRecipes::new);
-        pack.addProvider(InscriberRecipes::new);
-        pack.addProvider(SmeltingRecipes::new);
-        pack.addProvider(CraftingRecipes::new);
-        pack.addProvider(SmithingRecipes::new);
-        pack.addProvider(TransformRecipes::new);
-        pack.addProvider(ChargerRecipes::new);
+        pack.addProvider(bindRegistries(DecorationRecipes::new, registries));
+        pack.addProvider(bindRegistries(DecorationBlockRecipes::new, registries));
+        pack.addProvider(bindRegistries(MatterCannonAmmoProvider::new, registries));
+        pack.addProvider(bindRegistries(EntropyRecipes::new, registries));
+        pack.addProvider(bindRegistries(InscriberRecipes::new, registries));
+        pack.addProvider(bindRegistries(SmeltingRecipes::new, registries));
+        pack.addProvider(bindRegistries(CraftingRecipes::new, registries));
+        pack.addProvider(bindRegistries(SmithingRecipes::new, registries));
+        pack.addProvider(bindRegistries(TransformRecipes::new, registries));
+        pack.addProvider(bindRegistries(ChargerRecipes::new, registries));
 
         // Must run last
         pack.addProvider(packOutput -> localization);
@@ -121,22 +118,13 @@ public class AE2DataGenerators {
         return packOutput -> factory.apply(packOutput, factories);
     }
 
-    /**
-     * See {@link VanillaRegistries#createLookup()}
-     */
-    private static CompletableFuture<HolderLookup.Provider> createAppEngProvider(RegistryAccess registryAccess) {
 
-        var vanillaLookup = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-
-        return vanillaLookup.thenApply(provider -> {
-            var builder = new RegistrySetBuilder()
-                    .add(Registries.DIMENSION_TYPE, InitDimensionTypes::init)
-                    .add(Registries.STRUCTURE, InitStructures::initDatagenStructures)
-                    .add(Registries.STRUCTURE_SET, InitStructures::initDatagenStructureSets)
-                    .add(Registries.BIOME, InitBiomes::init)
-                    .add(Registries.DAMAGE_TYPE, AEDamageTypes::init);
-
-            return builder.buildPatch(registryAccess, provider);
-        });
+    private static RegistrySetBuilder createDatapackEntriesBuilder() {
+        return new RegistrySetBuilder()
+            .add(Registries.DIMENSION_TYPE, InitDimensionTypes::init)
+            .add(Registries.STRUCTURE, InitStructures::initDatagenStructures)
+            .add(Registries.STRUCTURE_SET, InitStructures::initDatagenStructureSets)
+            .add(Registries.BIOME, InitBiomes::init)
+            .add(Registries.DAMAGE_TYPE, AEDamageTypes::init);
     }
 }

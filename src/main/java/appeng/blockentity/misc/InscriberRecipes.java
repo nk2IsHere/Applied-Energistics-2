@@ -39,7 +39,7 @@ import appeng.recipes.handlers.InscriberRecipe;
  */
 public final class InscriberRecipes {
 
-    public static final ResourceLocation NAMEPLATE_RECIPE_ID = new ResourceLocation(AppEng.MOD_ID, "nameplate");
+    public static final ResourceLocation NAMEPLATE_RECIPE_ID = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "nameplate");
 
     private InscriberRecipes() {
     }

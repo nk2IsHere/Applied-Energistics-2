@@ -161,7 +161,7 @@ public abstract class P2PTunnelPart<T extends P2PTunnelPart<T>> extends AEBasePa
             var configData = mc.getData(is);
 
             // Change the actual tunnel type and import settings when the encoded type is a P2P
-            var partItem = IPartItem.byId(new ResourceLocation(configData.getString(CONFIG_NBT_TYPE)));
+            var partItem = IPartItem.byId(ResourceLocation.parse(configData.getString(CONFIG_NBT_TYPE)));
             if (partItem != null && P2PTunnelPart.class.isAssignableFrom(partItem.getPartClass())) {
                 IPart newBus = this;
                 if (newBus.getPartItem() != partItem) {

@@ -197,7 +197,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
     private void handheld(ItemDefinition<?> item) {
         singleTexture(
                 item.id().getPath(),
-                new ResourceLocation("item/handheld"),
+                ResourceLocation.parse("item/handheld"),
                 "layer0",
                 makeId("item/" + item.id().getPath()));
     }

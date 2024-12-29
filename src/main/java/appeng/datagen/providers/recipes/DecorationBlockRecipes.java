@@ -20,14 +20,11 @@ package appeng.datagen.providers.recipes;
 
 import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
 
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
-import net.minecraft.data.recipes.SingleItemRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -41,8 +38,14 @@ import appeng.datagen.providers.tags.ConventionTags;
 
 public class DecorationBlockRecipes extends AE2RecipeProvider {
 
-    public DecorationBlockRecipes(PackOutput output) {
-        super(output);
+    public DecorationBlockRecipes(
+        PackOutput packOutput,
+        CompletableFuture<HolderLookup.Provider> completableFuture
+    ) {
+        super(
+            packOutput,
+            completableFuture
+        );
     }
 
     @Override
@@ -51,7 +54,7 @@ public class DecorationBlockRecipes extends AE2RecipeProvider {
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> consumer) {
+    public void buildRecipes(RecipeOutput consumer) {
 
         crystalBlock(consumer, AEItems.CERTUS_QUARTZ_CRYSTAL, AEBlocks.QUARTZ_BLOCK);
         crystalBlock(consumer, AEItems.FLUIX_CRYSTAL, AEBlocks.FLUIX_BLOCK);
@@ -169,7 +172,7 @@ public class DecorationBlockRecipes extends AE2RecipeProvider {
                 .save(consumer, AppEng.makeId("decorative/quartz_vibrant_glass"));
     }
 
-    private void crystalBlock(Consumer<FinishedRecipe> consumer, ItemDefinition<?> crystal, BlockDefinition<?> block) {
+    private void crystalBlock(RecipeOutput consumer, ItemDefinition<?> crystal, BlockDefinition<?> block) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block)
                 .pattern("aa")
                 .pattern("aa")

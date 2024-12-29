@@ -39,7 +39,7 @@ public abstract class AbstractDisplayPart extends AbstractReportingPart {
 
     // The base chassis of all display parts
     @PartModels
-    protected static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID, "part/display_base");
+    protected static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/display_base");
 
     // Models that contain the status indicator light
     @PartModels

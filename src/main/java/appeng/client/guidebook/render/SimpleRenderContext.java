@@ -41,10 +41,10 @@ public record SimpleRenderContext(
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         var matrix = poseStack().last().pose();
         final int z = 0;
-        builder.vertex(matrix, rect.right(), rect.y(), z).color(resolveColor(topRight)).endVertex();
-        builder.vertex(matrix, rect.x(), rect.y(), z).color(resolveColor(topLeft)).endVertex();
-        builder.vertex(matrix, rect.x(), rect.bottom(), z).color(resolveColor(bottomLeft)).endVertex();
-        builder.vertex(matrix, rect.right(), rect.bottom(), z).color(resolveColor(bottomRight)).endVertex();
+        builder.addVertex(matrix, rect.right(), rect.y(), z).setColor(resolveColor(topRight));
+        builder.addVertex(matrix, rect.x(), rect.y(), z).setColor(resolveColor(topLeft));
+        builder.addVertex(matrix, rect.x(), rect.bottom(), z).setColor(resolveColor(bottomLeft));
+        builder.addVertex(matrix, rect.right(), rect.bottom(), z).setColor(resolveColor(bottomRight));
         tesselator.end();
         RenderSystem.disableBlend();
     }
@@ -61,10 +61,10 @@ public record SimpleRenderContext(
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         var matrix = poseStack().last().pose();
         final int z = 0;
-        builder.vertex(matrix, rect.right(), rect.y(), z).uv(u1, v0).color(resolveColor(topRight)).endVertex();
-        builder.vertex(matrix, rect.x(), rect.y(), z).uv(u0, v0).color(resolveColor(topLeft)).endVertex();
-        builder.vertex(matrix, rect.x(), rect.bottom(), z).uv(u0, v1).color(resolveColor(bottomLeft)).endVertex();
-        builder.vertex(matrix, rect.right(), rect.bottom(), z).uv(u1, v1).color(resolveColor(bottomRight)).endVertex();
+        builder.addVertex(matrix, rect.right(), rect.y(), z).setUv(u1, v0).setColor(resolveColor(topRight));
+        builder.addVertex(matrix, rect.x(), rect.y(), z).setUv(u0, v0).setColor(resolveColor(topLeft));
+        builder.addVertex(matrix, rect.x(), rect.bottom(), z).setUv(u0, v1).setColor(resolveColor(bottomLeft));
+        builder.addVertex(matrix, rect.right(), rect.bottom(), z).setUv(u1, v1).setColor(resolveColor(bottomRight));
         tesselator.end();
         RenderSystem.disableBlend();
     }
@@ -81,9 +81,9 @@ public record SimpleRenderContext(
         builder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
         var matrix = poseStack().last().pose();
         final int z = 0;
-        builder.vertex(matrix, p1.x, p1.y, z).color(resolvedColor).endVertex();
-        builder.vertex(matrix, p2.x, p2.y, z).color(resolvedColor).endVertex();
-        builder.vertex(matrix, p3.x, p3.y, z).color(resolvedColor).endVertex();
+        builder.addVertex(matrix, p1.x, p1.y, z).setColor(resolvedColor);
+        builder.addVertex(matrix, p2.x, p2.y, z).setColor(resolvedColor);
+        builder.addVertex(matrix, p3.x, p3.y, z).setColor(resolvedColor);
         tesselator.end();
         RenderSystem.disableBlend();
     }

@@ -25,6 +25,7 @@ import java.util.UUID;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
@@ -66,9 +67,11 @@ final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistr
             throw new IllegalStateException("Cannot retrieve player data for a server that has no overworld.");
         }
         return overworld.getDataStorage().computeIfAbsent(
-                nbt -> PlayerRegistryInternal.load(server, nbt),
+            new Factory<>(
                 () -> new PlayerRegistryInternal(server),
-                PlayerRegistryInternal.NAME);
+                (nbt, provider) -> PlayerRegistryInternal.load(server, nbt),
+                null),
+            PlayerRegistryInternal.NAME);
     }
 
     @Nullable
@@ -119,7 +122,7 @@ final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistr
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public CompoundTag save(CompoundTag compound, HolderLookup.Provider lookup) {
         int index = 0;
         int[] playerIds = new int[mapping.size()];
         long[] profileIds = new long[mapping.size() * 2];

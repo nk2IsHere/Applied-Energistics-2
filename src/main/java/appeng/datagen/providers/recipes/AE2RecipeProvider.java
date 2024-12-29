@@ -20,16 +20,25 @@ package appeng.datagen.providers.recipes;
 
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.ItemStack;
 
 import appeng.datagen.providers.IAE2DataProvider;
 
+import java.util.concurrent.CompletableFuture;
+
 public abstract class AE2RecipeProvider extends net.minecraft.data.recipes.RecipeProvider implements IAE2DataProvider {
 
-    public AE2RecipeProvider(PackOutput output) {
-        super(output);
+    public AE2RecipeProvider(
+        PackOutput packOutput,
+        CompletableFuture<HolderLookup.Provider> completableFuture
+    ) {
+        super(
+            packOutput,
+            completableFuture
+        );
     }
 
     public static JsonObject toJson(ItemStack stack) {

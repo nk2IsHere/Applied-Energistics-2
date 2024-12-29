@@ -20,11 +20,11 @@ package appeng.init.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 
 import appeng.api.parts.PartModelsInternal;
 import appeng.client.render.crafting.MolecularAssemblerRenderer;
 import appeng.client.render.tesr.CrankRenderer;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 
 /**
  * Registers any JSON model files with Minecraft that are not referenced via blockstates or item IDs
@@ -33,15 +33,13 @@ import appeng.client.render.tesr.CrankRenderer;
 public class InitAdditionalModels {
 
     public static void init() {
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((resourceManager, consumer) -> {
-            consumer.accept(MolecularAssemblerRenderer.LIGHTS_MODEL);
-            consumer.accept(CrankRenderer.BASE_MODEL);
-            consumer.accept(CrankRenderer.HANDLE_MODEL);
+        ModelLoadingPlugin.register((pluginContext) -> {
+            pluginContext.addModels(MolecularAssemblerRenderer.LIGHTS_MODEL, CrankRenderer.BASE_MODEL, CrankRenderer.HANDLE_MODEL);
         });
 
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((resourceManager, consumer) -> {
+        ModelLoadingPlugin.register((pluginContext) -> {
             PartModelsInternal.freeze();
-            PartModelsInternal.getModels().forEach(consumer);
+            pluginContext.addModels(PartModelsInternal.getModels());
         });
     }
 

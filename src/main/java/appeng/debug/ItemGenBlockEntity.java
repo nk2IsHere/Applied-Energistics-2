@@ -84,7 +84,7 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
     @Override
     public void loadTag(CompoundTag data) {
         if (data.contains("filter")) {
-            Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(data.getString("filter")));
+            Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(data.getString("filter")));
             this.setItem(item);
         }
         super.loadTag(data);

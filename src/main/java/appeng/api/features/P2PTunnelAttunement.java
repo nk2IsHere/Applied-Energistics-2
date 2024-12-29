@@ -96,7 +96,7 @@ public final class P2PTunnelAttunement {
             throw new IllegalArgumentException("Tunnel item must be registered first.");
         }
         return TagKey.create(Registries.ITEM,
-                new ResourceLocation(itemKey.getNamespace(), "p2p_attunements/" + itemKey.getPath()));
+                ResourceLocation.fromNamespaceAndPath(itemKey.getNamespace(), "p2p_attunements/" + itemKey.getPath()));
     }
 
     /**

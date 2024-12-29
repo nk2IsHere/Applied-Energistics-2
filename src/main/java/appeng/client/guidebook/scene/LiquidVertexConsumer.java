@@ -30,17 +30,17 @@ public class LiquidVertexConsumer implements VertexConsumer {
         y += sectionPos.getY() * SectionPos.SECTION_SIZE;
         z += sectionPos.getZ() * SectionPos.SECTION_SIZE;
 
-        return delegate.vertex(x, y, z);
+        return delegate.addVertex(x, y, z);
     }
 
     @Override
     public VertexConsumer color(int red, int green, int blue, int alpha) {
-        return delegate.color(red, green, blue, alpha);
+        return delegate.setColor(red, green, blue, alpha);
     }
 
     @Override
     public VertexConsumer uv(float u, float v) {
-        return delegate.uv(u, v);
+        return delegate.setUv(u, v);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LiquidVertexConsumer implements VertexConsumer {
 
     @Override
     public VertexConsumer uv2(int u, int v) {
-        return delegate.uv2(u, v);
+        return delegate.setUv2(u, v);
     }
 
     @Override
@@ -60,13 +60,13 @@ public class LiquidVertexConsumer implements VertexConsumer {
 
     @Override
     public void endVertex() {
-        delegate.endVertex();
+        delegate;
     }
 
     @Override
     public void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float texU,
             float texV, int overlayUV, int lightmapUV, float normalX, float normalY, float normalZ) {
-        delegate.vertex(x, y, z, red, green, blue, alpha, texU, texV, overlayUV, lightmapUV, normalX, normalY, normalZ);
+        delegate.addVertex(x, y, z, red, green, blue, alpha, texU, texV, overlayUV, lightmapUV, normalX, normalY, normalZ);
     }
 
     @Override
@@ -81,17 +81,17 @@ public class LiquidVertexConsumer implements VertexConsumer {
 
     @Override
     public VertexConsumer color(float red, float green, float blue, float alpha) {
-        return delegate.color(red, green, blue, alpha);
+        return delegate.setColor(red, green, blue, alpha);
     }
 
     @Override
     public VertexConsumer color(int i) {
-        return delegate.color(i);
+        return delegate.setColor(i);
     }
 
     @Override
     public VertexConsumer uv2(int lightmapUV) {
-        return delegate.uv2(lightmapUV);
+        return delegate.setUv2(lightmapUV);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class LiquidVertexConsumer implements VertexConsumer {
 
     @Override
     public VertexConsumer vertex(Matrix4f matrix4f, float f, float g, float h) {
-        return delegate.vertex(matrix4f, f, g, h);
+        return delegate.addVertex(matrix4f, f, g, h);
     }
 
     @Override

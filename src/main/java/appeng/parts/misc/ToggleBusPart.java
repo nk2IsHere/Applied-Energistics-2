@@ -47,7 +47,7 @@ import appeng.parts.PartModel;
 public class ToggleBusPart extends AEBasePart {
 
     @PartModels
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID, "part/toggle_bus_base");
+    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/toggle_bus_base");
     @PartModels
     public static final ResourceLocation MODEL_STATUS_OFF = new ResourceLocation(AppEng.MOD_ID,
             "part/toggle_bus_status_off");

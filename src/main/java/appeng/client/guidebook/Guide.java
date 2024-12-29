@@ -214,7 +214,7 @@ public final class Guide implements PageCollection {
         }
 
         // Transform id such that the path is prefixed with "ae2assets", the source folder for the guidebook assets
-        id = new ResourceLocation(id.getNamespace(), folder + "/" + id.getPath());
+        id = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), folder + "/" + id.getPath());
 
         var resource = Minecraft.getInstance().getResourceManager().getResource(id).orElse(null);
         if (resource == null) {
@@ -414,7 +414,7 @@ public final class Guide implements PageCollection {
             try {
                 var startupPageIdText = System.getProperty(startupPageProperty);
                 if (startupPageIdText != null) {
-                    this.startupPage = new ResourceLocation(startupPageIdText);
+                    this.startupPage = ResourceLocation.parse(startupPageIdText);
                 }
             } catch (Exception e) {
                 LOGGER.error("Specified invalid page id in system property {}", startupPageProperty);
@@ -613,6 +613,6 @@ public final class Guide implements PageCollection {
 
     private void registerReloadListener() {
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new ReloadListener(
-                new ResourceLocation(defaultNamespace, folder)));
+                ResourceLocation.fromNamespaceAndPath(defaultNamespace, folder)));
     }
 }

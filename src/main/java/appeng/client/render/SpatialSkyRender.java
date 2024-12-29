@@ -77,10 +77,10 @@ public class SpatialSkyRender {
             // This is very similar to how the End sky is rendered, just untextured
             Matrix4f matrix4f = poseStack.last().pose();
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-            buffer.vertex(matrix4f, -100.0f, -100.0f, -100.0f).color(0f, 0f, 0f, 1f).endVertex();
-            buffer.vertex(matrix4f, -100.0f, -100.0f, 100.0f).color(0f, 0f, 0f, 1f).endVertex();
-            buffer.vertex(matrix4f, 100.0f, -100.0f, 100.0f).color(0f, 0f, 0f, 1f).endVertex();
-            buffer.vertex(matrix4f, 100.0f, -100.0f, -100.0f).color(0f, 0f, 0f, 1f).endVertex();
+            buffer.addVertex(matrix4f, -100.0f, -100.0f, -100.0f).setColor(0f, 0f, 0f, 1f);
+            buffer.addVertex(matrix4f, -100.0f, -100.0f, 100.0f).setColor(0f, 0f, 0f, 1f);
+            buffer.addVertex(matrix4f, 100.0f, -100.0f, 100.0f).setColor(0f, 0f, 0f, 1f);
+            buffer.addVertex(matrix4f, 100.0f, -100.0f, -100.0f).setColor(0f, 0f, 0f, 1f);
             tessellator.end();
             poseStack.popPose();
         }
@@ -146,7 +146,7 @@ public class SpatialSkyRender {
                     final double d23 = d17 * d12 - d20 * d13;
                     final double d24 = d23 * d9 - d21 * d10;
                     final double d25 = d21 * d9 + d23 * d10;
-                    vb.vertex(x + d24, y + d22, z + d25).color(255, 255, 255, 255).endVertex();
+                    vb.addVertex(x + d24, y + d22, z + d25).setColor(255, 255, 255, 255);
                 }
             }
         }

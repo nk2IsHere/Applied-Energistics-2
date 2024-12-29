@@ -23,6 +23,7 @@
 
 package appeng.api.movable;
 
+import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -35,22 +36,22 @@ import net.minecraft.world.level.block.state.BlockState;
  * The default strategy for moving block entities in/out of spatial storage. Can be extended to create custom logic that
  * runs after {@link #completeMove} or prevents moving specific entities in {@link #beginMove} by returning null.
  * <p/>
- * The default strategy uses {@link BlockEntity#saveWithId()} in {@link #beginMove} to persist the block entity data
+ * The default strategy uses {@link BlockEntity#saveWithId(HolderLookup.Provider)} in {@link #beginMove} to persist the block entity data
  * before it is removed, and then creates a new block entity at the target position using
- * {@link BlockEntity#loadStatic(BlockPos, BlockState, CompoundTag)} in {@link #completeMove}.
+ * {@link BlockEntity#loadStatic(BlockPos, BlockState, CompoundTag, HolderLookup.Provider)} in {@link #completeMove}.
  */
 public abstract class DefaultBlockEntityMoveStrategy implements IBlockEntityMoveStrategy {
 
     @Nullable
     @Override
-    public CompoundTag beginMove(BlockEntity blockEntity) {
-        return blockEntity.saveWithId();
+    public CompoundTag beginMove(BlockEntity blockEntity, HolderLookup.Provider registries) {
+        return blockEntity.saveWithId(registries);
     }
 
     @Override
     public boolean completeMove(BlockEntity blockEntity, BlockState state, CompoundTag savedData, Level newLevel,
             BlockPos newPosition) {
-        var be = BlockEntity.loadStatic(newPosition, state, savedData);
+        var be = BlockEntity.loadStatic(newPosition, state, savedData, newLevel.registryAccess());
         if (be != null) {
             newLevel.setBlockEntity(be);
             return true;

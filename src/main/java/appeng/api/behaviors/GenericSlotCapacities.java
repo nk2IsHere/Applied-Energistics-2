@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.ApiStatus;
 
 import net.minecraft.world.Container;
@@ -20,7 +21,7 @@ public class GenericSlotCapacities {
     private static final CowMap<AEKeyType, Long> map = CowMap.identityHashMap();
 
     static {
-        register(AEKeyType.items(), (long) Container.LARGE_MAX_STACK_SIZE);
+        register(AEKeyType.items(), (long) Item.ABSOLUTE_MAX_STACK_SIZE);
         register(AEKeyType.fluids(), 4L * AEFluidKey.AMOUNT_BUCKET);
     }
 

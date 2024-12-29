@@ -89,7 +89,7 @@ class CableBuilder {
         };
 
         return new Material(TextureAtlas.LOCATION_BLOCKS,
-                new ResourceLocation(AppEng.MOD_ID, textureFolder + color.name().toLowerCase(Locale.ROOT)));
+                ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, textureFolder + color.name().toLowerCase(Locale.ROOT)));
     }
 
     /**

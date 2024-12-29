@@ -29,7 +29,7 @@ import appeng.core.AELog;
 public abstract class BasePacket {
 
     // KEEP THIS SHORT. It's serialized as a string!
-    public static final ResourceLocation CHANNEL = new ResourceLocation("ae2:m");
+    public static final ResourceLocation CHANNEL = ResourceLocation.parse("ae2:m");
 
     private FriendlyByteBuf p;
 

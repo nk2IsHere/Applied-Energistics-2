@@ -100,7 +100,7 @@ public final class Blitter {
      * Creates a blitter where the source rectangle is in relation to a texture of the given size.
      */
     public static Blitter texture(String file, int referenceWidth, int referenceHeight) {
-        return new Blitter(new ResourceLocation(AppEng.MOD_ID, "textures/" + file), referenceWidth, referenceHeight);
+        return new Blitter(ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "textures/" + file), referenceWidth, referenceHeight);
     }
 
     /**
@@ -303,22 +303,22 @@ public final class Blitter {
 
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.vertex(matrix, x1, y2, 0)
-                .uv(minU, maxV)
-                .color(r, g, b, a)
-                .endVertex();
-        bufferbuilder.vertex(matrix, x2, y2, 0)
-                .uv(maxU, maxV)
-                .color(r, g, b, a)
-                .endVertex();
-        bufferbuilder.vertex(matrix, x2, y1, 0)
-                .uv(maxU, minV)
-                .color(r, g, b, a)
-                .endVertex();
-        bufferbuilder.vertex(matrix, x1, y1, 0)
-                .uv(minU, minV)
-                .color(r, g, b, a)
-                .endVertex();
+        bufferbuilder.addVertex(matrix, x1, y2, 0)
+                .setUv(minU, maxV)
+                .setColor(r, g, b, a)
+                ;
+        bufferbuilder.addVertex(matrix, x2, y2, 0)
+                .setUv(maxU, maxV)
+                .setColor(r, g, b, a)
+                ;
+        bufferbuilder.addVertex(matrix, x2, y1, 0)
+                .setUv(maxU, minV)
+                .setColor(r, g, b, a)
+                ;
+        bufferbuilder.addVertex(matrix, x1, y1, 0)
+                .setUv(minU, minV)
+                .setColor(r, g, b, a)
+                ;
 
         if (blending) {
             RenderSystem.enableBlend();

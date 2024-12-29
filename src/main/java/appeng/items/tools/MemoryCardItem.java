@@ -173,7 +173,7 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
         for (String itemIdStr : desiredUpgradesTag.getAllKeys()) {
             ResourceLocation itemId;
             try {
-                itemId = new ResourceLocation(itemIdStr);
+                itemId = ResourceLocation.parse(itemIdStr);
             } catch (ResourceLocationException e) {
                 AELog.warn("Memory card contains invalid item id %s", itemIdStr);
                 continue;

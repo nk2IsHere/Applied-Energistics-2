@@ -142,6 +142,6 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
     }
 
     private TagsProvider.TagAppender<Block> tag(String name) {
-        return tag(TagKey.create(Registries.BLOCK, new ResourceLocation(name)));
+        return tag(TagKey.create(Registries.BLOCK, ResourceLocation.parse(name)));
     }
 }

@@ -66,7 +66,7 @@ import appeng.recipes.transform.TransformRecipe;
 public class JEIPlugin implements IModPlugin {
     public static final ResourceLocation TEXTURE = AppEng.makeId("textures/guis/jei.png");
 
-    private static final ResourceLocation ID = new ResourceLocation(AppEng.MOD_ID, "core");
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "core");
 
     private IJeiRuntime jeiRuntime;
 

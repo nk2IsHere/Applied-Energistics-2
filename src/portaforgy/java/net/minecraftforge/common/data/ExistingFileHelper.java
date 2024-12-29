@@ -24,14 +24,11 @@ import com.google.common.collect.Multimap;
 import net.minecraft.client.resources.ClientPackSource;
 import net.minecraft.client.resources.IndexedAssetSource;
 import net.minecraft.data.DataProvider;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.BuiltInMetadata;
-import net.minecraft.server.packs.FilePackResources;
-import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
-import net.minecraft.server.packs.VanillaPackResources;
-import net.minecraft.server.packs.VanillaPackResourcesBuilder;
+import net.minecraft.server.packs.*;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.server.packs.repository.ServerPacksSource;
 import net.minecraft.server.packs.resources.MultiPackResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.client.model.generators.ModelBuilder;
@@ -41,6 +38,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Enables data providers to check if other data files currently exist. The
@@ -106,18 +104,22 @@ public class ExistingFileHelper {
         List<PackResources> candidateClientResources = new ArrayList<>();
         List<PackResources> candidateServerResources = new ArrayList<>();
 
-         var resources = new VanillaPackResourcesBuilder()
-                .setMetadata(BuiltInMetadata.of())
-                .exposeNamespace("minecraft")
-                .pushJarResources()
-                .build();
+        var resources = ServerPacksSource.createVanillaPackSource();
+
         candidateClientResources.add(resources);
         candidateServerResources.add(resources);
 
         for (Path existing : existingPacks) {
             File file = existing.toFile();
             var packid = file.getName();
-            PackResources pack = file.isDirectory() ? new PathPackResources(file.getName(), file.toPath(), false) : new FilePackResources(file.getName(), file, false);
+            PackResources pack;
+            if(file.isDirectory()) {
+                pack = new PathPackResources(new PackLocationInfo(file.getName(), Component.empty(), PackSource.BUILT_IN, Optional.empty()), file.toPath());
+            } else {
+                var supplier = new FilePackResources.FileResourcesSupplier(file.toPath());
+                pack = supplier.openPrimary(new PackLocationInfo(packid, Component.empty(), PackSource.BUILT_IN, Optional.empty()));
+            }
+
             candidateClientResources.add(pack);
             candidateServerResources.add(pack);
         }
@@ -133,7 +135,7 @@ public class ExistingFileHelper {
     }
 
     private ResourceLocation getLocation(ResourceLocation base, String suffix, String prefix) {
-        return new ResourceLocation(base.getNamespace(), prefix + "/" + base.getPath() + suffix);
+        return ResourceLocation.fromNamespaceAndPath(base.getNamespace(), prefix + "/" + base.getPath() + suffix);
     }
 
     /**
