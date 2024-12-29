@@ -23,13 +23,11 @@
 
 package appeng.api.ids;
 
-import java.util.Map;
-
+import appeng.api.util.AEColor;
 import com.google.common.collect.ImmutableMap;
-
 import net.minecraft.resources.ResourceLocation;
 
-import appeng.api.util.AEColor;
+import java.util.Map;
 
 /**
  * Contains {@link net.minecraft.world.item.Item} ids for various cable bus parts defined by AE2.

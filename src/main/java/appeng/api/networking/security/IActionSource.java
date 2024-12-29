@@ -23,15 +23,13 @@
 
 package appeng.api.networking.security;
 
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Player;
-
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.MachineSource;
 import appeng.me.helpers.PlayerSource;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 /**
  * The source of any action.

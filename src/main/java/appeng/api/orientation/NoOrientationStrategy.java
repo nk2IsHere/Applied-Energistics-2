@@ -1,9 +1,9 @@
 package appeng.api.orientation;
 
+import net.minecraft.world.level.block.state.properties.Property;
+
 import java.util.Collection;
 import java.util.Collections;
-
-import net.minecraft.world.level.block.state.properties.Property;
 
 class NoOrientationStrategy implements IOrientationStrategy {
     @Override

@@ -23,16 +23,15 @@
 
 package appeng.api.implementations.parts;
 
-import java.util.EnumSet;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.parts.BusSupport;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+
+import java.util.EnumSet;
 
 /**
  * Implemented on the {@link IPart}s cable objects that can be placed at the center of {@link IPartHost}s.

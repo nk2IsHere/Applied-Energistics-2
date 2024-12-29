@@ -23,21 +23,17 @@
 
 package appeng.api.storage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.storage.cells.IBasicCellItem;
-import appeng.api.storage.cells.ICellGuiHandler;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
+import com.google.common.base.Preconditions;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Storage Cell Registry, used for specially implemented cells, if you just want to make a item act like a cell, or new
@@ -46,7 +42,6 @@ import appeng.api.storage.cells.StorageCell;
 public final class StorageCells {
 
     private static final List<ICellHandler> handlers = new ArrayList<>();
-    private static final List<ICellGuiHandler> guiHandlers = new ArrayList<>();
 
     private StorageCells() {
     }
@@ -54,8 +49,8 @@ public final class StorageCells {
     /**
      * Register a new handler.
      * <p>
-     * Never be call before {@link net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent} was handled by AE2. Will
-     * throw an exception otherwise.
+     * Never be call before {@link net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent} was handled by AE2. Will throw
+     * an exception otherwise.
      *
      * @param handler cell handler
      */
@@ -65,15 +60,6 @@ public final class StorageCells {
                 "Tried to register the same handler instance twice.");
 
         handlers.add(handler);
-    }
-
-    /**
-     * Register a new handler
-     *
-     * @param handler cell gui handler
-     */
-    public static synchronized void addCellGuiHandler(ICellGuiHandler handler) {
-        guiHandlers.add(handler);
     }
 
     /**
@@ -112,28 +98,6 @@ public final class StorageCells {
             }
         }
         return null;
-    }
-
-    /**
-     * get the handler, for the requested channel.
-     *
-     * @param is ItemStack
-     * @return the handler registered for this channel.
-     */
-    @Nullable
-    public static synchronized ICellGuiHandler getGuiHandler(ItemStack is) {
-        ICellGuiHandler fallBack = null;
-
-        for (ICellGuiHandler ch : guiHandlers) {
-            if (ch.isSpecializedFor(is)) {
-                return ch;
-            }
-
-            if (fallBack == null) {
-                fallBack = ch;
-            }
-        }
-        return fallBack;
     }
 
     /**

@@ -18,19 +18,17 @@
 
 package appeng.api.upgrades;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.ids.AEComponents;
+import appeng.util.inv.AppEngInternalInventory;
 import net.minecraft.world.item.ItemStack;
-
-import appeng.api.inventories.InternalInventory;
+import net.minecraft.world.item.component.ItemContainerContents;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides an upgrade inventory that stores the upgrades directly on an {@link ItemStack}, and derives which updates
  * are compatible from the item of that stack.
  */
 final class ItemUpgradeInventory extends UpgradeInventory {
-    private static final String TAG_UPGRADES = "upgrades";
-
     private final ItemStack stack;
 
     @Nullable
@@ -40,18 +38,19 @@ final class ItemUpgradeInventory extends UpgradeInventory {
         super(stack.getItem(), upgrades);
         this.stack = stack;
         this.changeCallback = changeCallback;
-        this.readFromNBT(stack.getOrCreateTag(), TAG_UPGRADES);
+
+        fromItemContainerContents(stack.getOrDefault(AEComponents.UPGRADES, ItemContainerContents.EMPTY));
     }
 
     @Override
-    public void saveChanges() {
-        this.writeToNBT(this.stack.getOrCreateTag(), TAG_UPGRADES);
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        stack.set(AEComponents.UPGRADES, toItemContainerContents());
 
-        super.saveChanges();
+        super.saveChangedInventory(inv);
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         super.onChangeInventory(inv, slot);
 
         if (changeCallback != null) {

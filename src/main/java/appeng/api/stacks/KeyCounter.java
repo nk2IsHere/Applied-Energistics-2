@@ -23,22 +23,14 @@
 
 package appeng.api.stacks;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
+import appeng.api.config.FuzzyMode;
 import com.google.common.collect.Iterators;
-
-import org.jetbrains.annotations.Nullable;
-
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.config.FuzzyMode;
+import java.util.*;
 
 /**
  * Associates a generic value of type T with AE keys and makes key/value pairs searchable with fuzzy mode semantics.
@@ -94,8 +86,23 @@ public final class KeyCounter implements Iterable<Object2LongMap.Entry<AEKey>> {
         getSubIndex(key).add(key, amount);
     }
 
+    /**
+     * Subtracts the given amount from the value associated with the given key.
+     */
     public void remove(AEKey key, long amount) {
         add(key, -amount);
+    }
+
+    /**
+     * Removes the given key from this counter, and returns the old value (or 0).
+     */
+    public long remove(AEKey key) {
+        var subIndex = getSubIndex(key);
+        var ret = subIndex.remove(key);
+        if (subIndex.isEmpty()) {
+            lists.remove(key.getPrimaryKey());
+        }
+        return ret;
     }
 
     public void set(AEKey key, long amount) {

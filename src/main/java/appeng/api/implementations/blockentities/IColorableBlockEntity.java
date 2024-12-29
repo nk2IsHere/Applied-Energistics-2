@@ -23,10 +23,9 @@
 
 package appeng.api.implementations.blockentities;
 
+import appeng.api.util.AEColor;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
-
-import appeng.api.util.AEColor;
 
 public interface IColorableBlockEntity {
 

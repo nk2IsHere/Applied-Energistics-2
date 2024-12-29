@@ -23,13 +23,11 @@
 
 package appeng.api.inventories;
 
-import java.util.function.Predicate;
-
+import appeng.api.config.FuzzyMode;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.item.ItemStack;
-
-import appeng.api.config.FuzzyMode;
+import java.util.function.Predicate;
 
 /**
  * Models item transfer that lets the target inventory handle where items are placed into or extracted from.
@@ -70,10 +68,4 @@ public interface ItemTransfer {
      */
 
     ItemStack addItems(ItemStack stack, boolean simulate);
-
-    /**
-     * Heuristically determine if this transfer object allows inserting items, i.e. if it's a slot based inventory and
-     * has no slots, it probably doesn't allow insertion.
-     */
-    boolean mayAllowInsertion();
 }

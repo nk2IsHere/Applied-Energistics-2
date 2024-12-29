@@ -23,13 +23,9 @@
 
 package appeng.api.features;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-
+import appeng.core.definitions.AEParts;
+import appeng.items.parts.PartItem;
+import appeng.parts.p2p.P2PTunnelPart;
 import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
@@ -42,9 +38,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import appeng.core.definitions.AEParts;
-import appeng.items.parts.PartItem;
-import appeng.parts.p2p.P2PTunnelPart;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * A Registry for how p2p Tunnels are attuned
@@ -109,7 +104,7 @@ public final class P2PTunnelAttunement {
 
     /**
      * Attunement based on the ability of getting an API via Fabric API Lookup from the item.
-     * 
+     *
      * @param tunnelPart  The P2P-tunnel part item.
      * @param description Description for display in REI/JEI.
      */
@@ -174,7 +169,7 @@ public final class P2PTunnelAttunement {
         Objects.requireNonNull(itemLike, "item");
         var item = itemLike.asItem();
         Objects.requireNonNull(item, "item");
-        if (!(item instanceof PartItem<?>partItem)) {
+        if (!(item instanceof PartItem<?> partItem)) {
             throw new IllegalArgumentException("Given tunnel part item is not a part");
         }
 

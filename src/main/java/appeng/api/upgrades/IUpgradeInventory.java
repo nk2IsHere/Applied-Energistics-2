@@ -23,10 +23,10 @@
 
 package appeng.api.upgrades;
 
+import appeng.api.inventories.InternalInventory;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ItemLike;
-
-import appeng.api.inventories.InternalInventory;
 
 /**
  * This specialized inventory can be used to insert and extract upgrade cards into AE2 machines. Only upgrades supported
@@ -58,10 +58,10 @@ public interface IUpgradeInventory extends InternalInventory {
     /**
      * Reads the contents of this upgrade inventory from a subtag of the given compound tag.
      */
-    void readFromNBT(CompoundTag data, String subtag);
+    void readFromNBT(CompoundTag data, String subtag, HolderLookup.Provider registries);
 
     /**
      * Reads the contents of this upgrade inventory from a subtag of the given compound tag.
      */
-    void writeToNBT(CompoundTag data, String subtag);
+    void writeToNBT(CompoundTag data, String subtag, HolderLookup.Provider registries);
 }

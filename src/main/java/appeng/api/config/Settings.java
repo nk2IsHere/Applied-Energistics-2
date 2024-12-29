@@ -23,11 +23,11 @@
 
 package appeng.api.config;
 
+import com.google.common.base.Preconditions;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.base.Preconditions;
 
 public final class Settings {
     private static final Map<String, Setting<?>> SETTINGS = new HashMap<>();
@@ -56,14 +56,13 @@ public final class Settings {
             RedstoneMode.LOW_SIGNAL);
     public static final Setting<RedstoneMode> REDSTONE_CONTROLLED = register("redstone_controlled", RedstoneMode.class);
     public static final Setting<CondenserOutput> CONDENSER_OUTPUT = register("condenser_output", CondenserOutput.class);
-    public static final Setting<PowerUnits> POWER_UNITS = register("power_units", PowerUnits.class);
+    public static final Setting<PowerUnit> POWER_UNITS = register("power_units", PowerUnit.class);
     public static final Setting<AccessRestriction> ACCESS = register("access", AccessRestriction.READ_WRITE,
             AccessRestriction.READ, AccessRestriction.WRITE);
     public static final Setting<SortDir> SORT_DIRECTION = register("sort_direction", SortDir.class);
     public static final Setting<SortOrder> SORT_BY = register("sort_by", SortOrder.class);
     public static final Setting<YesNo> SEARCH_TOOLTIPS = register("search_tooltips", YesNo.YES, YesNo.NO);
     public static final Setting<ViewItems> VIEW_MODE = register("view_mode", ViewItems.class);
-    public static final Setting<TypeFilter> TYPE_FILTER = register("filter_type", TypeFilter.class);
     public static final Setting<RelativeDirection> IO_DIRECTION = register("io_direction", RelativeDirection.LEFT,
             RelativeDirection.RIGHT);
     public static final Setting<YesNo> BLOCKING_MODE = register("blocking_mode", YesNo.YES, YesNo.NO);
@@ -93,7 +92,10 @@ public final class Settings {
             YesNo.YES);
     public static final Setting<YesNo> AUTO_EXPORT = register("auto_export", YesNo.NO, YesNo.YES);
 
+    @Deprecated(forRemoval = true)
     public static final Setting<YesNo> INSCRIBER_BUFFER_SIZE = register("inscriber_buffer_size", YesNo.NO, YesNo.YES);
+    public static final Setting<InscriberInputCapacity> INSCRIBER_INPUT_CAPACITY = register("inscriber_input_capacity",
+            InscriberInputCapacity.class);
 
     public static Setting<?> getOrThrow(String name) {
         var setting = SETTINGS.get(name);

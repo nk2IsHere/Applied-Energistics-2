@@ -23,28 +23,41 @@
 
 package appeng.api.stacks;
 
-import java.text.NumberFormat;
-import java.util.stream.Stream;
-
+import appeng.api.storage.AEKeyFilter;
+import appeng.core.AELog;
+import appeng.core.AppEng;
+import appeng.util.ReadableNumberConverter;
 import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.storage.AEKeyFilter;
-import appeng.util.ReadableNumberConverter;
+import java.text.NumberFormat;
+import java.util.stream.Stream;
 
 /**
  * Defines the properties of a specific subclass of {@link AEKey}. I.e. for {@link AEItemKey}, there is
  * {@link AEItemKeys}.
  */
 public abstract class AEKeyType {
+    public static final ResourceKey<Registry<AEKeyType>> REGISTRY_KEY = ResourceKey
+            .createRegistryKey(AppEng.makeId("keytypes"));
+    public static final Codec<AEKeyType> CODEC = Codec
+            .lazyInitialized(() -> AEKeyTypesInternal.getRegistry().byNameCodec());
+    public static final StreamCodec<RegistryFriendlyByteBuf, AEKeyType> STREAM_CODEC = ByteBufCodecs
+            .registry(AEKeyType.REGISTRY_KEY);
+
     private final ResourceLocation id;
     private final Class<? extends AEKey> keyClass;
     private final AEKeyFilter filter;
@@ -57,6 +70,11 @@ public abstract class AEKeyType {
         this.filter = what -> what.getType() == this;
         this.description = description;
     }
+
+    /**
+     * A codec used to encode keys of this type.
+     */
+    public abstract MapCodec<? extends AEKey> codec();
 
     /**
      * @return AE2's key space for {@link AEItemKey}.
@@ -125,13 +143,21 @@ public abstract class AEKeyType {
      * Attempts to load a key of this type from the given packet buffer.
      */
     @Nullable
-    public abstract AEKey readFromPacket(FriendlyByteBuf input);
+    public abstract AEKey readFromPacket(RegistryFriendlyByteBuf input);
 
     /**
      * Attempts to load a key of this type from the given tag.
      */
     @Nullable
-    public abstract AEKey loadKeyFromTag(CompoundTag tag);
+    public AEKey loadKeyFromTag(HolderLookup.Provider registries, CompoundTag tag) {
+        var ops = registries.createSerializationContext(NbtOps.INSTANCE);
+        try {
+            return codec().codec().decode(ops, tag).getOrThrow().getFirst();
+        } catch (Exception e) {
+            AELog.debug("Tried to load an invalid item key from NBT: %s", tag, e);
+            return null;
+        }
+    }
 
     /**
      * Does this key belong to this storage channel.
@@ -231,7 +257,7 @@ public abstract class AEKeyType {
     /**
      * Returns all tags that apply to keys of this type. Is an optional operation is keys of this type cannot have tags,
      * and {@link AEKey#isTagged(TagKey)} is not implemented for this key type.
-     * 
+     *
      * @see Registry#getTagNames()
      */
     public Stream<TagKey<?>> getTagNames() {

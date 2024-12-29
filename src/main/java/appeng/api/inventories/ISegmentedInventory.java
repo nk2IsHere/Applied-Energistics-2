@@ -23,11 +23,9 @@
 
 package appeng.api.inventories;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.upgrades.IUpgradeInventory;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Allows access to specific segments of a machines inventory.

@@ -1,25 +1,18 @@
 package appeng.api.behaviors;
 
+import appeng.api.stacks.*;
+import appeng.util.CowMap;
+import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.base.Function;
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.AEKeyType;
-import appeng.api.stacks.AEKeyTypes;
-import appeng.api.stacks.GenericStack;
-import appeng.util.CowMap;
 
 /**
  * Manages {@link ContainerItemStrategy} registrations for {@linkplain AEKeyType key types}.

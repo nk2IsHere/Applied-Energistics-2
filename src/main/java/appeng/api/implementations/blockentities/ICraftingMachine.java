@@ -23,18 +23,14 @@
 
 package appeng.api.implementations.blockentities;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import appeng.api.AECapabilities;
+import appeng.api.crafting.IPatternDetails;
+import appeng.api.stacks.KeyCounter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import appeng.api.crafting.IPatternDetails;
-import appeng.api.ids.AEConstants;
-import appeng.api.stacks.KeyCounter;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides crafting services to adjacent pattern providers for automatic crafting. Can be provided via capability on
@@ -42,26 +38,24 @@ import appeng.api.stacks.KeyCounter;
  */
 public interface ICraftingMachine {
 
-    BlockApiLookup<ICraftingMachine, Direction> SIDED = BlockApiLookup.get(
-            ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "icraftingmachine"), ICraftingMachine.class, Direction.class);
-
     @Nullable
     static ICraftingMachine of(@Nullable BlockEntity blockEntity, Direction side) {
-        if (blockEntity == null) {
+        if (blockEntity == null || blockEntity.getLevel() == null) {
             return null;
         }
 
-        return of(blockEntity.getLevel(), blockEntity.getBlockPos(), side, blockEntity);
+        return blockEntity.getLevel().getCapability(
+                AECapabilities.CRAFTING_MACHINE, blockEntity.getBlockPos(), blockEntity.getBlockState(),
+                blockEntity, side);
     }
 
     @Nullable
-    static ICraftingMachine of(Level level, BlockPos pos, Direction side,
-            @org.jetbrains.annotations.Nullable BlockEntity blockEntity) {
-        return SIDED.find(level, pos, null, blockEntity, side);
+    static ICraftingMachine of(Level level, BlockPos pos, Direction side) {
+        return level.getCapability(AECapabilities.CRAFTING_MACHINE, pos, side);
     }
 
     /**
-     * Describe how this machine is displayed & grouped in the pattern access terminal.
+     * Describe how this machine is displayed and grouped in the pattern access terminal.
      */
     PatternContainerGroup getCraftingMachineInfo();
 

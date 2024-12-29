@@ -23,22 +23,20 @@
 
 package appeng.api.networking;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.networking.events.GridEvent;
 import appeng.hooks.ticking.TickHandler;
 import appeng.me.GridConnection;
 import appeng.me.GridEventBus;
 import appeng.me.InWorldGridNode;
 import appeng.me.ManagedGridNode;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * A helper responsible for creating new {@link IGridNode}, connecting existing nodes, and related features.

@@ -23,11 +23,9 @@
 
 package appeng.api.networking.crafting;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.chat.Component;
-
 import appeng.api.config.CpuSelectionMode;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 public interface ICraftingCPU {
 

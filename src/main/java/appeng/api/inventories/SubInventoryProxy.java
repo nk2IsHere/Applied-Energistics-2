@@ -24,7 +24,6 @@
 package appeng.api.inventories;
 
 import com.google.common.base.Preconditions;
-
 import net.minecraft.world.item.ItemStack;
 
 /**

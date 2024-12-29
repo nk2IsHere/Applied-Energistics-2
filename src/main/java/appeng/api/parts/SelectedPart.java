@@ -23,9 +23,8 @@
 
 package appeng.api.parts;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Reports a selected part from the IPartHost

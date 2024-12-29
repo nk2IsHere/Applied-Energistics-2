@@ -18,23 +18,20 @@
 
 package appeng.api.features;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
-import net.minecraft.core.HolderLookup;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-
 import appeng.core.AELog;
 import appeng.core.AppEng;
 import appeng.core.worlddata.AESavedData;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Handles the matching between UUIDs and internal IDs for security systems. This whole system could be replaced by
@@ -67,11 +64,11 @@ final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistr
             throw new IllegalStateException("Cannot retrieve player data for a server that has no overworld.");
         }
         return overworld.getDataStorage().computeIfAbsent(
-            new Factory<>(
-                () -> new PlayerRegistryInternal(server),
-                (nbt, provider) -> PlayerRegistryInternal.load(server, nbt),
-                null),
-            PlayerRegistryInternal.NAME);
+                new Factory<>(
+                        () -> new PlayerRegistryInternal(server),
+                        (nbt, provider) -> PlayerRegistryInternal.load(server, nbt),
+                        null),
+                PlayerRegistryInternal.NAME);
     }
 
     @Nullable
@@ -104,7 +101,7 @@ final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistr
         long[] profileIds = nbt.getLongArray(TAG_PROFILE_IDS);
 
         if (playerIds.length * 2 != profileIds.length) {
-            throw new IllegalStateException("Plaer ID mapping is corrupted. " + playerIds.length + " player IDs vs. "
+            throw new IllegalStateException("Player ID mapping is corrupted. " + playerIds.length + " player IDs vs. "
                     + profileIds.length + " profile IDs (latter must be 2 * the former)");
         }
 
@@ -122,7 +119,7 @@ final class PlayerRegistryInternal extends AESavedData implements IPlayerRegistr
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound, HolderLookup.Provider lookup) {
+    public CompoundTag save(CompoundTag compound, HolderLookup.Provider registries) {
         int index = 0;
         int[] playerIds = new int[mapping.size()];
         long[] profileIds = new long[mapping.size() * 2];

@@ -1,21 +1,18 @@
 package appeng.api.behaviors;
 
-import java.util.Map;
-import java.util.UUID;
-
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.networking.energy.IEnergySource;
+import appeng.api.stacks.AEKeyType;
+import appeng.parts.automation.StackWorldBehaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.networking.energy.IEnergySource;
-import appeng.api.stacks.AEKeyType;
-import appeng.parts.automation.StackWorldBehaviors;
+import java.util.UUID;
 
 /**
  * Pickup strategies are used to pick up various types of game objects from within the world and convert them into a
@@ -62,7 +59,7 @@ public interface PickupStrategy {
     @FunctionalInterface
     interface Factory {
         PickupStrategy create(ServerLevel level, BlockPos fromPos, Direction fromSide, BlockEntity host,
-                Map<Enchantment, Integer> enchantments, @Nullable UUID owningPlayerId);
+                ItemEnchantments enchantments, @Nullable UUID owningPlayerId);
     }
 
     static void register(AEKeyType type, Factory factory) {

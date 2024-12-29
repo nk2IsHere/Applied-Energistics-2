@@ -23,9 +23,8 @@
 
 package appeng.api.inventories;
 
-import java.util.Iterator;
-import java.util.function.Predicate;
-
+import appeng.api.config.FuzzyMode;
+import appeng.util.helpers.ItemComparisonHelper;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.world.item.Item;
@@ -41,30 +40,19 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import appeng.api.config.FuzzyMode;
-import appeng.util.helpers.ItemComparisonHelper;
+import java.util.Iterator;
+import java.util.function.Predicate;
 
 public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
 
     @Nullable
-    static ItemTransfer wrapExternal(@Nullable BlockEntity be, Direction side) {
-        if (be == null) {
-            return null;
-        }
-
-        var storage = ItemStorage.SIDED.find(be.getLevel(), be.getBlockPos(), be.getBlockState(), be, side);
-        if (storage != null) {
-            return new PlatformInventoryWrapper(storage);
-        }
-
-        return null;
-    }
-
-    @Nullable
     static ItemTransfer wrapExternal(Level level, BlockPos pos, Direction side) {
-        return wrapExternal(level.getBlockEntity(pos), side);
+        var handler = ItemStorage.SIDED.find(level, pos, side);
+        if (handler != null) {
+            return new PlatformInventoryWrapper(handler);
+        }
+        return null;
     }
 
     static InternalInventory empty() {
@@ -82,7 +70,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
     }
 
     default Storage<ItemVariant> toStorage() {
-        return new InternalInventoryStorage(this);
+        return new InternalInventoryItemHandler(this);
     }
 
     default Container toContainer() {
@@ -399,11 +387,6 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
             }
             return result;
         }
-    }
-
-    @Override
-    default boolean mayAllowInsertion() {
-        return size() > 0;
     }
 
     /**

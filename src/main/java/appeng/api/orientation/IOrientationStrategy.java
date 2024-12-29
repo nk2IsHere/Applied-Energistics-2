@@ -1,15 +1,14 @@
 package appeng.api.orientation;
 
-import java.util.Collection;
-import java.util.stream.Stream;
-
+import appeng.block.orientation.SpinMapping;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 
-import appeng.block.orientation.SpinMapping;
+import java.util.Collection;
+import java.util.stream.Stream;
 
 /**
  * Specifies how a block determines its orientation and stores it in the blockstate. For use with

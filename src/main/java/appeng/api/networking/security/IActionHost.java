@@ -23,9 +23,8 @@
 
 package appeng.api.networking.security;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.networking.IGridNode;
+import org.jetbrains.annotations.Nullable;
 
 public interface IActionHost {
 

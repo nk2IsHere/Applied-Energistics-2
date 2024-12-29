@@ -1,14 +1,14 @@
 package appeng.api.orientation;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Implements a strategy that allows blocks to be oriented using a single directional property.

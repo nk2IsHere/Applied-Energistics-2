@@ -1,10 +1,8 @@
 package appeng.api.upgrades;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.util.inv.AppEngInternalInventory;
 import net.minecraft.world.level.ItemLike;
-
-import appeng.api.inventories.InternalInventory;
+import org.jetbrains.annotations.Nullable;
 
 class MachineUpgradeInventory extends UpgradeInventory {
     @Nullable
@@ -16,7 +14,7 @@ class MachineUpgradeInventory extends UpgradeInventory {
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         super.onChangeInventory(inv, slot);
 
         if (changeCallback != null) {

@@ -23,19 +23,17 @@
 
 package appeng.api.client;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A registry for 3D models used to render storage cells in the world, when they are inserted into a drive or similar
@@ -55,7 +53,8 @@ public final class StorageCellModels {
      * Register a new model for a storage cell item.
      * 
      * <p>
-     * You are responsible for ensuring that the given model is actually loaded by the game.
+     * You are responsible for ensuring that the given model is actually loaded by the game. See
+     * {@link net.minecraftforge.client.model.ModelLoader#addSpecialModel}.
      * 
      * This method only maps an {@link Item} to a {@link ResourceLocation} which can be looked up from the
      * {@link ModelBakery}. No validation about missing models will be done.

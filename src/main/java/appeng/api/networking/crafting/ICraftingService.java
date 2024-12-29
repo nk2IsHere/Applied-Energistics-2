@@ -23,22 +23,19 @@
 
 package appeng.api.networking.crafting;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.concurrent.Future;
-
-import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.Level;
-
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridService;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.AEKeyFilter;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.Future;
 
 public interface ICraftingService extends IGridService {
 

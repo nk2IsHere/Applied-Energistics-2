@@ -1,17 +1,14 @@
 package appeng.api.behaviors;
 
-import java.util.Map;
-
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
+import com.google.common.base.Preconditions;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Map;
 
 public final class ContainerItemContext {
     private final Map<AEKeyType, Entry<?>> entries;

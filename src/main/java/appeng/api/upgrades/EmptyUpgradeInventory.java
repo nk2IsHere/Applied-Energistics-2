@@ -18,15 +18,16 @@
 
 package appeng.api.upgrades;
 
-import java.util.Collections;
-import java.util.Iterator;
-
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+
+import java.util.Collections;
+import java.util.Iterator;
 
 final class EmptyUpgradeInventory implements IUpgradeInventory {
     public static final EmptyUpgradeInventory INSTANCE = new EmptyUpgradeInventory();
@@ -91,10 +92,10 @@ final class EmptyUpgradeInventory implements IUpgradeInventory {
     }
 
     @Override
-    public void readFromNBT(CompoundTag data, String subtag) {
+    public void readFromNBT(CompoundTag data, String subtag, HolderLookup.Provider registries) {
     }
 
     @Override
-    public void writeToNBT(CompoundTag data, String subtag) {
+    public void writeToNBT(CompoundTag data, String subtag, HolderLookup.Provider registries) {
     }
 }

@@ -23,8 +23,6 @@
 
 package appeng.api.parts;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 //@formatter:off
 
@@ -87,7 +86,7 @@ public interface IPartItem<P extends IPart> extends ItemLike {
     @Nullable
     static IPartItem<?> byId(ResourceLocation id) {
         var item = BuiltInRegistries.ITEM.get(id);
-        if (item instanceof IPartItem<?>partItem) {
+        if (item instanceof IPartItem<?> partItem) {
             return partItem;
         }
         return null;
@@ -99,7 +98,7 @@ public interface IPartItem<P extends IPart> extends ItemLike {
     @Nullable
     static IPartItem<?> byNetworkId(int id) {
         var item = BuiltInRegistries.ITEM.byId(id);
-        if (item instanceof IPartItem<?>partItem) {
+        if (item instanceof IPartItem<?> partItem) {
             return partItem;
         }
         return null;

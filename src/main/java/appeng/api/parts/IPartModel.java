@@ -23,10 +23,10 @@
 
 package appeng.api.parts;
 
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Collections;
 import java.util.List;
-
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * A container to store a collection of {@link ResourceLocation} as models for a part as well as other properties.

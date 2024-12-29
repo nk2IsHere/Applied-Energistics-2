@@ -1,25 +1,23 @@
 package appeng.api.implementations.blockentities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.ComponentSerialization;
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.parts.IPartHost;
+import appeng.api.stacks.AEItemKey;
+import appeng.core.localization.GuiText;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.api.parts.IPartHost;
-import appeng.api.stacks.AEItemKey;
-import appeng.core.localization.GuiText;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides both a key for grouping pattern providers, and displaying the group in the pattern access terminal.
@@ -70,22 +68,30 @@ public record PatternContainerGroup(
 
     @Nullable
     public static PatternContainerGroup fromMachine(Level level, BlockPos pos, Direction side) {
-        var target = level.getBlockEntity(pos);
-
         // Check for first-class support
-        var craftingMachine = ICraftingMachine.of(level, pos, side, target);
+        var craftingMachine = ICraftingMachine.of(level, pos, side);
         if (craftingMachine != null) {
             return craftingMachine.getCraftingMachineInfo();
         }
 
         // Anything else requires a block entity
+        var target = level.getBlockEntity(pos);
         if (target == null) {
             return null;
         }
 
-        // Heuristic: If it doesn't allow any transfers, ignore it
-        var adaptor = InternalInventory.wrapExternal(target, side);
-        if (adaptor == null || !adaptor.mayAllowInsertion()) {
+        // Heuristic: If it doesn't allow item or fluid transfers, ignore it
+        // var adaptor = InternalInventory.wrapExternal(target, side);
+        // if (adaptor == null || !adaptor.mayAllowInsertion()) {
+        //   return null;
+        // }
+        var itemStorage = ItemStorage.SIDED.find(target.getLevel(), pos, side);
+        if (itemStorage == null) {
+            return null;
+        }
+
+        var fluidStorage = FluidStorage.SIDED.find(target.getLevel(), pos, side);
+        if (fluidStorage == null) {
             return null;
         }
 

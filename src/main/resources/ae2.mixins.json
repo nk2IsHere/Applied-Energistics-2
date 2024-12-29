@@ -19,7 +19,8 @@
     "AnnihilationPlaneEnchantmentMixin",
     "tests.StructureUtilsMixin",
     "StructureTemplateMixin",
-    "UnbreakingMixin"
+    "UnbreakingMixin",
+    "RegistryMixin"
   ],
   "client": [
     "spatial.SkyRenderMixin",

@@ -23,9 +23,10 @@
 
 package appeng.api.stacks;
 
-import java.util.Objects;
-
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * AE2's registry of all known {@link AEKeyType key types}.
@@ -78,8 +79,7 @@ public final class AEKeyTypes {
      * <p>
      * This is mainly used as helper to let storage grids construct their internal storage for each type.
      */
-
-    public static Iterable<AEKeyType> getAll() {
-        return AEKeyTypesInternal.getRegistry();
+    public static Set<AEKeyType> getAll() {
+        return AEKeyTypesInternal.getAllTypes();
     }
 }

@@ -23,16 +23,14 @@
 
 package appeng.api.features;
 
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 /**
  * Maintains a save specific list of userids and username combinations this greatly simplifies storage internally and

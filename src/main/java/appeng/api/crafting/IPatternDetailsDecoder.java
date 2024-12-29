@@ -23,12 +23,10 @@
 
 package appeng.api.crafting;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.stacks.AEItemKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import appeng.api.stacks.AEItemKey;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Allows mod to decode their {@link IPatternDetails} from their item stacks. This is required for custom patterns,
@@ -41,9 +39,10 @@ public interface IPatternDetailsDecoder {
     IPatternDetails decodePattern(AEItemKey what, Level level);
 
     /**
-     * Decodes a pattern stored in a stack. Can attempt to recover a pattern hat has broken by recipe IDs being changed
-     * by other mods. Recovery will modify the given item stack.
+     * Convenience alternative to {@link #decodePattern(AEItemKey, Level)} that takes an ItemStack.
      */
     @Nullable
-    IPatternDetails decodePattern(ItemStack what, Level level, boolean tryRecovery);
+    default IPatternDetails decodePattern(ItemStack what, Level level) {
+        return decodePattern(AEItemKey.of(what), level);
+    }
 }

@@ -23,14 +23,12 @@
 
 package appeng.api.networking;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.util.AECableType;
+import appeng.core.AppEng;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import appeng.api.util.AECableType;
-import appeng.core.AppEng;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implement to create a networked {@link BlockEntity}. Must be implemented for a block entity to be available for

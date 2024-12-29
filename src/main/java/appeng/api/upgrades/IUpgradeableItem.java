@@ -1,9 +1,8 @@
 package appeng.api.upgrades;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Counterpart for {@link IUpgradeableObject}, but for {@link net.minecraft.world.item.Item}.

@@ -23,9 +23,8 @@
 
 package appeng.api.networking;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Access to AE's internal grid connections.

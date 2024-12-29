@@ -23,10 +23,9 @@
 
 package appeng.api.client;
 
-import java.util.List;
-
+import appeng.api.stacks.AEKey;
+import appeng.util.Platform;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -35,8 +34,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 
-import appeng.api.stacks.AEKey;
-import appeng.util.Platform;
+import java.util.List;
 
 /**
  * Client-side rendering of AE stacks. Must be registered in {@link AEKeyRendering} for each storage channel!

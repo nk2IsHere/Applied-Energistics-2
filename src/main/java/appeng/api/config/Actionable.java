@@ -33,4 +33,13 @@ public enum Actionable {
      * Pretend to perform the action.
      */
     SIMULATE;
+
+
+    public static Actionable ofSimulate(boolean simulate) {
+        return simulate ? SIMULATE : MODULATE;
+    }
+
+    public boolean isSimulate() {
+        return this == SIMULATE;
+    }
 }
