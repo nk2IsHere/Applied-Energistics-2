@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.world.item.Item;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +83,7 @@ public class InitStackRenderHandlers {
             // The Z-scaling by 0.001 causes the model to be visually "flattened"
             // This cannot replace a proper projection, but it's cheap and gives the desired effect.
             // We don't scale the normal matrix to avoid lighting issues.
-            poseStack.mulPoseMatrix(new Matrix4f().scale(scale, scale, 0.001f));
+            poseStack.mulPose(new Matrix4f().scale(scale, scale, 0.001f));
             // Rotate the normal matrix a little for nicer lighting.
             poseStack.last().normal().rotateX(Mth.DEG_TO_RAD * -45f);
 
@@ -99,17 +100,11 @@ public class InitStackRenderHandlers {
 
         @Override
         public List<Component> getTooltip(AEItemKey stack) {
-            try {
-                return stack.toStack().getTooltipLines(Minecraft.getInstance().player,
-                        Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.Default.ADVANCED
-                                : TooltipFlag.Default.NORMAL);
-            } catch (Exception e) {
-                LOG.error("Getting the tooltip of item {} crashed!", stack.getId(), e);
-                return List.of(
-                        stack.getDisplayName(),
-                        Component.literal(stack.getId().toString()),
-                        Component.literal("GETTING TOOLTIP CRASHED").withStyle(ChatFormatting.RED));
-            }
+            return stack.getReadOnlyStack().getTooltipLines(
+                Item.TooltipContext.of(Minecraft.getInstance().level),
+                Minecraft.getInstance().player,
+                Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED
+                    : TooltipFlag.NORMAL);
         }
     }
 
@@ -150,33 +145,29 @@ public class InitStackRenderHandlers {
 
             var transform = poseStack.last().pose();
             buffer.addVertex(transform, x0, y1, 0)
-                    .setColor(color)
-                    .setUv(sprite.getU0(), sprite.getV1())
-                    .setOverlay(OverlayTexture.NO_OVERLAY)
-                    .setUv2(combinedLight)
-                    .normal(0, 0, 1)
-                    ;
+                .setColor(color)
+                .setUv(sprite.getU0(), sprite.getV1())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
             buffer.addVertex(transform, x1, y1, 0)
-                    .setColor(color)
-                    .setUv(sprite.getU1(), sprite.getV1())
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .setUv2(combinedLight)
-                    .normal(0, 0, 1)
-                    ;
+                .setColor(color)
+                .setUv(sprite.getU1(), sprite.getV1())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
             buffer.addVertex(transform, x1, y0, 0)
-                    .setColor(color)
-                    .setUv(sprite.getU1(), sprite.getV0())
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .setUv2(combinedLight)
-                    .normal(0, 0, 1)
-                    ;
+                .setColor(color)
+                .setUv(sprite.getU1(), sprite.getV0())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
             buffer.addVertex(transform, x0, y0, 0)
-                    .setColor(color)
-                    .setUv(sprite.getU0(), sprite.getV0())
-                    .overlayCoords(OverlayTexture.NO_OVERLAY)
-                    .setUv2(combinedLight)
-                    .normal(0, 0, 1)
-                    ;
+                .setColor(color)
+                .setUv(sprite.getU0(), sprite.getV0())
+                .setOverlay(OverlayTexture.NO_OVERLAY)
+                .setLight(combinedLight)
+                .setNormal(0, 0, 1);
             poseStack.popPose();
         }
 
@@ -191,7 +182,7 @@ public class InitStackRenderHandlers {
 
             // Heuristic: If the last line doesn't include the modname, add it ourselves
             var modName = Platform.formatModName(stack.getModId());
-            if (tooltip.isEmpty() || !tooltip.get(tooltip.size() - 1).getString().equals(modName)) {
+            if (tooltip.isEmpty() || !tooltip.getLast().getString().equals(modName)) {
                 tooltip.add(Component.literal(modName));
             }
 

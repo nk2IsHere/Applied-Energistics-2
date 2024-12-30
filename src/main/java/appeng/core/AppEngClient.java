@@ -20,8 +20,10 @@ package appeng.core;
 
 import java.util.Objects;
 
+import appeng.core.network.serverbound.MouseWheelPacket;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,9 +78,6 @@ import appeng.client.render.effects.EnergyParticleData;
 import appeng.client.render.effects.ParticleTypes;
 import appeng.client.render.overlay.OverlayManager;
 import appeng.core.definitions.AEBlocks;
-import appeng.core.sync.network.ClientNetworkHandler;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.MouseWheelPacket;
 import appeng.helpers.IMouseWheelItem;
 import appeng.hooks.BlockAttackHook;
 import appeng.hooks.ICustomPickBlock;
@@ -271,7 +270,7 @@ public class AppEngClient extends AppEngBase {
             final boolean offHand = player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof IMouseWheelItem;
 
             if (mainHand || offHand) {
-                NetworkHandler.instance().sendToServer(new MouseWheelPacket(verticalAmount > 0));
+                ClientPlayNetworking.send(new MouseWheelPacket(verticalAmount > 0));
                 return true;
             }
         }
@@ -384,10 +383,6 @@ public class AppEngClient extends AppEngBase {
         }
 
         return this.getCableRenderModeForPlayer(mc.player);
-    }
-
-    protected void initNetworkHandler() {
-        new ClientNetworkHandler();
     }
 
     /**

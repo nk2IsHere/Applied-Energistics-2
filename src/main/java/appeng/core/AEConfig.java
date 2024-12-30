@@ -28,7 +28,7 @@ import java.util.function.DoubleSupplier;
 
 import appeng.api.config.CondenserOutput;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
+import appeng.api.config.PowerUnit;
 import appeng.api.config.Settings;
 import appeng.api.config.TerminalStyle;
 import appeng.api.networking.pathing.ChannelMode;
@@ -160,7 +160,7 @@ public final class AEConfig {
     }
 
     private void syncCommonConfig() {
-        PowerUnits.TR.conversionRatio = COMMON.powerRatioTechReborn.get();
+        PowerUnit.FE.conversionRatio = COMMON.powerRatioTechReborn.get();
         PowerMultiplier.CONFIG.multiplier = COMMON.powerUsageMultiplier.get();
 
         CondenserOutput.MATTER_BALLS.requiredPower = COMMON.condenserMatterBallsPower.get();
@@ -297,12 +297,12 @@ public final class AEConfig {
         syncCommonConfig();
     }
 
-    public PowerUnits getSelectedPowerUnit() {
+    public PowerUnit getSelectedPowerUnit() {
         return this.CLIENT.selectedPowerUnit.get();
     }
 
     public void nextPowerUnit(boolean backwards) {
-        PowerUnits selectedPowerUnit = EnumCycler.rotateEnum(getSelectedPowerUnit(), backwards,
+        PowerUnit selectedPowerUnit = EnumCycler.rotateEnum(getSelectedPowerUnit(), backwards,
                 Settings.POWER_UNITS.getValues());
         CLIENT.selectedPowerUnit.set(selectedPowerUnit);
     }
@@ -529,7 +529,7 @@ public final class AEConfig {
         public final BooleanOption disableColoredCableRecipesInJEI;
         public final BooleanOption enableFacadesInJEI;
         public final BooleanOption enableFacadeRecipesInJEI;
-        public final EnumOption<PowerUnits> selectedPowerUnit;
+        public final EnumOption<PowerUnit> selectedPowerUnit;
         public final BooleanOption debugGuiOverlays;
         public final BooleanOption showPlacementPreview;
         public final BooleanOption notifyForFinishedCraftingJobs;
@@ -564,7 +564,7 @@ public final class AEConfig {
             this.enableEffects = client.addBoolean("enableEffects", true);
             this.useLargeFonts = client.addBoolean("useTerminalUseLargeFont", false);
             this.useColoredCraftingStatus = client.addBoolean("useColoredCraftingStatus", true);
-            this.selectedPowerUnit = client.addEnum("PowerUnit", PowerUnits.AE, "Power unit shown in AE UIs");
+            this.selectedPowerUnit = client.addEnum("PowerUnit", PowerUnit.AE, "Power unit shown in AE UIs");
             this.debugGuiOverlays = client.addBoolean("showDebugGuiOverlays", false, "Show debugging GUI overlays");
             this.showPlacementPreview = client.addBoolean("showPlacementPreview", true,
                     "Show a preview of part and facade placement");

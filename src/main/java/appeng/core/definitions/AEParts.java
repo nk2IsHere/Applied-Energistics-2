@@ -18,15 +18,6 @@
 
 package appeng.core.definitions;
 
-import static appeng.core.definitions.AEItems.item;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.ids.AEPartIds;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
@@ -36,46 +27,29 @@ import appeng.core.AppEng;
 import appeng.items.parts.ColoredPartItem;
 import appeng.items.parts.PartItem;
 import appeng.items.parts.PartModelsHelper;
-import appeng.parts.automation.AnnihilationPlanePart;
-import appeng.parts.automation.AnnihilationPlanePartItem;
-import appeng.parts.automation.EnergyLevelEmitterPart;
-import appeng.parts.automation.ExportBusPart;
-import appeng.parts.automation.FormationPlanePart;
-import appeng.parts.automation.ImportBusPart;
-import appeng.parts.automation.StorageLevelEmitterPart;
+import appeng.parts.automation.*;
 import appeng.parts.crafting.PatternProviderPart;
 import appeng.parts.encoding.PatternEncodingTerminalPart;
 import appeng.parts.misc.CableAnchorPart;
 import appeng.parts.misc.InterfacePart;
 import appeng.parts.misc.InvertedToggleBusPart;
 import appeng.parts.misc.ToggleBusPart;
-import appeng.parts.networking.CoveredCablePart;
-import appeng.parts.networking.CoveredDenseCablePart;
-import appeng.parts.networking.EnergyAcceptorPart;
-import appeng.parts.networking.GlassCablePart;
-import appeng.parts.networking.QuartzFiberPart;
-import appeng.parts.networking.SmartCablePart;
-import appeng.parts.networking.SmartDenseCablePart;
-import appeng.parts.p2p.FEP2PTunnelPart;
-import appeng.parts.p2p.FluidP2PTunnelPart;
-import appeng.parts.p2p.ItemP2PTunnelPart;
-import appeng.parts.p2p.LightP2PTunnelPart;
-import appeng.parts.p2p.MEP2PTunnelPart;
-import appeng.parts.p2p.RedstoneP2PTunnelPart;
-import appeng.parts.reporting.ConversionMonitorPart;
-import appeng.parts.reporting.CraftingTerminalPart;
-import appeng.parts.reporting.DarkPanelPart;
-import appeng.parts.reporting.ItemTerminalPart;
-import appeng.parts.reporting.PanelPart;
-import appeng.parts.reporting.PatternAccessTerminalPart;
-import appeng.parts.reporting.SemiDarkPanelPart;
-import appeng.parts.reporting.StorageMonitorPart;
+import appeng.parts.networking.*;
+import appeng.parts.p2p.*;
+import appeng.parts.reporting.*;
 import appeng.parts.storagebus.StorageBusPart;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
+import static appeng.core.definitions.AEItems.item;
 
 /**
  * Internal implementation for the API parts
  */
-@SuppressWarnings("unused")
 public final class AEParts {
     public static final List<ColoredItemDefinition<?>> COLORED_PARTS = new ArrayList<>();
 
@@ -130,7 +104,7 @@ public final class AEParts {
             String englishName,
             ResourceLocation id,
             Class<T> partClass,
-            Function<FabricItemSettings, PartItem<T>> factory) {
+            Function<Item.Properties, PartItem<T>> factory) {
 
         PartModels.registerModels(PartModelsHelper.createModels(partClass));
         return item(englishName, id, factory);

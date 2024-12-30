@@ -25,14 +25,7 @@ import appeng.api.networking.pathing.IPathingService;
 import appeng.api.networking.spatial.ISpatialService;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.ITickManager;
-import appeng.me.service.CraftingService;
-import appeng.me.service.EnergyService;
-import appeng.me.service.P2PService;
-import appeng.me.service.PathingService;
-import appeng.me.service.SpatialPylonService;
-import appeng.me.service.StatisticsService;
-import appeng.me.service.StorageService;
-import appeng.me.service.TickManagerService;
+import appeng.me.service.*;
 
 public final class InitGridServices {
     private InitGridServices() {

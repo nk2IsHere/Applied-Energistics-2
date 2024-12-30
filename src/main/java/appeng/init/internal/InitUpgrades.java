@@ -18,13 +18,13 @@
 
 package appeng.init.internal;
 
-import java.util.List;
-
 import appeng.api.upgrades.Upgrades;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.AEParts;
 import appeng.core.localization.GuiText;
+
+import java.util.List;
 
 public final class InitUpgrades {
 

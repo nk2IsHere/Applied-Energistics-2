@@ -33,7 +33,7 @@ import appeng.api.ids.AEConstants;
 import appeng.api.parts.CableRenderMode;
 import appeng.client.EffectType;
 import appeng.client.guidebook.PageAnchor;
-import appeng.core.sync.BasePacket;
+import appeng.core.network.ClientboundPacket;
 
 public interface AppEng {
 
@@ -60,10 +60,11 @@ public interface AppEng {
      */
     Collection<ServerPlayer> getPlayers();
 
-    void sendToAllNearExcept(Player p, double x, double y, double z, double dist, Level level, BasePacket packet);
+    void sendToAllNearExcept(Player p, double x, double y, double z, double dist, Level level,
+                             ClientboundPacket packet);
 
     void spawnEffect(EffectType effect, Level level, double posX, double posY,
-            double posZ, Object o);
+                     double posZ, Object o);
 
     /**
      * Sets the player that is currently interacting with a cable or part attached to a cable. This will return that

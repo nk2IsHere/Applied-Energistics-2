@@ -26,7 +26,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 
 import appeng.menu.implementations.CellWorkbenchMenu;
-import appeng.menu.implementations.ChestMenu;
 import appeng.menu.implementations.CondenserMenu;
 import appeng.menu.implementations.DriveMenu;
 import appeng.menu.implementations.EnergyLevelEmitterMenu;
@@ -35,6 +34,7 @@ import appeng.menu.implementations.IOBusMenu;
 import appeng.menu.implementations.IOPortMenu;
 import appeng.menu.implementations.InscriberMenu;
 import appeng.menu.implementations.InterfaceMenu;
+import appeng.menu.implementations.MEChestMenu;
 import appeng.menu.implementations.MolecularAssemblerMenu;
 import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.implementations.PatternProviderMenu;
@@ -54,6 +54,7 @@ import appeng.menu.me.crafting.CraftAmountMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import appeng.menu.me.crafting.CraftingStatusMenu;
+import appeng.menu.me.items.BasicCellChestMenu;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.me.items.WirelessCraftingTermMenu;
@@ -68,45 +69,46 @@ public final class InitMenuTypes {
 
     public static void init(Registry<MenuType<?>> registry) {
         registerAll(registry,
-                CellWorkbenchMenu.TYPE,
-                ChestMenu.TYPE,
-                CondenserMenu.TYPE,
-                CraftAmountMenu.TYPE,
-                CraftConfirmMenu.TYPE,
-                CraftingCPUMenu.TYPE,
-                CraftingStatusMenu.TYPE,
-                CraftingTermMenu.TYPE,
-                DriveMenu.TYPE,
-                EnergyLevelEmitterMenu.TYPE,
-                FormationPlaneMenu.TYPE,
-                IOBusMenu.EXPORT_TYPE,
-                IOBusMenu.IMPORT_TYPE,
-                IOPortMenu.TYPE,
-                InscriberMenu.TYPE,
-                InterfaceMenu.TYPE,
-                MEStorageMenu.TYPE,
-                MEStorageMenu.PORTABLE_FLUID_CELL_TYPE,
-                MEStorageMenu.PORTABLE_ITEM_CELL_TYPE,
-                MEStorageMenu.WIRELESS_TYPE,
-                MolecularAssemblerMenu.TYPE,
-                NetworkStatusMenu.NETWORK_TOOL_TYPE,
-                NetworkStatusMenu.CONTROLLER_TYPE,
-                NetworkToolMenu.TYPE,
-                PatternAccessTermMenu.TYPE,
-                PatternProviderMenu.TYPE,
-                PatternEncodingTermMenu.TYPE,
-                PriorityMenu.TYPE,
-                QNBMenu.TYPE,
-                QuartzKnifeMenu.TYPE,
-                SetStockAmountMenu.TYPE,
-                SkyChestMenu.TYPE,
-                SpatialAnchorMenu.TYPE,
-                SpatialIOPortMenu.TYPE,
-                StorageBusMenu.TYPE,
-                StorageLevelEmitterMenu.TYPE,
-                VibrationChamberMenu.TYPE,
-                WirelessCraftingTermMenu.TYPE,
-                WirelessAccessPointMenu.TYPE);
+            BasicCellChestMenu.TYPE,
+            CellWorkbenchMenu.TYPE,
+            MEChestMenu.TYPE,
+            CondenserMenu.TYPE,
+            CraftAmountMenu.TYPE,
+            CraftConfirmMenu.TYPE,
+            CraftingCPUMenu.TYPE,
+            CraftingStatusMenu.TYPE,
+            CraftingTermMenu.TYPE,
+            DriveMenu.TYPE,
+            EnergyLevelEmitterMenu.TYPE,
+            FormationPlaneMenu.TYPE,
+            IOBusMenu.EXPORT_TYPE,
+            IOBusMenu.IMPORT_TYPE,
+            IOPortMenu.TYPE,
+            InscriberMenu.TYPE,
+            InterfaceMenu.TYPE,
+            MEStorageMenu.TYPE,
+            MEStorageMenu.PORTABLE_FLUID_CELL_TYPE,
+            MEStorageMenu.PORTABLE_ITEM_CELL_TYPE,
+            MEStorageMenu.WIRELESS_TYPE,
+            MolecularAssemblerMenu.TYPE,
+            NetworkStatusMenu.NETWORK_TOOL_TYPE,
+            NetworkStatusMenu.CONTROLLER_TYPE,
+            NetworkToolMenu.TYPE,
+            PatternAccessTermMenu.TYPE,
+            PatternProviderMenu.TYPE,
+            PatternEncodingTermMenu.TYPE,
+            PriorityMenu.TYPE,
+            QNBMenu.TYPE,
+            QuartzKnifeMenu.TYPE,
+            SetStockAmountMenu.TYPE,
+            SkyChestMenu.TYPE,
+            SpatialAnchorMenu.TYPE,
+            SpatialIOPortMenu.TYPE,
+            StorageBusMenu.TYPE,
+            StorageLevelEmitterMenu.TYPE,
+            VibrationChamberMenu.TYPE,
+            WirelessCraftingTermMenu.TYPE,
+            WirelessAccessPointMenu.TYPE);
     }
 
     private static void registerAll(Registry<MenuType<?>> registry, MenuType<?>... types) {
@@ -117,8 +119,6 @@ public final class InitMenuTypes {
         }
         REGISTRATION_QUEUE.clear();
 
-        // Fabric registers the container types at creation time, we just do this
-        // to ensure all static CTORs are called in a predictable manner
         for (var type : types) {
             if (registry.getResourceKey(type).isEmpty()) {
                 throw new IllegalStateException("Menu Type " + type + " is not registered");

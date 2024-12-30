@@ -18,14 +18,13 @@
 
 package appeng.core.definitions;
 
-import java.util.EnumMap;
-import java.util.Map;
-
+import appeng.api.util.AEColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import appeng.api.util.AEColor;
+import java.util.EnumMap;
+import java.util.Map;
 
 public final class ColoredItemDefinition<T extends Item> {
 

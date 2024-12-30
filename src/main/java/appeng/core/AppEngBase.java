@@ -18,11 +18,16 @@
 
 package appeng.core;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import appeng.core.definitions.*;
+import appeng.core.network.ClientboundPacket;
+import appeng.recipes.AERecipeTypes;
 import com.mojang.brigadier.CommandDispatcher;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -37,38 +42,22 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 
 import appeng.api.IAEAddonEntrypoint;
 import appeng.api.parts.CableRenderMode;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.core.sync.BasePacket;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.network.ServerNetworkHandler;
 import appeng.hooks.ToolItemHook;
 import appeng.hooks.WrenchHook;
 import appeng.hooks.ticking.TickHandler;
 import appeng.hotkeys.HotkeyActions;
 import appeng.init.InitApiLookup;
-import appeng.init.InitBlockEntities;
-import appeng.init.InitBlocks;
 import appeng.init.InitCauldronInteraction;
 import appeng.init.InitDispenserBehavior;
-import appeng.init.InitEntityTypes;
-import appeng.init.InitItems;
 import appeng.init.InitMenuTypes;
-import appeng.init.InitRecipeSerializers;
 import appeng.init.InitVillager;
 import appeng.init.client.InitKeyTypes;
 import appeng.init.client.InitParticleTypes;
@@ -118,8 +107,6 @@ public abstract class AppEngBase implements AppEng {
         InitKeyTypes.init();
 
         // Initialize items in order
-        AEItems.init();
-        AEBlocks.init();
         AEParts.init();
 
         // Now that item instances are available, we can initialize registries that need item instances
@@ -129,13 +116,13 @@ public abstract class AppEngBase implements AppEng {
 
         registerCreativeTabs(BuiltInRegistries.CREATIVE_MODE_TAB);
         registerDimension();
-        registerBlocks(BuiltInRegistries.BLOCK);
-        registerItems(BuiltInRegistries.ITEM);
-        registerEntities(BuiltInRegistries.ENTITY_TYPE);
+        AEItems.DR.register();
+        AEBlocks.DR.register();
+        AEEntities.DR.register();
         registerParticleTypes(BuiltInRegistries.PARTICLE_TYPE);
-        registerBlockEntities(BuiltInRegistries.BLOCK_ENTITY_TYPE);
+        AEBlockEntities.DR.register();
         registerMenuTypes(BuiltInRegistries.MENU);
-        registerRecipeSerializers(BuiltInRegistries.RECIPE_SERIALIZER);
+        AERecipeTypes.DR.register();
         registerStructures(BuiltInRegistries.STRUCTURE_TYPE);
         registerSounds(BuiltInRegistries.SOUND_EVENT);
 
@@ -167,35 +154,10 @@ public abstract class AppEngBase implements AppEng {
 
         AEConfig.instance().save();
         InitUpgrades.init();
-        initNetworkHandler();
-    }
-
-    protected void initNetworkHandler() {
-        new ServerNetworkHandler();
-    }
-
-    public void registerBlocks(Registry<Block> registry) {
-        InitBlocks.init(registry);
-    }
-
-    public void registerItems(Registry<Item> registry) {
-        InitItems.init(registry);
-    }
-
-    public void registerBlockEntities(Registry<BlockEntityType<?>> registry) {
-        InitBlockEntities.init(registry);
     }
 
     public void registerMenuTypes(Registry<MenuType<?>> registry) {
         InitMenuTypes.init(registry);
-    }
-
-    public void registerRecipeSerializers(Registry<RecipeSerializer<?>> registry) {
-        InitRecipeSerializers.init(registry);
-    }
-
-    public void registerEntities(Registry<EntityType<?>> registry) {
-        InitEntityTypes.init(registry);
     }
 
     public void registerParticleTypes(Registry<ParticleType<?>> registry) {
@@ -254,18 +216,22 @@ public abstract class AppEngBase implements AppEng {
 
     @Override
     public void sendToAllNearExcept(Player p, double x, double y, double z,
-            double dist, Level level, BasePacket packet) {
+            double dist, Level level, ClientboundPacket packet) {
         if (level.isClientSide()) {
             return;
         }
         for (ServerPlayer o : getPlayers()) {
-            if (o != p && o.level() == level) {
-                final double dX = x - o.getX();
-                final double dY = y - o.getY();
-                final double dZ = z - o.getZ();
-                if (dX * dX + dY * dY + dZ * dZ < dist * dist) {
-                    NetworkHandler.instance().sendTo(packet, o);
+            try (var otherPlayerLevel = o.level()) {
+                if (o != p && otherPlayerLevel == level) {
+                    final double dX = x - o.getX();
+                    final double dY = y - o.getY();
+                    final double dZ = z - o.getZ();
+                    if (dX * dX + dY * dY + dZ * dZ < dist * dist) {
+                        ServerPlayNetworking.send(o, packet);
+                    }
                 }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -288,8 +254,8 @@ public abstract class AppEngBase implements AppEng {
 
     protected final CableRenderMode getCableRenderModeForPlayer(@Nullable Player player) {
         if (player != null) {
-            if (AEItems.NETWORK_TOOL.isSameAs(player.getItemInHand(InteractionHand.MAIN_HAND))
-                    || AEItems.NETWORK_TOOL.isSameAs(player.getItemInHand(InteractionHand.OFF_HAND))) {
+            if (AEItems.NETWORK_TOOL.is(player.getItemInHand(InteractionHand.MAIN_HAND))
+                    || AEItems.NETWORK_TOOL.is(player.getItemInHand(InteractionHand.OFF_HAND))) {
                 return CableRenderMode.CABLE_VIEW;
             }
         }

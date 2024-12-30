@@ -1,6 +1,5 @@
 package appeng.helpers.patternprovider;
 
-import appeng.api.AECapabilities;
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
@@ -19,8 +18,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static appeng.api.AECapabilities.ME_STORAGE;
-
 class PatternProviderTargetCache {
     private final BlockApiCache<MEStorage, Direction> cache;
     private final IActionSource src;
@@ -28,7 +25,7 @@ class PatternProviderTargetCache {
     private final Direction direction;
 
     PatternProviderTargetCache(ServerLevel l, BlockPos pos, Direction direction, IActionSource src) {
-        this.cache = BlockApiCache.create(ME_STORAGE, l, pos);
+        this.cache = BlockApiCache.create(MEStorage.SIDED, l, pos);
         this.src = src;
         this.direction = direction;
         this.strategies = StackWorldBehaviors.createExternalStorageStrategies(l, pos, direction);

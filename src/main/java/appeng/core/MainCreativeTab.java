@@ -21,8 +21,11 @@ package appeng.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 
 import appeng.api.ids.AECreativeTabIds;
@@ -35,6 +38,8 @@ import appeng.items.AEBaseItem;
 
 public final class MainCreativeTab {
 
+    private static final Multimap<ResourceKey<CreativeModeTab>, ItemDefinition<?>> externalItemDefs = HashMultimap
+        .create();
     private static final List<ItemDefinition<?>> itemDefs = new ArrayList<>();
 
     public static void init(Registry<CreativeModeTab> registry) {
@@ -50,6 +55,10 @@ public final class MainCreativeTab {
         itemDefs.add(itemDef);
     }
 
+    public static void addExternal(ResourceKey<CreativeModeTab> tab, ItemDefinition<?> itemDef) {
+        externalItemDefs.put(tab, itemDef);
+    }
+
     private static void buildDisplayItems(CreativeModeTab.ItemDisplayParameters itemDisplayParameters,
             CreativeModeTab.Output output) {
         for (var itemDef : itemDefs) {
@@ -57,10 +66,10 @@ public final class MainCreativeTab {
 
             // For block items, the block controls the creative tab
             if (item instanceof AEBaseBlockItem baseItem
-                    && baseItem.getBlock() instanceof AEBaseBlock baseBlock) {
-                baseBlock.addToMainCreativeTab(output);
+                && baseItem.getBlock() instanceof AEBaseBlock baseBlock) {
+                baseBlock.addToMainCreativeTab(itemDisplayParameters, output);
             } else if (item instanceof AEBaseItem baseItem) {
-                baseItem.addToMainCreativeTab(output);
+                baseItem.addToMainCreativeTab(itemDisplayParameters, output);
             } else {
                 output.accept(itemDef);
             }

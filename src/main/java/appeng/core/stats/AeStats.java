@@ -18,10 +18,9 @@
 
 package appeng.core.stats;
 
+import appeng.core.AppEng;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-
-import appeng.core.AppEng;
 
 public enum AeStats {
 
@@ -32,7 +31,7 @@ public enum AeStats {
     private final ResourceLocation registryName;
 
     AeStats(String id) {
-        this.registryName = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, id);
+        this.registryName = AppEng.makeId(id);
     }
 
     public void addToPlayer(Player player, int howMany) {

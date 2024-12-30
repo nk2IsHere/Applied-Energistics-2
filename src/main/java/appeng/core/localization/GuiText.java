@@ -18,9 +18,8 @@
 
 package appeng.core.localization;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 public enum GuiText implements LocalizationEnum {
     inventory(null, "container"), // mc's default Inventory localization.
@@ -45,12 +44,13 @@ public enum GuiText implements LocalizationEnum {
     CertusQuartzObtain(
             "Certus Quartz is grown by the various Budding Certus Quartz blocks, which can be found in meteors, or crafted from regular Certus Quartz blocks."),
     ChannelEnergyDrain("Channel Passive Drain: %s"),
-    Chest("ME Chest"),
     Clean("Clean"),
     CompatibleUpgrade("%s (%s)"),
     CompatibleUpgrades("Compatible Upgrades:"),
     Condenser("Matter Condenser"),
     Config("Config"),
+    ConfigureImportedTypes("Configure Imported Types"),
+    ConfigureVisibleTypes("Configure Visible Types"),
     ConfirmCraftCpuStatus("Storage: %s : Co Processors: %s"),
     ConfirmCraftNoCpu("Storage: N/A : Co Processors: N/A"),
     CopyMode("Copy Mode"),
@@ -111,6 +111,7 @@ public enum GuiText implements LocalizationEnum {
     IOPort("ME IO Port"),
     ImportBus("ME Import Bus"),
     ImportBusFluids("ME Fluid Import Bus"),
+    IncompatibleWithCell("Incompatible with cell"),
     InWorldCrafting("AE2 In World Crafting"),
     Included("Included"),
     IncreasedEnergyUseFromEnchants("Enchants increase energy use"),
@@ -123,17 +124,16 @@ public enum GuiText implements LocalizationEnum {
     InvalidPattern("Invalid Pattern"),
     InvalidSingularity("Invalid Singularity"),
     Items("Items"),
-    // Used in a terminal to indicate that an item is craftable
-    LargeFontCraft("+"),
     LevelEmitter("ME Level Emitter"),
     LightBlue("Light Blue"),
     LightGray("Light Gray"),
     Lime("Lime"),
     Linked("Linked"),
     Lumen("Lumen"),
-    MENetworkStorage("ME Network Storage"),
     Magenta("Magenta"),
     MaxPower("Max Power: %s"),
+    MEChest("ME Chest"),
+    MENetworkStorage("ME Network Storage"),
     Missing("Missing: %s"),
     MolecularAssembler("Molecular Assembler"),
     MultipleOutputs("%1$d%% second, %2$d%% third output."),
@@ -154,6 +154,7 @@ public enum GuiText implements LocalizationEnum {
     OCTunnel("OpenComputers"),
     Of("of"),
     OfSecondOutput("%1$d%% Chance for second output."),
+    OutOfPower("Out of Power"),
     Orange("Orange"),
     P2PAttunementEnergy("Portable Energy Storage (i.e. Batteries)"),
     P2PAttunementFluid("Portable Fluid Storage (i.e. Tanks, Buckets)"),
@@ -164,6 +165,8 @@ public enum GuiText implements LocalizationEnum {
     PatternAccessTerminalShort("Pattern A. Terminal"),
     PatternEncoding("Pattern Encoding"),
     Patterns("Patterns"),
+    PatternTooltipSubstitutions("Substitutes alternate items"),
+    PatternTooltipFluidSubstitutions("Uses fluids directly"),
     Pink("Pink"),
     PortableCell("Portable Cell"),
     PowerInputRate("Energy Generation: %s"),
@@ -195,7 +198,6 @@ public enum GuiText implements LocalizationEnum {
     ShowingOf("Showing %d of %d"),
     SkyChest("Sky Stone Chest"),
     // Used in a terminal to indicate that an item is craftable
-    SmallFontCraft("Craft"),
     SmithingTablePattern("Smithing Table Patterns"),
     SpatialAnchor("Spatial Anchor"),
     SpatialAnchorAll("Spanning: %d chunks in %d worlds"),
@@ -234,7 +236,6 @@ public enum GuiText implements LocalizationEnum {
     StoredPower("Stored Power: %s"),
     StoredSize("Stored Size: %dx%dx%d"),
     Stores("Stores"),
-    Substitute("Using Substitutions:"),
     TankAmount("Amount: %d"),
     TankCapacity("Capacity: %d"),
     TankBucketCapacity("Can Store up to %d Buckets"),

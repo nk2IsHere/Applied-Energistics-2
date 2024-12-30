@@ -26,13 +26,14 @@ public enum PlayerMessages implements LocalizationEnum {
     ClickToShowDetails("Click to show details"),
     ClickToTeleport("Click to teleport into plot"),
     CommunicationError("Error Communicating with Network."),
+    CraftingCpuBusy("This crafting CPU is busy!"),
     DeviceNotLinked("Device is not linked."),
     LinkedNetworkNotFound("Linked network cannot be found"),
     DeviceNotPowered("Device is low on power."),
     MissingBlankPatterns("Not enough blank pattern to restore patterns (missing %d)."),
     MissingUpgrades("Not enough %s to restore upgrades (missing %d)."),
-    InvalidMachine("Could not restore configuration for an incompatible device."),
-    InvalidMachinePartiallyRestored("Partially restored configuration for an incompatible device: %s."),
+    InvalidMachine("Could not load configuration from an incompatible device."),
+    InvalidMachinePartiallyRestored("Partially loaded configuration: %s."),
     LastTransition("Last Transition:"),
     LastTransitionUnknown("Last Transition unknown"),
     LoadedSettings("Loaded device configuration from memory card."),
@@ -74,7 +75,10 @@ public enum PlayerMessages implements LocalizationEnum {
     MaxUpgradesOfTypeInstalled("No further upgrade cards of this type can be installed."),
     MaxUpgradesInstalled("The upgrade capacity of this machine has been reached."),
     UnknownHotkey("Unknown Hotkey: "),
-    SpecialThanks("Special thanks to %s");
+    SpecialThanks("Special thanks to %s"),
+    FacadePropertySelected("Now cycling through property '%s'."),
+    FacadePropertyWrapped(
+            "Wrapped around to the first value of '%s'. You can change properties by hitting the facade.");
 
     private final String englishText;
 

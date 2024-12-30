@@ -1,5 +1,6 @@
 package appeng.init;
 
+import appeng.api.implementations.blockentities.ICrankable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 
@@ -7,7 +8,6 @@ import team.reborn.energy.api.EnergyStorage;
 
 import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.implementations.blockentities.ICraftingMachine;
-import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.inventories.PartApiLookup;
 import appeng.api.storage.MEStorage;
@@ -16,7 +16,7 @@ import appeng.blockentity.misc.ChargerBlockEntity;
 import appeng.blockentity.misc.GrowthAcceleratorBlockEntity;
 import appeng.blockentity.misc.InscriberBlockEntity;
 import appeng.blockentity.powersink.AEBasePoweredBlockEntity;
-import appeng.blockentity.storage.ChestBlockEntity;
+import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.blockentity.storage.SkyStoneTankBlockEntity;
 import appeng.core.definitions.AEBlockEntities;
 import appeng.helpers.externalstorage.GenericStackFluidStorage;
@@ -88,28 +88,28 @@ public final class InitApiLookup {
 
     private static void initEnergyAcceptors() {
         PartApiLookup.register(EnergyStorage.SIDED, (part, context) -> part.getEnergyAdapter(),
-                EnergyAcceptorPart.class);
+            EnergyAcceptorPart.class);
         // The block version is handled by the generic fallback registration for AEBasePoweredBlockEntity
     }
 
     private static void initInterface() {
         PartApiLookup.register(GenericInternalInventory.SIDED, (part, context) -> part.getInterfaceLogic().getStorage(),
-                InterfacePart.class);
+            InterfacePart.class);
         GenericInternalInventory.SIDED.registerForBlockEntity(
-                (blockEntity, context) -> blockEntity.getInterfaceLogic().getStorage(), AEBlockEntities.INTERFACE);
+            (blockEntity, context) -> blockEntity.getInterfaceLogic().getStorage(), AEBlockEntities.INTERFACE.get());
 
         PartApiLookup.register(MEStorage.SIDED,
-                (part, context) -> part.getInterfaceLogic().getInventory(), InterfacePart.class);
+            (part, context) -> part.getInterfaceLogic().getInventory(), InterfacePart.class);
         MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
             return blockEntity.getInterfaceLogic().getInventory();
-        }, AEBlockEntities.INTERFACE);
+        }, AEBlockEntities.INTERFACE.get());
     }
 
     private static void initPatternProvider() {
         PartApiLookup.register(GenericInternalInventory.SIDED, (part, context) -> part.getLogic().getReturnInv(),
-                PatternProviderPart.class);
+            PatternProviderPart.class);
         GenericInternalInventory.SIDED.registerForBlockEntity(
-                (blockEntity, context) -> blockEntity.getLogic().getReturnInv(), AEBlockEntities.PATTERN_PROVIDER);
+            (blockEntity, context) -> blockEntity.getLogic().getReturnInv(), AEBlockEntities.PATTERN_PROVIDER.get());
     }
 
     private static void initCondenser() {
@@ -117,29 +117,29 @@ public final class InitApiLookup {
         // (unlike the base class it derives from)
         ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
             return blockEntity.getExternalInv().toStorage();
-        }, AEBlockEntities.CONDENSER);
+        }, AEBlockEntities.CONDENSER.get());
         FluidStorage.SIDED.registerForBlockEntity(((blockEntity, context) -> {
             return blockEntity.getFluidHandler();
-        }), AEBlockEntities.CONDENSER);
+        }), AEBlockEntities.CONDENSER.get());
         MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
             return blockEntity.getMEStorage();
-        }, AEBlockEntities.CONDENSER);
+        }, AEBlockEntities.CONDENSER.get());
     }
 
     private static void initMEChest() {
-        FluidStorage.SIDED.registerForBlockEntity(ChestBlockEntity::getFluidHandler, AEBlockEntities.CHEST);
-        MEStorage.SIDED.registerForBlockEntity(ChestBlockEntity::getMEStorage, AEBlockEntities.CHEST);
+        FluidStorage.SIDED.registerForBlockEntity(MEChestBlockEntity::getFluidHandler, AEBlockEntities.ME_CHEST.get());
+        MEStorage.SIDED.registerForBlockEntity(MEChestBlockEntity::getMEStorage, AEBlockEntities.ME_CHEST.get());
     }
 
     private static void initMisc() {
-        ICraftingMachine.SIDED.registerSelf(AEBlockEntities.MOLECULAR_ASSEMBLER);
+        ICraftingMachine.SIDED.registerSelf(AEBlockEntities.MOLECULAR_ASSEMBLER.get());
         ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
             return blockEntity.getItemHandler();
-        }, AEBlockEntities.DEBUG_ITEM_GEN);
-        EnergyStorage.SIDED.registerSelf(AEBlockEntities.DEBUG_ENERGY_GEN);
-        FluidStorage.SIDED.registerForBlockEntity(SkyStoneTankBlockEntity::getStorage, AEBlockEntities.SKY_STONE_TANK);
+        }, AEBlockEntities.DEBUG_ITEM_GEN.get());
+        EnergyStorage.SIDED.registerSelf(AEBlockEntities.DEBUG_ENERGY_GEN.get());
+        FluidStorage.SIDED.registerForBlockEntity(SkyStoneTankBlockEntity::getStorage, AEBlockEntities.SKY_STONE_TANK.get());
         PartApiLookup.register(ItemStorage.SIDED, (part, direction) -> part.getLogic().getBlankPatternInv().toStorage(),
-                PatternEncodingTerminalPart.class);
+            PatternEncodingTerminalPart.class);
     }
 
     private static void initPoweredItem() {
@@ -152,10 +152,10 @@ public final class InitApiLookup {
     }
 
     private static void initCrankable() {
-        ICrankable.LOOKUP.registerForBlockEntity(ChargerBlockEntity::getCrankable, AEBlockEntities.CHARGER);
-        ICrankable.LOOKUP.registerForBlockEntity(InscriberBlockEntity::getCrankable, AEBlockEntities.INSCRIBER);
-        ICrankable.LOOKUP.registerForBlockEntity(GrowthAcceleratorBlockEntity::getCrankable,
-                AEBlockEntities.GROWTH_ACCELERATOR);
+        ICrankable.SIDED.registerForBlockEntity(ChargerBlockEntity::getCrankable, AEBlockEntities.CHARGER.get());
+        ICrankable.SIDED.registerForBlockEntity(InscriberBlockEntity::getCrankable, AEBlockEntities.INSCRIBER.get());
+        ICrankable.SIDED.registerForBlockEntity(GrowthAcceleratorBlockEntity::getCrankable,
+            AEBlockEntities.GROWTH_ACCELERATOR.get());
     }
 
 }

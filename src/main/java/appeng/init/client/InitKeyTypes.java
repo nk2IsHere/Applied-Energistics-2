@@ -19,7 +19,7 @@ public final class InitKeyTypes {
         var registry = FabricRegistryBuilder
                 .createSimple(AEKeyType.class, REGISTRY_ID)
                 .attribute(RegistryAttribute.SYNCED)
-                .attribute(RegistryAttribute.PERSISTED)
+                .attribute(RegistryAttribute.MODDED)
                 .buildAndRegister();
         AEKeyTypesInternal.setRegistry(registry);
 

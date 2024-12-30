@@ -38,8 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static appeng.api.AECapabilities.IN_WORLD_GRID_NODE_HOST;
-
 /**
  * A helper responsible for creating new {@link IGridNode}, connecting existing nodes, and related features.
  */
@@ -133,7 +131,7 @@ public final class GridHelper {
         if (be instanceof IInWorldGridNodeHost host) {
             return host;
         }
-        return IN_WORLD_GRID_NODE_HOST.find(level, pos, null, be, null);
+        return IInWorldGridNodeHost.LOOKUP.find(level, pos, null, be, null);
     }
 
     /**

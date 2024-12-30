@@ -18,26 +18,24 @@
 
 package appeng.core.definitions;
 
-import java.util.Objects;
-
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.util.helpers.ItemComparisonHelper;
+import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.util.helpers.ItemComparisonHelper;
+import java.util.function.Supplier;
 
-public class ItemDefinition<T extends Item> implements ItemLike {
-    private final ResourceLocation id;
+public class ItemDefinition<T extends Item> implements ItemLike, Supplier<T> {
     private final String englishName;
-    private final T item;
+    private final RegistrySupplier<T> item;
 
-    public ItemDefinition(String englishName, ResourceLocation id, T item) {
-        Objects.requireNonNull(id, "id");
-        this.id = id;
+    public ItemDefinition(String englishName, RegistrySupplier<T> item) {
         this.englishName = englishName;
         this.item = item;
     }
@@ -47,7 +45,7 @@ public class ItemDefinition<T extends Item> implements ItemLike {
     }
 
     public ResourceLocation id() {
-        return this.id;
+        return this.item.getId();
     }
 
     public ItemStack stack() {
@@ -55,36 +53,63 @@ public class ItemDefinition<T extends Item> implements ItemLike {
     }
 
     public ItemStack stack(int stackSize) {
-        return new ItemStack(item, stackSize);
+        return new ItemStack((ItemLike) item, stackSize);
     }
 
     public GenericStack genericStack(long stackSize) {
-        return new GenericStack(AEItemKey.of(item), stackSize);
+        return new GenericStack(AEItemKey.of((ItemLike) item), stackSize);
+    }
+
+    public Holder<Item> holder() {
+        return (Holder<Item>) item;
     }
 
     /**
      * Compare {@link ItemStack} with this
      *
      * @param comparableStack compared item
-     *
      * @return true if the item stack is a matching item.
      */
+    @Deprecated(forRemoval = true, since = "1.21")
     public final boolean isSameAs(ItemStack comparableStack) {
+        return is(comparableStack);
+    }
+
+    /**
+     * Compare {@link ItemStack} with this
+     *
+     * @param comparableStack compared item
+     * @return true if the item stack is a matching item.
+     */
+    public final boolean is(ItemStack comparableStack) {
         return ItemComparisonHelper.isEqualItemType(comparableStack, this.stack());
     }
 
     /**
      * @return True if this item is represented by the given key.
      */
-    public final boolean isSameAs(AEKey key) {
+    public final boolean is(AEKey key) {
         if (key instanceof AEItemKey itemKey) {
-            return item == itemKey.getItem();
+            return asItem() == itemKey.getItem();
         }
         return false;
     }
 
+    /**
+     * @return True if this item is represented by the given key.
+     */
+    @Deprecated(forRemoval = true, since = "1.21")
+    public final boolean isSameAs(AEKey key) {
+        return is(key);
+    }
+
+    @Override
+    public T get() {
+        return item.get();
+    }
+
     @Override
     public T asItem() {
-        return item;
+        return item.get();
     }
 }

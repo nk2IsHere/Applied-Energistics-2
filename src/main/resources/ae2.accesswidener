@@ -28,7 +28,6 @@ accessible field net/minecraft/world/inventory/AbstractContainerMenu stateId I
 extendable method net/minecraft/world/entity/item/ItemEntity setUnderwaterMovement ()V
 
 # structures
-#accessible method net/minecraft/world/level/levelgen/structure/StructureType register (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/level/levelgen/structure/StructureType;
 accessible method net/minecraft/world/level/levelgen/structure/pieces/StructurePieceType setPieceId (Lnet/minecraft/world/level/levelgen/structure/pieces/StructurePieceType$ContextlessType;Ljava/lang/String;)Lnet/minecraft/world/level/levelgen/structure/pieces/StructurePieceType;
 
 # features

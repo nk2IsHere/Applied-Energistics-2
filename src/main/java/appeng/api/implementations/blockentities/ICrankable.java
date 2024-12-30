@@ -23,14 +23,13 @@
 
 package appeng.api.implementations.blockentities;
 
-import appeng.api.AECapabilities;
+import appeng.core.AppEng;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-
-import static appeng.api.AECapabilities.CRANKABLE;
 
 /**
  * Crank/Crankable API,
@@ -38,9 +37,13 @@ import static appeng.api.AECapabilities.CRANKABLE;
  * Blocks that expose this interface via Api lookup can receive power from the crank. A block can return this interface
  * only on specific sides to control where it can attach to.
  * <p>
- * Cranks obtain this interface from a block using {@link AECapabilities#CRANKABLE}.
+ * Cranks obtain this interface from a block using {@link #SIDED}.
  */
 public interface ICrankable {
+
+    BlockApiLookup<ICrankable, Direction> SIDED = BlockApiLookup.get(
+        AppEng.makeId("crankable"),
+        ICrankable.class, Direction.class);
 
     /**
      * Test if the crank can turn, return false if there is no work to be done.
@@ -56,6 +59,6 @@ public interface ICrankable {
 
     @Nullable
     static ICrankable get(Level level, BlockPos pos, Direction side) {
-        return CRANKABLE.find(level, pos, null, null, side);
+        return SIDED.find(level, pos, null, null, side);
     }
 }

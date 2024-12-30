@@ -34,7 +34,7 @@ public final class InitEntityRendering {
     }
 
     public static void init(RendererConsumer consumer) {
-        consumer.register(AEEntities.TINY_TNT_PRIMED, TinyTNTPrimedRenderer::new);
+        consumer.register(AEEntities.TINY_TNT_PRIMED.get(), TinyTNTPrimedRenderer::new);
     }
 
     @FunctionalInterface

@@ -57,12 +57,12 @@ public final class FacadeCreativeTab {
     }
 
     private static void buildDisplayItems(CreativeModeTab.ItemDisplayParameters displayParameters,
-            CreativeModeTab.Output output) {
+                                          CreativeModeTab.Output output) {
         // We need to create our own set since vanilla doesn't allow duplicates, but we cannot guarantee
         // uniqueness
-        var facades = ItemStackLinkedSet.createTypeAndTagSet();
+        var facades = ItemStackLinkedSet.createTypeAndComponentsSet();
 
-        var itemFacade = AEItems.FACADE.asItem();// Collect all variants of this item from creative tabs
+        var itemFacade = AEItems.FACADE.get();// Collect all variants of this item from creative tabs
         try {
             for (var tab : CreativeModeTabs.allTabs()) {
                 if (tab == group) {

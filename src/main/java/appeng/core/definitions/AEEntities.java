@@ -18,54 +18,51 @@
 
 package appeng.core.definitions;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
+import appeng.core.AppEng;
+import appeng.entity.TinyTNTPrimedEntity;
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.SharedConstants;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityType.Builder;
 import net.minecraft.world.entity.EntityType.EntityFactory;
 import net.minecraft.world.entity.MobCategory;
 
-import appeng.entity.TinyTNTPrimedEntity;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public final class AEEntities {
 
-    private static final Map<ResourceLocation, EntityType<?>> ENTITY_TYPES = new HashMap<>();
+    public static final DeferredRegister<EntityType<?>> DR = DeferredRegister.create(AppEng.MOD_ID, Registries.ENTITY_TYPE);
+
     public static final Map<String, String> ENTITY_ENGLISH_NAMES = new HashMap<>();
 
-    public static Map<ResourceLocation, EntityType<?>> getEntityTypes() {
-        return Collections.unmodifiableMap(ENTITY_TYPES);
-    }
-
-    public static final EntityType<TinyTNTPrimedEntity> TINY_TNT_PRIMED = create(
+    public static final RegistrySupplier<EntityType<TinyTNTPrimedEntity>> TINY_TNT_PRIMED = create(
             "tiny_tnt_primed",
             "Tiny TNT Primed",
             TinyTNTPrimedEntity::new,
             MobCategory.MISC,
-            builder -> builder.clientTrackingRange(16).updateInterval(4));
+            builder -> builder.clientTrackingRange(16).updateInterval(4).alwaysUpdateVelocity(true));
 
-    private static <T extends Entity> EntityType<T> create(String id,
+    private static <T extends Entity> RegistrySupplier<EntityType<T>> create(String id,
             String englishName,
             EntityFactory<T> entityFactory,
             MobCategory classification,
             Consumer<Builder<T>> customizer) {
-
-        String registryLoc = "ae2:" + id;
         ENTITY_ENGLISH_NAMES.put(id, englishName);
-        Builder<T> builder = Builder.of(entityFactory, classification);
-        customizer.accept(builder);
-        // Temporarily disable the data fixer check to avoid the annoying "no data fixer registered for ae2:xxx".
-        boolean prev = SharedConstants.CHECK_DATA_FIXER_SCHEMA;
-        SharedConstants.CHECK_DATA_FIXER_SCHEMA = false;
-        EntityType<T> result = builder.build(registryLoc);
-        SharedConstants.CHECK_DATA_FIXER_SCHEMA = prev;
-        ENTITY_TYPES.put(ResourceLocation.parse(registryLoc), result);
-        return result;
+        return DR.register(id, () -> {
+            Builder<T> builder = Builder.of(entityFactory, classification);
+            customizer.accept(builder);
+            // Temporarily disable the data fixer check to avoid the annoying "no data fixer registered for ae2:xxx".
+            boolean prev = SharedConstants.CHECK_DATA_FIXER_SCHEMA;
+            SharedConstants.CHECK_DATA_FIXER_SCHEMA = false;
+            EntityType<T> result = builder.build(id);
+            SharedConstants.CHECK_DATA_FIXER_SCHEMA = prev;
+            return result;
+        });
     }
 
 }

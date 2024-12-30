@@ -1,9 +1,15 @@
 package appeng.api.behaviors;
 
 import appeng.api.config.Actionable;
+import appeng.api.ids.AEConstants;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +19,11 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.Experimental
 public interface GenericInternalInventory {
+
+    BlockApiLookup<GenericInternalInventory, Direction> SIDED = BlockApiLookup.get(
+        ResourceLocation.fromNamespaceAndPath(AEConstants.MOD_ID, "genericinternalinventory"), GenericInternalInventory.class,
+        Direction.class);
+
     /**
      * @return The number of slots in this inventory. Never changes.
      */

@@ -18,6 +18,7 @@
 
 package appeng.init.client;
 
+import appeng.core.definitions.DeferredBlockEntityType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
@@ -50,7 +51,7 @@ public final class InitBlockEntityRenderers {
         register(AEBlockEntities.SKY_CHEST, SkyChestTESR::new);
         register(AEBlockEntities.CHARGER, ChargerBlockEntityRenderer.FACTORY);
         register(AEBlockEntities.DRIVE, DriveLedBlockEntityRenderer::new);
-        register(AEBlockEntities.CHEST, ChestBlockEntityRenderer::new);
+        register(AEBlockEntities.ME_CHEST, ChestBlockEntityRenderer::new);
         register(AEBlockEntities.CRAFTING_MONITOR, CraftingMonitorRenderer::new);
         register(AEBlockEntities.MOLECULAR_ASSEMBLER, MolecularAssemblerRenderer::new);
         register(AEBlockEntities.CABLE_BUS, CableBusTESR::new);
@@ -58,8 +59,9 @@ public final class InitBlockEntityRenderers {
 
     }
 
-    private static <T extends BlockEntity> void register(BlockEntityType<T> type,
-            BlockEntityRendererProvider<T> factory) {
+    private static <T extends BlockEntity> void register(
+        DeferredBlockEntityType<T> type,
+        BlockEntityRendererProvider<T> factory) {
         BlockEntityRendererRegistry.register(type, factory);
     }
 

@@ -22,6 +22,7 @@ import appeng.init.InitAdvancementTriggers;
 import appeng.init.InitStats;
 import appeng.init.internal.InitBlockEntityMoveStrategies;
 import appeng.init.internal.InitGridServices;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 /**
  * This class is just responsible for initializing AE directly after Minecraft's own bootstrap, but before any mods are
@@ -44,7 +45,7 @@ public final class AppEngBootstrap {
 
             // This has to be initialized here because Forge's common setup event will not run in datagens.
             InitStats.init();
-            InitAdvancementTriggers.init();
+            InitAdvancementTriggers.init(BuiltInRegistries.TRIGGER_TYPES);
         }
     }
 

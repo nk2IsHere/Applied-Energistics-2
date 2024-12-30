@@ -36,8 +36,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
-import static appeng.api.AECapabilities.ME_STORAGE;
-
 /**
  * Wrapper used by the pattern provider logic to interact with adjacent inventories.
  */
@@ -49,9 +47,9 @@ public interface PatternProviderTarget {
         // our capability first: allows any storage channel
         MEStorage storage;
         if (be != null) {
-            storage = ME_STORAGE.find(l, be.getBlockPos(), be.getBlockState(), be, side);
+            storage = MEStorage.SIDED.find(l, be.getBlockPos(), be.getBlockState(), be, side);
         } else {
-            storage = ME_STORAGE.find(l, pos, side);
+            storage = MEStorage.SIDED.find(l, pos, side);
         }
         if (storage != null) {
             return wrapMeStorage(storage, src);

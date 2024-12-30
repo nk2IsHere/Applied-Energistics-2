@@ -23,9 +23,10 @@
 
 package appeng.api.implementations.blockentities;
 
-import appeng.api.AECapabilities;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.stacks.KeyCounter;
+import appeng.core.AppEng;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -38,20 +39,22 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ICraftingMachine {
 
+    BlockApiLookup<ICraftingMachine, Direction> SIDED = BlockApiLookup.get(
+        AppEng.makeId("crafing_machine"),
+        ICraftingMachine.class, Direction.class);
+
     @Nullable
     static ICraftingMachine of(@Nullable BlockEntity blockEntity, Direction side) {
         if (blockEntity == null || blockEntity.getLevel() == null) {
             return null;
         }
 
-        return blockEntity.getLevel().getCapability(
-                AECapabilities.CRAFTING_MACHINE, blockEntity.getBlockPos(), blockEntity.getBlockState(),
-                blockEntity, side);
+        return of(blockEntity.getLevel(), blockEntity.getBlockPos(), side);
     }
 
     @Nullable
     static ICraftingMachine of(Level level, BlockPos pos, Direction side) {
-        return level.getCapability(AECapabilities.CRAFTING_MACHINE, pos, side);
+        return SIDED.find(level, pos, side);
     }
 
     /**

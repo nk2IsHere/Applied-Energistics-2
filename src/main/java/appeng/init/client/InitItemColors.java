@@ -19,6 +19,7 @@
 package appeng.init.client;
 
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -42,7 +43,7 @@ public final class InitItemColors {
 
     public static void init(Registry itemColors) {
         // I checked, the ME chest doesn't keep its color in item form
-        itemColors.register(new StaticItemColor(AEColor.TRANSPARENT), AEBlocks.CHEST.asItem());
+        itemColors.register(new StaticItemColor(AEColor.TRANSPARENT), AEBlocks.ME_CHEST.asItem());
 
         itemColors.register(MemoryCardItem::getTintColor, AEItems.MEMORY_CARD);
 

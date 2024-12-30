@@ -18,26 +18,6 @@
 
 package appeng.core.definitions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-
-import com.google.common.base.Preconditions;
-
-import dev.architectury.registry.registries.DeferredRegister;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.ids.AECreativeTabIds;
 import appeng.api.ids.AEItemIds;
@@ -64,42 +44,37 @@ import appeng.items.misc.MissingContentItem;
 import appeng.items.misc.PaintBallItem;
 import appeng.items.misc.WrappedGenericStack;
 import appeng.items.parts.FacadeItem;
-import appeng.items.storage.BasicStorageCell;
-import appeng.items.storage.CreativeCellItem;
-import appeng.items.storage.SpatialStorageCellItem;
-import appeng.items.storage.StorageTier;
-import appeng.items.storage.ViewCellItem;
+import appeng.items.storage.*;
 import appeng.items.tools.GuideItem;
 import appeng.items.tools.MemoryCardItem;
 import appeng.items.tools.NetworkToolItem;
-import appeng.items.tools.fluix.FluixAxeItem;
-import appeng.items.tools.fluix.FluixHoeItem;
-import appeng.items.tools.fluix.FluixPickaxeItem;
-import appeng.items.tools.fluix.FluixSmithingTemplateItem;
-import appeng.items.tools.fluix.FluixSpadeItem;
-import appeng.items.tools.fluix.FluixSwordItem;
-import appeng.items.tools.powered.ChargedStaffItem;
-import appeng.items.tools.powered.ColorApplicatorItem;
-import appeng.items.tools.powered.EntropyManipulatorItem;
-import appeng.items.tools.powered.MatterCannonItem;
-import appeng.items.tools.powered.PortableCellItem;
-import appeng.items.tools.powered.WirelessCraftingTerminalItem;
-import appeng.items.tools.powered.WirelessTerminalItem;
-import appeng.items.tools.quartz.QuartzAxeItem;
-import appeng.items.tools.quartz.QuartzCuttingKnifeItem;
-import appeng.items.tools.quartz.QuartzHoeItem;
-import appeng.items.tools.quartz.QuartzPickaxeItem;
-import appeng.items.tools.quartz.QuartzSpadeItem;
-import appeng.items.tools.quartz.QuartzSwordItem;
-import appeng.items.tools.quartz.QuartzToolType;
-import appeng.items.tools.quartz.QuartzWrenchItem;
+import appeng.items.tools.fluix.*;
+import appeng.items.tools.powered.*;
+import appeng.items.tools.quartz.*;
 import appeng.menu.me.common.MEStorageMenu;
+import com.google.common.base.Preconditions;
+import dev.architectury.registry.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Internal implementation for the API items
  */
 public final class AEItems {
-    public static final DeferredRegister<Item> DR = DeferredRegister.create(AppEng.MOD_ID);
+    public static final DeferredRegister<Item> DR = DeferredRegister.create(AppEng.MOD_ID,
+        Registries.ITEM
+    );
 
     // spotless:off
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
@@ -292,8 +267,8 @@ public final class AEItems {
     }
 
     private static <T extends Item> ColoredItemDefinition<T> createColoredItems(String name,
-                                                                                Map<AEColor, ResourceLocation> ids,
-                                                                                BiFunction<Item.Properties, AEColor, T> factory) {
+            Map<AEColor, ResourceLocation> ids,
+            BiFunction<Item.Properties, AEColor, T> factory) {
         var colors = new ColoredItemDefinition<T>();
         for (var entry : ids.entrySet()) {
             String fullName;
@@ -303,24 +278,24 @@ public final class AEItems {
                 fullName = entry.getKey().getEnglishName() + " " + name;
             }
             colors.add(entry.getKey(), entry.getValue(),
-                item(fullName, entry.getValue(), p -> factory.apply(p, entry.getKey())));
+                    item(fullName, entry.getValue(), p -> factory.apply(p, entry.getKey())));
         }
         return colors;
     }
 
     static <T extends Item> ItemDefinition<T> item(String name, ResourceLocation id,
-                                                   Function<Item.Properties, T> factory) {
+            Function<Item.Properties, T> factory) {
         return item(name, id, factory, AECreativeTabIds.MAIN);
     }
 
     static <T extends Item> ItemDefinition<T> item(String name, ResourceLocation id,
-                                                   Function<Item.Properties, T> factory,
-                                                   @Nullable ResourceKey<CreativeModeTab> group) {
+            Function<Item.Properties, T> factory,
+            @Nullable ResourceKey<CreativeModeTab> group) {
 
         Item.Properties p = new Item.Properties();
 
         Preconditions.checkArgument(id.getNamespace().equals(AppEng.MOD_ID), "Can only register for AE2");
-        var definition = new ItemDefinition<>(name, DR.registerItem(id.getPath(), factory));
+        var definition = new ItemDefinition<>(name, DR.register(id.getPath(), (Supplier<? extends Item>) () -> factory.apply(p)));
 
         if (Objects.equals(group, AECreativeTabIds.MAIN)) {
             MainCreativeTab.add(definition);
@@ -331,6 +306,6 @@ public final class AEItems {
 
         ITEMS.add(definition);
 
-        return definition;
+        return (ItemDefinition<T>) definition;
     }
 }

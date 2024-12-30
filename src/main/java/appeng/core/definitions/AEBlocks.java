@@ -18,64 +18,12 @@
 
 package appeng.core.definitions;
 
-import static appeng.block.AEBaseBlock.defaultProps;
-import static appeng.block.AEBaseBlock.glassProps;
-import static appeng.block.AEBaseBlock.metalProps;
-import static appeng.block.AEBaseBlock.stoneProps;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate;
-import net.minecraft.world.level.material.MapColor;
-
 import appeng.api.ids.AEBlockIds;
 import appeng.block.AEBaseBlock;
 import appeng.block.AEBaseBlockItem;
-import appeng.block.crafting.CraftingBlockItem;
-import appeng.block.crafting.CraftingMonitorBlock;
-import appeng.block.crafting.CraftingUnitBlock;
-import appeng.block.crafting.CraftingUnitType;
-import appeng.block.crafting.MolecularAssemblerBlock;
-import appeng.block.crafting.PatternProviderBlock;
-import appeng.block.misc.CellWorkbenchBlock;
-import appeng.block.misc.ChargerBlock;
-import appeng.block.misc.CondenserBlock;
-import appeng.block.misc.CrankBlock;
-import appeng.block.misc.GrowthAcceleratorBlock;
-import appeng.block.misc.InscriberBlock;
-import appeng.block.misc.InterfaceBlock;
-import appeng.block.misc.LightDetectorBlock;
-import appeng.block.misc.MysteriousCubeBlock;
-import appeng.block.misc.QuartzFixtureBlock;
-import appeng.block.misc.TinyTNTBlock;
-import appeng.block.misc.VibrationChamberBlock;
-import appeng.block.networking.CableBusBlock;
-import appeng.block.networking.ControllerBlock;
-import appeng.block.networking.CreativeEnergyCellBlock;
-import appeng.block.networking.CrystalResonanceGeneratorBlock;
-import appeng.block.networking.EnergyAcceptorBlock;
-import appeng.block.networking.EnergyCellBlock;
-import appeng.block.networking.EnergyCellBlockItem;
-import appeng.block.networking.WirelessAccessPointBlock;
+import appeng.block.crafting.*;
+import appeng.block.misc.*;
+import appeng.block.networking.*;
 import appeng.block.paint.PaintSplotchesBlock;
 import appeng.block.qnb.QuantumLinkChamberBlock;
 import appeng.block.qnb.QuantumRingBlock;
@@ -83,30 +31,43 @@ import appeng.block.spatial.MatrixFrameBlock;
 import appeng.block.spatial.SpatialAnchorBlock;
 import appeng.block.spatial.SpatialIOPortBlock;
 import appeng.block.spatial.SpatialPylonBlock;
-import appeng.block.storage.ChestBlock;
-import appeng.block.storage.DriveBlock;
-import appeng.block.storage.IOPortBlock;
-import appeng.block.storage.SkyChestBlock;
-import appeng.block.storage.SkyStoneTankBlock;
+import appeng.block.storage.*;
 import appeng.core.AppEng;
 import appeng.core.MainCreativeTab;
-import appeng.debug.ChunkLoaderBlock;
 import appeng.debug.CubeGeneratorBlock;
 import appeng.debug.EnergyGeneratorBlock;
 import appeng.debug.ItemGenBlock;
 import appeng.debug.PhantomNodeBlock;
 import appeng.decorative.AEDecorativeBlock;
-import appeng.decorative.solid.BuddingCertusQuartzBlock;
-import appeng.decorative.solid.CertusQuartzClusterBlock;
-import appeng.decorative.solid.NotSoMysteriousCubeBlock;
-import appeng.decorative.solid.QuartzGlassBlock;
-import appeng.decorative.solid.QuartzLampBlock;
+import appeng.decorative.solid.*;
+import com.google.common.base.Preconditions;
+import com.mojang.serialization.MapCodec;
+import dev.architectury.registry.registries.DeferredRegister;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate;
+import net.minecraft.world.level.material.MapColor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
+
+import static appeng.block.AEBaseBlock.*;
 
 /**
  * Internal implementation for the API blocks
  */
-@SuppressWarnings("unused")
 public final class AEBlocks {
+    public static final DeferredRegister<Block> DR = DeferredRegister.create(AppEng.MOD_ID,
+        Registries.BLOCK);
 
     private static final List<BlockDefinition<?>> BLOCKS = new ArrayList<>();
     private static final Properties QUARTZ_CLUSTER_PROPERTIES = defaultProps(MapColor.COLOR_CYAN,
@@ -170,7 +131,7 @@ public final class AEBlocks {
     public static final BlockDefinition<SpatialIOPortBlock> SPATIAL_IO_PORT = block("Spatial IO Port", AEBlockIds.SPATIAL_IO_PORT, SpatialIOPortBlock::new);
     public static final BlockDefinition<ControllerBlock> CONTROLLER = block("ME Controller", AEBlockIds.CONTROLLER, ControllerBlock::new);
     public static final BlockDefinition<DriveBlock> DRIVE = block("ME Drive", AEBlockIds.DRIVE, DriveBlock::new);
-    public static final BlockDefinition<ChestBlock> CHEST = block("ME Chest", AEBlockIds.CHEST, ChestBlock::new);
+    public static final BlockDefinition<MEChestBlock> ME_CHEST = block("ME Chest", AEBlockIds.ME_CHEST, MEChestBlock::new);
     public static final BlockDefinition<InterfaceBlock> INTERFACE = block("ME Interface", AEBlockIds.INTERFACE, InterfaceBlock::new);
     public static final BlockDefinition<CellWorkbenchBlock> CELL_WORKBENCH = block("Cell Workbench", AEBlockIds.CELL_WORKBENCH, CellWorkbenchBlock::new);
     public static final BlockDefinition<IOPortBlock> IO_PORT = block("ME IO Port", AEBlockIds.IO_PORT, IOPortBlock::new);
@@ -185,16 +146,16 @@ public final class AEBlocks {
     public static final BlockDefinition<CreativeEnergyCellBlock> CREATIVE_ENERGY_CELL = block("Creative Energy Cell", AEBlockIds.CREATIVE_ENERGY_CELL, CreativeEnergyCellBlock::new);
 
     public static final BlockDefinition<CraftingUnitBlock> CRAFTING_UNIT = block("Crafting Unit", AEBlockIds.CRAFTING_UNIT, () -> new CraftingUnitBlock(CraftingUnitType.UNIT));
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_ACCELERATOR = craftingBlock("Crafting Co-Processing Unit", AEBlockIds.CRAFTING_ACCELERATOR, () -> new CraftingUnitBlock(CraftingUnitType.ACCELERATOR), () -> AEItems.ENGINEERING_PROCESSOR);
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_1K = craftingBlock("1k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_1K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_1K), () -> AEItems.CELL_COMPONENT_1K);
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_4K = craftingBlock("4k Crafting Storage",AEBlockIds.CRAFTING_STORAGE_4K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_4K), () -> AEItems.CELL_COMPONENT_4K);
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_16K = craftingBlock("16k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_16K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_16K), () -> AEItems.CELL_COMPONENT_16K);
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_64K = craftingBlock("64k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_64K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_64K), () -> AEItems.CELL_COMPONENT_64K);
-    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_256K = craftingBlock("256k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_256K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_256K), () -> AEItems.CELL_COMPONENT_256K);
-    public static final BlockDefinition<CraftingMonitorBlock> CRAFTING_MONITOR = craftingBlock("Crafting Monitor",AEBlockIds.CRAFTING_MONITOR, () -> new CraftingMonitorBlock(CraftingUnitType.MONITOR), () -> AEParts.STORAGE_MONITOR);
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_ACCELERATOR = craftingBlock("Crafting Co-Processing Unit", AEBlockIds.CRAFTING_ACCELERATOR, () -> new CraftingUnitBlock(CraftingUnitType.ACCELERATOR));
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_1K = craftingBlock("1k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_1K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_1K));
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_4K = craftingBlock("4k Crafting Storage",AEBlockIds.CRAFTING_STORAGE_4K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_4K));
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_16K = craftingBlock("16k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_16K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_16K));
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_64K = craftingBlock("64k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_64K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_64K));
+    public static final BlockDefinition<CraftingUnitBlock> CRAFTING_STORAGE_256K = craftingBlock("256k Crafting Storage", AEBlockIds.CRAFTING_STORAGE_256K, () -> new CraftingUnitBlock(CraftingUnitType.STORAGE_256K));
+    public static final BlockDefinition<CraftingMonitorBlock> CRAFTING_MONITOR = craftingBlock("Crafting Monitor",AEBlockIds.CRAFTING_MONITOR, () -> new CraftingMonitorBlock(CraftingUnitType.MONITOR));
 
-    private static <T extends Block> BlockDefinition<T> craftingBlock(String englishName, ResourceLocation id, Supplier<T> blockSupplier, Supplier<ItemLike> disassemblyExtra) {
-        return block(englishName, id, blockSupplier, (block, props) -> new CraftingBlockItem(block, props, disassemblyExtra));
+    private static <T extends Block> BlockDefinition<T> craftingBlock(String englishName, ResourceLocation id, Supplier<T> blockSupplier) {
+        return block(englishName, id, blockSupplier, CraftingBlockItem::new);
     }
 
     public static final BlockDefinition<PatternProviderBlock> PATTERN_PROVIDER = block("ME Pattern Provider", AEBlockIds.PATTERN_PROVIDER, PatternProviderBlock::new);
@@ -248,7 +209,6 @@ public final class AEBlocks {
     /// DEBUG BLOCKS
     ///
     public static final BlockDefinition<ItemGenBlock> DEBUG_ITEM_GEN = block("Dev.ItemGen", AppEng.makeId("debug_item_gen"), ItemGenBlock::new);
-    public static final BlockDefinition<ChunkLoaderBlock> DEBUG_CHUNK_LOADER = block("Dev.ChunkLoader", AppEng.makeId("debug_chunk_loader"), ChunkLoaderBlock::new);
     public static final BlockDefinition<PhantomNodeBlock> DEBUG_PHANTOM_NODE = block("Dev.PhantomNode", AppEng.makeId("debug_phantom_node"), PhantomNodeBlock::new);
     public static final BlockDefinition<CubeGeneratorBlock> DEBUG_CUBE_GEN = block("Dev.CubeGen", AppEng.makeId("debug_cube_gen"), CubeGeneratorBlock::new);
     public static final BlockDefinition<EnergyGeneratorBlock> DEBUG_ENERGY_GEN = block("Dev.EnergyGen", AppEng.makeId("debug_energy_gen"), EnergyGeneratorBlock::new);
@@ -271,35 +231,34 @@ public final class AEBlocks {
             ResourceLocation id,
             Supplier<T> blockSupplier,
             @Nullable BiFunction<Block, Item.Properties, BlockItem> itemFactory) {
+        Preconditions.checkArgument(id.getNamespace().equals(AppEng.MOD_ID));
 
-        // Create block and matching item, and set factory name of both
-        T block = blockSupplier.get();
-
-        Item.Properties itemProperties = new Item.Properties();
-
-        BlockItem item;
-        if (itemFactory != null) {
-            item = itemFactory.apply(block, itemProperties);
-            if (item == null) {
-                throw new IllegalArgumentException("BlockItem factory for " + id + " returned null");
+        // Create block and matching item
+        var deferredBlock = DR.register(id.getPath(), blockSupplier);
+        var deferredItem = AEItems.DR.register(id.getPath(), () -> {
+            var block = deferredBlock.get();
+            var itemProperties = new Item.Properties();
+            if (itemFactory != null) {
+                var item = itemFactory.apply(block, itemProperties);
+                if (item == null) {
+                    throw new IllegalArgumentException("BlockItem factory for " + id + " returned null");
+                }
+                return item;
+            } else if (block instanceof AEBaseBlock) {
+                return new AEBaseBlockItem(block, itemProperties);
+            } else {
+                return new BlockItem(block, itemProperties);
             }
-        } else if (block instanceof AEBaseBlock) {
-            item = new AEBaseBlockItem(block, itemProperties);
-        } else {
-            item = new BlockItem(block, itemProperties);
-        }
+        });
 
-        BlockDefinition<T> definition = new BlockDefinition<>(englishName, id, block, item);
-        MainCreativeTab.add(definition);
+        var itemDef = new ItemDefinition<>(englishName, deferredItem);
+        MainCreativeTab.add(itemDef);
+        BlockDefinition<T> definition = new BlockDefinition<>(englishName, deferredBlock, itemDef);
 
         BLOCKS.add(definition);
 
         return definition;
 
-    }
-
-    // Used to control in which order static constructors are called
-    public static void init() {
     }
 
 }

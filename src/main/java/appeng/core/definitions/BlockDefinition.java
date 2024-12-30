@@ -18,32 +18,67 @@
 
 package appeng.core.definitions;
 
-import java.util.Objects;
-
-import com.google.common.base.Preconditions;
-
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-public class BlockDefinition<T extends Block> extends ItemDefinition<BlockItem> {
-    private final T block;
+import java.util.Objects;
 
-    public BlockDefinition(String englishName, ResourceLocation id, T block, BlockItem item) {
-        super(englishName, id, item);
+public class BlockDefinition<T extends Block> implements ItemLike {
+    private final String englishName;
+    private final ItemDefinition<BlockItem> item;
+    private final RegistrySupplier<T> block;
+
+    public BlockDefinition(String englishName, RegistrySupplier<T> block, ItemDefinition<BlockItem> item) {
+        this.englishName = englishName;
+        this.item = Objects.requireNonNull(item, "item");
         this.block = Objects.requireNonNull(block, "block");
     }
 
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public ResourceLocation id() {
+        return block.getId();
+    }
+
     public final T block() {
-        return this.block;
+        return this.block.get();
+    }
+
+    public ItemStack stack() {
+        return item.stack();
+    }
+
+    public ItemStack stack(int stackSize) {
+        return item.stack(stackSize);
+    }
+
+    public GenericStack genericStack(long stackSize) {
+        return item.genericStack(stackSize);
+    }
+
+    public boolean is(ItemStack comparableStack) {
+        return item.is(comparableStack);
+    }
+
+    public boolean is(AEKey key) {
+        return item.is(key);
+    }
+
+    public ItemDefinition<BlockItem> item() {
+        return item;
     }
 
     @Override
-    public final ItemStack stack(int stackSize) {
-        Preconditions.checkArgument(stackSize > 0);
-
-        return new ItemStack(block, stackSize);
+    public Item asItem() {
+        return item.asItem();
     }
-
 }

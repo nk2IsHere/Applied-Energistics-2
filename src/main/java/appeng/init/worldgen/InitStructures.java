@@ -43,13 +43,13 @@ public final class InitStructures {
         var biomes = context.lookup(Registries.BIOME);
 
         context.register(
-                MeteoriteStructure.KEY,
-                new MeteoriteStructure(
-                        new Structure.StructureSettings(
-                                biomes.getOrThrow(MeteoriteStructure.BIOME_TAG_KEY),
-                                Map.of(),
-                                Decoration.TOP_LAYER_MODIFICATION,
-                                TerrainAdjustment.NONE)));
+            MeteoriteStructure.KEY,
+            new MeteoriteStructure(
+                new Structure.StructureSettings(
+                    biomes.getOrThrow(MeteoriteStructure.BIOME_TAG_KEY),
+                    Map.of(),
+                    Decoration.TOP_LAYER_MODIFICATION,
+                    TerrainAdjustment.NONE)));
 
     }
 
@@ -58,8 +58,8 @@ public final class InitStructures {
         var meteorite = structures.getOrThrow(MeteoriteStructure.KEY);
 
         var structureSet = new StructureSet(
-                List.of(StructureSet.entry(meteorite)),
-                new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 124895654));
+            List.of(StructureSet.entry(meteorite)),
+            new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 124895654));
 
         context.register(MeteoriteStructure.STRUCTURE_SET_KEY, structureSet);
     }
