@@ -1,35 +1,39 @@
 package appeng.server.services;
 
+import appeng.core.AppEng;
+import appeng.core.worlddata.AESavedData;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongArrayTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-
-import appeng.core.AppEng;
-import appeng.core.worlddata.AESavedData;
-
 /**
  * Implementation detail of {@link ChunkLoadingService} on Fabric, as {@code ForgeChunkManager} is not available there.
  */
 class ChunkLoadState extends AESavedData {
+
     public static final String NAME = AppEng.MOD_ID + "_chunk_load_state";
 
     public static ChunkLoadState get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(tag -> new ChunkLoadState(level, tag),
-                () -> new ChunkLoadState(level), NAME);
+        return level.getDataStorage().computeIfAbsent(
+                new Factory<>(
+                        () -> new ChunkLoadState(level),
+                        (tag, provider) -> new ChunkLoadState(level, tag),
+                        null),
+                NAME);
     }
 
     private final ServerLevel level;
@@ -47,9 +51,8 @@ class ChunkLoadState extends AESavedData {
             var chunkPos = new ChunkPos(forcedChunk.getInt("cx"), forcedChunk.getInt("cz"));
 
             var blockSet = new HashSet<BlockPos>();
-            var blocks = forcedChunk.getList("blocks", Tag.TAG_COMPOUND);
-            for (int j = 0; j < blocks.size(); ++j) {
-                blockSet.add(NbtUtils.readBlockPos(blocks.getCompound(j)));
+            for (long blockPos : forcedChunk.getLongArray("blocks")) {
+                blockSet.add(BlockPos.of(blockPos));
             }
 
             forceLoadedChunks.put(chunkPos.toLong(), blockSet);
@@ -57,7 +60,7 @@ class ChunkLoadState extends AESavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         var forcedChunks = new ListTag();
         for (var entry : forceLoadedChunks.long2ObjectEntrySet()) {
             var chunkPos = new ChunkPos(entry.getLongKey());
@@ -66,10 +69,7 @@ class ChunkLoadState extends AESavedData {
             forcedChunk.putInt("cx", chunkPos.x);
             forcedChunk.putInt("cz", chunkPos.z);
 
-            var list = new ListTag();
-            for (var pos : entry.getValue()) {
-                list.add(NbtUtils.writeBlockPos(pos));
-            }
+            var list = new LongArrayTag(entry.getValue().stream().map(BlockPos::asLong).toList());
             forcedChunk.put("blocks", list);
 
             forcedChunks.add(forcedChunk);

@@ -31,7 +31,7 @@ public class FalloutSand extends FalloutCopy {
     private final MeteoriteBlockPutter putter;
 
     public FalloutSand(LevelAccessor level, BlockPos pos, MeteoriteBlockPutter putter,
-            BlockState skyStone, RandomSource random) {
+                       BlockState skyStone, RandomSource random) {
         super(level, pos, putter, skyStone, random);
         this.putter = putter;
     }

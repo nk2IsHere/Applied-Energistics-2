@@ -45,7 +45,7 @@ import appeng.api.movable.BlockEntityMoveStrategies;
 import appeng.api.movable.IBlockEntityMoveStrategy;
 import appeng.core.AELog;
 import appeng.core.definitions.AEBlocks;
-import appeng.server.services.compass.CompassService;
+import appeng.server.services.compass.ServerCompassService;
 import appeng.util.Platform;
 
 public class CachedPlane {
@@ -66,7 +66,7 @@ public class CachedPlane {
     private final BlockState matrixBlockState;
 
     public CachedPlane(ServerLevel level, int minX, int minY, int minZ, int maxX,
-            int maxY, int maxZ) {
+                       int maxY, int maxZ) {
 
         Block matrixFrameBlock = AEBlocks.MATRIX_FRAME.block();
         if (matrixFrameBlock != null) {
@@ -102,7 +102,7 @@ public class CachedPlane {
         for (int x = 0; x < this.x_size; x++) {
             for (int z = 0; z < this.z_size; z++) {
                 this.myColumns[x][z] = new Column(level.getChunk(minX + x >> 4, minZ + z >> 4), minX + x & 0xF,
-                        minZ + z & 0xF);
+                    minZ + z & 0xF);
             }
         }
 
@@ -112,44 +112,49 @@ public class CachedPlane {
                 this.myChunks[cx][cz] = c;
 
                 // Make a copy of the BE list in the chunk. This allows us to immediately remove BE's we're moving.
-                var rawBlockEntities = new ArrayList<>(c.getBlockEntities().entrySet());
-                for (var entry : rawBlockEntities) {
-                    var blockEntity = entry.getValue();
-
-                    var pos = blockEntity.getBlockPos();
+                // We cannot simply copy the map entries since the map may reuse those if we remove entries.
+                var chunkBlockEntities = c.getBlockEntities().entrySet();
+                var blockEntities = new ArrayList<BlockEntity>(chunkBlockEntities.size());
+                for (var entity : chunkBlockEntities) {
+                    var pos = entity.getKey();
                     if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
-                            && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
+                        && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
+                        blockEntities.add(entity.getValue());
+                    }
+                }
 
-                        // If the block entities containing block is blacklisted, it will be skipped
-                        // automatically later, so we have to avoid removing it here
-                        if (blockEntity.getBlockState().is(AETags.SPATIAL_BLACKLIST)) {
-                            continue;
-                        }
+                for (var blockEntity : blockEntities) {
+                    var pos = blockEntity.getBlockPos();
 
-                        var strategy = BlockEntityMoveStrategies.get(blockEntity);
-                        var savedData = strategy.beginMove(blockEntity);
-                        var section = c.getSection(c.getSectionIndex(entry.getKey().getY()));
+                    // If the block entities containing block is blacklisted, it will be skipped
+                    // automatically later, so we have to avoid removing it here
+                    if (blockEntity.getBlockState().is(AETags.SPATIAL_BLACKLIST)) {
+                        continue;
+                    }
 
-                        // Coordinate within the section
-                        int sx = entry.getKey().getX() & (LevelChunkSection.SECTION_WIDTH - 1);
-                        int sy = entry.getKey().getY() & (LevelChunkSection.SECTION_HEIGHT - 1);
-                        int sz = entry.getKey().getZ() & (LevelChunkSection.SECTION_WIDTH - 1);
-                        var state = section.getBlockState(sx, sy, sz);
+                    var strategy = BlockEntityMoveStrategies.get(blockEntity);
+                    var savedData = strategy.beginMove(blockEntity, level.registryAccess());
+                    var section = c.getSection(c.getSectionIndex(pos.getY()));
 
-                        if (savedData != null) {
-                            this.blockEntities.add(
-                                    new BlockEntityMoveRecord(strategy, blockEntity, savedData, entry.getKey(), state));
+                    // Coordinate within the section
+                    int sx = pos.getX() & (LevelChunkSection.SECTION_WIDTH - 1);
+                    int sy = pos.getY() & (LevelChunkSection.SECTION_HEIGHT - 1);
+                    int sz = pos.getZ() & (LevelChunkSection.SECTION_WIDTH - 1);
+                    var state = section.getBlockState(sx, sy, sz);
 
-                            // Set the state to AIR now since that prevents it from being resurrected recursively
-                            section.setBlockState(sx, sy, sz, Blocks.AIR.defaultBlockState());
-                            c.removeBlockEntity(entry.getKey());
+                    if (savedData != null) {
+                        this.blockEntities.add(
+                            new BlockEntityMoveRecord(strategy, blockEntity, savedData, pos, state));
+
+                        // Set the state to AIR now since that prevents it from being resurrected recursively
+                        section.setBlockState(sx, sy, sz, Blocks.AIR.defaultBlockState());
+                        c.removeBlockEntity(pos);
+                    } else {
+                        // don't skip air, just let the code replace it...
+                        if (state.isAir()) {
+                            level.removeBlock(pos, false);
                         } else {
-                            // don't skip air, just let the code replace it...
-                            if (state.isAir()) {
-                                level.removeBlock(pos, false);
-                            } else {
-                                this.myColumns[pos.getX() - minX][pos.getZ() - minZ].setSkip(pos.getY());
-                            }
+                            this.myColumns[pos.getX() - minX][pos.getZ() - minZ].setSkip(pos.getY());
                         }
                     }
                 }
@@ -158,7 +163,7 @@ public class CachedPlane {
                 pending.getAll().forEach(entry -> {
                     var pos = entry.pos();
                     if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
-                            && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
+                        && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
                         this.ticks.add(entry);
                     }
                 });
@@ -187,12 +192,12 @@ public class CachedPlane {
                             var dstSection = dstCol.getSection(dst_y);
 
                             var srcState = srcSection.getBlockState(srcCol.x, SectionPos.sectionRelative(src_y),
-                                    srcCol.z);
+                                srcCol.z);
                             if (srcState == CachedPlane.this.matrixBlockState) {
                                 srcState = Blocks.AIR.defaultBlockState();
                             }
                             var dstState = dstSection.getBlockState(dstCol.x, SectionPos.sectionRelative(dst_y),
-                                    dstCol.z);
+                                dstCol.z);
                             if (dstState == CachedPlane.this.matrixBlockState) {
                                 dstState = Blocks.AIR.defaultBlockState();
                             }
@@ -214,14 +219,14 @@ public class CachedPlane {
             for (var moveRecord : this.blockEntities) {
                 var pos = moveRecord.blockEntity().getBlockPos();
                 dst.addBlockEntity(pos.getX() - this.x_offset, pos.getY() - this.y_offset,
-                        pos.getZ() - this.z_offset,
-                        moveRecord);
+                    pos.getZ() - this.z_offset,
+                    moveRecord);
             }
 
             for (var moveRecord : dst.blockEntities) {
                 var pos = moveRecord.blockEntity().getBlockPos();
                 this.addBlockEntity(pos.getX() - dst.x_offset, pos.getY() - dst.y_offset,
-                        pos.getZ() - dst.z_offset, moveRecord);
+                    pos.getZ() - dst.z_offset, moveRecord);
             }
 
             for (var entry : this.ticks) {
@@ -253,7 +258,7 @@ public class CachedPlane {
 
     private void addTick(BlockPos pos, ScheduledTick<Block> tick) {
         this.level.getBlockTicks().schedule(new ScheduledTick<>(
-                tick.type(), pos, tick.triggerTick(), tick.priority(), tick.subTickOrder()));
+            tick.type(), pos, tick.triggerTick(), tick.priority(), tick.subTickOrder()));
     }
 
     private void addBlockEntity(int x, int y, int z, BlockEntityMoveRecord moveRecord) {
@@ -263,8 +268,8 @@ public class CachedPlane {
             var c = this.myColumns[x][z];
             if (!c.doNotSkip(y + this.y_offset)) {
                 AELog.warn(
-                        "Block entity %s was queued to be moved from %s, but it's position then skipped during the move.",
-                        moveRecord.blockEntity(), originalPos);
+                    "Block entity %s was queued to be moved from %s, but it's position then skipped during the move.",
+                    moveRecord.blockEntity(), originalPos);
                 return;
             }
 
@@ -274,17 +279,17 @@ public class CachedPlane {
             var chunk = this.level.getChunk(newPosition);
             var section = chunk.getSection(chunk.getSectionIndex(newPosition.getY()));
             section.setBlockState(
-                    newPosition.getX() & (LevelChunkSection.SECTION_WIDTH - 1),
-                    newPosition.getY() & (LevelChunkSection.SECTION_HEIGHT - 1),
-                    newPosition.getZ() & (LevelChunkSection.SECTION_WIDTH - 1),
-                    moveRecord.state);
+                newPosition.getX() & (LevelChunkSection.SECTION_WIDTH - 1),
+                newPosition.getY() & (LevelChunkSection.SECTION_HEIGHT - 1),
+                newPosition.getZ() & (LevelChunkSection.SECTION_WIDTH - 1),
+                moveRecord.state);
 
             var strategy = moveRecord.strategy();
             boolean success;
             try {
                 success = strategy.completeMove(moveRecord.blockEntity(), moveRecord.state(), moveRecord.savedData(),
-                        this.level,
-                        newPosition);
+                    this.level,
+                    newPosition);
             } catch (Throwable e) {
                 AELog.warn(e);
                 success = false;
@@ -305,7 +310,7 @@ public class CachedPlane {
 
         // attempt recovery, but do not reuse the same TE instance since we did destroy it
         var blockState = moveRecord.blockEntity().getBlockState();
-        var recoveredEntity = BlockEntity.loadStatic(pos, blockState, moveRecord.savedData());
+        var recoveredEntity = BlockEntity.loadStatic(pos, blockState, moveRecord.savedData(), level.registryAccess());
         if (recoveredEntity != null) {
             // We need to restore the block state too before re-setting the entity
             this.level.setBlock(pos, blockState, 3);
@@ -337,11 +342,11 @@ public class CachedPlane {
 
                 final LevelChunk c = this.myChunks[x][z];
 
-                CompassService.updateArea(this.getLevel(), c);
+                ServerCompassService.updateArea(this.getLevel(), c);
 
                 var cdp = Platform.getFullChunkPacket(c);
                 level.getChunkSource().chunkMap.getPlayers(c.getPos(), false)
-                        .forEach(spe -> spe.connection.send(cdp));
+                    .forEach(spe -> spe.connection.send(cdp));
             }
         }
 
@@ -397,11 +402,11 @@ public class CachedPlane {
     }
 
     private record BlockEntityMoveRecord(
-            IBlockEntityMoveStrategy strategy,
-            BlockEntity blockEntity,
-            CompoundTag savedData,
-            BlockPos pos,
-            BlockState state) {
+        IBlockEntityMoveStrategy strategy,
+        BlockEntity blockEntity,
+        CompoundTag savedData,
+        BlockPos pos,
+        BlockState state) {
     }
 
 }

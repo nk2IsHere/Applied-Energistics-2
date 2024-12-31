@@ -1,22 +1,23 @@
 package appeng.server.testplots;
 
-import java.util.Locale;
-import java.util.function.BiFunction;
-
+import appeng.server.testworld.PlotBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 
-import appeng.server.testworld.PlotBuilder;
+import java.util.Locale;
+import java.util.function.BiFunction;
 
 /**
  * Test plot that sets up a working area for working on Guidebook structures.
  */
+@TestPlotClass
 public final class GuidebookPlot {
     private GuidebookPlot() {
     }
@@ -50,7 +51,8 @@ public final class GuidebookPlot {
         plot.blockState(pos, Blocks.DARK_OAK_SIGN.defaultBlockState().setValue(StandingSignBlock.ROTATION,
                 RotationSegment.convertToSegment(Direction.NORTH)));
         plot.customizeBlockEntity(pos, BlockEntityType.SIGN, sign -> {
-            sign.getFrontText().setMessage(0, Component.literal(label));
+            var text = sign.getFrontText().setMessage(0, Component.literal(label)).setColor(DyeColor.WHITE);
+            sign.setText(text, true);
         });
 
         pos = pos.north();

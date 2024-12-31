@@ -18,19 +18,17 @@
 
 package appeng.spatial;
 
-import java.util.List;
-
+import appeng.core.AELog;
+import appeng.core.worlddata.AESavedData;
 import com.google.common.collect.ImmutableList;
-
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-
-import appeng.core.AELog;
-import appeng.core.worlddata.AESavedData;
+import java.util.List;
 
 /**
  * Extra data attached to the spatial storage level.
@@ -87,7 +85,7 @@ public class SpatialStorageWorldData extends AESavedData {
         setDirty();
     }
 
-    public static SpatialStorageWorldData load(CompoundTag tag) {
+    public static SpatialStorageWorldData load(CompoundTag tag, HolderLookup.Provider registries) {
         SpatialStorageWorldData result = new SpatialStorageWorldData();
         int version = tag.getInt(TAG_FORMAT);
         if (version != CURRENT_FORMAT) {
@@ -109,7 +107,7 @@ public class SpatialStorageWorldData extends AESavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt(TAG_FORMAT, CURRENT_FORMAT);
 
         ListTag plotTags = new ListTag();

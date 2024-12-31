@@ -1,65 +1,5 @@
 package appeng.siteexport;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.io.MoreFiles;
-import com.google.common.io.RecursiveDeleteOption;
-import com.mojang.blaze3d.platform.NativeImage;
-
-import org.apache.commons.io.FilenameUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.ChatFormatting;
-import net.minecraft.DetectedVersion;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.LoadingOverlay;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-
 import appeng.api.features.P2PTunnelAttunement;
 import appeng.api.features.P2PTunnelAttunementInternal;
 import appeng.api.util.AEColor;
@@ -83,6 +23,50 @@ import appeng.siteexport.mdastpostprocess.PageExportPostProcessor;
 import appeng.siteexport.model.P2PTypeInfo;
 import appeng.util.CraftingRecipeUtil;
 import appeng.util.Platform;
+import com.google.common.io.MoreFiles;
+import com.google.common.io.RecursiveDeleteOption;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.ChatFormatting;
+import net.minecraft.DetectedVersion;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.LoadingOverlay;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.util.*;
 
 /**
  * Exports a data package for use by the website.
@@ -90,7 +74,7 @@ import appeng.util.Platform;
 @Environment(EnvType.CLIENT)
 public final class SiteExporter implements ResourceExporter {
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOG = LoggerFactory.getLogger(SiteExporter.class);
 
     private static final int ICON_DIMENSION = 128;
 
@@ -103,7 +87,7 @@ public final class SiteExporter implements ResourceExporter {
 
     private ParsedGuidePage currentPage;
 
-    private final Set<Recipe<?>> recipes = new HashSet<>();
+    private final Set<RecipeHolder<?>> recipes = new HashSet<>();
 
     private final Set<Item> items = new HashSet<>();
 
@@ -173,8 +157,8 @@ public final class SiteExporter implements ResourceExporter {
     public void referenceItem(ItemStack stack) {
         if (!stack.isEmpty()) {
             items.add(stack.getItem());
-            if (stack.hasTag()) {
-                LOGGER.error("Couldn't handle stack with NBT tag: {}", stack);
+            if (!stack.getComponentsPatch().isEmpty()) {
+                LOG.error("Couldn't handle stack with NBT tag: {}", stack);
             }
         }
     }
@@ -191,10 +175,12 @@ public final class SiteExporter implements ResourceExporter {
     }
 
     @Override
-    public void referenceRecipe(Recipe<?> recipe) {
-        if (!recipes.add(recipe)) {
+    public void referenceRecipe(RecipeHolder<?> holder) {
+        if (!recipes.add(holder)) {
             return; // Already added
         }
+
+        var recipe = holder.value();
 
         var registryAccess = Platform.getClientRegistryAccess();
         var resultItem = recipe.getResultItem(registryAccess);
@@ -207,32 +193,35 @@ public final class SiteExporter implements ResourceExporter {
     }
 
     private void dumpRecipes(SiteExportWriter writer) {
-        for (var recipe : recipes) {
+        for (var holder : recipes) {
+            var id = holder.id();
+            var recipe = holder.value();
+
             if (recipe instanceof CraftingRecipe craftingRecipe) {
                 if (craftingRecipe.isSpecial()) {
                     continue;
                 }
-                writer.addRecipe(craftingRecipe);
+                writer.addRecipe(id, craftingRecipe);
             } else if (recipe instanceof AbstractCookingRecipe cookingRecipe) {
-                writer.addRecipe(cookingRecipe);
+                writer.addRecipe(id, cookingRecipe);
             } else if (recipe instanceof InscriberRecipe inscriberRecipe) {
-                writer.addRecipe(inscriberRecipe);
+                writer.addRecipe(id, inscriberRecipe);
             } else if (recipe instanceof TransformRecipe transformRecipe) {
-                writer.addRecipe(transformRecipe);
+                writer.addRecipe(id, transformRecipe);
             } else if (recipe instanceof SmithingTransformRecipe smithingTransformRecipe) {
-                writer.addRecipe(smithingTransformRecipe);
+                writer.addRecipe(id, smithingTransformRecipe);
             } else if (recipe instanceof SmithingTrimRecipe smithingTrimRecipe) {
-                writer.addRecipe(smithingTrimRecipe);
+                writer.addRecipe(id, smithingTrimRecipe);
             } else if (recipe instanceof StonecutterRecipe stonecutterRecipe) {
-                writer.addRecipe(stonecutterRecipe);
+                writer.addRecipe(id, stonecutterRecipe);
             } else if (recipe instanceof EntropyRecipe entropyRecipe) {
-                writer.addRecipe(entropyRecipe);
+                writer.addRecipe(id, entropyRecipe);
             } else if (recipe instanceof MatterCannonAmmo ammoRecipe) {
-                writer.addRecipe(ammoRecipe);
+                writer.addRecipe(id, ammoRecipe);
             } else if (recipe instanceof ChargerRecipe chargerRecipe) {
-                writer.addRecipe(chargerRecipe);
+                writer.addRecipe(id, chargerRecipe);
             } else {
-                LOGGER.warn("Unable to handle recipe {} of type {}", recipe.getId(), recipe.getType());
+                LOG.warn("Unable to handle recipe {} of type {}", holder.id(), recipe.getType());
             }
         }
     }
@@ -309,9 +298,9 @@ public final class SiteExporter implements ResourceExporter {
 
         // Load data packs if needed
         if (client.level == null) {
-            LOGGER.info("Reloading datapacks to get recipes");
+            LOG.info("Reloading datapacks to get recipes");
             Guide.runDatapackReload();
-            LOGGER.info("Completed datapack reload");
+            LOG.info("Completed datapack reload");
         }
 
         // Reference all navigation node icons
@@ -322,7 +311,7 @@ public final class SiteExporter implements ResourceExporter {
         for (var page : guide.getPages()) {
             currentPage = page;
 
-            LOGGER.debug("Compiling {}", page);
+            LOG.debug("Compiling {}", page);
             var compiledPage = PageCompiler.compile(guide, guide.getExtensions(), page);
 
             processPage(indexWriter, page, compiledPage);
@@ -461,7 +450,7 @@ public final class SiteExporter implements ResourceExporter {
 
             renderer.setupItemRendering();
 
-            LOGGER.info("Exporting items...");
+            LOG.info("Exporting items...");
             for (var item : items) {
                 var stack = new ItemStack(item);
 
@@ -509,7 +498,7 @@ public final class SiteExporter implements ResourceExporter {
 
             renderer.setupItemRendering();
 
-            LOGGER.info("Exporting fluids...");
+            LOG.info("Exporting fluids...");
             for (var fluid : fluids) {
                 var fluidVariant = FluidVariant.of(fluid);
                 String fluidId = BuiltInRegistries.FLUID.getKey(fluid).toString();

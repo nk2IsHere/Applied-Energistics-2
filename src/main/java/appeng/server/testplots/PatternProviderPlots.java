@@ -1,16 +1,16 @@
 package appeng.server.testplots;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.Items;
-
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEItemKey;
 import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEParts;
 import appeng.server.testworld.PlotBuilder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.Items;
 
+@TestPlotClass
 public final class PatternProviderPlots {
     private PatternProviderPlots() {
     }

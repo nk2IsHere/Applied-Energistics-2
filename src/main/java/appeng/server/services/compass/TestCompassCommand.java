@@ -18,16 +18,14 @@
 
 package appeng.server.services.compass;
 
+import appeng.core.localization.PlayerMessages;
+import appeng.server.ISubCommand;
 import com.mojang.brigadier.context.CommandContext;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.ChunkPos;
-
-import appeng.core.localization.PlayerMessages;
-import appeng.server.ISubCommand;
 
 public class TestCompassCommand implements ISubCommand {
     @Override
@@ -37,7 +35,7 @@ public class TestCompassCommand implements ISubCommand {
         var compassRegion = CompassRegion.get(level, chunkPos);
 
         for (var i = 0; i <= level.getSectionsCount(); i++) {
-            var hasSkyStone = compassRegion.hasSkyStone(chunkPos.x, chunkPos.z, i);
+            var hasSkyStone = compassRegion.hasCompassTarget(chunkPos.x, chunkPos.z, i);
             var yMin = i * SectionPos.SECTION_SIZE;
             var yMax = (i + 1) * SectionPos.SECTION_SIZE - 1;
             var iFinal = i;

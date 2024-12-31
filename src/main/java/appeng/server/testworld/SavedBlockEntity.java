@@ -1,11 +1,10 @@
 package appeng.server.testworld;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class SavedBlockEntity {
 
@@ -27,7 +26,7 @@ public class SavedBlockEntity {
             helper.fail("No BlockEntity", pos);
             return;
         }
-        data = be.saveWithId();
+        data = be.saveWithId(helper.getLevel().registryAccess());
     }
 
     public void saveAndRemove(BlockPos pos) {
@@ -45,7 +44,8 @@ public class SavedBlockEntity {
         var be = BlockEntity.loadStatic(
                 helper.absolutePos(BlockPos.ZERO),
                 blockState,
-                data);
+                data,
+                helper.getLevel().registryAccess());
         if (be == null) {
             helper.fail("Blockentity could not be restored", pos);
             return null;

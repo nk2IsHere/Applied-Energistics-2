@@ -18,10 +18,10 @@
 
 package appeng.spatial;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.stats.AdvancementTriggers;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,17 +32,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.entity.Visibility;
-import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-
-import appeng.core.definitions.AEBlocks;
-import appeng.core.stats.AdvancementTriggers;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SpatialStorageHelper {
 
@@ -109,14 +106,15 @@ public class SpatialStorageHelper {
             AdvancementTriggers.SPATIAL_EXPLORER.trigger((ServerPlayer) entity);
         }
 
-        PortalInfo portalInfo = new PortalInfo(new Vec3(link.x, link.y, link.z), Vec3.ZERO, entity.getYRot(),
-                entity.getXRot());
-        entity = FabricDimensions.teleport(entity, link.dim, portalInfo);
-        if (entity != null && !passengersOnOtherSide.isEmpty()) {
-            for (Entity passanger : passengersOnOtherSide) {
-                passanger.startRiding(entity, true);
-            }
-        }
+        entity.changeDimension(new DimensionTransition(
+                newLevel, new Vec3(link.x, link.y, link.z), Vec3.ZERO, entity.getYRot(),
+                entity.getXRot(), transportedEntity -> {
+                    if (!passengersOnOtherSide.isEmpty()) {
+                        for (Entity passanger : passengersOnOtherSide) {
+                            passanger.startRiding(transportedEntity, true);
+                        }
+                    }
+                }));
 
         return entity;
     }
@@ -247,8 +245,7 @@ public class SpatialStorageHelper {
         @Override
         public void visit(BlockPos pos) {
             final BlockState state = this.dst.getBlockState(pos);
-            final Block blk = state.getBlock();
-            blk.neighborChanged(state, this.dst, pos, blk, pos, false);
+            state.handleNeighborChanged(this.dst, pos, state.getBlock(), pos, false);
         }
     }
 

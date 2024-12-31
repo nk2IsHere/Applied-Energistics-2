@@ -1,13 +1,12 @@
 package appeng.server.testplots;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.core.AppEng;
 import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.PlotTestHelper;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class TestPlotCollection {
     private final Map<ResourceLocation, Consumer<PlotBuilder>> plots;

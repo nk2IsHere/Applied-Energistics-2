@@ -32,7 +32,7 @@ public class FalloutSnow extends FalloutCopy {
     private final MeteoriteBlockPutter putter;
 
     public FalloutSnow(LevelAccessor level, BlockPos pos, MeteoriteBlockPutter putter,
-            BlockState skyStone, RandomSource random) {
+                       BlockState skyStone, RandomSource random) {
         super(level, pos, putter, skyStone, random);
         this.putter = putter;
     }

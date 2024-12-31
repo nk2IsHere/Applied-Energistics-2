@@ -1,14 +1,13 @@
 package appeng.siteexport.model;
 
+import com.google.gson.JsonElement;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.JsonElement;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 
 public class SiteExportJson {
     public String defaultNamespace;
@@ -28,5 +27,7 @@ public class SiteExportJson {
     public List<NavigationNodeJson> navigationRootNodes = new ArrayList<>();
 
     public Map<String, FluidInfoJson> fluids = new HashMap<>();
+
+    public Map<String, String> defaultConfigValues = new HashMap<>();
 
 }

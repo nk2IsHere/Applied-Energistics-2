@@ -21,13 +21,7 @@ package appeng.server;
 import java.util.Locale;
 
 import appeng.server.services.compass.TestCompassCommand;
-import appeng.server.subcommands.ChannelModeCommand;
-import appeng.server.subcommands.ChunkLogger;
-import appeng.server.subcommands.ReloadConfigCommand;
-import appeng.server.subcommands.SetupTestWorldCommand;
-import appeng.server.subcommands.SpatialStorageCommand;
-import appeng.server.subcommands.TestMeteoritesCommand;
-import appeng.server.subcommands.TickMonitoring;
+import appeng.server.subcommands.*;
 
 public enum Commands {
     RELOAD_CONFIG(4, "reloadconfig", new ReloadConfigCommand()),
@@ -37,6 +31,7 @@ public enum Commands {
     SPATIAL(4, "spatial", new SpatialStorageCommand()),
     CHANNEL_MODE(4, "channelmode", new ChannelModeCommand()),
     TICK_MONITORING(4, "tickmonitor", new TickMonitoring()),
+    GRIDS(4, "grids", new GridsCommand()),
 
     // Testing
     COMPASS(4, "compass", new TestCompassCommand(), true),

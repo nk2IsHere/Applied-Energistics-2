@@ -1,8 +1,5 @@
 package appeng.siteexport.mdastpostprocess;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 import appeng.client.guidebook.GuidePage;
 import appeng.client.guidebook.compiler.ParsedGuidePage;
 import appeng.client.guidebook.document.block.LytNode;
@@ -11,6 +8,8 @@ import appeng.libs.mdast.MdAstVisitor;
 import appeng.libs.mdast.MdAstYamlFrontmatter;
 import appeng.libs.mdast.model.MdAstNode;
 import appeng.siteexport.ResourceExporter;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Post-Processes page content before exporting it.

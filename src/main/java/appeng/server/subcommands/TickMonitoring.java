@@ -18,16 +18,14 @@
 
 package appeng.server.subcommands;
 
+import appeng.me.service.TickManagerService;
+import appeng.server.ISubCommand;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
-
-import appeng.me.service.TickManagerService;
-import appeng.server.ISubCommand;
 
 public class TickMonitoring implements ISubCommand {
 

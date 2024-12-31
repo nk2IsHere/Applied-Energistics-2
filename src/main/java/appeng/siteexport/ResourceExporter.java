@@ -1,21 +1,20 @@
 package appeng.siteexport;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-
 public interface ResourceExporter {
     default void referenceItem(ItemLike item) {
-        referenceItem(new ItemStack(item.asItem()));
+        referenceItem(new ItemStack(item));
     }
 
     void referenceItem(ItemStack stack);
@@ -56,5 +55,5 @@ public interface ResourceExporter {
      */
     ResourceLocation getPageSpecificResourceLocation(String suffix);
 
-    void referenceRecipe(Recipe<?> recipe);
+    void referenceRecipe(RecipeHolder<?> recipe);
 }

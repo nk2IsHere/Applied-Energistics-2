@@ -25,6 +25,7 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.LevelAccessor;
@@ -32,7 +33,9 @@ import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
 import appeng.core.AEConfig;
@@ -45,7 +48,7 @@ import appeng.worldgen.meteorite.fallout.FalloutSnow;
 
 public final class MeteoritePlacer {
     public static void place(LevelAccessor level, PlacedMeteoriteSettings settings, BoundingBox boundingBox,
-            RandomSource random) {
+                             RandomSource random) {
         var placer = new MeteoritePlacer(level, settings, boundingBox, random);
         placer.place();
     }
@@ -71,7 +74,7 @@ public final class MeteoritePlacer {
     private final BoundingBox boundingBox;
 
     private MeteoritePlacer(LevelAccessor level, PlacedMeteoriteSettings settings, BoundingBox boundingBox,
-            RandomSource random) {
+                            RandomSource random) {
         this.boundingBox = boundingBox;
         this.level = level;
         this.random = random;
@@ -91,12 +94,12 @@ public final class MeteoritePlacer {
 
         this.quartzBlocks = getQuartzBudList();
         this.quartzBuds = Stream.of(
-                AEBlocks.SMALL_QUARTZ_BUD,
-                AEBlocks.MEDIUM_QUARTZ_BUD,
-                AEBlocks.LARGE_QUARTZ_BUD).map(def -> def.block().defaultBlockState()).toList();
+            AEBlocks.SMALL_QUARTZ_BUD,
+            AEBlocks.MEDIUM_QUARTZ_BUD,
+            AEBlocks.LARGE_QUARTZ_BUD).map(def -> def.block().defaultBlockState()).toList();
         this.skyStone = AEBlocks.SKY_STONE_BLOCK.block().defaultBlockState();
 
-        this.type = getFallout(level, settings.getPos(), settings.getFallout());
+        this.type = getFallout(level, boundingBox.getCenter(), settings.getFallout());
     }
 
     private List<BlockState> getQuartzBudList() {
@@ -104,11 +107,11 @@ public final class MeteoritePlacer {
             return Stream.of(AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
         }
         return Stream.of(
-                AEBlocks.QUARTZ_BLOCK,
-                AEBlocks.DAMAGED_BUDDING_QUARTZ,
-                AEBlocks.CHIPPED_BUDDING_QUARTZ,
-                AEBlocks.FLAWED_BUDDING_QUARTZ,
-                AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
+            AEBlocks.QUARTZ_BLOCK,
+            AEBlocks.DAMAGED_BUDDING_QUARTZ,
+            AEBlocks.CHIPPED_BUDDING_QUARTZ,
+            AEBlocks.FLAWED_BUDDING_QUARTZ,
+            AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
     }
 
     public void place() {
@@ -200,7 +203,7 @@ public final class MeteoritePlacer {
         }
 
         for (var e : level.getEntitiesOfClass(ItemEntity.class,
-                new AABB(minX(x - 30), y - 5, minZ(z - 30), maxX(x + 30), y + 30, maxZ(z + 30)))) {
+            new AABB(minX(x - 30), y - 5, minZ(z - 30), maxX(x + 30), y + 30, maxZ(z + 30)))) {
             e.discard();
         }
     }
@@ -307,7 +310,7 @@ public final class MeteoritePlacer {
                             if (!xf.canBeReplaced()) {
                                 final double extraRange = random.nextDouble() * 0.6;
                                 final double height = this.crater * (extraRange + 0.2)
-                                        - Math.abs(dist - this.crater * 1.7);
+                                    - Math.abs(dist - this.crater * 1.7);
 
                                 if (!xf.isAir() && height > 0 && random.nextDouble() > 0.6) {
                                     randomShit++;
@@ -337,31 +340,68 @@ public final class MeteoritePlacer {
     private void placeCraterLake() {
         final int maxY = level.getSeaLevel() - 1;
         MutableBlockPos blockPos = new MutableBlockPos();
+        ChunkAccess currentChunk;
 
-        for (int j = y - 5; j <= maxY; j++) {
-            blockPos.setY(j);
+        for (int currentX = boundingBox.minX(); currentX <= boundingBox.maxX(); currentX++) {
+            blockPos.setX(currentX);
 
-            for (int i = boundingBox.minX(); i <= boundingBox.maxX(); i++) {
-                blockPos.setX(i);
+            for (int currentZ = boundingBox.minZ(); currentZ <= boundingBox.maxZ(); currentZ++) {
+                blockPos.setZ(currentZ);
+                currentChunk = level.getChunk(blockPos);
 
-                for (int k = boundingBox.minZ(); k <= boundingBox.maxZ(); k++) {
-                    blockPos.setZ(k);
-                    final double dx = i - x;
-                    final double dz = k - z;
+                for (int currentY = y - 5; currentY <= maxY; currentY++) {
+                    blockPos.setY(currentY);
+
+                    final double dx = currentX - x;
+                    final double dz = currentZ - z;
                     final double h = y - this.meteoriteSize + 1 + this.type.adjustCrater();
 
                     final double distanceFrom = dx * dx + dz * dz;
 
-                    if (j > h + distanceFrom * 0.02) {
-                        BlockState currentBlock = level.getBlockState(blockPos);
+                    if (currentY > h + distanceFrom * 0.02) {
+                        BlockState currentBlock = currentChunk.getBlockState(blockPos);
                         if (currentBlock.getBlock() == Blocks.AIR) {
                             this.putter.put(level, blockPos, Blocks.WATER.defaultBlockState());
-                        }
 
+                            if (currentY == maxY) {
+                                level.scheduleTick(blockPos, Fluids.WATER, 0);
+                            }
+                        }
+                    } else if (maxY + (maxY - currentY) * 2 + 2 > h + distanceFrom * 0.02) {
+                        pillarDownSlopeBlocks(currentChunk, blockPos);
                     }
                 }
             }
         }
+    }
+
+    private void pillarDownSlopeBlocks(ChunkAccess currentChunk, MutableBlockPos blockPos) {
+        MutableBlockPos enclosingBlockPos = new MutableBlockPos();
+        enclosingBlockPos.set(blockPos);
+
+        for (int i = 0; i < 20; i++) {
+            if (placeEnclosingBlock(currentChunk, enclosingBlockPos)) {
+                break;
+            }
+            enclosingBlockPos.move(Direction.DOWN);
+        }
+    }
+
+    private boolean placeEnclosingBlock(ChunkAccess currentChunk, MutableBlockPos enclosingBlockPos) {
+        BlockState currentState = currentChunk.getBlockState(enclosingBlockPos);
+        if (currentState.getBlock() == Blocks.AIR ||
+            (currentState.getFluidState().isEmpty() &&
+                (currentState.canBeReplaced() || currentState.is(BlockTags.REPLACEABLE)))) {
+
+            if (craterType == CraterType.LAVA && level.getRandom().nextFloat() < 0.075f) {
+                this.putter.put(level, enclosingBlockPos, Blocks.MAGMA_BLOCK.defaultBlockState());
+            } else {
+                this.type.getRandomFall(level, enclosingBlockPos);
+            }
+        } else {
+            return true;
+        }
+        return false;
     }
 
     private Fallout getFallout(LevelAccessor level, BlockPos pos, FalloutMode mode) {

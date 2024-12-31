@@ -1,51 +1,6 @@
 package appeng.server.testplots;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import com.google.common.collect.Sets;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.inventory.TransientCraftingContainer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.material.Fluids;
-
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.config.RedstoneMode;
-import appeng.api.config.Settings;
-import appeng.api.config.YesNo;
+import appeng.api.config.*;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.networking.pathing.ChannelMode;
 import appeng.api.orientation.BlockOrientation;
@@ -57,8 +12,8 @@ import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.StorageCells;
 import appeng.api.util.AEColor;
 import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
-import appeng.blockentity.misc.InterfaceBlockEntity;
 import appeng.blockentity.storage.DriveBlockEntity;
+import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.blockentity.storage.SkyStoneTankBlockEntity;
 import appeng.core.AELog;
 import appeng.core.AppEng;
@@ -70,20 +25,59 @@ import appeng.items.tools.powered.MatterCannonItem;
 import appeng.me.cells.BasicCellInventory;
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.service.PathingService;
-import appeng.menu.AutoCraftingMenu;
 import appeng.parts.crafting.PatternProviderPart;
 import appeng.server.testworld.Plot;
 import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.TestCraftingJob;
 import appeng.util.CraftingRecipeUtil;
+import appeng.util.Platform;
+import com.google.common.collect.Sets;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.ElementType;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.function.Consumer;
+
+@TestPlotClass
 public final class TestPlots {
     private static final List<Class<?>> PLOT_CLASSES = new ArrayList<>();
+    private static final Logger LOG = LoggerFactory.getLogger(TestPlots.class);
 
     @Nullable
     private static Map<ResourceLocation, Consumer<PlotBuilder>> plots;
 
     static {
+        SpawnTestTools.init();
         PLOT_CLASSES.addAll(List.of(
                 TestPlots.class,
                 AutoCraftingTestPlots.class,
@@ -98,7 +92,12 @@ public final class TestPlots {
                 GuidebookPlot.class,
                 SubnetPlots.class,
                 ChannelTests.class,
-                AnnihilationPlaneTests.class));
+                ExternalEnergyTestPlots.class,
+                CrystalResonanceGeneratorTestPlots.class,
+                AnnihilationPlaneTests.class,
+                InterfaceTestPlots.class,
+                InvalidPatternTestPlot.class
+        ));
     }
 
     private TestPlots() {
@@ -174,7 +173,7 @@ public final class TestPlots {
                 }
             }
         } catch (Exception e) {
-            AELog.warn("Failed to scan for plots: %s", e);
+            AELog.error("Failed to scan for plots: %s", e);
         }
 
         return plots;
@@ -212,26 +211,31 @@ public final class TestPlots {
         return plot;
     }
 
+    private static AEItemKey createEnchantedPickaxe(Level level) {
+        var enchantmentRegistry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+
+        var enchantedPickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
+        enchantedPickaxe.enchant(enchantmentRegistry.getHolderOrThrow(Enchantments.FORTUNE), 3);
+        return AEItemKey.of(enchantedPickaxe);
+    }
+
     /**
      * A wall of all terminals/monitors in all color combinations.
      */
     @TestPlot("all_terminals")
     public static void allTerminals(PlotBuilder plot) {
-        var enchantedPickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
-        enchantedPickaxe.enchant(Enchantments.BLOCK_FORTUNE, 3);
-        var enchantedPickaxeKey = AEItemKey.of(enchantedPickaxe);
-
         plot.creativeEnergyCell("0 -1 0");
 
         plot.cable("[-1,0] [0,8] 0", AEParts.COVERED_DENSE_CABLE);
         plot.part("0 [0,8] 0", Direction.WEST, AEParts.CABLE_ANCHOR);
         plot.block("[-1,0] 5 0", AEBlocks.CONTROLLER);
         plot.storageDrive(new BlockPos(0, 5, 1));
-        plot.afterGridInitAt("0 5 1", (grid, gridNode) -> {
+        plot.afterGridInitAt(new BlockPos(0, 5, 1), (grid, gridNode) -> {
+            var enchantedPickaxe = createEnchantedPickaxe(gridNode.getLevel());
             var storage = grid.getStorageService().getInventory();
             var src = new BaseActionSource();
             storage.insert(AEItemKey.of(Items.DIAMOND_PICKAXE), 10, Actionable.MODULATE, src);
-            storage.insert(enchantedPickaxeKey, 1234, Actionable.MODULATE, src);
+            storage.insert(enchantedPickaxe, 1234, Actionable.MODULATE, src);
             storage.insert(AEItemKey.of(Items.ACACIA_LOG), Integer.MAX_VALUE, Actionable.MODULATE, src);
         });
 
@@ -257,7 +261,8 @@ public final class TestPlots {
             line.part("3 0 0", Direction.NORTH, AEParts.PATTERN_ENCODING_TERMINAL);
             line.part("4 0 0", Direction.NORTH, AEParts.PATTERN_ACCESS_TERMINAL);
             line.part("5 0 0", Direction.NORTH, AEParts.STORAGE_MONITOR, monitor -> {
-                monitor.setConfiguredItem(enchantedPickaxeKey);
+                var enchantedPickaxe = createEnchantedPickaxe(monitor.getLevel());
+                monitor.setConfiguredItem(enchantedPickaxe);
                 monitor.setLocked(true);
             });
             line.part("6 0 0", Direction.NORTH, AEParts.CONVERSION_MONITOR, monitor -> {
@@ -280,7 +285,7 @@ public final class TestPlots {
 
     @TestPlot("item_chest")
     public static void itemChest(PlotBuilder plot) {
-        plot.blockEntity("0 0 0", AEBlocks.CHEST, chest -> {
+        plot.blockEntity("0 0 0", AEBlocks.ME_CHEST, chest -> {
             var cellItem = AEItems.ITEM_CELL_1K.stack();
             var cellInv = StorageCells.getCellInventory(cellItem, null);
             var r = RandomSource.create();
@@ -297,7 +302,7 @@ public final class TestPlots {
 
     @TestPlot("fluid_chest")
     public static void fluidChest(PlotBuilder plot) {
-        plot.blockEntity("0 0 0", AEBlocks.CHEST, chest -> {
+        plot.blockEntity("0 0 0", AEBlocks.ME_CHEST, chest -> {
             var cellItem = AEItems.FLUID_CELL_1K.stack();
             var cellInv = StorageCells.getCellInventory(cellItem, null);
             var r = RandomSource.create();
@@ -525,7 +530,7 @@ public final class TestPlots {
                     .thenExecuteAfter(1, () -> {
                         var pos = helper.absolutePos(BlockPos.ZERO);
                         var importBus = PartHelper.setPart(helper.getLevel(), pos, Direction.NORTH,
-                                null, AEParts.IMPORT_BUS.asItem());
+                                null, AEParts.IMPORT_BUS.get());
                         importBus.getUpgrades().addItems(AEItems.REDSTONE_CARD.stack());
                         importBus.getConfigManager().putSetting(Settings.REDSTONE_CONTROLLED,
                                 RedstoneMode.SIGNAL_PULSE);
@@ -548,7 +553,7 @@ public final class TestPlots {
         plot.creativeEnergyCell(origin.below());
         plot.blockEntity(
                 origin,
-                AEBlocks.CHEST,
+                AEBlocks.ME_CHEST,
                 chest -> chest.setCell(createMatterCannon(Items.IRON_NUGGET)));
 
         plot.block("-2 [0,1] 5", Blocks.STONE);
@@ -566,7 +571,7 @@ public final class TestPlots {
         plot.blockState(BlockPos.ZERO, Blocks.DISPENSER.defaultBlockState()
                 .setValue(DispenserBlock.FACING, Direction.SOUTH));
         plot.customizeBlockEntity(BlockPos.ZERO, BlockEntityType.DISPENSER, dispenser -> {
-            dispenser.addItem(createMatterCannon(ammos));
+            dispenser.setItem(0, createMatterCannon(ammos));
         });
         plot.buttonOn(BlockPos.ZERO, Direction.NORTH);
     }
@@ -590,7 +595,7 @@ public final class TestPlots {
     public static void testInsertFluidIntoMEChest(PlotBuilder plot) {
         var origin = BlockPos.ZERO;
         plot.creativeEnergyCell(origin.below());
-        plot.blockEntity(origin, AEBlocks.CHEST, chest -> {
+        plot.blockEntity(origin, AEBlocks.ME_CHEST, chest -> {
             chest.setCell(AEItems.FLUID_CELL_4K.stack());
         });
         plot.cable(origin.east())
@@ -603,7 +608,7 @@ public final class TestPlots {
         plot.creativeEnergyCell(origin.east().north().below());
 
         plot.test(helper -> helper.succeedWhen(() -> {
-            var meChest = (appeng.blockentity.storage.ChestBlockEntity) helper.getBlockEntity(origin);
+            var meChest = (MEChestBlockEntity) helper.getBlockEntity(origin);
             helper.assertContains(meChest.getInventory(), AEFluidKey.of(Fluids.WATER));
         }));
     }
@@ -615,16 +620,16 @@ public final class TestPlots {
     public static void testInsertItemsIntoMEChest(PlotBuilder plot) {
         var origin = BlockPos.ZERO;
         plot.creativeEnergyCell(origin.below());
-        plot.blockEntity(origin, AEBlocks.CHEST, chest -> {
+        plot.blockEntity(origin, AEBlocks.ME_CHEST, chest -> {
             var cell = AEItems.ITEM_CELL_1K.stack();
-            AEItems.ITEM_CELL_1K.asItem().getConfigInventory(cell).addFilter(Items.REDSTONE);
+            AEItems.ITEM_CELL_1K.get().getConfigInventory(cell).addFilter(Items.REDSTONE);
             chest.setCell(cell);
         });
         // Hopper to test insertion of stuff. It should try to insert stick first.
         plot.hopper(origin.above(), Direction.DOWN, Items.STICK, Items.REDSTONE);
 
         plot.test(helper -> helper.succeedWhen(() -> {
-            var meChest = (appeng.blockentity.storage.ChestBlockEntity) helper.getBlockEntity(origin);
+            var meChest = (MEChestBlockEntity) helper.getBlockEntity(origin);
             helper.assertContains(meChest.getInventory(), AEItemKey.of(Items.REDSTONE));
             // The stick should still be in the hopper
             helper.assertContainerContains(origin.above(), Items.STICK);
@@ -647,7 +652,7 @@ public final class TestPlots {
                 .part(Direction.EAST, AEParts.PATTERN_PROVIDER)
                 .part(Direction.WEST, AEParts.PATTERN_PROVIDER);
 
-        plot.afterGridExistsAt("0 0 0", (grid, node) -> {
+        plot.afterGridExistsAt(BlockPos.ZERO, (grid, node) -> {
             // This has so many nodes it needs infinite mode
             ((PathingService) grid.getPathingService()).setForcedChannelMode(ChannelMode.INFINITE);
 
@@ -658,7 +663,8 @@ public final class TestPlots {
             Set<AEItemKey> neededIngredients = new HashSet<>();
             Set<AEItemKey> providedResults = new HashSet<>();
 
-            for (var recipe : craftingRecipes) {
+            for (var holder : craftingRecipes) {
+                var recipe = holder.value();
                 if (recipe.isSpecial()) {
                     continue;
                 }
@@ -674,7 +680,7 @@ public final class TestPlots {
                                 }
                             }).toArray(ItemStack[]::new);
                     craftingPattern = PatternDetailsHelper.encodeCraftingPattern(
-                            recipe,
+                            holder,
                             ingredients,
                             recipe.getResultItem(node.getLevel().registryAccess()),
                             false,
@@ -709,8 +715,8 @@ public final class TestPlots {
 
                 var cellInv = drive.getInternalInventory();
                 for (int i = 0; i < cellInv.size(); i++) {
-                    var creativeCell = AEItems.ITEM_CELL_CREATIVE.stack();
-                    var configInv = AEItems.ITEM_CELL_CREATIVE.asItem().getConfigInventory(creativeCell);
+                    var creativeCell = AEItems.CREATIVE_CELL.stack();
+                    var configInv = AEItems.CREATIVE_CELL.get().getConfigInventory(creativeCell);
 
                     for (int j = 0; j < configInv.size(); j++) {
                         if (!keysToAdd.hasNext()) {
@@ -743,8 +749,8 @@ public final class TestPlots {
                 .part(Direction.EAST, AEParts.PATTERN_PROVIDER, pp -> {
                     pp.getLogic().getPatternInv().addItems(
                             PatternDetailsHelper.encodeProcessingPattern(
-                                    new GenericStack[] { input },
-                                    new GenericStack[] { output }));
+                                    List.of(input),
+                                    List.of(output)));
                     pp.getLogic().getConfigManager().putSetting(Settings.BLOCKING_MODE, YesNo.YES);
                 });
         plot.drive(new BlockPos(2, 0, -1))
@@ -774,51 +780,6 @@ public final class TestPlots {
     }
 
     /**
-     * Regression test for https://github.com/AppliedEnergistics/Applied-Energistics-2/issues/5919
-     */
-    @TestPlot("canceling_jobs_from_interfacecrash")
-    public static void cancelingJobsFromInterfaceCrash(PlotBuilder plot) {
-        var origin = BlockPos.ZERO;
-
-        plot.creativeEnergyCell(origin);
-        // Stock 1 oak_plank via crafting
-        plot.blockEntity(origin.above(), AEBlocks.INTERFACE, iface -> {
-            iface.getUpgrades().addItems(AEItems.CRAFTING_CARD.stack());
-            iface.getConfig().setStack(0, new GenericStack(AEItemKey.of(Items.OAK_PLANKS), 1));
-        });
-        plot.block(origin.east(), AEBlocks.CRAFTING_STORAGE_1K);
-        // Set up a level emitter for oak_planks
-        plot.cable(origin.west()).craftingEmitter(Direction.WEST, Items.OAK_PLANKS);
-
-        plot.test(helper -> {
-            helper.startSequence()
-                    .thenWaitUntil(() -> {
-                        var grid = helper.getGrid(origin);
-                        helper.check(
-                                grid.getCraftingService().isRequesting(AEItemKey.of(Items.OAK_PLANKS)),
-                                "Interface is not crafting oak planks");
-                    })
-                    .thenExecute(() -> {
-                        // Cancel the job by removing the upgrade card
-                        var iface = (InterfaceBlockEntity) helper.getBlockEntity(origin.above());
-                        iface.getUpgrades().removeItems(1, ItemStack.EMPTY, null);
-
-                        // and immediately insert a craft result into the network storage
-                        // this would crash because the crafting job was not cleaned up properly before
-                        // the crafting service ticks
-                        var grid = helper.getGrid(origin);
-                        var inserted = grid.getStorageService().getInventory().insert(
-                                AEItemKey.of(Items.OAK_PLANKS), 1, Actionable.MODULATE, new BaseActionSource());
-                        helper.check(inserted == 0,
-                                "Nothing should have been inserted into the network");
-                        helper.check(iface.getInterfaceLogic().getStorage().isEmpty(),
-                                "Nothing should have been inserted into the interface");
-                    })
-                    .thenSucceed();
-        }).maxTicks(300 /* interface takes a while to request */);
-    }
-
-    /**
      * Simple terminal full of enchanted items to test rendering performance.
      */
     @TestPlot("terminal_fullof_enchanteditems")
@@ -828,15 +789,18 @@ public final class TestPlots {
         plot.cable(origin).part(Direction.NORTH, AEParts.TERMINAL);
         var drive = plot.drive(origin.east());
 
-        var pickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
-        pickaxe.enchant(Enchantments.BLOCK_FORTUNE, 1);
-        for (var i = 0; i < 10; i++) {
-            var cell = drive.addItemCell64k();
-            for (var j = 0; j < 63; j++) {
-                pickaxe.setDamageValue(pickaxe.getDamageValue() + 1);
-                cell.add(AEItemKey.of(pickaxe), 2);
+        plot.addPostBuildAction((level, player, ignored) -> {
+            var enchantment = Platform.getEnchantment(level, Enchantments.FORTUNE);
+            var pickaxe = new ItemStack(Items.DIAMOND_PICKAXE);
+            pickaxe.enchant(enchantment, 1);
+            for (var i = 0; i < 10; i++) {
+                var cell = drive.addItemCell64k();
+                for (var j = 0; j < 63; j++) {
+                    pickaxe.setDamageValue(pickaxe.getDamageValue() + 1);
+                    cell.add(AEItemKey.of(pickaxe), 2);
+                }
             }
-        }
+        });
     }
 
     @TestPlot("import_from_cauldron")
@@ -854,9 +818,9 @@ public final class TestPlots {
             helper.succeedWhen(() -> {
                 helper.assertBlockPresent(Blocks.CAULDRON, origin.east());
                 var tank = (SkyStoneTankBlockEntity) helper.getBlockEntity(origin.west());
-                helper.check(tank.getStorage().amount == AEFluidKey.AMOUNT_BUCKET,
+                helper.check(tank.getTank().getFluidAmount() == AEFluidKey.AMOUNT_BUCKET,
                         "Less than a bucket stored");
-                helper.check(tank.getStorage().variant.getFluid() == Fluids.LAVA,
+                helper.check(tank.getTank().getFluid().getFluid() == Fluids.LAVA,
                         "Something other than lava stored");
             });
         });
@@ -886,11 +850,13 @@ public final class TestPlots {
         var molecularAssemblerPos = new BlockPos(0, 1, 0);
         plot.blockEntity(molecularAssemblerPos, AEBlocks.MOLECULAR_ASSEMBLER, molecularAssembler -> {
             // Get repair recipe
-            var craftingContainer = new TransientCraftingContainer(new AutoCraftingMenu(), 3, 3);
-            craftingContainer.setItem(0, undamaged.toStack());
-            craftingContainer.setItem(1, undamaged.toStack());
+            var items = NonNullList.withSize(9, ItemStack.EMPTY);
+            items.set(0, undamaged.toStack());
+            items.set(1, undamaged.toStack());
+            var input = CraftingInput.of(3, 3, items);
+
             var level = molecularAssembler.getLevel();
-            var recipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingContainer, level).get();
+            var recipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level).get();
 
             // Encode pattern
             var sparseInputs = new ItemStack[9];
@@ -982,85 +948,6 @@ public final class TestPlots {
                         "Expected 64 sticks total, but found: " + stickCount);
             });
         });
-    }
-
-    /**
-     * Similar to {@link #exportBusDupeRegression(PlotBuilder)}, but tests that interface restocking will not make the
-     * same mistake.
-     */
-    @TestPlot("interface_restock_dupe_test")
-    private static void interfaceRestockDupeTest(PlotBuilder plot) {
-        var o = BlockPos.ZERO;
-        // Set up a double chest with 64 sticks which will report as 128 sticks
-        // and allow simulated extractions of 128 sticks to succeed.
-        plot.chest(o.north(), new ItemStack(Items.STICK, 64));
-        plot.blockState(o.north(), Blocks.CHEST.defaultBlockState().setValue(ChestBlock.TYPE, ChestType.RIGHT));
-        plot.cable(o).part(Direction.NORTH, AEParts.STORAGE_BUS);
-        plot.blockState(o.north().west(), Blocks.CHEST.defaultBlockState().setValue(ChestBlock.TYPE, ChestType.LEFT));
-        plot.cable(o.west()).part(Direction.NORTH, AEParts.STORAGE_BUS);
-
-        // Set up an interface that tries to stock 128 sticks
-        plot.blockEntity(o.above(), AEBlocks.INTERFACE, iface -> {
-            iface.getConfig().setStack(0, GenericStack.fromItemStack(new ItemStack(Items.STICK, 64)));
-            iface.getConfig().setStack(1, GenericStack.fromItemStack(new ItemStack(Items.STICK, 64)));
-        });
-        plot.creativeEnergyCell(o.below());
-
-        plot.test(helper -> {
-            helper.succeedWhen(() -> {
-                // Both double chests should be empty
-                helper.assertContainerEmpty(o.north());
-                helper.assertContainerEmpty(o.north().west());
-
-                // The output interface should have 64 sticks
-                var iface = (InterfaceBlockEntity) helper.getBlockEntity(o.above());
-                var counter = new KeyCounter();
-                iface.getInterfaceLogic().getStorage().getAvailableStacks(counter);
-                var stickCount = counter.get(AEItemKey.of(Items.STICK));
-                helper.check(stickCount == 64,
-                        "Expected 64 sticks total, but found: " + stickCount);
-            });
-        });
-    }
-
-    /**
-     * Tests that the priority checks for interface -> interface restocking don't apply when the source interface is on
-     * another network. Regression test for https://github.com/AppliedEnergistics/Applied-Energistics-2/issues/6847.
-     */
-    @TestPlot("interface_to_interface_different_networks")
-    public static void interfaceToInterfaceDifferentNetworks(PlotBuilder plot) {
-        var o = BlockPos.ZERO;
-        plot.cable(o)
-                .part(Direction.NORTH, AEParts.STORAGE_BUS);
-        plot.blockEntity(o.north(), AEBlocks.INTERFACE, iface -> {
-            // Need something in the config to not expose the full network...
-            iface.getConfig().setStack(0, GenericStack.fromItemStack(new ItemStack(Items.APPLE)));
-            iface.getStorage().setStack(0, GenericStack.fromItemStack(new ItemStack(Items.APPLE, 64)));
-        });
-        plot.block(o.north().north(), AEBlocks.CREATIVE_ENERGY_CELL);
-        plot.block(o.east(), AEBlocks.CREATIVE_ENERGY_CELL);
-        plot.blockEntity(o.south(), AEBlocks.INTERFACE, iface -> {
-            iface.getConfig().setStack(0, GenericStack.fromItemStack(new ItemStack(Items.APPLE)));
-        });
-
-        plot.test(helper -> helper.startSequence()
-                // Test interface restock
-                .thenWaitUntil(() -> {
-                    var iface = (InterfaceBlockEntity) helper.getBlockEntity(o.south());
-                    var apples = iface.getStorage().getStack(0);
-                    helper.check(apples != null && apples.amount() == 1, "Expected 1 apple", o.south());
-                })
-                // Test interface pushing items away to subnet
-                .thenExecute(() -> {
-                    var iface = (InterfaceBlockEntity) helper.getBlockEntity(o.south());
-                    iface.getStorage().setStack(1, GenericStack.fromItemStack(new ItemStack(Items.DIAMOND)));
-                })
-                .thenWaitUntil(() -> {
-                    var iface = (InterfaceBlockEntity) helper.getBlockEntity(o.north());
-                    var diamonds = iface.getStorage().getStack(1);
-                    helper.check(diamonds != null && diamonds.amount() == 1, "Expected 1 diamond", o.north());
-                })
-                .thenSucceed());
     }
 
 }

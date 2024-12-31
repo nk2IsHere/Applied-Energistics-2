@@ -38,7 +38,7 @@ public class MeteoriteSpawner {
     }
 
     public PlacedMeteoriteSettings trySpawnMeteoriteAtSuitableHeight(LevelReader level, BlockPos startPos,
-            float coreRadius, CraterType craterType, boolean pureCrater) {
+                                                                     float coreRadius, CraterType craterType, boolean pureCrater) {
         int stepSize = Math.min(5, (int) Math.ceil(coreRadius) + 1);
         int minY = 10 + stepSize;
         MutableBlockPos mutablePos = startPos.mutable();
@@ -59,7 +59,7 @@ public class MeteoriteSpawner {
 
     @Nullable
     public PlacedMeteoriteSettings trySpawnMeteorite(LevelReader level, BlockPos pos, float coreRadius,
-            CraterType craterType, boolean pureCrater) {
+                                                     CraterType craterType, boolean pureCrater) {
         if (!areSurroundingsSuitable(level, pos)) {
             return null;
         }

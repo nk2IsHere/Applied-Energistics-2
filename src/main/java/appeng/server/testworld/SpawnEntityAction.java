@@ -1,8 +1,5 @@
 package appeng.server.testworld;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -10,6 +7,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public record SpawnEntityAction(BoundingBox bb, EntityType<?> type,
         Consumer<Entity> postProcessor) implements BuildAction {

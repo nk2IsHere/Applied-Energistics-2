@@ -29,24 +29,17 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
-import appeng.server.services.compass.CompassService;
+import appeng.server.services.compass.ServerCompassService;
 import appeng.worldgen.meteorite.fallout.FalloutMode;
 
 public class MeteoriteStructurePiece extends StructurePiece {
 
-    public static final StructurePieceType TYPE = StructurePieceType.setPieceId(MeteoriteStructurePiece::new,
-            "ae2mtrt");
-
-    public static void register() {
-        // THIS MUST BE CALLED otherwise the static initializer above will not run,
-        // unless level generation is actually invoked, which means that chunks may
-        // be loaded without this being registered as a structure piece!
-    }
+    public static final StructurePieceType.ContextlessType TYPE = MeteoriteStructurePiece::new;
 
     private final PlacedMeteoriteSettings settings;
 
     protected MeteoriteStructurePiece(BlockPos center, float coreRadius, CraterType craterType, FalloutMode fallout,
-            boolean pureCrater, boolean craterLake) {
+                                      boolean pureCrater, boolean craterLake) {
         super(TYPE, 0, createBoundingBox(center));
         this.settings = new PlacedMeteoriteSettings(center, coreRadius, craterType, fallout, pureCrater, craterLake);
     }
@@ -59,8 +52,8 @@ public class MeteoriteStructurePiece extends StructurePiece {
         ChunkPos chunkPos = new ChunkPos(origin);
 
         return new BoundingBox(chunkPos.getMinBlockX() - range, origin.getY(),
-                chunkPos.getMinBlockZ() - range, chunkPos.getMaxBlockX() + range, origin.getY(),
-                chunkPos.getMaxBlockZ() + range);
+            chunkPos.getMinBlockZ() - range, chunkPos.getMaxBlockX() + range, origin.getY(),
+            chunkPos.getMaxBlockZ() + range);
     }
 
     public MeteoriteStructurePiece(CompoundTag tag) {
@@ -96,9 +89,9 @@ public class MeteoriteStructurePiece extends StructurePiece {
 
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator,
-            RandomSource rand, BoundingBox bounds, ChunkPos chunkPos, BlockPos blockPos) {
+                            RandomSource rand, BoundingBox bounds, ChunkPos chunkPos, BlockPos blockPos) {
         MeteoritePlacer.place(level, settings, bounds, rand);
 
-        CompassService.updateArea(level.getLevel(), level.getChunk(chunkPos.x, chunkPos.z));
+        ServerCompassService.updateArea(level.getLevel(), level.getChunk(chunkPos.x, chunkPos.z));
     }
 }

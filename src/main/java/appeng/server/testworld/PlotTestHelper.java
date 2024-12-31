@@ -1,19 +1,5 @@
 package appeng.server.testworld;
 
-import java.util.Objects;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTestAssertException;
-import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.gametest.framework.GameTestInfo;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGrid;
@@ -23,10 +9,23 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
+import appeng.blockentity.AEBaseInvBlockEntity;
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.parts.AEBasePart;
 import appeng.util.Platform;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTestAssertException;
+import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.gametest.framework.GameTestInfo;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class PlotTestHelper extends GameTestHelper {
     private final BlockPos plotTranslation;
@@ -83,7 +82,7 @@ public class PlotTestHelper extends GameTestHelper {
     public IGridNode getGridNode(BlockPos pos) {
         checkAllInitialized();
 
-        var be = getBlockEntity(pos);
+        var be = getLevel().getBlockEntity(absolutePos(pos));
         if (be instanceof IGridConnectedBlockEntity gridConnectedBlockEntity) {
             var node = gridConnectedBlockEntity.getMainNode().getNode();
             check(node != null, "no node", pos);
@@ -117,7 +116,7 @@ public class PlotTestHelper extends GameTestHelper {
      */
     public void checkAllInitialized() {
         forEveryBlockInStructure(blockPos -> {
-            var be = getBlockEntity(blockPos);
+            var be = getLevel().getBlockEntity(absolutePos(blockPos));
             if (be instanceof IGridConnectedBlockEntity gridConnectedBlockEntity) {
                 check(gridConnectedBlockEntity.getMainNode().isReady(), "BE " + be + " is not ready");
             } else if (be instanceof IPartHost partHost) {
@@ -189,12 +188,21 @@ public class PlotTestHelper extends GameTestHelper {
     }
 
     public void countContainerContentAt(BlockPos pos, KeyCounter counter) {
-        var container = ((BaseContainerBlockEntity) getBlockEntity(pos));
-        for (int i = 0; i < container.getContainerSize(); i++) {
-            var item = container.getItem(i);
-            if (!item.isEmpty()) {
+        var be = getBlockEntity(pos);
+        if (be instanceof BaseContainerBlockEntity container) {
+            for (int i = 0; i < container.getContainerSize(); i++) {
+                var item = container.getItem(i);
+                if (!item.isEmpty()) {
+                    counter.add(AEItemKey.of(item), item.getCount());
+                }
+            }
+        } else if (be instanceof AEBaseInvBlockEntity aeBe) {
+            var internalInv = aeBe.getInternalInventory();
+            for (var item : internalInv) {
                 counter.add(AEItemKey.of(item), item.getCount());
             }
+        } else {
+            throw new RuntimeException("Unsupported BE: " + be);
         }
     }
 

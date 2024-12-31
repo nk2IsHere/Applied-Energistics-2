@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -42,17 +42,17 @@ public enum FalloutMode {
     /**
      * For sandy terrain
      */
-    SAND(ConventionalBiomeTags.DESERT, ConventionalBiomeTags.BEACH),
+    SAND(ConventionalBiomeTags.IS_DESERT, ConventionalBiomeTags.IS_BEACH),
 
     /**
      * For terracotta (mesa)
      */
-    TERRACOTTA(ConventionalBiomeTags.MESA),
+    TERRACOTTA(ConventionalBiomeTags.IS_BADLANDS),
 
     /**
      * Icy/snowy terrain
      */
-    ICE_SNOW(ConventionalBiomeTags.SNOWY, ConventionalBiomeTags.ICY);
+    ICE_SNOW(ConventionalBiomeTags.IS_COLD);
 
     private final List<TagKey<Biome>> biomeTags;
 

@@ -32,8 +32,8 @@ public class CableBuilder {
     }
 
     public <T extends IPart> CableBuilder part(Direction side,
-            ItemDefinition<? extends PartItem<T>> part,
-            Consumer<T> partCustomizer) {
+                                               ItemDefinition<? extends PartItem<T>> part,
+                                               Consumer<T> partCustomizer) {
         plotBuilder.part(bb, side, part, partCustomizer);
         return this;
     }

@@ -1,10 +1,9 @@
 package appeng.siteexport.model;
 
-import java.util.List;
-
+import appeng.client.guidebook.navigation.NavigationNode;
 import net.minecraft.world.item.ItemStack;
 
-import appeng.client.guidebook.navigation.NavigationNode;
+import java.util.List;
 
 public class NavigationNodeJson {
     public String pageId;

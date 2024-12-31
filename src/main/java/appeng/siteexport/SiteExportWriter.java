@@ -1,55 +1,9 @@
 package appeng.siteexport;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.HexFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.internal.bind.JsonTreeWriter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
-import net.minecraft.world.item.crafting.StonecutterRecipe;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-
 import appeng.client.guidebook.Guide;
 import appeng.client.guidebook.compiler.MdAstNodeAdapter;
 import appeng.client.guidebook.compiler.ParsedGuidePage;
+import appeng.client.guidebook.extensions.ConfigValueTagExtension;
 import appeng.client.guidebook.indices.PageIndex;
 import appeng.items.tools.powered.MatterCannonItem;
 import appeng.libs.mdast.MdAstVisitor;
@@ -61,12 +15,38 @@ import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipe;
 import appeng.recipes.mattercannon.MatterCannonAmmo;
 import appeng.recipes.transform.TransformRecipe;
-import appeng.siteexport.model.ExportedPageJson;
-import appeng.siteexport.model.FluidInfoJson;
-import appeng.siteexport.model.ItemInfoJson;
-import appeng.siteexport.model.NavigationNodeJson;
-import appeng.siteexport.model.P2PTypeInfo;
-import appeng.siteexport.model.SiteExportJson;
+import appeng.siteexport.model.*;
+import appeng.util.Platform;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.internal.bind.JsonTreeWriter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.zip.GZIPOutputStream;
 
 public class SiteExportWriter {
     private static final Logger LOG = LoggerFactory.getLogger(SiteExportWriter.class);
@@ -149,6 +129,10 @@ public class SiteExportWriter {
                 .stream()
                 .map(NavigationNodeJson::of)
                 .toList();
+        siteExport.defaultConfigValues = ConfigValueTagExtension.CONFIG_VALUES.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().get()));
     }
 
     public void addItem(String id, ItemStack stack, String iconPath) {
@@ -165,11 +149,11 @@ public class SiteExportWriter {
         var fluidInfo = new FluidInfoJson();
         fluidInfo.id = id;
         fluidInfo.icon = iconPath;
-        fluidInfo.displayName = FluidVariantRendering.getTooltip(fluid).get(0).getString();
+        fluidInfo.displayName = FluidVariantRendering.getTooltip(fluid).getFirst().getString();
         siteExport.fluids.put(fluidInfo.id, fluidInfo);
     }
 
-    public void addRecipe(CraftingRecipe recipe) {
+    public void addRecipe(ResourceLocation id, CraftingRecipe recipe) {
         Map<String, Object> fields = new HashMap<>();
         if (recipe instanceof ShapedRecipe shapedRecipe) {
             fields.put("shapeless", false);
@@ -184,12 +168,12 @@ public class SiteExportWriter {
         fields.put("resultCount", resultItem.getCount());
         fields.put("ingredients", recipe.getIngredients());
 
-        addRecipe(recipe, fields);
+        addRecipe(id, recipe, fields);
     }
 
-    public void addRecipe(InscriberRecipe recipe) {
+    public void addRecipe(ResourceLocation id, InscriberRecipe recipe) {
         var resultItem = recipe.getResultItem();
-        addRecipe(recipe, Map.of(
+        addRecipe(id, recipe, Map.of(
                 "top", recipe.getTopOptional(),
                 "middle", recipe.getMiddleInput(),
                 "bottom", recipe.getBottomOptional(),
@@ -198,13 +182,13 @@ public class SiteExportWriter {
                 "consumesTopAndBottom", recipe.getProcessType() == InscriberProcessType.PRESS));
     }
 
-    public void addRecipe(AbstractCookingRecipe recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, AbstractCookingRecipe recipe) {
+        addRecipe(id, recipe, Map.of(
                 "resultItem", recipe.getResultItem(null),
                 "ingredient", recipe.getIngredients().get(0)));
     }
 
-    public void addRecipe(TransformRecipe recipe) {
+    public void addRecipe(ResourceLocation id, TransformRecipe recipe) {
 
         Map<String, Object> circumstanceJson = new HashMap<>();
         var circumstance = recipe.circumstance;
@@ -223,58 +207,56 @@ public class SiteExportWriter {
             throw new IllegalStateException("Unknown circumstance: " + circumstance.toJson());
         }
 
-        addRecipe(recipe, Map.of(
+        addRecipe(id, recipe, Map.of(
                 "resultItem", recipe.getResultItem(null),
                 "ingredients", recipe.getIngredients(),
                 "circumstance", circumstanceJson));
     }
 
-    public void addRecipe(EntropyRecipe recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, EntropyRecipe recipe) {
+        addRecipe(id, recipe, Map.of(
                 "mode", recipe.getMode().name().toLowerCase(Locale.ROOT)));
     }
 
-    public void addRecipe(MatterCannonAmmo recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, MatterCannonAmmo recipe) {
+        addRecipe(id, recipe, Map.of(
                 "ammo", recipe.getAmmo(),
                 "damage", MatterCannonItem.getDamageFromPenetration(recipe.getWeight())));
     }
 
-    public void addRecipe(ChargerRecipe recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, ChargerRecipe recipe) {
+        addRecipe(id, recipe, Map.of(
                 "resultItem", recipe.getResultItem(),
                 "ingredient", recipe.getIngredient()));
     }
 
-    public void addRecipe(SmithingTransformRecipe recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, SmithingTransformRecipe recipe) {
+        addRecipe(id, recipe, Map.of(
                 "resultItem", recipe.getResultItem(null),
                 "base", recipe.base,
                 "addition", recipe.addition,
                 "template", recipe.template));
     }
 
-    public void addRecipe(SmithingTrimRecipe recipe) {
-        addRecipe(recipe, Map.of(
+    public void addRecipe(ResourceLocation id, SmithingTrimRecipe recipe) {
+        addRecipe(id, recipe, Map.of(
                 "base", recipe.base,
                 "addition", recipe.addition,
                 "template", recipe.template));
     }
 
-    public void addRecipe(StonecutterRecipe recipe) {
-        addRecipe(
-                recipe,
+    public void addRecipe(ResourceLocation id, StonecutterRecipe recipe) {
+        addRecipe(id, recipe,
                 Map.of(
                         "resultItem", recipe.getResultItem(null),
                         "ingredient", recipe.getIngredients().get(0)));
     }
 
-    public void addRecipe(Recipe<?> recipe, Map<String, Object> element) {
+    public void addRecipe(ResourceLocation id, Recipe<?> recipe, Map<String, Object> element) {
         // Auto-transform ingredients
 
         var jsonElement = GSON.toJsonTree(element);
 
-        var id = recipe.getId();
         var type = BuiltInRegistries.RECIPE_TYPE.getKey(recipe.getType()).toString();
         jsonElement.getAsJsonObject().addProperty("type", type);
 
@@ -340,9 +322,11 @@ public class SiteExportWriter {
 
     public String addItem(ItemStack stack) {
         var itemId = stack.getItem().builtInRegistryHolder().key().location().toString().replace(':', '-');
-        if (stack.getTag() == null) {
+        if (stack.getComponentsPatch().isEmpty()) {
             return itemId;
         }
+
+        var serializedTag = (CompoundTag) stack.save(Platform.getClientRegistryAccess());
 
         MessageDigest digest;
         try {
@@ -351,7 +335,7 @@ public class SiteExportWriter {
             throw new RuntimeException(e);
         }
         try (var out = new DataOutputStream(new DigestOutputStream(OutputStream.nullOutputStream(), digest))) {
-            NbtIo.write(stack.getTag(), out);
+            NbtIo.write(serializedTag, out);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -18,15 +18,14 @@
 
 package appeng.spatial;
 
-import java.util.Locale;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
 
 /**
  * A plot inside the storage cell level that is assigned to a specific storage cell.
@@ -189,7 +188,7 @@ public class SpatialStoragePlot {
 
     public static SpatialStoragePlot fromTag(CompoundTag tag) {
         int id = tag.getInt(TAG_ID);
-        BlockPos size = NbtUtils.readBlockPos(tag.getCompound(TAG_SIZE));
+        BlockPos size = NbtUtils.readBlockPos(tag, TAG_SIZE).orElseThrow();
         int ownerId = tag.getInt(TAG_OWNER);
         SpatialStoragePlot plot = new SpatialStoragePlot(id, size, ownerId);
 

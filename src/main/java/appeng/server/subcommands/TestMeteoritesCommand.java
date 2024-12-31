@@ -18,18 +18,14 @@
 
 package appeng.server.subcommands;
 
-import static net.minecraft.commands.Commands.literal;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-
+import appeng.server.ISubCommand;
+import appeng.worldgen.meteorite.MeteoriteStructure;
+import appeng.worldgen.meteorite.MeteoriteStructurePiece;
+import appeng.worldgen.meteorite.PlacedMeteoriteSettings;
 import com.google.common.math.StatsAccumulator;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -45,14 +41,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
-import appeng.server.ISubCommand;
-import appeng.worldgen.meteorite.MeteoriteStructure;
-import appeng.worldgen.meteorite.MeteoriteStructurePiece;
-import appeng.worldgen.meteorite.PlacedMeteoriteSettings;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+
+import static net.minecraft.commands.Commands.literal;
 
 /**
  * This is a testing command to validate quartz ore generation.

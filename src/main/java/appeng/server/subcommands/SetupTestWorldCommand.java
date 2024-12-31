@@ -1,17 +1,17 @@
 package appeng.server.subcommands;
 
-import static net.minecraft.commands.Commands.literal;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
+import appeng.core.AELog;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.PlayerMessages;
+import appeng.items.tools.powered.ColorApplicatorItem;
+import appeng.server.ISubCommand;
+import appeng.server.testplots.KitOutPlayerEvent;
+import appeng.server.testplots.TestPlots;
+import appeng.server.testworld.TestWorldGenerator;
 import com.google.common.base.Stopwatch;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -22,15 +22,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.core.AELog;
-import appeng.core.definitions.AEItems;
-import appeng.core.localization.PlayerMessages;
-import appeng.items.tools.powered.ColorApplicatorItem;
-import appeng.server.ISubCommand;
-import appeng.server.testplots.KitOutPlayerEvent;
-import appeng.server.testplots.TestPlots;
-import appeng.server.testworld.TestWorldGenerator;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static net.minecraft.commands.Commands.literal;
 
 /**
  * This command will verify the user is in creative mode, the world is a flat world with void preset, and then start
@@ -90,10 +87,10 @@ public class SetupTestWorldCommand implements ISubCommand {
                 player.teleportTo(level, goodStartPos.getX(), goodStartPos.getY(), goodStartPos.getZ(), 0, 0);
             }
 
-            sender.sendSuccess(() -> PlayerMessages.TestWorldSetupComplete.text(sw), true);
+            sender.sendSuccess(() -> PlayerMessages.TestWorldSetupComplete.text(sw.toString()), true);
         } catch (RuntimeException | CommandSyntaxException e) {
             AELog.error(e);
-            sender.sendFailure(PlayerMessages.TestWorldSetupFailed.text(e));
+            sender.sendFailure(PlayerMessages.TestWorldSetupFailed.text(e.toString()));
         }
     }
 

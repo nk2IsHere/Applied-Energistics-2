@@ -1,9 +1,9 @@
 package appeng.server.testworld;
 
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 class TransformingPlotBuilder implements PlotBuilder {
     private final Plot plot;
@@ -17,6 +17,16 @@ class TransformingPlotBuilder implements PlotBuilder {
     @Override
     public void addBuildAction(BuildAction action) {
         plot.addBuildAction(action);
+    }
+
+    @Override
+    public void addPostBuildAction(PostBuildAction action) {
+        plot.addPostBuildAction(action);
+    }
+
+    @Override
+    public void addPostInitAction(PostBuildAction action) {
+        plot.addPostInitAction(action);
     }
 
     @Override
