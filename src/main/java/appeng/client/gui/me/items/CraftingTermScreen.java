@@ -18,15 +18,14 @@
 
 package appeng.client.gui.me.items;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.config.ActionItems;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ActionButton;
 import appeng.core.AEConfig;
 import appeng.menu.me.items.CraftingTermMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * This screen extends the item terminal with a crafting grid. The content of the crafting grid is stored server-side in
@@ -38,13 +37,15 @@ public class CraftingTermScreen<C extends CraftingTermMenu> extends MEStorageScr
             Component title, ScreenStyle style) {
         super(menu, playerInventory, title, style);
 
-        ActionButton clearBtn = new ActionButton(ActionItems.STASH, btn -> menu.clearCraftingGrid());
+        ActionButton clearBtn = new ActionButton(ActionItems.S_STASH, btn -> menu.clearCraftingGrid());
         clearBtn.setHalfSize(true);
+        clearBtn.setDisableBackground(true);
         widgets.add("clearCraftingGrid", clearBtn);
 
-        ActionButton clearToPlayerInvBtn = new ActionButton(ActionItems.STASH_TO_PLAYER_INV,
+        ActionButton clearToPlayerInvBtn = new ActionButton(ActionItems.S_STASH_TO_PLAYER_INV,
                 btn -> menu.clearToPlayerInventory());
         clearToPlayerInvBtn.setHalfSize(true);
+        clearToPlayerInvBtn.setDisableBackground(true);
         widgets.add("clearToPlayerInv", clearToPlayerInvBtn);
     }
 

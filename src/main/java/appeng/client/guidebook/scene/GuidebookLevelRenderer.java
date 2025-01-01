@@ -1,36 +1,29 @@
 package appeng.client.guidebook.scene;
 
-import java.util.Collection;
-
+import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
+import appeng.client.guidebook.scene.annotation.InWorldAnnotationRenderer;
+import appeng.client.guidebook.scene.level.GuidebookLevel;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
-
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
-import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
-import appeng.client.guidebook.scene.annotation.InWorldAnnotationRenderer;
-import appeng.client.guidebook.scene.level.GuidebookLevel;
+import java.util.Collection;
 
 public class GuidebookLevelRenderer {
 
@@ -49,7 +42,11 @@ public class GuidebookLevelRenderer {
     public void render(GuidebookLevel level,
             CameraSettings cameraSettings,
             Collection<InWorldAnnotation> annotations) {
+        lightmap.update(level);
+
         RenderSystem.clear(GlConst.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
+        RenderSystem.setShaderGameTime(System.currentTimeMillis(), 0);
+
         var buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         render(level, cameraSettings, buffers, annotations);
         RenderSystem.clear(GlConst.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
@@ -76,9 +73,9 @@ public class GuidebookLevelRenderer {
         RenderSystem.setShaderFogShape(FogShape.SPHERE);
 
         var modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.setIdentity();
-        modelViewStack.mulPoseMatrix(viewMatrix);
+        modelViewStack.pushMatrix();
+        modelViewStack.identity();
+        modelViewStack.mul(viewMatrix);
         RenderSystem.applyModelViewMatrix();
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorting.ORTHOGRAPHIC_Z);
@@ -95,7 +92,7 @@ public class GuidebookLevelRenderer {
 
         InWorldAnnotationRenderer.render(buffers, annotations);
 
-        modelViewStack.popPose();
+        modelViewStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.restoreProjectionMatrix();
 
@@ -133,7 +130,7 @@ public class GuidebookLevelRenderer {
             buffers.endBatch(Sheets.signSheet());
             buffers.endBatch(Sheets.hangingSignSheet());
             buffers.endBatch(Sheets.chestSheet());
-            buffers.endBatch();
+            buffers.endLastBatch();
 
             renderBlocks(level, buffers, true);
             buffers.endBatch(RenderType.translucent());
@@ -205,7 +202,7 @@ public class GuidebookLevelRenderer {
             MultiBufferSource buffers) {
         var dispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
         var renderer = dispatcher.getRenderer(blockEntity);
-        if (renderer != null) {
+        if (renderer != null && renderer.shouldRender(blockEntity, blockEntity.getBlockPos().getCenter())) {
             var pos = blockEntity.getBlockPos();
             stack.pushPose();
             stack.translate(pos.getX(), pos.getY(), pos.getZ());

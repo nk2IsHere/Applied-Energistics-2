@@ -1,10 +1,9 @@
 package appeng.client.guidebook.document.flow;
 
-import java.util.stream.Stream;
-
+import appeng.client.guidebook.document.LytRect;
 import org.jetbrains.annotations.Nullable;
 
-import appeng.client.guidebook.document.LytRect;
+import java.util.stream.Stream;
 
 public interface LytFlowContainer extends LytFlowParent {
     /**

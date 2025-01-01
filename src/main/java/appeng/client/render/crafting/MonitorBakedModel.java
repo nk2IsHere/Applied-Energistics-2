@@ -18,10 +18,6 @@
 
 package appeng.client.render.crafting;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.api.orientation.IOrientationStrategy;
 import appeng.api.orientation.RelativeSide;
 import appeng.api.util.AEColor;
@@ -29,6 +25,9 @@ import appeng.block.crafting.CraftingMonitorBlock;
 import appeng.blockentity.crafting.CraftingCubeModelData;
 import appeng.blockentity.crafting.CraftingMonitorModelData;
 import appeng.client.render.cablebus.CubeBuilder;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * The baked model for the crafting monitor. Please note that this model doesn't handle the item being displayed. That
@@ -60,7 +59,7 @@ public class MonitorBakedModel extends CraftingCubeBakedModel {
 
     @Override
     protected void addInnerCube(Direction side, BlockState state, CraftingCubeModelData modelData, CubeBuilder builder,
-            float x1, float y1, float z1, float x2, float y2, float z2) {
+                                float x1, float y1, float z1, float x2, float y2, float z2) {
         Direction forward = IOrientationStrategy.get(state).getSide(state, RelativeSide.FRONT);
 
         // For sides other than the front, use the chassis texture
@@ -102,5 +101,4 @@ public class MonitorBakedModel extends CraftingCubeBakedModel {
         }
         return AEColor.TRANSPARENT;
     }
-
 }

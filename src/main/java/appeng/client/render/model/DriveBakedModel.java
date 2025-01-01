@@ -18,26 +18,14 @@
 
 package appeng.client.render.model;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
+import appeng.client.render.DelegateBakedModel;
 import com.mojang.math.Transformation;
-
-import org.joml.Vector3f;
-
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
@@ -48,8 +36,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Vector3f;
 
-public class DriveBakedModel extends ForwardingBakedModel implements FabricBakedModel {
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
+public class DriveBakedModel extends DelegateBakedModel {
     private final Map<Item, BakedModel> cellModels;
     private final Map<Item, Mesh> bakedCells;
     private final BakedModel defaultCellModel;
@@ -59,7 +53,7 @@ public class DriveBakedModel extends ForwardingBakedModel implements FabricBaked
 
     public DriveBakedModel(Transformation rotation, BakedModel bakedBase, Map<Item, BakedModel> cellModels,
             BakedModel defaultCell) {
-        this.wrapped = bakedBase;
+        super(bakedBase);
         this.defaultCellModel = defaultCell;
         this.defaultCell = convertCellModel(defaultCell);
         this.slotTransforms = buildSlotTransforms(rotation);
@@ -98,8 +92,8 @@ public class DriveBakedModel extends ForwardingBakedModel implements FabricBaked
                     BakedModel cellChassisModel = getCellChassisModel(cell);
 
                     context.pushTransform(slotTransforms[slot]);
-                    context.bakedModelConsumer().accept(cellChassisModel, null);
-                    context.meshConsumer().accept(getCellChassisMesh(cell));
+                    cellChassisModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    getCellChassisMesh(cell).outputTo(context.getEmitter());
                     context.popTransform();
                 }
             }
@@ -108,15 +102,12 @@ public class DriveBakedModel extends ForwardingBakedModel implements FabricBaked
     }
 
     private static Item[] getCells(BlockAndTintGetter blockView, BlockPos pos) {
-        if (!(blockView instanceof RenderAttachedBlockView)) {
-            return null;
-        }
-        Object attachedData = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
-        if (!(attachedData instanceof DriveModelData)) {
+        var attachedData = blockView.getBlockEntityRenderData(pos);
+        if (!(attachedData instanceof DriveModelData driveModelData)) {
             return null;
         }
 
-        return ((DriveModelData) attachedData).getCells();
+        return driveModelData.getCells();
     }
 
     @Override
@@ -202,7 +193,6 @@ public class DriveBakedModel extends ForwardingBakedModel implements FabricBaked
     }
 
     private Mesh convertCellModel(BakedModel bakedModel) {
-        Renderer renderer = RendererAccess.INSTANCE.getRenderer();
         RandomSource random = RandomSource.create();
         MeshBuilder meshBuilder = renderer.meshBuilder();
         QuadEmitter emitter = meshBuilder.getEmitter();

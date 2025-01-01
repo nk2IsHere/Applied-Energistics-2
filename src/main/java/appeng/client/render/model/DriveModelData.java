@@ -18,9 +18,6 @@
 
 package appeng.client.render.model;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import net.minecraft.world.item.Item;
 
 public class DriveModelData extends AEModelData {
@@ -39,25 +36,4 @@ public class DriveModelData extends AEModelData {
     public Item[] getCells() {
         return cells;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        DriveModelData that = (DriveModelData) o;
-        return Arrays.equals(cells, that.cells);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), Arrays.hashCode(cells));
-    }
-
 }

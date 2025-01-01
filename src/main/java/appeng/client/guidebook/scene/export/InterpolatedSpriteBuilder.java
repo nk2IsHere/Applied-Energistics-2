@@ -1,15 +1,13 @@
 package appeng.client.guidebook.scene.export;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.mojang.blaze3d.platform.NativeImage;
-
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.util.FastColor;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Creates a new animation sprite-sheet for sprite-sheets that have interpolation enabled. Interpolating frames is too

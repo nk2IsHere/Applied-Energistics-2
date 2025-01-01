@@ -18,13 +18,12 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ProgressBar;
 import appeng.client.gui.widgets.ProgressBar.Direction;
 import appeng.menu.implementations.MolecularAssemblerMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class MolecularAssemblerScreen extends UpgradeableScreen<MolecularAssemblerMenu> {
 

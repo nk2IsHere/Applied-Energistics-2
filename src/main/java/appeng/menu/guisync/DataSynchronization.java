@@ -18,13 +18,13 @@
 
 package appeng.menu.guisync;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.minecraft.network.FriendlyByteBuf;
+import appeng.core.AELog;
+import it.unimi.dsi.fastutil.shorts.ShortSet;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import appeng.core.AELog;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Helper class for synchronizing fields from server-side menus to client-side menus. Fields need to be annotated with
@@ -70,18 +70,18 @@ public class DataSynchronization {
     /**
      * Write the data for all fields to the given buffer, and marks all fields as unchanged.
      */
-    public void writeFull(FriendlyByteBuf data) {
+    public void writeFull(RegistryFriendlyByteBuf data) {
         writeFields(data, true);
     }
 
     /**
      * Write the data for changed fields to the given buffer, and marks all fields as unchanged.
      */
-    public void writeUpdate(FriendlyByteBuf data) {
+    public void writeUpdate(RegistryFriendlyByteBuf data) {
         writeFields(data, false);
     }
 
-    private void writeFields(FriendlyByteBuf data, boolean includeUnchanged) {
+    private void writeFields(RegistryFriendlyByteBuf data, boolean includeUnchanged) {
         for (Map.Entry<Short, SynchronizedField<?>> entry : fields.entrySet()) {
             if (includeUnchanged || entry.getValue().hasChanges()) {
                 data.writeShort(entry.getKey());
@@ -93,7 +93,7 @@ public class DataSynchronization {
         data.writeVarInt(-1);
     }
 
-    public void readUpdate(FriendlyByteBuf data) {
+    public void readUpdate(RegistryFriendlyByteBuf data, ShortSet updatedFields) {
         for (short key = data.readShort(); key != -1; key = data.readShort()) {
             SynchronizedField<?> field = fields.get(key);
             if (field == null) {
@@ -102,6 +102,7 @@ public class DataSynchronization {
             }
 
             field.read(data);
+            updatedFields.add(key);
         }
     }
 

@@ -18,6 +18,9 @@
 
 package appeng.menu.me.common;
 
+import net.minecraft.world.item.crafting.Ingredient;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -40,4 +43,8 @@ public interface IClientRepo {
      */
     Set<GridInventoryEntry> getAllEntries();
 
+    /**
+     * Find all entries that match the given ingredient.
+     */
+    Collection<GridInventoryEntry> getByIngredient(Ingredient ingredient);
 }

@@ -18,12 +18,11 @@
 
 package appeng.client.render.overlay;
 
-import java.util.Set;
-
+import appeng.api.util.DimensionalBlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import appeng.api.util.DimensionalBlockPos;
+import java.util.Set;
 
 /**
  * A source providing data for a chunk overlay.

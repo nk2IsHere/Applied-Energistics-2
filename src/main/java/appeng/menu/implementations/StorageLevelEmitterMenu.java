@@ -18,12 +18,6 @@
 
 package appeng.menu.implementations;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-
 import appeng.api.config.Settings;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
@@ -33,6 +27,10 @@ import appeng.core.definitions.AEItems;
 import appeng.menu.SlotSemantics;
 import appeng.menu.slot.FakeSlot;
 import appeng.parts.automation.StorageLevelEmitterPart;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @see StorageLevelEmitterScreen

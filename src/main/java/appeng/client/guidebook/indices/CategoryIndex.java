@@ -1,16 +1,14 @@
 package appeng.client.guidebook.indices;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.client.guidebook.PageAnchor;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
 import com.google.gson.stream.JsonWriter;
-
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import appeng.client.guidebook.PageAnchor;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Pages can declare to be part of multiple categories using the categories frontmatter.
@@ -18,7 +16,7 @@ import appeng.client.guidebook.compiler.ParsedGuidePage;
  * This index is installed by default on all {@linkplain appeng.client.guidebook.Guide guides}.
  */
 public class CategoryIndex extends MultiValuedIndex<String, PageAnchor> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CategoryIndex.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CategoryIndex.class);
 
     public CategoryIndex() {
         super(
@@ -34,8 +32,8 @@ public class CategoryIndex extends MultiValuedIndex<String, PageAnchor> {
             return List.of();
         }
 
-        if (!(categoriesNode instanceof List<?>categoryList)) {
-            LOGGER.warn("Page {} contains malformed categories frontmatter", page.getId());
+        if (!(categoriesNode instanceof List<?> categoryList)) {
+            LOG.warn("Page {} contains malformed categories frontmatter", page.getId());
             return List.of();
         }
 
@@ -48,7 +46,7 @@ public class CategoryIndex extends MultiValuedIndex<String, PageAnchor> {
             if (listEntry instanceof String categoryString) {
                 categories.add(Pair.of(categoryString, anchor));
             } else {
-                LOGGER.warn("Page {} contains a malformed categories frontmatter entry: {}", page.getId(), listEntry);
+                LOG.warn("Page {} contains a malformed categories frontmatter entry: {}", page.getId(), listEntry);
             }
         }
 

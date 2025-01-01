@@ -2,13 +2,11 @@ package appeng.hooks;
 
 import com.google.common.base.Preconditions;
 import com.mojang.math.Transformation;
-
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-
 import net.minecraft.client.renderer.block.model.Variant;
 import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 /**
  * Hooks into the loading of blockstate definition files to load additional variants.

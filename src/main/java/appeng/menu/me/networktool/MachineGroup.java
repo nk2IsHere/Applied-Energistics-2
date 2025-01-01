@@ -18,12 +18,11 @@
 
 package appeng.menu.me.networktool;
 
-import java.util.Comparator;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 import appeng.api.networking.IGridNode;
 import appeng.api.stacks.AEItemKey;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import java.util.Comparator;
 
 /**
  * Represents the status of machines grouped by their {@linkplain IGridNode#getVisualRepresentation() item
@@ -61,9 +60,9 @@ public class MachineGroup {
     }
 
     /**
-     * Reads back a machine group previously {@link #write(FriendlyByteBuf) written}.
+     * Reads back a machine group previously {@link #write(RegistryFriendlyByteBuf) written}.
      */
-    static MachineGroup read(FriendlyByteBuf data) {
+    static MachineGroup read(RegistryFriendlyByteBuf data) {
         MachineGroup entry = new MachineGroup(MachineGroupKey.fromPacket(data));
         entry.idlePowerUsage = data.readDouble();
         entry.powerGenerationCapacity = data.readDouble();
@@ -71,7 +70,7 @@ public class MachineGroup {
         return entry;
     }
 
-    void write(FriendlyByteBuf data) {
+    void write(RegistryFriendlyByteBuf data) {
         key.write(data);
         data.writeDouble(idlePowerUsage);
         data.writeDouble(powerGenerationCapacity);

@@ -1,25 +1,18 @@
 package appeng.client.guidebook.compiler.tags;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.client.guidebook.PageAnchor;
 import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.document.block.AlignItems;
-import appeng.client.guidebook.document.block.LytBlock;
-import appeng.client.guidebook.document.block.LytBlockContainer;
-import appeng.client.guidebook.document.block.LytHBox;
-import appeng.client.guidebook.document.block.LytList;
-import appeng.client.guidebook.document.block.LytListItem;
-import appeng.client.guidebook.document.block.LytParagraph;
+import appeng.client.guidebook.document.block.*;
 import appeng.client.guidebook.document.flow.LytFlowLink;
 import appeng.client.guidebook.navigation.NavigationNode;
 import appeng.client.guidebook.scene.LytItemImage;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 public class SubPagesCompiler extends BlockTagCompiler {
     private static final Comparator<NavigationNode> ALPHABETICAL_COMPARATOR = Comparator

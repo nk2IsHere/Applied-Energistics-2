@@ -1,10 +1,8 @@
 package appeng.hooks;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.Level;
-
 import appeng.util.Platform;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Under certain circumstances we want to save the state that the client received from the server in block entity NBT

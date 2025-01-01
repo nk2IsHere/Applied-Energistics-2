@@ -19,16 +19,11 @@
 package appeng.client.render.effects;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.*;
 import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
@@ -115,10 +110,10 @@ public class EnergyFx extends TextureSheetParticle {
             result.setMotionX((float) xSpeed);
             result.setMotionY((float) ySpeed);
             result.setMotionZ((float) zSpeed);
-            if (data.forItem) {
-                result.x += -0.2 * data.direction.getStepX();
-                result.y += -0.2 * data.direction.getStepY();
-                result.z += -0.2 * data.direction.getStepZ();
+            if (data.forItem()) {
+                result.x += -0.2 * data.direction().getStepX();
+                result.y += -0.2 * data.direction().getStepY();
+                result.z += -0.2 * data.direction().getStepZ();
                 result.quadSize *= 0.8f;
             }
             return result;

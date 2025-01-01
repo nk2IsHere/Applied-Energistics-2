@@ -1,22 +1,24 @@
 package appeng.client.gui.me.common;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
-import net.minecraft.util.FormattedCharSequence;
-
 import appeng.api.client.AEKeyRendering;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AmountFormat;
 import appeng.core.localization.GuiText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+
+import java.util.List;
 
 /**
  * A Minecraft toast for a finished crafting job.
  */
 public class FinishedJobToast implements Toast {
+    private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.parse("toast/recipe");
+
     private static final long TIME_VISIBLE = 2500;
     private static final int TITLE_COLOR = 0xFF500050;
     private static final int TEXT_COLOR = 0xFF000000;
@@ -44,13 +46,13 @@ public class FinishedJobToast implements Toast {
         var font = minecraft.font;
 
         // stretch the middle
-        guiGraphics.blit(TEXTURE, 0, 0, 0, 32, this.width(), 8);
+        guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 0, 0, 0, this.width(), 8);
         int middleHeight = height - 16;
         for (var middleY = 0; middleY < middleHeight; middleY += 16) {
             var tileHeight = Math.min(middleHeight - middleY, 16);
-            guiGraphics.blit(TEXTURE, 0, 8 + middleY, 0, 32 + 8, this.width(), tileHeight);
+            guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 8, 0, 8 + middleY, this.width(), tileHeight);
         }
-        guiGraphics.blit(TEXTURE, 0, height - 8, 0, 32 + 32 - 8, this.width(), 8);
+        guiGraphics.blitSprite(BACKGROUND_SPRITE, 160, 32, 0, 32 - 8, 0, height - 8, this.width(), 8);
         guiGraphics.drawString(toastComponent.getMinecraft().font, GuiText.ToastCraftingJobFinishedTitle.text(), 30, 7,
                 TITLE_COLOR, false);
         var lineY = 18;
@@ -60,7 +62,7 @@ public class FinishedJobToast implements Toast {
         }
         AEKeyRendering.drawInGui(minecraft, guiGraphics, 8, 8, what);
 
-        return timeSinceLastVisible >= TIME_VISIBLE ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
+        return timeSinceLastVisible >= TIME_VISIBLE ? Visibility.HIDE : Visibility.SHOW;
     }
 
     @Override

@@ -1,14 +1,14 @@
 
 package appeng.client.guidebook.document.block.recipes;
 
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.document.block.LytSlot;
 import appeng.client.guidebook.layout.LayoutContext;
 import appeng.client.guidebook.render.RenderContext;
 import appeng.core.AppEng;
 import appeng.recipes.handlers.InscriberRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 public class LytInscriberRecipe extends LytRecipeBox {
 
@@ -22,9 +22,9 @@ public class LytInscriberRecipe extends LytRecipeBox {
     private final LytSlot bottomSlot;
     private final LytSlot resultSlot;
 
-    public LytInscriberRecipe(InscriberRecipe recipe) {
-        super(recipe);
-        this.recipe = recipe;
+    public LytInscriberRecipe(RecipeHolder<InscriberRecipe> holder) {
+        super(holder);
+        this.recipe = holder.value();
 
         append(topSlot = new LytSlot(recipe.getTopOptional()));
         append(middleSlot = new LytSlot(recipe.getMiddleInput()));

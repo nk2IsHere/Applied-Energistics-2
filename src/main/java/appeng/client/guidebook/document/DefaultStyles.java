@@ -1,7 +1,5 @@
 package appeng.client.guidebook.document;
 
-import net.minecraft.client.Minecraft;
-
 import appeng.client.guidebook.color.ColorValue;
 import appeng.client.guidebook.color.ConstantColor;
 import appeng.client.guidebook.color.SymbolicColor;
@@ -9,6 +7,7 @@ import appeng.client.guidebook.style.ResolvedTextStyle;
 import appeng.client.guidebook.style.TextAlignment;
 import appeng.client.guidebook.style.TextStyle;
 import appeng.client.guidebook.style.WhiteSpaceMode;
+import net.minecraft.client.Minecraft;
 
 public final class DefaultStyles {
     private DefaultStyles() {
@@ -24,7 +23,8 @@ public final class DefaultStyles {
             Minecraft.UNIFORM_FONT,
             (ColorValue) SymbolicColor.BODY_TEXT,
             WhiteSpaceMode.NORMAL,
-            TextAlignment.LEFT);
+            TextAlignment.LEFT,
+            false);
 
     public static final TextStyle BODY_TEXT = TextStyle.builder()
             .font(Minecraft.UNIFORM_FONT)

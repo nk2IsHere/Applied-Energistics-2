@@ -1,18 +1,17 @@
 package appeng.client.guidebook.scene;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 public class SodiumCompat {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SodiumCompat.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SodiumCompat.class);
 
     @Nullable
     private static final MethodHandle METHOD_HANDLE;
@@ -24,10 +23,10 @@ public class SodiumCompat {
                     Class.forName("me.jellysquid.mods.sodium.client.render.texture.SpriteUtil"),
                     "markSpriteActive",
                     MethodType.methodType(void.class, TextureAtlasSprite.class));
-            LOGGER.info("Loaded Sodium active sprite compat.");
+            LOG.info("Loaded Sodium active sprite compat.");
         } catch (NoSuchMethodException | IllegalAccessException | ClassNotFoundException e) {
             if (FabricLoader.getInstance().isModLoaded("sodium")) {
-                LOGGER.error("Failed to load Sodium active sprite compat.", e);
+                LOG.error("Failed to load Sodium active sprite compat.", e);
             }
         }
 

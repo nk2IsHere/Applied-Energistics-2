@@ -18,15 +18,9 @@
 
 package appeng.client.gui.me.items;
 
-import java.util.function.Consumer;
-
-import com.google.common.primitives.Longs;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.AESubScreen;
+import appeng.client.gui.Icon;
 import appeng.client.gui.NumberEntryType;
 import appeng.client.gui.me.common.ClientDisplaySlot;
 import appeng.client.gui.widgets.NumberEntryWidget;
@@ -34,6 +28,11 @@ import appeng.client.gui.widgets.TabButton;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
 import appeng.menu.me.items.PatternEncodingTermMenu;
+import com.google.common.primitives.Longs;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+
+import java.util.function.Consumer;
 
 /**
  * Allows precisely setting the amount to use for a processing pattern slot.
@@ -61,7 +60,7 @@ public class SetProcessingPatternAmountScreen<C extends PatternEncodingTermMenu>
 
         var icon = getMenu().getHost().getMainMenuIcon();
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        var button = new TabButton(icon, icon.getHoverName(), btn -> {
+        var button = new TabButton(Icon.BACK, icon.getHoverName(), btn -> {
             returnToParent();
         });
         widgets.add("back", button);

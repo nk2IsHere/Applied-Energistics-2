@@ -18,9 +18,8 @@
 
 package appeng.menu.me.common;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.stacks.AEKey;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Contains information about something that is stored inside of the grid inventory. This is used to synchronize the

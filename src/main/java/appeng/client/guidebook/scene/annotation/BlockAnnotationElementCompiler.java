@@ -1,14 +1,13 @@
 package appeng.client.guidebook.scene.annotation;
 
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
 import appeng.client.guidebook.color.ConstantColor;
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.compiler.tags.MdxAttrs;
 import appeng.client.guidebook.document.LytErrorSink;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public class BlockAnnotationElementCompiler extends AnnotationTagCompiler {
 

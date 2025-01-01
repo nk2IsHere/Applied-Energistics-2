@@ -1,25 +1,22 @@
 package appeng.client.guidebook.render;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Objects;
-
+import appeng.client.guidebook.document.LytSize;
+import appeng.core.AppEng;
 import com.mojang.blaze3d.platform.NativeImage;
-
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.stb.STBImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.client.guidebook.document.LytSize;
-import appeng.core.AppEng;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A texture that is used in the context of a single guide page and is automatically cleared from texture memory when
@@ -31,7 +28,7 @@ public class GuidePageTexture {
         return new GuidePageTexture(AppEng.makeId("missing"), null);
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuidePageTexture.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GuidePageTexture.class);
 
     // Textures in use by the current page
     private static final Map<GuidePageTexture, DynamicTexture> usedTextures = new IdentityHashMap<>();
@@ -76,7 +73,7 @@ public class GuidePageTexture {
         try {
             return new GuidePageTexture(id, imageContent);
         } catch (Exception e) {
-            LOGGER.error("Failed to get image {}: {}", id, e.toString());
+            LOG.error("Failed to get image {}: {}", id, e.toString());
             return missing();
         }
     }
@@ -91,7 +88,7 @@ public class GuidePageTexture {
                 var nativeImage = NativeImage.read(guidePageTexture.imageContent);
                 return new DynamicTexture(nativeImage);
             } catch (IOException e) {
-                LOGGER.error("Failed to read image {}: {}", guidePageTexture.id, e.toString());
+                LOG.error("Failed to read image {}: {}", guidePageTexture.id, e.toString());
                 return MissingTextureAtlasSprite.getTexture();
             }
         });

@@ -1,13 +1,13 @@
 package appeng.client.guidebook.compiler.tags;
 
-import java.util.Set;
-
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.document.block.LytBlockContainer;
 import appeng.client.guidebook.document.block.LytBox;
 import appeng.client.guidebook.document.block.LytHBox;
 import appeng.client.guidebook.document.block.LytVBox;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
+
+import java.util.Set;
 
 public class BoxTagCompiler extends BlockTagCompiler {
     private final BoxFlowDirection direction;
@@ -31,7 +31,7 @@ public class BoxTagCompiler extends BlockTagCompiler {
                 hbox.setGap(gap);
                 yield hbox;
             }
-            default -> {
+            case COLUMN -> {
                 var vbox = new LytVBox();
                 vbox.setGap(gap);
                 yield vbox;

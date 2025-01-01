@@ -1,40 +1,30 @@
 package appeng.client.guidebook;
 
+import appeng.client.guidebook.compiler.PageCompiler;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import com.google.common.base.Stopwatch;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.methvin.watcher.DirectoryChangeEvent;
+import io.methvin.watcher.DirectoryChangeListener;
+import io.methvin.watcher.DirectoryWatcher;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.google.common.base.Stopwatch;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.methvin.watcher.DirectoryChangeEvent;
-import io.methvin.watcher.DirectoryChangeListener;
-import io.methvin.watcher.DirectoryWatcher;
-
-import net.fabricmc.loader.impl.FabricLoaderImpl;
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
-
 class GuideSourceWatcher {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuideSourceWatcher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GuideSourceWatcher.class);
 
     /**
      * The {@link ResourceLocation} namespace to use for files in the watched folder.
@@ -68,7 +58,7 @@ class GuideSourceWatcher {
             throw new RuntimeException("Cannot find the specified folder for the AE2 guidebook sources: "
                     + sourceFolder);
         }
-        LOGGER.info("Watching guidebook sources in {}", sourceFolder);
+        LOG.info("Watching guidebook sources in {}", sourceFolder);
 
         watchExecutor = Executors.newSingleThreadExecutor(new ThreadFactoryBuilder()
                 .setDaemon(true)
@@ -85,7 +75,7 @@ class GuideSourceWatcher {
                     .listener(new Listener())
                     .build();
         } catch (IOException e) {
-            LOGGER.error("Failed to watch for changes in the guidebook sources at {}", sourceFolder, e);
+            LOG.error("Failed to watch for changes in the guidebook sources at {}", sourceFolder, e);
             watcher = null;
         }
         sourceWatcher = watcher;
@@ -119,23 +109,23 @@ class GuideSourceWatcher {
 
                 @Override
                 public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                    LOGGER.error("Failed to list page {}", file, exc);
+                    LOG.error("Failed to list page {}", file, exc);
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
                     if (exc != null) {
-                        LOGGER.error("Failed to list all pages in {}", dir, exc);
+                        LOG.error("Failed to list all pages in {}", dir, exc);
                     }
                     return FileVisitResult.CONTINUE;
                 }
             });
         } catch (IOException e) {
-            LOGGER.error("Failed to list all pages in {}", sourceFolder, e);
+            LOG.error("Failed to list all pages in {}", sourceFolder, e);
         }
 
-        LOGGER.info("Loading {} guidebook pages", pagesToLoad.size());
+        LOG.info("Loading {} guidebook pages", pagesToLoad.size());
         var loadedPages = pagesToLoad.entrySet()
                 .stream()
                 .map(entry -> {
@@ -144,14 +134,14 @@ class GuideSourceWatcher {
                         return PageCompiler.parse(sourcePackId, entry.getKey(), in);
 
                     } catch (Exception e) {
-                        LOGGER.error("Failed to reload guidebook page {}", path, e);
+                        LOG.error("Failed to reload guidebook page {}", path, e);
                         return null;
                     }
                 })
                 .filter(Objects::nonNull)
                 .toList();
 
-        LOGGER.info("Loaded {} pages from {} in {}", loadedPages.size(), sourceFolder, stopwatch);
+        LOG.info("Loaded {} pages from {} in {}", loadedPages.size(), sourceFolder, stopwatch);
 
         return loadedPages;
     }
@@ -186,7 +176,7 @@ class GuideSourceWatcher {
             try {
                 sourceWatcher.close();
             } catch (IOException e) {
-                LOGGER.error("Failed to close fileystem watcher for {}", sourceFolder);
+                LOG.error("Failed to close fileystem watcher for {}", sourceFolder);
             }
         }
     }
@@ -210,7 +200,7 @@ class GuideSourceWatcher {
 
         @Override
         public void onException(Exception e) {
-            LOGGER.error("Failed watching for changes", e);
+            LOG.error("Failed watching for changes", e);
         }
     }
 
@@ -228,7 +218,7 @@ class GuideSourceWatcher {
             var page = PageCompiler.parse(sourcePackId, pageId, in);
             changedPages.put(pageId, page);
         } catch (Exception e) {
-            LOGGER.error("Failed to reload guidebook page {}", path, e);
+            LOG.error("Failed to reload guidebook page {}", path, e);
         }
     }
 
@@ -251,7 +241,7 @@ class GuideSourceWatcher {
         if (!relativePathStr.endsWith(".md")) {
             return null;
         }
-        if (!ResourceLocation.isValidResourceLocation(relativePathStr)) {
+        if (!ResourceLocation.isValidPath(relativePathStr)) {
             return null;
         }
         return ResourceLocation.fromNamespaceAndPath(namespace, relativePathStr);

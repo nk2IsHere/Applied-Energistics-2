@@ -1,19 +1,17 @@
 package appeng.client.guidebook.indices;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.client.guidebook.PageAnchor;
+import appeng.client.guidebook.compiler.IdUtils;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import net.minecraft.ResourceLocationException;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.client.guidebook.PageAnchor;
-import appeng.client.guidebook.compiler.IdUtils;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An index of Minecraft items to the main guidebook page describing it.
@@ -21,7 +19,7 @@ import appeng.client.guidebook.compiler.ParsedGuidePage;
  * This index is installed by default on all {@linkplain appeng.client.guidebook.Guide guides}.
  */
 public class ItemIndex extends UniqueIndex<ResourceLocation, PageAnchor> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ItemIndex.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ItemIndex.class);
 
     public ItemIndex() {
         super(
@@ -37,8 +35,8 @@ public class ItemIndex extends UniqueIndex<ResourceLocation, PageAnchor> {
             return List.of();
         }
 
-        if (!(itemIdsNode instanceof List<?>itemIdList)) {
-            LOGGER.warn("Page {} contains malformed item_ids frontmatter", page.getId());
+        if (!(itemIdsNode instanceof List<?> itemIdList)) {
+            LOG.warn("Page {} contains malformed item_ids frontmatter", page.getId());
             return List.of();
         }
 
@@ -50,7 +48,7 @@ public class ItemIndex extends UniqueIndex<ResourceLocation, PageAnchor> {
                 try {
                     itemId = IdUtils.resolveId(itemIdStr, page.getId().getNamespace());
                 } catch (ResourceLocationException e) {
-                    LOGGER.warn("Page {} contains a malformed item_ids frontmatter entry: {}", page.getId(),
+                    LOG.warn("Page {} contains a malformed item_ids frontmatter entry: {}", page.getId(),
                             listEntry);
                     continue;
                 }
@@ -60,11 +58,11 @@ public class ItemIndex extends UniqueIndex<ResourceLocation, PageAnchor> {
                     itemAnchors.add(Pair.of(
                             itemId, new PageAnchor(page.getId(), null)));
                 } else {
-                    LOGGER.warn("Page {} references an unknown item {} in its item_ids frontmatter",
+                    LOG.warn("Page {} references an unknown item {} in its item_ids frontmatter",
                             page.getId(), itemId);
                 }
             } else {
-                LOGGER.warn("Page {} contains a malformed item_ids frontmatter entry: {}", page.getId(), listEntry);
+                LOG.warn("Page {} contains a malformed item_ids frontmatter entry: {}", page.getId(), listEntry);
             }
         }
 

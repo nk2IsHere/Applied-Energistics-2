@@ -1,9 +1,9 @@
 package appeng.client.gui.style;
 
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.network.chat.Component;
 
 public final class TooltipArea extends Position {
     private int width;

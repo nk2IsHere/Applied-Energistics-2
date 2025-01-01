@@ -18,12 +18,14 @@
 
 package appeng.client.render.tesr;
 
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.misc.InscriberBlockEntity;
+import appeng.core.AppEng;
+import appeng.recipes.handlers.InscriberProcessType;
+import appeng.recipes.handlers.InscriberRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import org.joml.Quaternionf;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,19 +35,13 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.misc.InscriberBlockEntity;
-import appeng.core.AppEng;
-import appeng.recipes.handlers.InscriberProcessType;
-import appeng.recipes.handlers.InscriberRecipe;
+import org.joml.Quaternionf;
 
 /**
  * Renders the dynamic parts of an inscriber (the presses, the animation and the item being smashed)
@@ -55,7 +51,7 @@ public final class InscriberTESR implements BlockEntityRenderer<InscriberBlockEn
     private static final float ITEM_RENDER_SCALE = 1.0f / 1.2f;
 
     private static final Material TEXTURE_INSIDE = new Material(InventoryMenu.BLOCK_ATLAS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/inscriber_inside"));
+            AppEng.makeId("block/inscriber_inside"));
 
     public InscriberTESR(BlockEntityRendererProvider.Context context) {
     }
@@ -109,63 +105,74 @@ public final class InscriberTESR implements BlockEntityRenderer<InscriberBlockEn
         VertexConsumer buffer = buffers.getBuffer(RenderType.solid());
 
         // Bottom of Top Stamp
-        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 2, 13, combinedOverlay, combinedLight, Direction.DOWN);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 14, 13, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.DOWN);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 14, 2, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
                 Direction.DOWN);
-        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 2, 2, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 0.125f, 0.875f, combinedOverlay,
+                combinedLight,
+                Direction.DOWN);
+        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 0.875f, 0.875f, combinedOverlay, combinedLight,
                 Direction.DOWN);
 
         // Front of Top Stamp
-        addVertex(buffer, ms, tas, TwoPx, middle + base, TwoPx, 2, 3 - 16 * (press - base), combinedOverlay,
+        addVertex(buffer, ms, tas, TwoPx, middle + base, TwoPx, 0.125f, 0.125f - (press - base), combinedOverlay,
                 combinedLight, Direction.NORTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + base, TwoPx, 14, 3 - 16 * (press - base), combinedOverlay,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + base, TwoPx, 0.875f, 0.125f - (press - base),
+                combinedOverlay,
                 combinedLight, Direction.NORTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 14, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.NORTH);
-        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 2, 3, combinedOverlay, combinedLight, Direction.NORTH);
+        addVertex(buffer, ms, tas, TwoPx, middle + press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
+                Direction.NORTH);
 
         // Rear of Top Stamp
-        addVertex(buffer, ms, tas, TwoPx, middle + base, 1.0f - TwoPx, 2, 3 - 16 * (press - base), combinedOverlay,
+        addVertex(buffer, ms, tas, TwoPx, middle + base, 1.0f - TwoPx, 0.125f, 0.125f - (press - base),
+                combinedOverlay,
                 combinedLight, Direction.SOUTH);
-        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 2, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle + press, 1.0f - TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
                 Direction.SOUTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 14, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + press, 1.0f - TwoPx, 0.875f, 0.125f, combinedOverlay,
+                combinedLight,
                 Direction.SOUTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + base, 1.0f - TwoPx, 14, 3 - 16 * (press - base),
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle + base, 1.0f - TwoPx, 0.875f, 0.125f - (press - base),
                 combinedOverlay,
                 combinedLight, Direction.SOUTH);
 
         // Top of Bottom Stamp
         middle -= 2.0f * 0.02f;
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 2, 13, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.UP);
-        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 14, 13, combinedOverlay, combinedLight, Direction.UP);
-        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 14, 2, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
                 Direction.UP);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 2, 2, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 0.125f, 0.875f, combinedOverlay, combinedLight,
+                Direction.UP);
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 0.875f, 0.875f, combinedOverlay,
+                combinedLight,
                 Direction.UP);
 
         // Front of Bottom Stamp
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - base, TwoPx, 2, 3 - 16 * (press - base), combinedOverlay,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - base, TwoPx, 0.125f, 0.125f - (press - base),
+                combinedOverlay,
                 combinedLight, Direction.NORTH);
-        addVertex(buffer, ms, tas, TwoPx, middle - base, TwoPx, 14, 3 - 16 * (press - base), combinedOverlay,
+        addVertex(buffer, ms, tas, TwoPx, middle - base, TwoPx, 0.875f, 0.125f - (press - base), combinedOverlay,
                 combinedLight, Direction.NORTH);
-        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 14, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle - press, TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.NORTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 2, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, TwoPx, 0.125f, 0.125f, combinedOverlay, combinedLight,
                 Direction.NORTH);
 
         // Rear of Bottom Stamp
-        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 14, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, TwoPx, middle - press, 1.0f - TwoPx, 0.875f, 0.125f, combinedOverlay, combinedLight,
                 Direction.SOUTH);
-        addVertex(buffer, ms, tas, TwoPx, middle - base, 1.0f - TwoPx, 14, 3 - 16 * (press - base), combinedOverlay,
-                combinedLight, Direction.SOUTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - base, 1.0f - TwoPx, 2, 3 - 16 * (press - base),
+        addVertex(buffer, ms, tas, TwoPx, middle - base, 1.0f - TwoPx, 0.875f, 0.125f - (press - base),
                 combinedOverlay,
                 combinedLight, Direction.SOUTH);
-        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 2, 3, combinedOverlay, combinedLight,
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - base, 1.0f - TwoPx, 0.125f, 0.125f - (press - base),
+                combinedOverlay,
+                combinedLight, Direction.SOUTH);
+        addVertex(buffer, ms, tas, 1.0f - TwoPx, middle - press, 1.0f - TwoPx, 0.125f, 0.125f, combinedOverlay,
+                combinedLight,
                 Direction.SOUTH);
 
         // render items.
@@ -219,14 +226,13 @@ public final class InscriberTESR implements BlockEntityRenderer<InscriberBlockEn
     }
 
     private static void addVertex(VertexConsumer vb, PoseStack ms, TextureAtlasSprite sprite, float x, float y,
-            float z, double texU, double texV, int overlayUV, int lightmapUV, Direction front) {
+            float z, float texU, float texV, int overlayUV, int lightmapUV, Direction front) {
         vb.addVertex(ms.last().pose(), x, y, z);
         vb.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         vb.setUv(sprite.getU(texU), sprite.getV(texV));
-        vb.overlayCoords(overlayUV);
-        vb.setUv2(lightmapUV);
-        vb.normal(ms.last().normal(), front.getStepX(), front.getStepY(), front.getStepZ());
-        vb;
+        vb.setOverlay(overlayUV);
+        vb.setLight(lightmapUV);
+        vb.setNormal(ms.last(), front.getStepX(), front.getStepY(), front.getStepZ());
     }
 
     private void renderItem(PoseStack ms, ItemStack stack, float o, MultiBufferSource buffers,

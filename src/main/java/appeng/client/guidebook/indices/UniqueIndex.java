@@ -1,28 +1,25 @@
 package appeng.client.guidebook.indices;
 
+import appeng.client.guidebook.GuidePageChange;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import com.google.gson.stream.JsonWriter;
+import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.google.gson.stream.JsonWriter;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.client.guidebook.GuidePageChange;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
-
 /**
  * Maintains an index for any given page using a mapping function for keys and values of the index.
  */
 public class UniqueIndex<K, V> implements PageIndex {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UniqueIndex.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UniqueIndex.class);
 
     private final Map<K, Record<V>> index = new HashMap<>();
 
@@ -99,7 +96,7 @@ public class UniqueIndex<K, V> implements PageIndex {
             var value = entry.getValue();
             var previousPage = index.put(key, new Record<>(page.getId(), value));
             if (previousPage != null) {
-                LOGGER.warn("Key conflict in index {}: {} is used by pages {} and {}",
+                LOG.warn("Key conflict in index {}: {} is used by pages {} and {}",
                         name, key, page, previousPage);
                 hadDuplicates = true;
             }
@@ -121,6 +118,6 @@ public class UniqueIndex<K, V> implements PageIndex {
         Iterable<Pair<K, V>> getEntry(ParsedGuidePage page);
     }
 
-    private record Record<V> (ResourceLocation pageId, V value) {
+    private record Record<V>(ResourceLocation pageId, V value) {
     }
 }

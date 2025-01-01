@@ -1,5 +1,25 @@
 package appeng.client.guidebook.scene.export;
 
+import appeng.client.guidebook.scene.CameraSettings;
+import appeng.client.guidebook.scene.GuidebookLevelRenderer;
+import appeng.client.guidebook.scene.GuidebookScene;
+import appeng.flatbuffers.scene.*;
+import appeng.siteexport.CacheBusting;
+import appeng.siteexport.ResourceExporter;
+import com.google.flatbuffers.FlatBufferBuilder;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import com.mojang.blaze3d.vertex.VertexSorting;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import org.joml.Matrix4f;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -14,44 +34,6 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.GZIPOutputStream;
-
-import com.google.flatbuffers.FlatBufferBuilder;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
-import com.mojang.blaze3d.vertex.VertexSorting;
-
-import org.joml.Matrix4f;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-
-import appeng.client.guidebook.scene.CameraSettings;
-import appeng.client.guidebook.scene.GuidebookLevelRenderer;
-import appeng.client.guidebook.scene.GuidebookScene;
-import appeng.flatbuffers.scene.ExpAnimatedTexturePart;
-import appeng.flatbuffers.scene.ExpAnimatedTexturePartFrame;
-import appeng.flatbuffers.scene.ExpCameraSettings;
-import appeng.flatbuffers.scene.ExpDepthTest;
-import appeng.flatbuffers.scene.ExpIndexElementType;
-import appeng.flatbuffers.scene.ExpMaterial;
-import appeng.flatbuffers.scene.ExpMesh;
-import appeng.flatbuffers.scene.ExpPrimitiveType;
-import appeng.flatbuffers.scene.ExpSampler;
-import appeng.flatbuffers.scene.ExpScene;
-import appeng.flatbuffers.scene.ExpTransparency;
-import appeng.flatbuffers.scene.ExpVertexElementType;
-import appeng.flatbuffers.scene.ExpVertexElementUsage;
-import appeng.flatbuffers.scene.ExpVertexFormat;
-import appeng.flatbuffers.scene.ExpVertexFormatElement;
-import appeng.siteexport.CacheBusting;
-import appeng.siteexport.ResourceExporter;
 
 /**
  * Exports a game scene 3d rendering to a custom 3d format for rendering it using WebGL in the browser. See scene.fbs
@@ -89,15 +71,15 @@ public class SceneExporter {
 
         // To avoid baking in the projection and camera, we need to reset these here
         var modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.setIdentity();
+        modelViewStack.pushMatrix();
+        modelViewStack.identity();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(new Matrix4f(), VertexSorting.ORTHOGRAPHIC_Z);
 
         GuidebookLevelRenderer.getInstance().renderContent(level, bufferSource);
 
-        modelViewStack.popPose();
+        modelViewStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.restoreProjectionMatrix();
 
@@ -248,22 +230,22 @@ public class SceneExporter {
         for (int i = elements.size() - 1; i >= 0; i--) {
             var offset = 0;
             for (int j = 0; j < i; j++) {
-                offset += elements.get(j).getByteSize();
+                offset += elements.get(j).byteSize();
             }
 
             var element = elements.get(i);
             if (isRelevant(element)) {
-                var normalized = element.getUsage() == VertexFormatElement.Usage.NORMAL
-                        || element.getUsage() == VertexFormatElement.Usage.COLOR;
+                var normalized = element.usage() == VertexFormatElement.Usage.NORMAL
+                        || element.usage() == VertexFormatElement.Usage.COLOR;
 
                 ExpVertexFormatElement.createExpVertexFormatElement(
                         builder,
-                        element.getIndex(),
-                        mapType(element.getType()),
-                        mapUsage(element.getUsage()),
-                        element.getCount(),
+                        element.index(),
+                        mapType(element.type()),
+                        mapUsage(element.usage()),
+                        element.count(),
                         offset,
-                        element.getByteSize(),
+                        element.byteSize(),
                         normalized);
             }
         }
@@ -278,8 +260,7 @@ public class SceneExporter {
     }
 
     private static boolean isRelevant(VertexFormatElement element) {
-        return element.getUsage() != VertexFormatElement.Usage.PADDING
-                && element.getUsage() != VertexFormatElement.Usage.GENERIC;
+        return element.usage() != VertexFormatElement.Usage.GENERIC;
     }
 
     private Map<RenderType, Integer> writeMaterials(List<Mesh> meshes, FlatBufferBuilder builder) {
@@ -384,7 +365,7 @@ public class SceneExporter {
             case NORMAL -> ExpVertexElementUsage.NORMAL;
             case COLOR -> ExpVertexElementUsage.COLOR;
             case UV -> ExpVertexElementUsage.UV;
-            case PADDING, GENERIC -> throw new IllegalStateException("Should have been skipped");
+            case GENERIC -> throw new IllegalStateException("Should have been skipped");
         };
     }
 
@@ -438,7 +419,7 @@ public class SceneExporter {
             int indexCount) {
     }
 
-    private IndexBufferAttributes createIndexBuffer(BufferBuilder.DrawState drawState, ByteBuffer idxBuffer) {
+    private IndexBufferAttributes createIndexBuffer(MeshData.DrawState drawState, ByteBuffer idxBuffer) {
         // Handle index buffer
         ByteBuffer effectiveIndices;
         var indexType = drawState.indexType();
@@ -446,7 +427,7 @@ public class SceneExporter {
         var mode = drawState.mode();
 
         // Auto-generated indices
-        if (drawState.sequentialIndex()) {
+        if (idxBuffer == null) {
             var generated = generateSequentialIndices(
                     mode,
                     drawState.vertexCount(),

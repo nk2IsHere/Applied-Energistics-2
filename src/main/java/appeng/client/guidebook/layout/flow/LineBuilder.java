@@ -1,21 +1,15 @@
 package appeng.client.guidebook.layout.flow;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import org.jetbrains.annotations.Nullable;
-
 import appeng.client.guidebook.document.DefaultStyles;
 import appeng.client.guidebook.document.LytRect;
-import appeng.client.guidebook.document.flow.InlineBlockAlignment;
-import appeng.client.guidebook.document.flow.LytFlowAnchor;
-import appeng.client.guidebook.document.flow.LytFlowBreak;
-import appeng.client.guidebook.document.flow.LytFlowContent;
-import appeng.client.guidebook.document.flow.LytFlowInlineBlock;
-import appeng.client.guidebook.document.flow.LytFlowText;
+import appeng.client.guidebook.document.flow.*;
 import appeng.client.guidebook.layout.LayoutContext;
 import appeng.client.guidebook.style.ResolvedTextStyle;
 import appeng.client.guidebook.style.TextAlignment;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Does inline-flow layout similar to how it is described here:

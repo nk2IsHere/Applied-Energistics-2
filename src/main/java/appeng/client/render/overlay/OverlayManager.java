@@ -18,20 +18,18 @@
 
 package appeng.client.render.overlay;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
+import appeng.api.util.DimensionalBlockPos;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
-import appeng.api.util.DimensionalBlockPos;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * This is based on the area render of https://github.com/TeamPneumatic/pnc-repressurized/
@@ -46,10 +44,11 @@ public class OverlayManager {
         return INSTANCE;
     }
 
-    private OverlayManager() {
-    }
-
     public void renderWorldLastEvent(WorldRenderContext context) {
+        if (overlayHandlers.isEmpty()) {
+            return;
+        }
+
         Minecraft minecraft = Minecraft.getInstance();
         BufferSource buffer = minecraft.renderBuffers().bufferSource();
         PoseStack poseStack = context.matrixStack();
@@ -57,16 +56,20 @@ public class OverlayManager {
         poseStack.pushPose();
 
         Vec3 projectedView = minecraft.gameRenderer.getMainCamera().getPosition();
+        Quaternionf rotation = new Quaternionf(minecraft.gameRenderer.getMainCamera().rotation());
+        rotation.invert();
+        poseStack.mulPose(rotation);
         poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
 
-        for (OverlayRenderer handler : overlayHandlers.entrySet().stream()
+        for (var handler : overlayHandlers.entrySet().stream()
                 .filter(e -> e.getKey().getLevel() == minecraft.level).map(Entry::getValue)
-                .collect(Collectors.toList())) {
+                .toList()) {
             handler.render(poseStack, buffer);
         }
 
         poseStack.popPose();
 
+        buffer.endBatch(OverlayRenderType.getBlockHilightLineOccluded());
         buffer.endBatch(OverlayRenderType.getBlockHilightFace());
         buffer.endBatch(OverlayRenderType.getBlockHilightLine());
     }

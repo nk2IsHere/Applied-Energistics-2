@@ -18,9 +18,6 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.client.gui.NumberEntryType;
@@ -29,6 +26,8 @@ import appeng.client.gui.widgets.NumberEntryWidget;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.EnergyLevelEmitterMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class EnergyLevelEmitterScreen extends UpgradeableScreen<EnergyLevelEmitterMenu> {
 

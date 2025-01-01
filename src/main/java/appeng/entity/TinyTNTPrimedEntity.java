@@ -18,15 +18,15 @@
 
 package appeng.entity;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.core.AEConfig;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEEntities;
+import appeng.core.network.clientbound.MockExplosionPacket;
+import appeng.integration.abstraction.IFabricCustomEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -43,16 +43,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.core.AEConfig;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEEntities;
-import appeng.core.sync.packets.ICustomEntity;
-import appeng.core.sync.packets.MockExplosionPacket;
-import appeng.core.sync.packets.SpawnEntityPacket;
+import java.util.List;
 
-public final class TinyTNTPrimedEntity extends PrimedTnt implements ICustomEntity {
+public final class TinyTNTPrimedEntity extends PrimedTnt implements IFabricCustomEntity {
 
     private LivingEntity placedBy;
 
@@ -62,8 +57,8 @@ public final class TinyTNTPrimedEntity extends PrimedTnt implements ICustomEntit
     }
 
     public TinyTNTPrimedEntity(Level level, double x, double y, double z,
-            LivingEntity igniter) {
-        super(AEEntities.TINY_TNT_PRIMED, level);
+            @Nullable LivingEntity igniter) {
+        super(AEEntities.TINY_TNT_PRIMED.get(), level);
         this.setPos(x, y, z);
         double d0 = level.random.nextDouble() * ((float) Math.PI * 2F);
         this.setDeltaMovement(-Math.sin(d0) * 0.02D, 0.2F, -Math.cos(d0) * 0.02D);
@@ -131,7 +126,7 @@ public final class TinyTNTPrimedEntity extends PrimedTnt implements ICustomEntit
     // override :P
     @Override
     protected void explode() {
-        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE,
+        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXPLODE.value(),
                 SoundSource.BLOCKS, 4.0F,
                 (1.0F + (this.level().random.nextFloat() - this.level().random.nextFloat()) * 0.2F) * 32.9F);
 
@@ -139,7 +134,7 @@ public final class TinyTNTPrimedEntity extends PrimedTnt implements ICustomEntit
             return;
         }
 
-        final Explosion ex = new Explosion(this.level(), this, null, null, this.getX(), this.getY(), this.getZ(),
+        final Explosion ex = new Explosion(this.level(), this, this.getX(), this.getY(), this.getZ(),
                 0.2f, false, AEConfig.instance().isTinyTntBlockDamageEnabled() ? BlockInteraction.DESTROY_WITH_DECAY
                         : BlockInteraction.KEEP);
         final AABB area = new AABB(this.getX() - 1.5, this.getY() - 1.5f, this.getZ() - 1.5,
@@ -189,11 +184,6 @@ public final class TinyTNTPrimedEntity extends PrimedTnt implements ICustomEntit
 
         AppEng.instance().sendToAllNearExcept(null, this.getX(), this.getY(), this.getZ(), 64, this.level(),
                 new MockExplosionPacket(this.getX(), this.getY(), this.getZ()));
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return SpawnEntityPacket.create(this);
     }
 
     @Override

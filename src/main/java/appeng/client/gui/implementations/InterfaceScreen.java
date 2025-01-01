@@ -18,13 +18,6 @@
 
 package appeng.client.gui.implementations;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
 import appeng.client.gui.Icon;
@@ -36,6 +29,12 @@ import appeng.core.definitions.AEItems;
 import appeng.core.localization.ButtonToolTips;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.InterfaceMenu;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InterfaceScreen<C extends InterfaceMenu> extends UpgradeableScreen<C> {
 
@@ -87,7 +86,7 @@ public class InterfaceScreen<C extends InterfaceMenu> extends UpgradeableScreen<
 
         @Override
         protected Icon getIcon() {
-            return isHoveredOrFocused() ? Icon.WRENCH : Icon.WRENCH_DISABLED;
+            return isHoveredOrFocused() ? Icon.COG : Icon.COG_DISABLED;
         }
     }
 }

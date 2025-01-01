@@ -18,14 +18,8 @@
 
 package appeng.client.render.model;
 
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import appeng.hooks.CompassManager;
+import appeng.integration.abstraction.IFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -41,17 +35,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
-import appeng.hooks.CompassManager;
-import appeng.hooks.CompassResult;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * This baked model combines the quads of a compass base and the quads of a compass pointer, which will be rotated
  * around the Y-axis to get the compass to point in the right direction.
  */
-public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel {
-
+public class MeteoriteCompassBakedModel implements IFabricBakedModel {
     // Rotation is expressed as radians
 
     private final BakedModel base;
@@ -65,29 +62,20 @@ public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel 
         this.pointer = pointer;
     }
 
-    public BakedModel getBase() {
-        return base;
-    }
-
     public BakedModel getPointer() {
         return pointer;
-    }
-
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
     }
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
             Supplier<RandomSource> randomSupplier, RenderContext context) {
         // Pre-compute the quad count to avoid list resizes
-        context.bakedModelConsumer().accept(this.base);
+        this.base.emitBlockQuads(blockView, state, pos, randomSupplier, context);
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        context.bakedModelConsumer().accept(base);
+        this.base.emitItemQuads(stack, randomSupplier, context);
 
         // This is used to render a compass pointing in a specific direction when being
         // held in hand
@@ -104,7 +92,7 @@ public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel 
             }
             return true;
         });
-        context.bakedModelConsumer().accept(this.pointer);
+        this.pointer.emitItemQuads(stack, randomSupplier, context);
         context.popTransform();
     }
 
@@ -147,8 +135,7 @@ public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel 
     @Override
     public ItemOverrides getOverrides() {
         /*
-         * This handles setting the rotation of the compass when being held in hand. If it's not held in hand, it'll
-         * animate using the spinning animation.
+         * The entity is given when an item rendered on the hotbar, or when held in hand.
          */
         return new ItemOverrides() {
             @Override
@@ -179,28 +166,23 @@ public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel 
 
         // Only query for a meteor position if we know our own position
         if (pos != null) {
-            CompassResult cr = CompassManager.INSTANCE.getCompassDirection(0, pos.getX(), pos.getY(), pos.getZ());
+            var ourChunkPos = new ChunkPos(pos);
+            var closestMeteorite = CompassManager.INSTANCE.getClosestMeteorite(ourChunkPos, prefetch);
 
-            // Prefetch meteor positions from the server for adjacent blocks, so they are
-            // available more quickly when
-            // we're moving
-            if (prefetch) {
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < 3; j++) {
-                        CompassManager.INSTANCE.getCompassDirection(0, pos.getX() + i - 1, pos.getY(),
-                                pos.getZ() + j - 1);
-                    }
-                }
-            }
-
-            if (cr.isValidResult()) {
-                if (cr.isSpin()) {
-                    long timeMillis = System.currentTimeMillis();
-                    // .5 seconds per full rotation
-                    timeMillis %= 500;
-                    return timeMillis / 500.f * (float) Math.PI * 2;
-                } else {
-                    return (float) cr.getRad() + playerRotation;
+            // No close meteorite was found -> spin slowly
+            if (closestMeteorite == null) {
+                long timeMillis = System.currentTimeMillis();
+                // .5 seconds per full rotation
+                timeMillis %= 500;
+                return timeMillis / 500.f * (float) Math.PI * 2;
+            } else {
+                var dx = pos.x - closestMeteorite.getX();
+                var dz = pos.z - closestMeteorite.getZ();
+                var distanceSq = dx * dx + dz * dz;
+                if (distanceSq > 6 * 6) {
+                    var x = closestMeteorite.getX();
+                    var z = closestMeteorite.getZ();
+                    return (float) rad(pos.x(), pos.z(), x, z) + playerRotation;
                 }
             }
         }
@@ -209,5 +191,12 @@ public class MeteoriteCompassBakedModel implements BakedModel, FabricBakedModel 
         // 3 seconds per full rotation
         timeMillis %= 3000;
         return timeMillis / 3000.f * (float) Math.PI * 2;
+    }
+
+    private static double rad(double ax, double az, double bx, double bz) {
+        var up = bz - az;
+        var side = bx - ax;
+
+        return Math.atan2(-up, side) - Math.PI / 2.0;
     }
 }

@@ -18,10 +18,9 @@
 
 package appeng.menu.slot;
 
+import appeng.client.Point;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import appeng.client.Point;
 
 /**
  * @author BrockWS

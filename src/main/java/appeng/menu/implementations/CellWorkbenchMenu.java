@@ -18,19 +18,6 @@
 
 package appeng.menu.implementations;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-
-import com.google.common.collect.Iterators;
-
-import org.jetbrains.annotations.NotNull;
-
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.config.CopyMode;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
@@ -50,6 +37,17 @@ import appeng.menu.slot.OptionalRestrictedInputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.util.EnumCycler;
 import appeng.util.inv.SupplierInternalInventory;
+import com.google.common.collect.Iterators;
+import it.unimi.dsi.fastutil.shorts.ShortSet;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * @see appeng.client.gui.implementations.CellWorkbenchScreen
@@ -121,7 +119,7 @@ public class CellWorkbenchMenu extends UpgradeableMenu<CellWorkbenchBlockEntity>
     protected void setupUpgrades() {
         // We support up to 8 upgrade slots, see ICellWorkbenchItem, but we need to pre-create all slots here
         // while the active number of slots changes depending on the item inserted
-        var upgradeInventory = new SupplierInternalInventory(this::getUpgrades);
+        var upgradeInventory = new SupplierInternalInventory<>(this::getUpgrades);
         for (int i = 0; i < 8; i++) {
             OptionalRestrictedInputSlot slot = new OptionalRestrictedInputSlot(
                     RestrictedInputSlot.PlacableItemType.UPGRADES,
@@ -156,8 +154,8 @@ public class CellWorkbenchMenu extends UpgradeableMenu<CellWorkbenchBlockEntity>
     }
 
     @Override
-    public void onServerDataSync() {
-        super.onServerDataSync();
+    public void onServerDataSync(ShortSet updatedFields) {
+        super.onServerDataSync(updatedFields);
 
         getHost().getConfigManager().putSetting(Settings.COPY_MODE, this.getCopyMode());
     }

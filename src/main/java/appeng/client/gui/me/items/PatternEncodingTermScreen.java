@@ -18,18 +18,6 @@
 
 package appeng.client.gui.me.items;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.behaviors.EmptyingAction;
 import appeng.api.config.ActionItems;
@@ -42,12 +30,24 @@ import appeng.client.gui.widgets.TabButton;
 import appeng.core.AEConfig;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.Tooltips;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.InventoryActionPacket;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.SlotSemantics;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.parts.encoding.EncodingMode;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 
 public class PatternEncodingTermScreen<C extends PatternEncodingTermMenu> extends MEStorageScreen<C> {
     private final Map<EncodingMode, EncodingModePanel> modePanels = new EnumMap<>(EncodingMode.class);
@@ -65,7 +65,7 @@ public class PatternEncodingTermScreen<C extends PatternEncodingTermMenu> extend
                 case STONECUTTING -> new StonecuttingEncodingPanel(this, widgets);
             };
             var tabButton = new TabButton(
-                    panel.getTabIconItem(),
+                    panel.getIcon(),
                     panel.getTabTooltip(),
                     btn -> getMenu().setMode(mode));
             tabButton.setStyle(TabButton.Style.HORIZONTAL);
@@ -103,9 +103,12 @@ public class PatternEncodingTermScreen<C extends PatternEncodingTermMenu> extend
                     var screen = new SetProcessingPatternAmountScreen<>(
                             this,
                             currentStack,
-                            newStack -> NetworkHandler.instance().sendToServer(new InventoryActionPacket(
-                                    InventoryAction.SET_FILTER, slot.index,
-                                    GenericStack.wrapInItemStack(newStack))));
+                            newStack -> {
+                                ServerboundPacket message = new InventoryActionPacket(
+                                        InventoryAction.SET_FILTER, slot.index,
+                                        GenericStack.wrapInItemStack(newStack));
+                                ClientPlayNetworking.send(message);
+                            });
                     switchToScreen(screen);
                     return true;
                 }

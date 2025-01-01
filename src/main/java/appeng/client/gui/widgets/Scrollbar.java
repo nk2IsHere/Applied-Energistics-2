@@ -18,19 +18,18 @@
 
 package appeng.client.gui.widgets;
 
-import java.time.Duration;
-
+import appeng.client.Point;
+import appeng.client.gui.ICompositeWidget;
+import appeng.client.gui.style.Blitter;
+import appeng.core.AppEng;
 import com.mojang.blaze3d.platform.InputConstants;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-import appeng.client.Point;
-import appeng.client.gui.ICompositeWidget;
-import appeng.client.gui.style.Blitter;
-import appeng.core.AppEng;
+import java.time.Duration;
 
 /**
  * Implements a vertical scrollbar using Vanilla's scrollbar handle texture from the creative tab.
@@ -111,10 +110,10 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
         Blitter image;
         if (this.getRange() == 0) {
             yOffset = 0;
-            image = style.disabledBlitter();
+            image = Blitter.guiSprite(style.disabledSprite());
         } else {
             yOffset = getHandleYOffset();
-            image = style.enabledBlitter();
+            image = Blitter.guiSprite(style.enabledSprite());
         }
 
         image.dest(this.displayX, this.displayY + yOffset).blit(guiGraphics);
@@ -295,44 +294,34 @@ public class Scrollbar implements IScrollSource, ICompositeWidget {
     }
 
     public static final Style DEFAULT = Style.create(
-            ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/container/creative_inventory/tabs.png"),
-            12,
-            15,
-            232, 0,
-            244, 0);
+            ResourceLocation.fromNamespaceAndPath("minecraft", "container/creative_inventory/scroller"),
+            ResourceLocation.fromNamespaceAndPath("minecraft", "container/creative_inventory/scroller_disabled"));
+
+    public static final Style BIG = Style.create(
+            AppEng.makeId("big_scroller"),
+            AppEng.makeId("big_scroller_disabled"));
 
     public static final Style SMALL = Style.create(
-            AppEng.makeId("textures/guis/pattern_modes.png"),
-            7,
-            15,
-            242, 0,
-            249, 0);
+            AppEng.makeId("small_scroller"),
+            AppEng.makeId("small_scroller_disabled"));
 
-    /**
-     * @param handleWidth     Width of the scrollbar handle sprite in the source texture.
-     * @param handleHeight    Height of the scrollbar handle sprite in the source texture.
-     * @param texture         Texture containing the scrollbar handle sprites.
-     * @param enabledBlitter  Rectangle in the source texture that contains the sprite for an enabled handle.
-     * @param disabledBlitter Rectangle in the source texture that contains the sprite for a disabled handle.
-     */
     public record Style(
-            int handleWidth,
-            int handleHeight,
-            ResourceLocation texture,
-            Blitter enabledBlitter,
-            Blitter disabledBlitter) {
+            ResourceLocation enabledSprite,
+            ResourceLocation disabledSprite) {
         public static Style create(
-                ResourceLocation texture,
-                int handleWidth,
-                int handleHeight,
-                int enabledSrcX, int enabledSrcY,
-                int disabledSrcX, int disabledSrcY) {
-            return new Style(
-                    handleWidth,
-                    handleHeight,
-                    texture,
-                    Blitter.texture(texture).src(enabledSrcX, enabledSrcY, handleWidth, handleHeight),
-                    Blitter.texture(texture).src(disabledSrcX, disabledSrcY, handleWidth, handleHeight));
+                ResourceLocation enabledSprite,
+                ResourceLocation disabledSprite) {
+            return new Style(enabledSprite, disabledSprite);
+        }
+
+        public int handleWidth() {
+            var minecraft = Minecraft.getInstance();
+            return minecraft.getGuiSprites().getSprite(enabledSprite).contents().width();
+        }
+
+        public int handleHeight() {
+            var minecraft = Minecraft.getInstance();
+            return minecraft.getGuiSprites().getSprite(enabledSprite).contents().height();
         }
     }
 

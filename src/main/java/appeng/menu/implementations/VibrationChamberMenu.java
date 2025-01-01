@@ -18,15 +18,14 @@
 
 package appeng.menu.implementations;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.blockentity.misc.VibrationChamberBlockEntity;
 import appeng.core.definitions.AEItems;
 import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.RestrictedInputSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see appeng.client.gui.implementations.VibrationChamberScreen

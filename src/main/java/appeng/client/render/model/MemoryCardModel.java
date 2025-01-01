@@ -18,12 +18,8 @@
 
 package appeng.client.render.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -31,18 +27,20 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * Model wrapper for the memory card item model, which combines a base card layer with a "visual hash" of the part/tile.
  */
 public class MemoryCardModel implements BasicUnbakedModel {
 
-    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/memory_card_base");
+    public static final ResourceLocation MODEL_BASE = AppEng.makeId("item/memory_card_base");
     private static final Material TEXTURE = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/memory_card_hash"));
+            AppEng.makeId("item/memory_card_hash"));
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -52,7 +50,7 @@ public class MemoryCardModel implements BasicUnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter,
-            ModelState rotationContainer, ResourceLocation modelId) {
+            ModelState rotationContainer) {
         TextureAtlasSprite texture = textureGetter.apply(TEXTURE);
 
         BakedModel baseModel = loader.bake(MODEL_BASE, rotationContainer);

@@ -18,21 +18,6 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.WeakHashMap;
-
-import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.api.config.CpuSelectionMode;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingCPU;
@@ -42,6 +27,15 @@ import appeng.menu.ISubMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.guisync.PacketWritable;
 import appeng.menu.implementations.MenuTypeBuilder;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * @see appeng.client.gui.me.crafting.CraftingStatusScreen
@@ -199,11 +193,11 @@ public class CraftingStatusMenu extends CraftingCPUMenu implements ISubMenu {
     }
 
     public record CraftingCpuList(List<CraftingCpuListEntry> cpus) implements PacketWritable {
-        public CraftingCpuList(FriendlyByteBuf data) {
+        public CraftingCpuList(RegistryFriendlyByteBuf data) {
             this(readFromPacket(data));
         }
 
-        private static List<CraftingCpuListEntry> readFromPacket(FriendlyByteBuf data) {
+        private static List<CraftingCpuListEntry> readFromPacket(RegistryFriendlyByteBuf data) {
             var count = data.readInt();
             var result = new ArrayList<CraftingCpuListEntry>(count);
             for (int i = 0; i < count; i++) {
@@ -213,7 +207,7 @@ public class CraftingStatusMenu extends CraftingCPUMenu implements ISubMenu {
         }
 
         @Override
-        public void writeToPacket(FriendlyByteBuf data) {
+        public void writeToPacket(RegistryFriendlyByteBuf data) {
             data.writeInt(cpus.size());
             for (var entry : cpus) {
                 entry.writeToPacket(data);
@@ -230,25 +224,25 @@ public class CraftingStatusMenu extends CraftingCPUMenu implements ISubMenu {
             GenericStack currentJob,
             float progress,
             long elapsedTimeNanos) {
-        public static CraftingCpuListEntry readFromPacket(FriendlyByteBuf data) {
+        public static CraftingCpuListEntry readFromPacket(RegistryFriendlyByteBuf data) {
             return new CraftingCpuListEntry(
                     data.readInt(),
                     data.readLong(),
                     data.readInt(),
-                    data.readBoolean() ? data.readComponent() : null,
+                    data.readBoolean() ? ComponentSerialization.TRUSTED_STREAM_CODEC.decode(data) : null,
                     data.readEnum(CpuSelectionMode.class),
                     GenericStack.readBuffer(data),
                     data.readFloat(),
                     data.readVarLong());
         }
 
-        public void writeToPacket(FriendlyByteBuf data) {
+        public void writeToPacket(RegistryFriendlyByteBuf data) {
             data.writeInt(serial);
             data.writeLong(storage);
             data.writeInt(coProcessors);
             data.writeBoolean(name != null);
             if (name != null) {
-                data.writeComponent(name);
+                ComponentSerialization.TRUSTED_STREAM_CODEC.encode(data, name);
             }
             data.writeEnum(mode);
             GenericStack.writeBuffer(currentJob, data);

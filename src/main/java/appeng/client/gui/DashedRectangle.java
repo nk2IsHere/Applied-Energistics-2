@@ -1,16 +1,10 @@
 package appeng.client.gui;
 
+import appeng.client.guidebook.document.LytRect;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
-
-import appeng.client.guidebook.document.LytRect;
 
 /**
  * Rendering helper for rendering a rectangle with a dashed outline.
@@ -39,6 +33,7 @@ public final class DashedRectangle {
         buildVerticalDashedLine(builder, stack, t, bounds.right() - pattern.width(), bounds.y(), bounds.bottom(), z,
                 pattern, false);
 
+        BufferUploader.drawWithShader(builder.buildOrThrow());
         RenderSystem.disableBlend();
     }
 
@@ -57,8 +52,7 @@ public final class DashedRectangle {
             builder.addVertex(pose, Mth.clamp(x + pattern.onLength(), x1, x2), y, z).setColor(color);
             builder.addVertex(pose, Mth.clamp(x, x1, x2), y, z).setColor(color);
             builder.addVertex(pose, Mth.clamp(x, x1, x2), y + pattern.width(), z).setColor(color);
-            builder.addVertex(pose, Mth.clamp(x + pattern.onLength(), x1, x2), y + pattern.width(), z).setColor(color)
-                    ;
+            builder.addVertex(pose, Mth.clamp(x + pattern.onLength(), x1, x2), y + pattern.width(), z).setColor(color);
         }
     }
 
@@ -77,8 +71,7 @@ public final class DashedRectangle {
             builder.addVertex(pose, x + pattern.width(), Mth.clamp(y, y1, y2), z).setColor(color);
             builder.addVertex(pose, x, Mth.clamp(y, y1, y2), z).setColor(color);
             builder.addVertex(pose, x, Mth.clamp(y + pattern.onLength(), y1, y2), z).setColor(color);
-            builder.addVertex(pose, x + pattern.width(), Mth.clamp(y + pattern.onLength(), y1, y2), z).setColor(color)
-                    ;
+            builder.addVertex(pose, x + pattern.width(), Mth.clamp(y + pattern.onLength(), y1, y2), z).setColor(color);
         }
     }
 

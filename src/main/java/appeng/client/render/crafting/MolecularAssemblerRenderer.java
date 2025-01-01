@@ -18,9 +18,12 @@
 
 package appeng.client.render.crafting;
 
+import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
+import appeng.client.render.effects.ParticleTypes;
+import appeng.core.AppEng;
+import appeng.core.AppEngClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -36,13 +39,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
-import appeng.client.render.effects.ParticleTypes;
-import appeng.core.AELog;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
-
 /**
  * Renders the item currently being crafted by the molecular assembler, as well as the light strip when it's powered.
  */
@@ -82,12 +78,7 @@ public class MolecularAssemblerRenderer implements BlockEntityRenderer<Molecular
     private void renderPowerLight(PoseStack ms, MultiBufferSource bufferIn, int combinedLightIn,
             int combinedOverlayIn) {
         Minecraft minecraft = Minecraft.getInstance();
-        BakedModel lightsModel = minecraft.getModelManager().bakedRegistry.get(LIGHTS_MODEL);
-        if (lightsModel == null) {
-            AELog.warn("Lights model missing");
-            return;
-        }
-
+        BakedModel lightsModel = minecraft.getModelManager().getModel(LIGHTS_MODEL);
         // tripwire layer has the shader-property we're looking for:
         // alpha testing
         // translucency

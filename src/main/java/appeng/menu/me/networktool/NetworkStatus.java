@@ -18,23 +18,20 @@
 
 package appeng.menu.me.networktool;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.energy.IPassiveEnergyGenerator;
 import appeng.blockentity.misc.VibrationChamberBlockEntity;
 import appeng.client.gui.me.networktool.NetworkStatusScreen;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Contains statistics about an ME network and the machines that form it.
@@ -135,9 +132,9 @@ public class NetworkStatus {
     }
 
     /**
-     * Reads a network status previously written using {@link #write(FriendlyByteBuf)}.
+     * Reads a network status previously written using {@link #write(RegistryFriendlyByteBuf)}.
      */
-    public static NetworkStatus read(FriendlyByteBuf data) {
+    public static NetworkStatus read(RegistryFriendlyByteBuf data) {
         NetworkStatus status = new NetworkStatus();
         status.averagePowerInjection = data.readDouble();
         status.averagePowerUsage = data.readDouble();
@@ -157,9 +154,9 @@ public class NetworkStatus {
     }
 
     /**
-     * Writes the contents of this object to a packet buffer. Use {@link #read(FriendlyByteBuf)} to restore.
+     * Writes the contents of this object to a packet buffer. Use {@link #read(RegistryFriendlyByteBuf)} to restore.
      */
-    public void write(FriendlyByteBuf data) {
+    public void write(RegistryFriendlyByteBuf data) {
         data.writeDouble(averagePowerInjection);
         data.writeDouble(averagePowerUsage);
         data.writeDouble(storedPower);

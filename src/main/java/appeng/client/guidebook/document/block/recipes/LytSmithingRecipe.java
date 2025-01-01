@@ -1,19 +1,5 @@
 package appeng.client.guidebook.document.block.recipes;
 
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.SmithingRecipe;
-import net.minecraft.world.item.crafting.SmithingTransformRecipe;
-import net.minecraft.world.item.crafting.SmithingTrimRecipe;
-import net.minecraft.world.level.block.Blocks;
-
 import appeng.client.guidebook.document.DefaultStyles;
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.document.block.LytSlot;
@@ -23,6 +9,15 @@ import appeng.client.guidebook.render.RenderContext;
 import appeng.core.AppEng;
 import appeng.siteexport.ExportableResourceProvider;
 import appeng.util.Platform;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class LytSmithingRecipe extends LytRecipeBox implements ExportableResourceProvider {
     private static final Logger LOG = LoggerFactory.getLogger(LytSmithingRecipe.class);
@@ -36,9 +31,9 @@ public class LytSmithingRecipe extends LytRecipeBox implements ExportableResourc
 
     private final LytSlot resultSlot;
 
-    public LytSmithingRecipe(SmithingRecipe recipe) {
-        super(recipe);
-        this.recipe = recipe;
+    public LytSmithingRecipe(RecipeHolder<SmithingRecipe> holder) {
+        super(holder);
+        this.recipe = holder.value();
         setPadding(5);
         paddingTop = 15;
 

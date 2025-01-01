@@ -41,5 +41,4 @@ public class AEModelData {
     public int hashCode() {
         return 0;
     }
-
 }

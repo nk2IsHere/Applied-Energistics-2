@@ -18,37 +18,34 @@
 
 package appeng.client.render.model;
 
-import java.util.Collection;
-import java.util.function.Function;
-
+import appeng.client.render.BasicUnbakedModel;
 import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * The parent model for the compass baked model. Declares the dependencies for the base and pointer submodels mostly.
  */
 public class MeteoriteCompassModel implements BasicUnbakedModel {
 
-    private static final ResourceLocation MODEL_BASE = new ResourceLocation(
+    private static final ResourceLocation MODEL_BASE = ResourceLocation.parse(
             "ae2:item/meteorite_compass_base");
 
-    private static final ResourceLocation MODEL_POINTER = new ResourceLocation(
+    private static final ResourceLocation MODEL_POINTER = ResourceLocation.parse(
             "ae2:item/meteorite_compass_pointer");
 
     @Nullable
     @Override
     public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter,
-            ModelState rotationContainer, ResourceLocation modelId) {
+            ModelState rotationContainer) {
         BakedModel baseModel = loader.bake(MODEL_BASE, rotationContainer);
         BakedModel pointerModel = loader.bake(MODEL_POINTER, rotationContainer);
         return new MeteoriteCompassBakedModel(baseModel, pointerModel);

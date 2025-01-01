@@ -18,16 +18,14 @@
 
 package appeng.client.gui.widgets;
 
-import java.util.function.Consumer;
-import java.util.regex.Pattern;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.chat.Component;
-
 import appeng.api.config.ActionItems;
 import appeng.client.gui.Icon;
 import appeng.core.localization.ButtonToolTips;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class ActionButton extends IconButton {
     private static final Pattern PATTERN_NEW_LINE = Pattern.compile("\\n", Pattern.LITERAL);
@@ -43,8 +41,8 @@ public class ActionButton extends IconButton {
         ButtonToolTips displayName;
         ButtonToolTips displayValue;
         switch (action) {
-            case WRENCH -> {
-                icon = Icon.WRENCH;
+            case COG -> {
+                icon = Icon.COG;
                 displayName = ButtonToolTips.PartitionStorage;
                 displayValue = ButtonToolTips.PartitionStorageHint;
             }
@@ -53,13 +51,28 @@ public class ActionButton extends IconButton {
                 displayName = ButtonToolTips.Clear;
                 displayValue = ButtonToolTips.ClearSettings;
             }
+            case S_CLOSE -> {
+                icon = Icon.S_CLEAR;
+                displayName = ButtonToolTips.Clear;
+                displayValue = ButtonToolTips.ClearSettings;
+            }
             case STASH -> {
                 icon = Icon.ARROW_UP;
                 displayName = ButtonToolTips.Stash;
                 displayValue = ButtonToolTips.StashDesc;
             }
+            case S_STASH -> {
+                icon = Icon.S_ARROW_UP;
+                displayName = ButtonToolTips.Stash;
+                displayValue = ButtonToolTips.StashDesc;
+            }
             case STASH_TO_PLAYER_INV -> {
                 icon = Icon.ARROW_DOWN;
+                displayName = ButtonToolTips.StashToPlayer;
+                displayValue = ButtonToolTips.StashToPlayerDesc;
+            }
+            case S_STASH_TO_PLAYER_INV -> {
+                icon = Icon.S_ARROW_DOWN;
                 displayName = ButtonToolTips.StashToPlayer;
                 displayValue = ButtonToolTips.StashToPlayerDesc;
             }
@@ -73,8 +86,13 @@ public class ActionButton extends IconButton {
                 displayName = ButtonToolTips.CycleProcessingOutput;
                 displayValue = ButtonToolTips.CycleProcessingOutputTooltip;
             }
+            case S_CYCLE_PROCESSING_OUTPUT -> {
+                icon = Icon.S_CYCLE;
+                displayName = ButtonToolTips.CycleProcessingOutput;
+                displayValue = ButtonToolTips.CycleProcessingOutputTooltip;
+            }
             case TERMINAL_SETTINGS -> {
-                icon = Icon.WRENCH;
+                icon = Icon.COG;
                 displayName = ButtonToolTips.TerminalSettings;
                 displayValue = null;
             }

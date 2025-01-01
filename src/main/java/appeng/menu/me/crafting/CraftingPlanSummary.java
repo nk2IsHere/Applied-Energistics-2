@@ -18,21 +18,15 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingPlan;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import java.util.*;
 
 /**
  * A crafting plan intended to be sent to the client.
@@ -69,7 +63,7 @@ public class CraftingPlanSummary {
         return entries;
     }
 
-    public void write(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeVarLong(usedBytes);
         buffer.writeBoolean(simulation);
         buffer.writeVarInt(entries.size());
@@ -78,7 +72,7 @@ public class CraftingPlanSummary {
         }
     }
 
-    public static CraftingPlanSummary read(FriendlyByteBuf buffer) {
+    public static CraftingPlanSummary read(RegistryFriendlyByteBuf buffer) {
 
         long bytesUsed = buffer.readVarLong();
         boolean simulation = buffer.readBoolean();

@@ -1,23 +1,18 @@
 package appeng.hooks;
 
-import static net.minecraft.client.renderer.RenderStateShard.COLOR_WRITE;
-import static net.minecraft.client.renderer.RenderStateShard.ITEM_ENTITY_TARGET;
-import static net.minecraft.client.renderer.RenderStateShard.NO_CULL;
-import static net.minecraft.client.renderer.RenderStateShard.RENDERTYPE_LINES_SHADER;
-import static net.minecraft.client.renderer.RenderStateShard.TRANSLUCENT_TRANSPARENCY;
-import static net.minecraft.client.renderer.RenderStateShard.VIEW_OFFSET_Z_LAYERING;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalDouble;
-
+import appeng.api.implementations.items.IFacadeItem;
+import appeng.api.parts.IFacadePart;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartItem;
+import appeng.core.AEConfig;
+import appeng.core.definitions.AEParts;
+import appeng.items.parts.FacadeItem;
+import appeng.parts.BusCollisionHelper;
+import appeng.parts.PartPlacement;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
-
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
@@ -36,17 +31,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
-import appeng.api.implementations.items.IFacadeItem;
-import appeng.api.parts.IFacadePart;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartItem;
-import appeng.core.AEConfig;
-import appeng.core.definitions.AEParts;
-import appeng.items.parts.FacadeItem;
-import appeng.parts.BusCollisionHelper;
-import appeng.parts.PartPlacement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalDouble;
+
+import static net.minecraft.client.renderer.RenderStateShard.*;
 
 public class RenderBlockOutlineHook {
     private RenderBlockOutlineHook() {
@@ -55,11 +47,13 @@ public class RenderBlockOutlineHook {
     /**
      * Similar to {@link RenderType#LINES}, but with inverted depth test.
      */
-    public static final RenderType.CompositeRenderType LINES_BEHIND_BLOCK = RenderType.create(
+    public static final RenderType LINES_BEHIND_BLOCK = RenderType.create(
             "lines_behind_block",
             DefaultVertexFormat.POSITION_COLOR_NORMAL,
             VertexFormat.Mode.LINES,
             256,
+            false,
+            false,
             RenderType.CompositeState.builder()
                     .setShaderState(RENDERTYPE_LINES_SHADER)
                     .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.empty()))
@@ -154,7 +148,7 @@ public class RenderBlockOutlineHook {
                 // Maybe a bit hacky, but if there's no part on the side to support the facade
                 // We would render a cable anchor implicitly
                 if (partHost.getPart(side) == null) {
-                    var cableAnchor = AEParts.CABLE_ANCHOR.asItem().createPart();
+                    var cableAnchor = AEParts.CABLE_ANCHOR.get().createPart();
                     renderPart(poseStack, buffers, camera, pos, cableAnchor, side, true, insideBlock);
                 }
 
@@ -173,7 +167,7 @@ public class RenderBlockOutlineHook {
             BlockHitResult blockHitResult,
             ItemStack itemInHand,
             boolean insideBlock) {
-        if (itemInHand.getItem() instanceof IPartItem<?>partItem) {
+        if (itemInHand.getItem() instanceof IPartItem<?> partItem) {
             var placement = PartPlacement.getPartPlacement(player,
                     player.level(),
                     itemInHand,

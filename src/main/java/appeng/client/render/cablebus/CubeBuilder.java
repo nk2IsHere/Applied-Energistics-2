@@ -18,24 +18,19 @@
 
 package appeng.client.render.cablebus;
 
-import java.util.EnumMap;
-import java.util.EnumSet;
-
 import com.google.common.base.Preconditions;
-
-import org.joml.Vector4f;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import org.joml.Vector4f;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
 
 /**
  * Builds the quads for a cube.
  */
-@Environment(EnvType.CLIENT)
 public class CubeBuilder {
 
     private final EnumMap<Direction, TextureAtlasSprite> textures = new EnumMap<>(Direction.class);
@@ -44,7 +39,7 @@ public class CubeBuilder {
 
     private final EnumMap<Direction, Vector4f> customUv = new EnumMap<>(Direction.class);
 
-    private final byte[] uvRotations = new byte[Direction.values().length];
+    private byte[] uvRotations = new byte[Direction.values().length];
 
     private final boolean[] flipU = new boolean[Direction.values().length];
 
@@ -174,29 +169,29 @@ public class CubeBuilder {
         UvVector uv = new UvVector();
 
         if (face.getAxis() != Direction.Axis.Y) {
-            uv.v1 = texture.getV(16 - y1 * 16);
-            uv.v2 = texture.getV(16 - y2 * 16);
+            uv.v1 = texture.getV(1 - y1);
+            uv.v2 = texture.getV(1 - y2);
         } else {
-            uv.v1 = texture.getV(z1 * 16);
-            uv.v2 = texture.getV(z2 * 16);
+            uv.v1 = texture.getV(z1);
+            uv.v2 = texture.getV(z2);
         }
 
         switch (face) {
             case DOWN, UP, SOUTH -> {
-                uv.u1 = texture.getU(x1 * 16);
-                uv.u2 = texture.getU(x2 * 16);
+                uv.u1 = texture.getU(x1);
+                uv.u2 = texture.getU(x2);
             }
             case NORTH -> {
-                uv.u1 = texture.getU(16 - x2 * 16);
-                uv.u2 = texture.getU(16 - x1 * 16);
+                uv.u1 = texture.getU(1 - x2);
+                uv.u2 = texture.getU(1 - x1);
             }
             case WEST -> {
-                uv.u1 = texture.getU(z1 * 16);
-                uv.u2 = texture.getU(z2 * 16);
+                uv.u1 = texture.getU(z1);
+                uv.u2 = texture.getU(z2);
             }
             case EAST -> {
-                uv.u1 = texture.getU(16 - z2 * 16);
-                uv.u2 = texture.getU(16 - z1 * 16);
+                uv.u1 = texture.getU(1 - z2);
+                uv.u2 = texture.getU(1 - z1);
             }
         }
 

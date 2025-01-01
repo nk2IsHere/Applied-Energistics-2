@@ -92,7 +92,7 @@ public final class AEConfig {
     }
 
     // Default Energy Conversion Rates
-    private static final double DEFAULT_TR_EXCHANGE = 2.0;
+    private static final double DEFAULT_FE_EXCHANGE = 2.0;
 
     // Config instance
     private static AEConfig instance;
@@ -119,11 +119,10 @@ public final class AEConfig {
     private boolean enableEffects;
     private boolean useLargeFonts;
     private boolean useColoredCraftingStatus;
-    private boolean disableColoredCableRecipesInJEI;
-    private boolean isEnableFacadesInJEI;
-    private boolean isEnableFacadeRecipesInJEI;
+    private boolean disableColoredCableRecipesInRecipeViewer;
+    private boolean isEnableFacadesInRecipeViewer;
+    private boolean isEnableFacadeRecipesInRecipeViewer;
     private int craftingCalculationTimePerTick;
-    private boolean craftingSimulatedExtraction;
     private boolean spatialAnchorEnablesRandomTicks;
 
     // Spatial IO/Dimension
@@ -151,16 +150,16 @@ public final class AEConfig {
     public static final double TUNNEL_POWER_LOSS = 0.05;
 
     private void syncClientConfig() {
-        this.disableColoredCableRecipesInJEI = CLIENT.disableColoredCableRecipesInJEI.get();
-        this.isEnableFacadesInJEI = CLIENT.enableFacadesInJEI.get();
-        this.isEnableFacadeRecipesInJEI = CLIENT.enableFacadeRecipesInJEI.get();
+        this.disableColoredCableRecipesInRecipeViewer = CLIENT.disableColoredCableRecipesInRecipeViewer.get();
+        this.isEnableFacadesInRecipeViewer = CLIENT.enableFacadesInRecipeViewer.get();
+        this.isEnableFacadeRecipesInRecipeViewer = CLIENT.enableFacadeRecipesInRecipeViewer.get();
         this.enableEffects = CLIENT.enableEffects.get();
         this.useLargeFonts = CLIENT.useLargeFonts.get();
         this.useColoredCraftingStatus = CLIENT.useColoredCraftingStatus.get();
     }
 
     private void syncCommonConfig() {
-        PowerUnit.FE.conversionRatio = COMMON.powerRatioTechReborn.get();
+        PowerUnit.FE.conversionRatio = COMMON.powerRatioForgeEnergy.get();
         PowerMultiplier.CONFIG.multiplier = COMMON.powerUsageMultiplier.get();
 
         CondenserOutput.MATTER_BALLS.requiredPower = COMMON.condenserMatterBallsPower.get();
@@ -192,7 +191,6 @@ public final class AEConfig {
         this.spatialPowerExponent = COMMON.spatialPowerExponent.get();
 
         this.craftingCalculationTimePerTick = COMMON.craftingCalculationTimePerTick.get();
-        this.craftingSimulatedExtraction = COMMON.craftingSimulatedExtraction.get();
         this.spatialAnchorEnablesRandomTicks = COMMON.spatialAnchorEnableRandomTicks.get();
 
         AELog.setCraftingLogEnabled(COMMON.craftingLog.get());
@@ -204,18 +202,28 @@ public final class AEConfig {
         return instance;
     }
 
+    // Tunnels
+    public double getP2PTunnelEnergyTax() {
+        return COMMON.p2pTunnelEnergyTax.get();
+    }
+
+    public double getP2PTunnelTransportTax() {
+        return COMMON.p2pTunnelTransportTax.get();
+    }
+
     public double wireless_getDrainRate(double range) {
-        return this.wirelessTerminalDrainMultiplier * range;
+        return COMMON.wirelessTerminalDrainMultiplier.get() * range;
     }
 
     public double wireless_getMaxRange(int boosters) {
-        return this.wirelessBaseRange
-                + this.wirelessBoosterRangeMultiplier * Math.pow(boosters, this.wirelessBoosterExp);
+        return COMMON.wirelessBaseRange.get()
+            + COMMON.wirelessBoosterRangeMultiplier.get() * Math.pow(boosters, COMMON.wirelessBoosterExp.get());
     }
 
     public double wireless_getPowerDrain(int boosters) {
-        return this.wirelessBaseCost
-                + this.wirelessCostMultiplier * Math.pow(boosters, 1 + boosters / this.wirelessHighWirelessCount);
+        return COMMON.wirelessBaseCost.get()
+            + COMMON.wirelessCostMultiplier.get()
+            * Math.pow(boosters, 1 + boosters / COMMON.wirelessHighWirelessCount.get());
     }
 
     public boolean isSearchModNameInTooltips() {
@@ -274,10 +282,6 @@ public final class AEConfig {
         CLIENT.terminalStyle.set(setting);
     }
 
-    public boolean isGuideHotkeyEnabled() {
-        return CLIENT.enableGuideHotkey.get();
-    }
-
     public double getGridEnergyStoragePerNode() {
         return COMMON.gridEnergyStoragePerNode.get();
     }
@@ -286,31 +290,17 @@ public final class AEConfig {
         return COMMON.crystalResonanceGeneratorRate.get();
     }
 
-    public void save() {
-    }
-
-    public void reload() {
-        clientConfigManager.load();
-        commonConfigManager.load();
-
-        syncClientConfig();
-        syncCommonConfig();
-    }
-
-    public PowerUnit getSelectedPowerUnit() {
+    public PowerUnit getSelectedEnergyUnit() {
         return this.CLIENT.selectedPowerUnit.get();
     }
 
-    public void nextPowerUnit(boolean backwards) {
-        PowerUnit selectedPowerUnit = EnumCycler.rotateEnum(getSelectedPowerUnit(), backwards,
-                Settings.POWER_UNITS.getValues());
-        CLIENT.selectedPowerUnit.set(selectedPowerUnit);
+    public void nextEnergyUnit(boolean backwards) {
+        var selected = EnumCycler.rotateEnum(getSelectedEnergyUnit(), backwards,
+            Settings.POWER_UNITS.getValues());
+        CLIENT.selectedPowerUnit.set(selected);
     }
 
     // Getters
-    public boolean isBlockEntityFacadesEnabled() {
-        return COMMON.allowBlockEntityFacades.get();
-    }
 
     public boolean isDebugToolsEnabled() {
         return COMMON.debugTools.get();
@@ -332,36 +322,32 @@ public final class AEConfig {
         return this.useColoredCraftingStatus;
     }
 
-    public boolean isDisableColoredCableRecipesInJEI() {
-        return this.disableColoredCableRecipesInJEI;
+    public boolean isDisableColoredCableRecipesInRecipeViewer() {
+        return CLIENT.disableColoredCableRecipesInRecipeViewer.get();
     }
 
-    public boolean isEnableFacadesInJEI() {
-        return this.isEnableFacadesInJEI;
+    public boolean isEnableFacadesInRecipeViewer() {
+        return CLIENT.enableFacadesInRecipeViewer.get();
     }
 
-    public boolean isEnableFacadeRecipesInJEI() {
-        return this.isEnableFacadeRecipesInJEI;
+    public boolean isEnableFacadeRecipesInRecipeViewer() {
+        return CLIENT.enableFacadeRecipesInRecipeViewer.get();
     }
 
-    public int getCraftingCalculationTimePerTick() {
-        return this.craftingCalculationTimePerTick;
-    }
-
-    public boolean isCraftingSimulatedExtraction() {
-        return this.craftingSimulatedExtraction;
+    public boolean isExposeNetworkInventoryToEmi() {
+        return CLIENT.exposeNetworkInventoryToEmi.get();
     }
 
     public boolean isSpatialAnchorEnablesRandomTicks() {
-        return this.spatialAnchorEnablesRandomTicks;
+        return COMMON.spatialAnchorEnableRandomTicks.get();
     }
 
     public double getSpatialPowerExponent() {
-        return this.spatialPowerExponent;
+        return COMMON.spatialPowerExponent.get();
     }
 
     public double getSpatialPowerMultiplier() {
-        return this.spatialPowerMultiplier;
+        return COMMON.spatialPowerMultiplier.get();
     }
 
     public double getChargerChargeRate() {
@@ -369,27 +355,27 @@ public final class AEConfig {
     }
 
     public DoubleSupplier getWirelessTerminalBattery() {
-        return () -> this.wirelessTerminalBattery;
+        return COMMON.wirelessTerminalBattery::get;
     }
 
     public DoubleSupplier getEntropyManipulatorBattery() {
-        return () -> this.entropyManipulatorBattery;
+        return COMMON.entropyManipulatorBattery::get;
     }
 
     public DoubleSupplier getMatterCannonBattery() {
-        return () -> this.matterCannonBattery;
+        return COMMON.matterCannonBattery::get;
     }
 
     public DoubleSupplier getPortableCellBattery() {
-        return () -> this.portableCellBattery;
+        return COMMON.portableCellBattery::get;
     }
 
     public DoubleSupplier getColorApplicatorBattery() {
-        return () -> this.colorApplicatorBattery;
+        return COMMON.colorApplicatorBattery::get;
     }
 
     public DoubleSupplier getChargedStaffBattery() {
-        return () -> this.chargedStaffBattery;
+        return COMMON.chargedStaffBattery::get;
     }
 
     public boolean isShowDebugGuiOverlays() {
@@ -416,20 +402,12 @@ public final class AEConfig {
         return COMMON.tinyTntBlockDamage.get();
     }
 
-    public boolean isDisassemblyCraftingEnabled() {
-        return COMMON.disassemblyCrafting.get();
-    }
-
     public int getGrowthAcceleratorSpeed() {
         return COMMON.growthAcceleratorSpeed.get();
     }
 
     public boolean isBlockUpdateLogEnabled() {
         return COMMON.blockUpdateLog.get();
-    }
-
-    public boolean isPacketLogEnabled() {
-        return COMMON.packetLog.get();
     }
 
     public boolean isChunkLoggerTraceEnabled() {
@@ -449,10 +427,6 @@ public final class AEConfig {
      */
     public boolean isPlacementPreviewEnabled() {
         return CLIENT.showPlacementPreview.get();
-    }
-
-    public boolean isPortableCellDisassemblyEnabled() {
-        return COMMON.portableCellDisassembly.get();
     }
 
     // Tooltip settings
@@ -518,6 +492,20 @@ public final class AEConfig {
         return CLIENT.terminalMargin.get();
     }
 
+    public int getCraftingCalculationTimePerTick() {
+        return COMMON.craftingCalculationTimePerTick.get();
+    }
+
+    public void save() {
+    }
+
+    public void reload() {
+        clientConfigManager.load();
+        commonConfigManager.load();
+
+        syncClientConfig();
+        syncCommonConfig();
+    }
     // Setters keep visibility as low as possible.
 
     private static class ClientConfig {
@@ -526,9 +514,10 @@ public final class AEConfig {
         public final BooleanOption enableEffects;
         public final BooleanOption useLargeFonts;
         public final BooleanOption useColoredCraftingStatus;
-        public final BooleanOption disableColoredCableRecipesInJEI;
-        public final BooleanOption enableFacadesInJEI;
-        public final BooleanOption enableFacadeRecipesInJEI;
+        public final BooleanOption disableColoredCableRecipesInRecipeViewer;
+        public final BooleanOption enableFacadesInRecipeViewer;
+        public final BooleanOption enableFacadeRecipesInRecipeViewer;
+        public final BooleanOption exposeNetworkInventoryToEmi;
         public final EnumOption<PowerUnit> selectedPowerUnit;
         public final BooleanOption debugGuiOverlays;
         public final BooleanOption showPlacementPreview;
@@ -552,15 +541,16 @@ public final class AEConfig {
         public final BooleanOption tooltipShowCellUpgrades;
         public final BooleanOption tooltipShowCellContent;
         public final IntegerOption tooltipMaxCellContentShown;
-        public final BooleanOption enableGuideHotkey;
 
         public ClientConfig(ConfigSection root) {
             var client = root.subsection("client");
-            this.disableColoredCableRecipesInJEI = client.addBoolean("disableColoredCableRecipesInJEI", true);
-            this.enableFacadesInJEI = client.addBoolean("enableFacadesInJEI", true,
+            this.disableColoredCableRecipesInRecipeViewer = client.addBoolean("disableColoredCableRecipesInRecipeViewer", true);
+            this.enableFacadeRecipesInRecipeViewer = client.addBoolean("enableFacadeRecipesInRecipeViewer", true,
                     "Show facades in JEI ingredient list");
-            this.enableFacadeRecipesInJEI = client.addBoolean("enableFacadeRecipesInJEI", true,
+            this.enableFacadesInRecipeViewer = client.addBoolean("enableFacadesInRecipeViewer", true,
                     "Show facade recipes in JEI for supported blocks");
+            this.exposeNetworkInventoryToEmi = client.addBoolean("exposeNetworkInventoryToEmi", false,
+                "Expose the full network inventory to EMI, which might cause performance problems.");
             this.enableEffects = client.addBoolean("enableEffects", true);
             this.useLargeFonts = client.addBoolean("useTerminalUseLargeFont", false);
             this.useColoredCraftingStatus = client.addBoolean("useColoredCraftingStatus", true);
@@ -602,8 +592,6 @@ public final class AEConfig {
                     "Show a preview of the content in the tooltips of storage cells, color applicators and matter cannons");
             this.tooltipMaxCellContentShown = tooltips.addInt("maxCellContentShown", 5, 1, 32,
                     "The maximum number of content entries to show in the tooltip of storage cells, color applicators and matter cannons");
-            this.enableGuideHotkey = tooltips.addBoolean("enableGuideHotkey", true,
-                    "Enables the 'hold key to show guide' functionality in tooltips");
         }
 
     }
@@ -613,16 +601,14 @@ public final class AEConfig {
         // Misc
         public final IntegerOption formationPlaneEntityLimit;
         public final IntegerOption craftingCalculationTimePerTick;
-        public final BooleanOption craftingSimulatedExtraction;
-        public final BooleanOption allowBlockEntityFacades;
         public final BooleanOption debugTools;
         public final BooleanOption matterCannonBlockDamage;
         public final BooleanOption tinyTntBlockDamage;
         public final EnumOption<ChannelMode> channels;
         public final BooleanOption spatialAnchorEnableRandomTicks;
 
-        public final BooleanOption disassemblyCrafting;
         public final IntegerOption growthAcceleratorSpeed;
+        public final BooleanOption annihilationPlaneSkyDustGeneration;
 
         // Spatial IO/Dimension
         public final DoubleOption spatialPowerExponent;
@@ -630,7 +616,6 @@ public final class AEConfig {
 
         // Logging
         public final BooleanOption blockUpdateLog;
-        public final BooleanOption packetLog;
         public final BooleanOption craftingLog;
         public final BooleanOption debugLog;
         public final BooleanOption gridLog;
@@ -658,14 +643,13 @@ public final class AEConfig {
         public final DoubleOption wirelessBoosterExp;
         public final DoubleOption wirelessHighWirelessCount;
 
-        // Portable Cells
-        public final BooleanOption portableCellDisassembly;
-
         // Power Ratios
-        public final DoubleOption powerRatioTechReborn;
+        public final DoubleOption powerRatioForgeEnergy;
         public final DoubleOption powerUsageMultiplier;
         public final DoubleOption gridEnergyStoragePerNode;
         public final DoubleOption crystalResonanceGeneratorRate;
+        public final DoubleOption p2pTunnelEnergyTax;
+        public final DoubleOption p2pTunnelTransportTax;
 
         // Vibration Chamber
         public final DoubleOption vibrationChamberBaseEnergyPerFuelTick;
@@ -678,7 +662,6 @@ public final class AEConfig {
 
         public final Map<TickRates, IntegerOption> tickRateMin = new HashMap<>();
         public final Map<TickRates, IntegerOption> tickRateMax = new HashMap<>();
-
         public CommonConfig(ConfigSection root) {
 
             ConfigSection general = root.subsection("general");
@@ -695,20 +678,14 @@ public final class AEConfig {
             ConfigSection automation = root.subsection("automation");
             formationPlaneEntityLimit = automation.addInt("formationPlaneEntityLimit", 128);
 
-            ConfigSection facades = root.subsection("facades");
-            allowBlockEntityFacades = facades.addBoolean("allowBlockEntities", false,
-                    "Unsupported: Allows whitelisting block entities as facades. Could work, have render issues, or corrupt your world. USE AT YOUR OWN RISK.");
-
             ConfigSection craftingCPU = root.subsection("craftingCPU");
             this.craftingCalculationTimePerTick = craftingCPU.addInt("craftingCalculationTimePerTick", 5);
-            this.craftingSimulatedExtraction = craftingCPU.addBoolean("craftingSimulatedExtraction", false,
-                    "When true: simulate extraction of all the network's contents when starting a crafting job calculation. When false: use the cached available content list (same as terminals). Enabling might work a bit better, but it will significantly reduce performance.");
 
             var crafting = root.subsection("crafting");
-            disassemblyCrafting = crafting.addBoolean("disassemblyCrafting", true,
-                    "Enable shift-clicking with the crafting units in hand to disassemble them.");
             growthAcceleratorSpeed = crafting.addInt("growthAccelerator", 10, 1, 100,
                     "Number of ticks between two crystal growth accelerator ticks");
+            annihilationPlaneSkyDustGeneration = crafting.addBoolean("annihilationPlaneSkyDustGeneration", true,
+                "If enabled, an annihilation placed face up at the maximum world height will generate sky stone passively.");
 
             ConfigSection spatialio = root.subsection("spatialio");
             this.spatialPowerMultiplier = spatialio.addDouble("spatialPowerMultiplier", 1250.0);
@@ -716,7 +693,6 @@ public final class AEConfig {
 
             var logging = root.subsection("logging");
             blockUpdateLog = logging.addBoolean("blockUpdateLog", false);
-            packetLog = logging.addBoolean("packetLog", false);
             craftingLog = logging.addBoolean("craftingLog", false);
             debugLog = logging.addBoolean("debugLog", false);
             gridLog = logging.addBoolean("gridLog", false);
@@ -748,17 +724,17 @@ public final class AEConfig {
             this.wirelessHighWirelessCount = wireless.addDouble("wirelessHighWirelessCount", 64.0);
             this.wirelessTerminalDrainMultiplier = wireless.addDouble("wirelessTerminalDrainMultiplier", 1.0);
 
-            ConfigSection portableCells = root.subsection("PortableCells");
-            portableCellDisassembly = portableCells.addBoolean("allowDisassembly", true,
-                    "Allow disassembly of portable cells into the recipe ingredients using shift+right-click");
-
             ConfigSection PowerRatios = root.subsection("PowerRatios");
-            powerRatioTechReborn = PowerRatios.addDouble("TechReborn", DEFAULT_TR_EXCHANGE);
+            powerRatioForgeEnergy = PowerRatios.addDouble("ForgeEnergy", DEFAULT_FE_EXCHANGE);
             powerUsageMultiplier = PowerRatios.addDouble("UsageMultiplier", 1.0, 0.01, Double.MAX_VALUE);
             gridEnergyStoragePerNode = PowerRatios.addDouble("GridEnergyStoragePerNode", 25, 1, 1000000,
                     "How much energy can the internal grid buffer storage per node attached to the grid.");
             crystalResonanceGeneratorRate = PowerRatios.addDouble("CrystalResonanceGeneratorRate", 20, 0, 1000000,
                     "How much energy a crystal resonance generator generates per tick.");
+            p2pTunnelEnergyTax = PowerRatios.addDouble("p2pTunnelEnergyTax", 0.025, 0.0, 1.0,
+                "The cost to transport energy through an energy P2P tunnel expressed as a factor of the transported energy.");
+            p2pTunnelTransportTax = PowerRatios.addDouble("p2pTunnelTransportTax", 0.025, 0.0, 1.0,
+                "The cost to transport items/fluids/etc. through P2P tunnels, expressed in AE energy per equivalent I/O bus operation for the transported object type (i.e. items=per 1 item, fluids=per 125mb).");
 
             ConfigSection Condenser = root.subsection("Condenser");
             condenserMatterBallsPower = Condenser.addInt("MatterBalls", 256);

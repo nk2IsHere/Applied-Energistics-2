@@ -18,12 +18,11 @@
 
 package appeng.client.gui.widgets;
 
-import java.util.Collections;
-import java.util.List;
-
+import appeng.client.gui.Icon;
 import net.minecraft.network.chat.Component;
 
-import appeng.client.gui.Icon;
+import java.util.Collections;
+import java.util.List;
 
 public class ToggleButton extends IconButton implements ITooltip {
 

@@ -18,11 +18,9 @@
 
 package appeng.client.gui.widgets;
 
-import org.lwjgl.glfw.GLFW;
-
-import net.minecraft.client.gui.Font;
-
 import appeng.client.gui.style.ScreenStyle;
+import net.minecraft.client.gui.Font;
+import org.lwjgl.glfw.GLFW;
 
 public class ConfirmableTextField extends AETextField {
 

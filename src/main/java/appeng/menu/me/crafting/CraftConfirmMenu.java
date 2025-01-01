@@ -18,38 +18,18 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.Future;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.Level;
-
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.crafting.CalculationStrategy;
-import appeng.api.networking.crafting.CraftingSubmitErrorCode;
-import appeng.api.networking.crafting.ICraftingCPU;
-import appeng.api.networking.crafting.ICraftingPlan;
-import appeng.api.networking.crafting.ICraftingService;
-import appeng.api.networking.crafting.ICraftingSubmitResult;
-import appeng.api.networking.crafting.UnsuitableCpus;
+import appeng.api.networking.crafting.*;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.ISubMenuHost;
 import appeng.core.AELog;
-import appeng.core.sync.packets.CraftConfirmPlanPacket;
+import appeng.core.network.clientbound.CraftConfirmPlanPacket;
 import appeng.crafting.execution.CraftingSubmitResult;
-import appeng.helpers.IMenuCraftingPacket;
+import appeng.helpers.ICraftingGridMenu;
 import appeng.me.helpers.PlayerSource;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.ISubMenu;
@@ -57,7 +37,19 @@ import appeng.menu.MenuOpener;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.guisync.PacketWritable;
 import appeng.menu.implementations.MenuTypeBuilder;
-import appeng.menu.locator.MenuLocator;
+import appeng.menu.locator.MenuHostLocator;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Future;
 
 /**
  * @see appeng.client.gui.me.crafting.CraftConfirmScreen
@@ -113,7 +105,7 @@ public class CraftConfirmMenu extends AEBaseMenu implements ISubMenu {
      * if canceling should return to the craft amount menu.
      */
     @Nullable
-    private List<IMenuCraftingPacket.AutoCraftEntry> autoCraftingQueue;
+    private List<ICraftingGridMenu.AutoCraftEntry> autoCraftingQueue;
     private List<Integer> requestedSlots;
 
     public CraftConfirmMenu(int id, Inventory ip, ISubMenuHost te) {
@@ -133,7 +125,7 @@ public class CraftConfirmMenu extends AEBaseMenu implements ISubMenu {
      * Open with a list of items to craft, i.e. via REI ctrl+click.
      */
     public static void openWithCraftingList(@Nullable IActionHost terminal, ServerPlayer player,
-            @Nullable MenuLocator locator, List<IMenuCraftingPacket.AutoCraftEntry> stacksToCraft) {
+            @Nullable MenuHostLocator locator, List<ICraftingGridMenu.AutoCraftEntry> stacksToCraft) {
         if (terminal == null || locator == null || stacksToCraft.isEmpty()) {
             return;
         }
@@ -406,7 +398,7 @@ public class CraftConfirmMenu extends AEBaseMenu implements ISubMenu {
 
     // Helper to sync the crafting result error
     public record SyncableSubmitResult(@Nullable ICraftingSubmitResult result) implements PacketWritable {
-        public SyncableSubmitResult(FriendlyByteBuf data) {
+        public SyncableSubmitResult(RegistryFriendlyByteBuf data) {
             this(readFromPacket(data));
         }
 
@@ -417,7 +409,7 @@ public class CraftConfirmMenu extends AEBaseMenu implements ISubMenu {
             return this == obj;
         }
 
-        private static ICraftingSubmitResult readFromPacket(FriendlyByteBuf data) {
+        private static ICraftingSubmitResult readFromPacket(RegistryFriendlyByteBuf data) {
             if (!data.readBoolean()) {
                 return null;
             }
@@ -445,7 +437,7 @@ public class CraftConfirmMenu extends AEBaseMenu implements ISubMenu {
         }
 
         @Override
-        public void writeToPacket(FriendlyByteBuf data) {
+        public void writeToPacket(RegistryFriendlyByteBuf data) {
             if (result == null) {
                 data.writeBoolean(false);
                 return;

@@ -18,12 +18,11 @@
 
 package appeng.client.render.crafting;
 
+import appeng.blockentity.crafting.CraftingCubeModelData;
+import appeng.client.render.cablebus.CubeBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-
-import appeng.blockentity.crafting.CraftingCubeModelData;
-import appeng.client.render.cablebus.CubeBuilder;
 
 /**
  * A simple crafting unit model that uses an un-lit texture for the inner block.

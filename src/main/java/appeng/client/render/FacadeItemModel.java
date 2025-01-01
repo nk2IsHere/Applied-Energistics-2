@@ -18,10 +18,8 @@
 
 package appeng.client.render;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
-
+import appeng.client.render.cablebus.FacadeBuilder;
+import appeng.core.AppEng;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -29,8 +27,9 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 
-import appeng.client.render.cablebus.FacadeBuilder;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * The model class for facades. Since facades wrap existing models, they don't declare any dependencies here other than
@@ -39,16 +38,15 @@ import appeng.core.AppEng;
 public class FacadeItemModel implements BasicUnbakedModel {
 
     // We use this to get the default item transforms and make our lives easier
-    private static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/facade_base");
+    private static final ResourceLocation MODEL_BASE = AppEng.makeId("item/facade_base");
 
     @Override
-    public BakedModel bake(ModelBaker baker,
-            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
-            ResourceLocation modelLocation) {
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter,
+            ModelState modelTransform) {
         BakedModel bakedBaseModel = baker.bake(MODEL_BASE, modelTransform);
         FacadeBuilder facadeBuilder = new FacadeBuilder(baker, null);
 
-        return new FacadeBakedItemModel(bakedBaseModel, facadeBuilder);
+        return new FacadeDispatcherBakedModel(bakedBaseModel, facadeBuilder);
     }
 
     @Override

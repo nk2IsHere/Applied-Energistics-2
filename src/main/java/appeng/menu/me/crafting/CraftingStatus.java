@@ -18,16 +18,14 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.Collections;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.network.FriendlyByteBuf;
-
 import appeng.crafting.execution.CraftingCpuLogic;
 import appeng.crafting.execution.ElapsedTimeTracker;
 import appeng.menu.me.common.IncrementalUpdateHelper;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Describes a currently running crafting job. A crafting status can either be a full update which replaces any
@@ -92,30 +90,21 @@ public class CraftingStatus {
         return entries;
     }
 
-    public void write(FriendlyByteBuf buffer) {
+    public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeBoolean(fullStatus);
         buffer.writeVarLong(elapsedTime);
         buffer.writeVarLong(remainingItemCount);
         buffer.writeVarLong(startItemCount);
-        buffer.writeVarInt(entries.size());
-        for (CraftingStatusEntry entry : entries) {
-            entry.write(buffer);
-        }
+        CraftingStatusEntry.LIST_STREAM_CODEC.encode(buffer, entries);
     }
 
-    public static CraftingStatus read(FriendlyByteBuf buffer) {
+    public static CraftingStatus read(RegistryFriendlyByteBuf buffer) {
         boolean fullStatus = buffer.readBoolean();
         long elapsedTime = buffer.readVarLong();
         long remainingItemCount = buffer.readVarLong();
         long startItemCount = buffer.readVarLong();
-        int entryCount = buffer.readVarInt();
-
-        ImmutableList.Builder<CraftingStatusEntry> entries = ImmutableList.builder();
-        for (int i = 0; i < entryCount; i++) {
-            entries.add(CraftingStatusEntry.read(buffer));
-        }
-
-        return new CraftingStatus(fullStatus, elapsedTime, remainingItemCount, startItemCount, entries.build());
+        var entries = CraftingStatusEntry.LIST_STREAM_CODEC.decode(buffer);
+        return new CraftingStatus(fullStatus, elapsedTime, remainingItemCount, startItemCount, List.copyOf(entries));
     }
 
     public static CraftingStatus create(IncrementalUpdateHelper changes, CraftingCpuLogic logic) {

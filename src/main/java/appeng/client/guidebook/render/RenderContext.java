@@ -1,27 +1,5 @@
 package appeng.client.guidebook.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.phys.Vec2;
-
 import appeng.api.stacks.AEFluidKey;
 import appeng.client.gui.Icon;
 import appeng.client.gui.style.BackgroundGenerator;
@@ -30,7 +8,27 @@ import appeng.client.guidebook.color.ColorValue;
 import appeng.client.guidebook.color.ConstantColor;
 import appeng.client.guidebook.color.LightDarkMode;
 import appeng.client.guidebook.document.LytRect;
+import appeng.client.guidebook.layout.MinecraftFontMetrics;
 import appeng.client.guidebook.style.ResolvedTextStyle;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.StringSplitter;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.Vec2;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public interface RenderContext {
 
@@ -111,7 +109,7 @@ public interface RenderContext {
 
     default float getAdvance(int codePoint, ResolvedTextStyle style) {
         return font().getFontSet(style.font()).getGlyphInfo(codePoint, false)
-                .getAdvance(Boolean.TRUE.equals(style.bold()));
+                .getAdvance(style.bold());
     }
 
     default float getWidth(String text, ResolvedTextStyle style) {
@@ -120,8 +118,28 @@ public interface RenderContext {
                 .sum();
     }
 
+    default void renderTextCenteredIn(String text, ResolvedTextStyle style, LytRect rect) {
+        var splitter = new StringSplitter((i, ignored) -> getAdvance(i, style));
+        var fontMetrics = new MinecraftFontMetrics(font());
+
+        var splitLines = splitter.splitLines(text, (int) ((rect.width() - 10) / style.fontScale()), Style.EMPTY);
+        var lineHeight = fontMetrics.getLineHeight(style);
+        var overallHeight = splitLines.size() * lineHeight;
+        var overallWidth = (int) (splitLines.stream().mapToDouble(splitter::stringWidth).max().orElse(0f)
+                * style.fontScale());
+        var textRect = new LytRect(0, 0, overallWidth, overallHeight);
+        textRect = textRect.centerIn(rect);
+
+        var y = textRect.y();
+        for (var line : splitLines) {
+            var x = textRect.x() + (textRect.width() - splitter.stringWidth(line) * style.fontScale()) / 2;
+            renderText(line.getString(), style, x, y);
+            y += lineHeight;
+        }
+    }
+
     default void renderText(String text, ResolvedTextStyle style, float x, float y) {
-        var bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        var bufferSource = MultiBufferSource.immediate(new ByteBufferBuilder(512));
         renderTextInBatch(text, style, x, y, bufferSource);
         bufferSource.endBatch();
     }
@@ -144,7 +162,8 @@ public interface RenderContext {
             y = 0;
         }
 
-        font().drawInBatch(Component.literal(text).withStyle(effectiveStyle), x, y, resolveColor(style.color()), false,
+        font().drawInBatch(Component.literal(text).withStyle(effectiveStyle), x, y, resolveColor(style.color()),
+                style.dropShadow(),
                 matrix, buffers, Font.DisplayMode.NORMAL, 0, LightTexture.FULL_BRIGHT);
     }
 
@@ -173,7 +192,7 @@ public interface RenderContext {
     }
 
     default MultiBufferSource.BufferSource beginBatch() {
-        return MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+        return MultiBufferSource.immediate(new ByteBufferBuilder(512));
     }
 
     default void endBatch(MultiBufferSource.BufferSource batch) {
@@ -184,9 +203,14 @@ public interface RenderContext {
         renderItem(stack, x, y, 0, width, height);
     }
 
-    default void renderFluid(Fluid fluid, @Nullable CompoundTag tag, int x, int y, int z, int width, int height) {
-        var key = AEFluidKey.of(fluid, tag);
-        FluidBlitter.create(key)
+    default void renderFluid(Fluid fluid, int x, int y, int z, int width, int height) {
+        FluidBlitter.create(AEFluidKey.of(fluid))
+                .dest(x, y, width, height)
+                .blit(guiGraphics());
+    }
+
+    default void renderFluid(FluidVariant variant, int x, int y, int z, int width, int height) {
+        FluidBlitter.create(variant)
                 .dest(x, y, width, height)
                 .blit(guiGraphics());
     }

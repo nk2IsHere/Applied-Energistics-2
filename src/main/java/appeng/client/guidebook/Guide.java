@@ -1,32 +1,23 @@
 package appeng.client.guidebook;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import appeng.client.guidebook.compiler.PageCompiler;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import appeng.client.guidebook.extensions.DefaultExtensions;
+import appeng.client.guidebook.extensions.Extension;
+import appeng.client.guidebook.extensions.ExtensionCollection;
+import appeng.client.guidebook.extensions.ExtensionPoint;
+import appeng.client.guidebook.indices.CategoryIndex;
+import appeng.client.guidebook.indices.ItemIndex;
+import appeng.client.guidebook.indices.PageIndex;
+import appeng.client.guidebook.navigation.NavigationTree;
+import appeng.client.guidebook.screen.GlobalInMemoryHistory;
+import appeng.client.guidebook.screen.GuideScreen;
+import appeng.util.Platform;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LoadingOverlay;
@@ -43,27 +34,25 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.level.validation.DirectoryValidator;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
-import appeng.client.guidebook.extensions.DefaultExtensions;
-import appeng.client.guidebook.extensions.Extension;
-import appeng.client.guidebook.extensions.ExtensionCollection;
-import appeng.client.guidebook.extensions.ExtensionPoint;
-import appeng.client.guidebook.indices.CategoryIndex;
-import appeng.client.guidebook.indices.ItemIndex;
-import appeng.client.guidebook.indices.PageIndex;
-import appeng.client.guidebook.navigation.NavigationTree;
-import appeng.client.guidebook.screen.GlobalInMemoryHistory;
-import appeng.client.guidebook.screen.GuideScreen;
-import appeng.util.Platform;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Encapsulates a Guide, which consists of a collection of Markdown pages and associated content, loaded from a
  * guide-specific subdirectory of resource packs.
  */
 public final class Guide implements PageCollection {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Guide.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Guide.class);
 
     private final String defaultNamespace;
     private final String folder;
@@ -105,8 +94,16 @@ public final class Guide implements PageCollection {
         return indexClass.cast(index);
     }
 
+    /**
+     * Creates a build without listening for mod events. This disables all features that rely on being able to register
+     * mod events, such as {@linkplain Builder#registerReloadListener the reload listener},
+     * {@linkplain Builder#validateAllAtStartup validation} or the {@linkplain Builder#startupPage startup page}.
+     */
     public static Builder builder(String defaultNamespace, String folder) {
-        return new Builder(defaultNamespace, folder);
+        return new Builder(defaultNamespace, folder)
+                .registerReloadListener(false)
+                .validateAllAtStartup(false)
+                .startupPage(null);
     }
 
     private static CompletableFuture<Minecraft> afterClientStart() {
@@ -140,10 +137,10 @@ public final class Guide implements PageCollection {
             var layeredAccess = RegistryLayer.createRegistryAccess();
 
             PackRepository packRepository = new PackRepository(
-                    new ServerPacksSource(),
+                    new ServerPacksSource(new DirectoryValidator(path -> false)),
                     new ModResourcePackCreator(PackType.SERVER_DATA));
             packRepository.reload();
-            packRepository.setSelected(ModResourcePackUtil.createDefaultDataConfiguration().dataPacks().getEnabled());
+            packRepository.setSelected(packRepository.getAvailableIds());
 
             var resourceManager = new MultiPackResourceManager(PackType.SERVER_DATA,
                     packRepository.openAllSelected());
@@ -156,13 +153,20 @@ public final class Guide implements PageCollection {
 
             var stuff = ReloadableServerResources.loadResources(
                     resourceManager,
-                    layeredAccess.getAccessForLoading(RegistryLayer.RELOADABLE),
+                    layeredAccess,
                     FeatureFlagSet.of(),
                     Commands.CommandSelection.ALL,
                     0,
                     Util.backgroundExecutor(),
-                    Runnable::run).get();
-            stuff.updateRegistryTags(layeredAccess.compositeAccess());
+                    command -> {
+                        try {
+                            command.run();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            throw e;
+                        }
+                    }).get();
+            stuff.updateRegistryTags();
             Platform.fallbackClientRecipeManager = stuff.getRecipeManager();
             Platform.fallbackClientRegistryAccess = layeredAccess.compositeAccess();
         } catch (Exception e) {
@@ -174,7 +178,7 @@ public final class Guide implements PageCollection {
     @Nullable
     public ParsedGuidePage getParsedPage(ResourceLocation id) {
         if (pages == null) {
-            LOGGER.warn("Can't get page {}. Pages not loaded yet.", id);
+            LOG.warn("Can't get page {}. Pages not loaded yet.", id);
             return null;
         }
 
@@ -208,7 +212,7 @@ public final class Guide implements PageCollection {
                 return in.readAllBytes();
             } catch (FileNotFoundException ignored) {
             } catch (IOException e) {
-                LOGGER.error("Failed to open guidebook asset {}", path);
+                LOG.error("Failed to open guidebook asset {}", path);
                 return null;
             }
         }
@@ -223,7 +227,7 @@ public final class Guide implements PageCollection {
         try (var input = resource.open()) {
             return input.readAllBytes();
         } catch (IOException e) {
-            LOGGER.error("Failed to open guidebook asset {}", id);
+            LOG.error("Failed to open guidebook asset {}", id);
             return null;
         }
     }
@@ -255,6 +259,11 @@ public final class Guide implements PageCollection {
         return null;
     }
 
+    @Nullable
+    public Path getDevelopmentSourceFolder() {
+        return developmentSourceFolder;
+    }
+
     public ExtensionCollection getExtensions() {
         return extensions;
     }
@@ -282,7 +291,7 @@ public final class Guide implements PageCollection {
                     location -> location.getPath().endsWith(".md"));
 
             for (var entry : resources.entrySet()) {
-                var pageId = new ResourceLocation(
+                var pageId = ResourceLocation.fromNamespaceAndPath(
                         entry.getKey().getNamespace(),
                         entry.getKey().getPath().substring((folder + "/").length()));
 
@@ -290,7 +299,7 @@ public final class Guide implements PageCollection {
                 try (var in = entry.getValue().open()) {
                     pages.put(pageId, PageCompiler.parse(sourcePackId, pageId, in));
                 } catch (IOException e) {
-                    LOGGER.error("Failed to load guidebook page {} from pack {}", pageId, sourcePackId, e);
+                    LOG.error("Failed to load guidebook page {} from pack {}", pageId, sourcePackId, e);
                 }
             }
 
@@ -325,13 +334,14 @@ public final class Guide implements PageCollection {
 
     private void watchDevelopmentSources() {
         var watcher = new GuideSourceWatcher(developmentSourceNamespace, developmentSourceFolder);
+
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
             var changes = watcher.takeChanges();
             if (!changes.isEmpty()) {
                 applyChanges(changes);
             }
         });
-        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> watcher.close());
+        Runtime.getRuntime().addShutdownHook(new Thread(watcher::close));
         for (var page : watcher.loadAll()) {
             developmentPages.put(page.getId(), page);
         }
@@ -400,13 +410,13 @@ public final class Guide implements PageCollection {
 
         private Builder(String defaultNamespace, String folder) {
             this.defaultNamespace = Objects.requireNonNull(defaultNamespace, "defaultNamespace");
-            this.folder = Objects.requireNonNull(folder, folder);
+            this.folder = Objects.requireNonNull(folder, "folder");
 
             // Both folder and default namespace need to be valid resource paths
-            if (!ResourceLocation.isValidResourceLocation(defaultNamespace + ":dummy")) {
+            if (!ResourceLocation.isValidNamespace(defaultNamespace)) {
                 throw new IllegalArgumentException("The default namespace for a guide needs to be a valid namespace");
             }
-            if (!ResourceLocation.isValidResourceLocation("dummy:" + folder)) {
+            if (!ResourceLocation.isValidPath(folder)) {
                 throw new IllegalArgumentException("The folder for a guide needs to be a valid resource location");
             }
 
@@ -417,7 +427,7 @@ public final class Guide implements PageCollection {
                     this.startupPage = ResourceLocation.parse(startupPageIdText);
                 }
             } catch (Exception e) {
-                LOGGER.error("Specified invalid page id in system property {}", startupPageProperty);
+                LOG.error("Specified invalid page id in system property {}", startupPageProperty);
             }
 
             // Development sources folder
@@ -582,7 +592,7 @@ public final class Guide implements PageCollection {
                 }
                 reloadFuture.whenComplete((unused, throwable) -> {
                     if (throwable != null) {
-                        LOGGER.error("Failed Guide startup.", throwable);
+                        LOG.error("Failed Guide startup.", throwable);
                     }
                 });
             }
@@ -606,13 +616,14 @@ public final class Guide implements PageCollection {
     private void validateAll() {
         // Iterate and compile all pages to warn about errors on startup
         for (var entry : developmentPages.entrySet()) {
-            LOGGER.info("Compiling {}", entry.getKey());
+            LOG.info("Compiling {}", entry.getKey());
             getPage(entry.getKey());
         }
     }
 
     private void registerReloadListener() {
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new ReloadListener(
-                ResourceLocation.fromNamespaceAndPath(defaultNamespace, folder)));
+        ResourceManagerHelper
+            .get(PackType.CLIENT_RESOURCES)
+            .registerReloadListener(new ReloadListener(ResourceLocation.fromNamespaceAndPath(defaultNamespace, folder)));
     }
 }

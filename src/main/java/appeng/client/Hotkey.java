@@ -1,14 +1,15 @@
 package appeng.client;
 
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.HotkeyPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.KeyMapping;
-
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.HotkeyPacket;
 
 public record Hotkey(String name, KeyMapping mapping) {
     public void check() {
         while (mapping().consumeClick()) {
-            NetworkHandler.instance().sendToServer(new HotkeyPacket(this));
+            ServerboundPacket message = new HotkeyPacket(this);
+            ClientPlayNetworking.send(message);
         }
     }
 }

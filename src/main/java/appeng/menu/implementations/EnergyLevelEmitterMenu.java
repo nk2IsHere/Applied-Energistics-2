@@ -18,12 +18,11 @@
 
 package appeng.menu.implementations;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
 import appeng.parts.automation.EnergyLevelEmitterPart;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 
 public class EnergyLevelEmitterMenu extends UpgradeableMenu<EnergyLevelEmitterPart> {
 

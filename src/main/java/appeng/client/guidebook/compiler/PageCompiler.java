@@ -1,47 +1,13 @@
 package appeng.client.guidebook.compiler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.client.guidebook.GuidePage;
 import appeng.client.guidebook.PageAnchor;
 import appeng.client.guidebook.PageCollection;
 import appeng.client.guidebook.color.SymbolicColor;
 import appeng.client.guidebook.document.LytErrorSink;
-import appeng.client.guidebook.document.block.LytBlock;
-import appeng.client.guidebook.document.block.LytBlockContainer;
-import appeng.client.guidebook.document.block.LytDocument;
-import appeng.client.guidebook.document.block.LytHeading;
-import appeng.client.guidebook.document.block.LytImage;
-import appeng.client.guidebook.document.block.LytList;
-import appeng.client.guidebook.document.block.LytListItem;
-import appeng.client.guidebook.document.block.LytParagraph;
-import appeng.client.guidebook.document.block.LytThematicBreak;
+import appeng.client.guidebook.document.block.*;
 import appeng.client.guidebook.document.block.table.LytTable;
-import appeng.client.guidebook.document.flow.LytFlowBreak;
-import appeng.client.guidebook.document.flow.LytFlowContent;
-import appeng.client.guidebook.document.flow.LytFlowInlineBlock;
-import appeng.client.guidebook.document.flow.LytFlowLink;
-import appeng.client.guidebook.document.flow.LytFlowParent;
-import appeng.client.guidebook.document.flow.LytFlowSpan;
-import appeng.client.guidebook.document.flow.LytFlowText;
+import appeng.client.guidebook.document.flow.*;
 import appeng.client.guidebook.document.interaction.TextTooltip;
 import appeng.client.guidebook.extensions.Extension;
 import appeng.client.guidebook.extensions.ExtensionCollection;
@@ -58,33 +24,28 @@ import appeng.libs.mdast.gfm.model.GfmTable;
 import appeng.libs.mdast.mdx.MdxMdastExtension;
 import appeng.libs.mdast.mdx.model.MdxJsxFlowElement;
 import appeng.libs.mdast.mdx.model.MdxJsxTextElement;
-import appeng.libs.mdast.model.MdAstAnyContent;
-import appeng.libs.mdast.model.MdAstBreak;
-import appeng.libs.mdast.model.MdAstCode;
-import appeng.libs.mdast.model.MdAstEmphasis;
-import appeng.libs.mdast.model.MdAstHeading;
-import appeng.libs.mdast.model.MdAstImage;
-import appeng.libs.mdast.model.MdAstInlineCode;
-import appeng.libs.mdast.model.MdAstLink;
-import appeng.libs.mdast.model.MdAstList;
-import appeng.libs.mdast.model.MdAstListItem;
-import appeng.libs.mdast.model.MdAstNode;
-import appeng.libs.mdast.model.MdAstParagraph;
-import appeng.libs.mdast.model.MdAstParent;
-import appeng.libs.mdast.model.MdAstPhrasingContent;
-import appeng.libs.mdast.model.MdAstPosition;
-import appeng.libs.mdast.model.MdAstRoot;
-import appeng.libs.mdast.model.MdAstStrong;
-import appeng.libs.mdast.model.MdAstText;
-import appeng.libs.mdast.model.MdAstThematicBreak;
+import appeng.libs.mdast.model.*;
 import appeng.libs.mdx.MdxSyntax;
 import appeng.libs.micromark.extensions.YamlFrontmatterSyntax;
 import appeng.libs.micromark.extensions.gfm.GfmTableSyntax;
 import appeng.libs.unist.UnistNode;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @ApiStatus.Internal
 public final class PageCompiler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PageCompiler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PageCompiler.class);
 
     /**
      * Default gap between block-level elements. Set as margin.
@@ -174,13 +135,13 @@ public final class PageCompiler {
         for (var child : root.children()) {
             if (child instanceof MdAstYamlFrontmatter frontmatter) {
                 if (result != null) {
-                    LOGGER.error("Found more than one frontmatter!"); // TODO: proper debugging
+                    LOG.error("Found more than one frontmatter!"); // TODO: proper debugging
                     continue;
                 }
                 try {
                     result = Frontmatter.parse(pageId, frontmatter.value);
                 } catch (Exception e) {
-                    LOGGER.error("Failed to parse frontmatter for page {}", pageId, e);
+                    LOG.error("Failed to parse frontmatter for page {}", pageId, e);
                     break;
                 }
             }
@@ -402,12 +363,12 @@ public final class PageCompiler {
             var imageId = IdUtils.resolveLink(astImage.url, pageId);
             var imageContent = pages.loadAsset(imageId);
             if (imageContent == null) {
-                LOGGER.error("Couldn't find image {}", astImage.url);
+                LOG.error("Couldn't find image {}", astImage.url);
                 image.setTitle("Missing image: " + astImage.url);
             }
             image.setImage(imageId, imageContent);
         } catch (ResourceLocationException e) {
-            LOGGER.error("Invalid image id: {}", astImage.url);
+            LOG.error("Invalid image id: {}", astImage.url);
             image.setTitle("Invalid image URL: " + astImage.url);
         }
         return image;
@@ -447,9 +408,9 @@ public final class PageCompiler {
             span.appendText("~".repeat(pos.column() - 1) + "^");
             span.appendBreak();
 
-            LOGGER.warn("{}\n{}\n{}\n", text, line, "~".repeat(pos.column() - 1) + "^");
+            LOG.warn("{}\n{}\n{}\n", text, line, "~".repeat(pos.column() - 1) + "^");
         } else {
-            LOGGER.warn("{}\n", text);
+            LOG.warn("{}\n", text);
         }
 
         return span;
@@ -491,6 +452,6 @@ public final class PageCompiler {
         compilerState.remove(state);
     }
 
-    public record State<T> (String name, Class<T> dataClass, T defaultValue) {
+    public record State<T>(String name, Class<T> dataClass, T defaultValue) {
     }
 }

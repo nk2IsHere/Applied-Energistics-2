@@ -18,19 +18,17 @@
 
 package appeng.client.render.tesr;
 
-import java.util.List;
-
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.client.render.renderable.Renderable;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.client.render.renderable.Renderable;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ModularTESR<T extends AEBaseBlockEntity> implements BlockEntityRenderer<T> {

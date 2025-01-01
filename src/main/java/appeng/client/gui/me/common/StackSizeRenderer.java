@@ -18,17 +18,14 @@
 
 package appeng.client.gui.me.common;
 
+import appeng.core.AEConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.Tesselator;
-
-import org.joml.Matrix4f;
-
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
-
-import appeng.core.AEConfig;
+import org.joml.Matrix4f;
 
 /**
  * @author AlgorithmX2
@@ -39,15 +36,18 @@ import appeng.core.AEConfig;
 public class StackSizeRenderer {
     private static void renderSizeLabel(Matrix4f matrix, Font fontRenderer, float xPos, float yPos, String text,
             boolean largeFonts) {
-        final float scaleFactor = largeFonts ? 0.85f : 0.5f;
+        final float scaleFactor = largeFonts ? 0.85f : 0.666f;
         final float inverseScaleFactor = 1.0f / scaleFactor;
         final int offset = largeFonts ? 0 : -1;
 
         RenderSystem.disableBlend();
-        final int X = (int) ((xPos + offset + 16.0f - fontRenderer.width(text) * scaleFactor) * inverseScaleFactor);
-        final int Y = (int) ((yPos + offset + 16.0f - 7.0f * scaleFactor) * inverseScaleFactor);
-        BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-        fontRenderer.drawInBatch(text, X, Y, 0xffffff, true, matrix, buffer, Font.DisplayMode.NORMAL, 0, 15728880);
+        final int X = (int) ((xPos + offset + 16.0f + 2.0f - fontRenderer.width(text) * scaleFactor)
+                * inverseScaleFactor);
+        final int Y = (int) ((yPos + offset + 16.0f - 5.0f * scaleFactor) * inverseScaleFactor);
+        BufferSource buffer = MultiBufferSource.immediate(new ByteBufferBuilder(512));
+        fontRenderer.drawInBatch(text, X + 1, Y + 1, 0x413f54, false, matrix, buffer, Font.DisplayMode.NORMAL, 0,
+                15728880);
+        fontRenderer.drawInBatch(text, X, Y, 0xffffff, false, matrix, buffer, Font.DisplayMode.NORMAL, 0, 15728880);
         buffer.endBatch();
         RenderSystem.enableBlend();
     }
@@ -59,7 +59,7 @@ public class StackSizeRenderer {
 
     public static void renderSizeLabel(GuiGraphics guiGraphics, Font fontRenderer, float xPos, float yPos, String text,
             boolean largeFonts) {
-        final float scaleFactor = largeFonts ? 0.85f : 0.5f;
+        final float scaleFactor = largeFonts ? 0.85f : 0.666f;
 
         var stack = guiGraphics.pose();
         stack.pushPose();

@@ -18,20 +18,18 @@
 
 package appeng.client.render.tesr;
 
-import java.util.EnumMap;
-
+import appeng.api.implementations.blockentities.IChestOrDrive;
+import appeng.api.storage.cells.CellState;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-
-import org.joml.Vector3f;
-
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
+import org.joml.Vector3f;
 
-import appeng.api.implementations.blockentities.IChestOrDrive;
-import appeng.api.storage.cells.CellState;
+import java.util.EnumMap;
 
 /**
  * Utility class to render LEDs for storage cells from a Block entity Renderer.
@@ -64,7 +62,7 @@ public class CellLedRenderer {
     private static final float T = 1 / 16.f; // top (y-axis)
     private static final float B = -0.001f / 16.f; // bottom (y-axis)
     private static final float FR = -0.001f / 16.f; // front (z-axis)
-    private static final float BA = 0.499f / 16.f; // back (z-axis)
+    private static final float BA = 0.999f / 16.f; // back (z-axis)
 
     // Vertex data for the LED cuboid (has no back)
     // Directions are when looking from the front onto the LED
@@ -83,7 +81,7 @@ public class CellLedRenderer {
     public static final RenderType RENDER_LAYER = RenderType.create("ae_drive_leds",
             DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 32565, false, true,
             RenderType.CompositeState.builder()
-                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+                    .setShaderState(new RenderStateShard.ShaderStateShard(GameRenderer::getPositionColorShader))
                     .createCompositeState(false));
 
     public static void renderLed(IChestOrDrive drive, int slot, VertexConsumer buffer, PoseStack ms,
@@ -98,8 +96,7 @@ public class CellLedRenderer {
             float x = LED_QUADS[i];
             float y = LED_QUADS[i + 1];
             float z = LED_QUADS[i + 2];
-            buffer.addVertex(ms.last().pose(), x, y, z).setColor(color.x(), color.y(), color.z(), 1.f)
-                    ;
+            buffer.addVertex(ms.last().pose(), x, y, z).setColor(color.x(), color.y(), color.z(), 1.f);
         }
     }
 

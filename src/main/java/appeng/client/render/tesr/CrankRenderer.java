@@ -18,10 +18,10 @@
 
 package appeng.client.render.tesr;
 
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.misc.CrankBlockEntity;
+import appeng.core.AppEng;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import org.joml.Quaternionf;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,11 +33,7 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.misc.CrankBlockEntity;
-import appeng.core.AELog;
-import appeng.core.AppEng;
+import org.joml.Quaternionf;
 
 @Environment(EnvType.CLIENT)
 public class CrankRenderer implements BlockEntityRenderer<CrankBlockEntity> {
@@ -58,16 +54,8 @@ public class CrankRenderer implements BlockEntityRenderer<CrankBlockEntity> {
     public void render(CrankBlockEntity crank, float partialTick, PoseStack stack, MultiBufferSource buffers,
             int packedLight, int packedOverlay) {
 
-        var baseModel = modelManager.bakedRegistry.get(BASE_MODEL);
-        if (baseModel == null) {
-            AELog.warn("Crank base model missing");
-            return;
-        }
-        var handleModel = modelManager.bakedRegistry.get(HANDLE_MODEL);
-        if (handleModel == null) {
-            AELog.warn("Crank handle model missing");
-            return;
-        }
+        var baseModel = modelManager.getModel(BASE_MODEL);
+        var handleModel = modelManager.getModel(HANDLE_MODEL);
 
         var blockState = crank.getBlockState();
         var buffer = buffers.getBuffer(RenderType.cutout());

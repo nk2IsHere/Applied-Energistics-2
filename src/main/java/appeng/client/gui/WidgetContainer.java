@@ -18,38 +18,28 @@
 
 package appeng.client.gui;
 
+import appeng.client.Point;
+import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.style.WidgetStyle;
+import appeng.client.gui.widgets.*;
+import appeng.core.localization.GuiText;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.SwitchGuisPacket;
+import appeng.menu.implementations.PriorityMenu;
+import com.google.common.base.Preconditions;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Button.OnPress;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.Component;
-
-import appeng.client.Point;
-import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.style.WidgetStyle;
-import appeng.client.gui.widgets.AECheckbox;
-import appeng.client.gui.widgets.AETextField;
-import appeng.client.gui.widgets.BackgroundPanel;
-import appeng.client.gui.widgets.IResizableWidget;
-import appeng.client.gui.widgets.NumberEntryWidget;
-import appeng.client.gui.widgets.Scrollbar;
-import appeng.client.gui.widgets.TabButton;
-import appeng.core.localization.GuiText;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.SwitchGuisPacket;
-import appeng.menu.implementations.PriorityMenu;
 
 /**
  * This utility class helps with positioning commonly used Minecraft {@link AbstractWidget} instances on a screen
@@ -79,7 +69,7 @@ public class WidgetContainer {
             resizableWidget.resize(width, height);
         } else {
             widget.setWidth(width);
-            widget.height = height;
+            widget.setHeight(height);
         }
 
         if (widget instanceof TabButton tabButton) {
@@ -109,18 +99,18 @@ public class WidgetContainer {
      * Convenient way to add Vanilla buttons without having to specify x,y,width and height. The actual
      * position/rectangle is instead sourced from the screen style.
      */
-    public Button addButton(String id, Component text, OnPress action) {
-        var button = Button.builder(text, action).build();
+    public AE2Button addButton(String id, Component text, OnPress action) {
+        var button = new AE2Button(text, action);
         add(id, button);
         return button;
     }
 
-    public Button addButton(String id, Component text, Runnable action) {
+    public AE2Button addButton(String id, Component text, Runnable action) {
         return addButton(id, text, btn -> action.run());
     }
 
     public AECheckbox addCheckbox(String id, Component text, Runnable changeListener) {
-        var checkbox = new AECheckbox(0, 0, 0, 14, style, text);
+        var checkbox = new AECheckbox(0, 0, 0, AECheckbox.SIZE, style, text);
         add(id, checkbox);
         checkbox.setChangeListener(changeListener);
         return checkbox;
@@ -328,13 +318,13 @@ public class WidgetContainer {
      * Adds a button named "openPriority" that opens the priority GUI for the current menu host.
      */
     public void addOpenPriorityButton() {
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        add("openPriority", new TabButton(Icon.WRENCH, GuiText.Priority.text(),
+        add("openPriority", new TabButton(Icon.PRIORITY, GuiText.Priority.text(),
                 btn -> openPriorityGui()));
     }
 
     private void openPriorityGui() {
-        NetworkHandler.instance().sendToServer(SwitchGuisPacket.openSubMenu(PriorityMenu.TYPE));
+        ServerboundPacket message = SwitchGuisPacket.openSubMenu(PriorityMenu.TYPE);
+        ClientPlayNetworking.send(message);
     }
 
     /**

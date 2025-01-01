@@ -18,12 +18,13 @@
 
 package appeng.hooks.ticking;
 
-import java.util.Objects;
-
+import appeng.me.Grid;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 
-import appeng.me.Grid;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * A class to hold data related to ticking networks.
@@ -86,8 +87,8 @@ class ServerGridRepo {
     /**
      * Get all registered {@link Grid}s
      */
-    public Iterable<Grid> getNetworks() {
-        return networks;
+    public Set<Grid> getNetworks() {
+        return Collections.unmodifiableSet(networks);
     }
 
 }

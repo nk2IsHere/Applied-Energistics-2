@@ -18,17 +18,12 @@
 
 package appeng.client.render.crafting;
 
-import java.util.function.Function;
-
+import appeng.client.render.BasicUnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.function.Function;
 
 /**
  * The built-in model for the connected texture crafting cube.
@@ -47,7 +42,7 @@ public class CraftingCubeModel implements BasicUnbakedModel {
     @org.jetbrains.annotations.Nullable
     @Override
     public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteGetter,
-            ModelState modelState, ResourceLocation modelId) {
+            ModelState modelState) {
         return this.provider.getBakedModel(spriteGetter);
     }
 }

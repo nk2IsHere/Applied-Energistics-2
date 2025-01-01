@@ -18,13 +18,16 @@
 
 package appeng.menu.slot;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.config.Actionable;
 import appeng.api.inventories.InternalInventory;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.InventoryActionPacket;
+import appeng.helpers.InventoryAction;
 import appeng.util.ConfigInventory;
 import appeng.util.ConfigMenuInventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class FakeSlot extends AppEngSlot {
     public FakeSlot(InternalInventory inv, int invSlot) {
@@ -47,6 +50,10 @@ public class FakeSlot extends AppEngSlot {
 
     @Override
     public void set(ItemStack is) {
+        if (!canSetFilterTo(is)) {
+            return;
+        }
+
         if (!is.isEmpty()) {
             is = is.copy();
         }
@@ -59,9 +66,16 @@ public class FakeSlot extends AppEngSlot {
         return false;
     }
 
-    // Used by REI/JEI dragging ghost items to determine if this is a valid destination
+    // Used by item list mod dragging ghost items to determine if this is a valid destination
     public boolean canSetFilterTo(ItemStack stack) {
         return slot < getInventory().size() && getInventory().isItemValid(slot, stack);
+    }
+
+    // Used by the item list mod dropping ghost ingredients on this slot
+    public void setFilterTo(ItemStack itemStack) {
+        ServerboundPacket message = new InventoryActionPacket(InventoryAction.SET_FILTER,
+                index, itemStack);
+        PacketDistributor.sendToServer(message);
     }
 
     public void increase(ItemStack is) {
@@ -100,7 +114,7 @@ public class FakeSlot extends AppEngSlot {
             current = current.copy();
             current.shrink(1);
             set(current);
-        } else if (ItemStack.isSameItemSameTags(current, is)) {
+        } else if (ItemStack.isSameItemSameComponents(current, is)) {
             // Increase when holding same item
             current = current.copy();
             current.grow(1);

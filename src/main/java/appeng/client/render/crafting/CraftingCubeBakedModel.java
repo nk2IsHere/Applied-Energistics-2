@@ -18,38 +18,30 @@
 
 package appeng.client.render.crafting;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import appeng.blockentity.crafting.CraftingCubeModelData;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.util.Platform;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.blockentity.crafting.CraftingCubeModelData;
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.util.Platform;
+import java.util.EnumSet;
+import java.util.function.Supplier;
 
 /**
  * The base model for baked models used by components of the crafting cube multi-block in it's formed state. Primarily
  * this base class handles adding the "ring" that frames the multi-block structure and delegates rendering of the
  * "inner" part of each block to the subclasses of this class.
  */
-abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
+abstract class CraftingCubeBakedModel implements IFabricBakedModel {
 
     private final TextureAtlasSprite ringCorner;
 
@@ -64,16 +56,11 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
-
-    @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
             Supplier<RandomSource> RandomSourceSupplier, RenderContext context) {
         var modelData = getModelData(blockView, pos);
         var connections = modelData != null ? modelData.getConnections()
-                : EnumSet.noneOf(Direction.class);
+            : EnumSet.noneOf(Direction.class);
 
         CubeBuilder builder = new CubeBuilder(context.getEmitter());
 
@@ -97,40 +84,22 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
             // On the axis of the side that we're currently drawing, extend the dimensions
             // out to the outer face of the block
             switch (side) {
-                case DOWN:
-                case UP:
+                case DOWN, UP -> {
                     y1 = 0;
                     y2 = 16;
-                    break;
-                case NORTH:
-                case SOUTH:
+                }
+                case NORTH, SOUTH -> {
                     z1 = 0;
                     z2 = 16;
-                    break;
-                case WEST:
-                case EAST:
+                }
+                case WEST, EAST -> {
                     x1 = 0;
                     x2 = 16;
-                    break;
+                }
             }
 
             this.addInnerCube(side, state, modelData, builder, x1, y1, z1, x2, y2, z2);
         }
-    }
-
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> RandomSourceSupplier, RenderContext context) {
-
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource RandomSource) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return ItemTransforms.NO_TRANSFORMS;
     }
 
     private void addRing(CubeBuilder builder, Direction side, EnumSet<Direction> connections) {
@@ -153,10 +122,10 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
 
             // Select the horizontal or vertical ring texture depending on which side we're
             // filling in
-            if (side.getAxis() != Direction.Axis.Y
+            if (side.getAxis() != Axis.Y
                     && (a == Direction.NORTH || a == Direction.EAST || a == Direction.WEST || a == Direction.SOUTH)) {
                 builder.setTexture(this.ringVer);
-            } else if (side.getAxis() == Direction.Axis.Y && (a == Direction.EAST || a == Direction.WEST)) {
+            } else if (side.getAxis() == Axis.Y && (a == Direction.EAST || a == Direction.WEST)) {
                 builder.setTexture(this.ringVer);
             } else {
                 builder.setTexture(this.ringHor);
@@ -172,30 +141,30 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
                 float x1 = 0, y1 = 0, z1 = 0, x2 = 16, y2 = 16, z2 = 16;
 
                 switch (a) {
-                    case DOWN:
+                    case DOWN -> {
                         y1 = 0;
                         y2 = 3;
-                        break;
-                    case UP:
+                    }
+                    case UP -> {
                         y1 = 13.0f;
                         y2 = 16;
-                        break;
-                    case WEST:
+                    }
+                    case WEST -> {
                         x1 = 0;
                         x2 = 3;
-                        break;
-                    case EAST:
+                    }
+                    case EAST -> {
                         x1 = 13;
                         x2 = 16;
-                        break;
-                    case NORTH:
+                    }
+                    case NORTH -> {
                         z1 = 0;
                         z2 = 3;
-                        break;
-                    case SOUTH:
+                    }
+                    case SOUTH -> {
                         z1 = 13;
                         z2 = 16;
-                        break;
+                    }
                 }
 
                 // Constraint the stripe in the two directions perpendicular to a in case there
@@ -211,24 +180,12 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
                     if (!connections.contains(cornerCandidate)) {
                         // There's a cap in this direction
                         switch (cornerCandidate) {
-                            case DOWN:
-                                y1 = 3;
-                                break;
-                            case UP:
-                                y2 = 13;
-                                break;
-                            case NORTH:
-                                z1 = 3;
-                                break;
-                            case SOUTH:
-                                z2 = 13;
-                                break;
-                            case WEST:
-                                x1 = 3;
-                                break;
-                            case EAST:
-                                x2 = 13;
-                                break;
+                            case DOWN -> y1 = 3;
+                            case UP -> y2 = 13;
+                            case NORTH -> z1 = 3;
+                            case SOUTH -> z2 = 13;
+                            case WEST -> x1 = 3;
+                            case EAST -> x2 = 13;
                         }
                     }
                 }
@@ -264,10 +221,7 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
     // Retrieve the cube connection state from the block state
     // If none is present, just assume there are no adjacent crafting cube blocks
     private static CraftingCubeModelData getModelData(BlockAndTintGetter blockRenderView, BlockPos pos) {
-        if (!(blockRenderView instanceof RenderAttachedBlockView)) {
-            return null;
-        }
-        Object attached = ((RenderAttachedBlockView) blockRenderView).getBlockEntityRenderAttachment(pos);
+        var attached = blockRenderView.getBlockEntityRenderData(pos);
         if (attached instanceof CraftingCubeModelData) {
             return (CraftingCubeModelData) attached;
         }
@@ -307,4 +261,8 @@ abstract class CraftingCubeBakedModel implements BakedModel, FabricBakedModel {
         return ItemOverrides.EMPTY;
     }
 
+    @Override
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
+    }
 }

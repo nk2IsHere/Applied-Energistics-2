@@ -18,16 +18,11 @@
 
 package appeng.client.render.cablebus;
 
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
-
+import appeng.api.util.AEColor;
+import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.util.Platform;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -35,41 +30,35 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.inventories.IDynamicPartBakedModel;
-import appeng.api.util.AEColor;
-import appeng.util.Platform;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
-public class P2PTunnelFrequencyBakedModel implements IDynamicPartBakedModel {
-
-    private final Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+public class P2PTunnelFrequencyBakedModel implements IFabricBakedModel {
 
     private final TextureAtlasSprite texture;
 
     private final static Cache<Long, Mesh> modelCache = CacheBuilder.newBuilder().maximumSize(100).build();
 
-    private static final int[][] QUAD_OFFSETS = new int[][] { { 4, 10, 2 }, { 10, 10, 2 }, { 4, 4, 2 }, { 10, 4, 2 } };
+    private static final int[][] QUAD_OFFSETS = new int[][] { { 3, 11, 2 }, { 11, 11, 2 }, { 3, 3, 2 }, { 11, 3, 2 } };
 
     public P2PTunnelFrequencyBakedModel(TextureAtlasSprite texture) {
         this.texture = texture;
     }
 
     @Override
-    public void emitQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
-            Supplier<RandomSource> randomSupplier,
-            RenderContext context, Direction partSide, @Nullable Object modelData) {
-        if (!(modelData instanceof Long)) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        var modelData = blockView.getBlockEntityRenderData(pos);
+        if (!(modelData instanceof Long frequency)) {
             return;
         }
-        long frequency = (long) modelData;
 
-        Mesh frequencyMesh = getFrequencyModel(frequency);
+        var frequencyMesh = getFrequencyModel(frequency);
         if (frequencyMesh != null) {
-            context.meshConsumer().accept(frequencyMesh);
+            frequencyMesh.outputTo(context.getEmitter());
         }
     }
 

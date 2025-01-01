@@ -1,31 +1,22 @@
 package appeng.client.guidebook.scene.level;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.core.AppEng;
+import appeng.util.Platform;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.SectionPos;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.InactiveProfiler;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -43,17 +34,17 @@ import net.minecraft.world.level.entity.LevelEntityGetter;
 import net.minecraft.world.level.entity.TransientEntitySectionManager;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.ticks.BlackholeTickAccess;
 import net.minecraft.world.ticks.LevelTickAccess;
+import org.jetbrains.annotations.Nullable;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-
-import appeng.core.AppEng;
-import appeng.util.Platform;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GuidebookLevel extends Level {
 
@@ -72,6 +63,8 @@ public class GuidebookLevel extends Level {
      */
     private final LongSet litSections = new LongOpenHashSet();
     private final DataLayer defaultDataLayer;
+
+    private final TickRateManager tickRateManager = new TickRateManager();
 
     public GuidebookLevel() {
         this(Platform.getClientRegistryAccess());
@@ -206,6 +199,11 @@ public class GuidebookLevel extends Level {
     }
 
     @Override
+    public TickRateManager tickRateManager() {
+        return tickRateManager;
+    }
+
+    @Override
     public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {
     }
 
@@ -226,17 +224,17 @@ public class GuidebookLevel extends Level {
 
     @Nullable
     @Override
-    public MapItemSavedData getMapData(String mapName) {
+    public MapItemSavedData getMapData(MapId mapId) {
         return null;
     }
 
     @Override
-    public void setMapData(String mapId, MapItemSavedData data) {
+    public void setMapData(MapId mapId, MapItemSavedData data) {
     }
 
     @Override
-    public int getFreeMapId() {
-        return 0;
+    public MapId getFreeMapId() {
+        return new MapId(1);
     }
 
     @Override
@@ -273,7 +271,7 @@ public class GuidebookLevel extends Level {
     }
 
     @Override
-    public void gameEvent(GameEvent gameEvent, Vec3 vec3, GameEvent.Context context) {
+    public void gameEvent(Holder<GameEvent> gameEvent, Vec3 vec3, GameEvent.Context context) {
     }
 
     @Override
@@ -303,6 +301,11 @@ public class GuidebookLevel extends Level {
     @Override
     public RegistryAccess registryAccess() {
         return registryAccess;
+    }
+
+    @Override
+    public PotionBrewing potionBrewing() {
+        throw new UnsupportedOperationException();
     }
 
     @Override

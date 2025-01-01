@@ -1,22 +1,6 @@
 package appeng.client.guidebook.scene.element;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -31,14 +15,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipBlockStateContext;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.ColorResolver;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Block;
@@ -48,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkSource;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -64,6 +41,18 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.ticks.LevelTickAccess;
 import net.minecraft.world.ticks.TickPriority;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Makes it possible to use a {@link LevelAccessor} where code requires a {@link ServerLevelAccessor}, when that code
@@ -202,22 +191,22 @@ class FakeForwardingServerLevel implements ServerLevelAccessor {
     }
 
     @Override
-    public void gameEvent(GameEvent event, Vec3 position, GameEvent.Context context) {
+    public void gameEvent(Holder<GameEvent> event, Vec3 position, GameEvent.Context context) {
         delegate.gameEvent(event, position, context);
     }
 
     @Override
-    public void gameEvent(@Nullable Entity entity, GameEvent event, Vec3 position) {
+    public void gameEvent(@Nullable Entity entity, Holder<GameEvent> event, Vec3 position) {
         delegate.gameEvent(entity, event, position);
     }
 
     @Override
-    public void gameEvent(@Nullable Entity entity, GameEvent event, BlockPos pos) {
+    public void gameEvent(@Nullable Entity entity, Holder<GameEvent> event, BlockPos pos) {
         delegate.gameEvent(entity, event, pos);
     }
 
     @Override
-    public void gameEvent(GameEvent event, BlockPos pos, GameEvent.Context context) {
+    public void gameEvent(Holder<GameEvent> event, BlockPos pos, GameEvent.Context context) {
         delegate.gameEvent(event, pos, context);
     }
 
@@ -775,5 +764,50 @@ class FakeForwardingServerLevel implements ServerLevelAccessor {
     @Override
     public int getMoonPhase() {
         return delegate.getMoonPhase();
+    }
+
+    @Override
+    public void gameEvent(ResourceKey<GameEvent> p_316780_, BlockPos p_316509_, GameEvent.Context p_316524_) {
+        delegate.gameEvent(p_316780_, p_316509_, p_316524_);
+    }
+
+    @Override
+    public boolean noBlockCollision(@Nullable Entity pEntity, AABB pBoundingBox) {
+        return delegate.noBlockCollision(pEntity, pBoundingBox);
+    }
+
+    @Override
+    public Optional<BlockPos> findSupportingBlock(Entity pEntity, AABB pBox) {
+        return delegate.findSupportingBlock(pEntity, pBox);
+    }
+
+    @Override
+    public int getDirectSignalTo(BlockPos pPos) {
+        return delegate.getDirectSignalTo(pPos);
+    }
+
+    @Override
+    public int getControlInputSignal(BlockPos pPos, Direction pDirection, boolean pDiodesOnly) {
+        return delegate.getControlInputSignal(pPos, pDirection, pDiodesOnly);
+    }
+
+    @Override
+    public boolean hasSignal(BlockPos pPos, Direction pDirection) {
+        return delegate.hasSignal(pPos, pDirection);
+    }
+
+    @Override
+    public int getSignal(BlockPos pPos, Direction pDirection) {
+        return delegate.getSignal(pPos, pDirection);
+    }
+
+    @Override
+    public boolean hasNeighborSignal(BlockPos pPos) {
+        return delegate.hasNeighborSignal(pPos);
+    }
+
+    @Override
+    public int getBestNeighborSignal(BlockPos pPos) {
+        return delegate.getBestNeighborSignal(pPos);
     }
 }

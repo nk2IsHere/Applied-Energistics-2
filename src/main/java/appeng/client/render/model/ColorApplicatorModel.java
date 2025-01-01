@@ -18,12 +18,8 @@
 
 package appeng.client.render.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -31,9 +27,11 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
 
 /**
  * A color applicator uses the base model, and extends it with additional layers that are colored according to the
@@ -41,15 +39,15 @@ import appeng.core.AppEng;
  */
 public class ColorApplicatorModel implements BasicUnbakedModel {
 
-    private static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID,
+    private static final ResourceLocation MODEL_BASE = AppEng.makeId(
             "item/color_applicator_colored");
 
     private static final Material TEXTURE_DARK = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/color_applicator_tip_dark"));
+            AppEng.makeId("item/color_applicator_tip_dark"));
     private static final Material TEXTURE_MEDIUM = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/color_applicator_tip_medium"));
+            AppEng.makeId("item/color_applicator_tip_medium"));
     private static final Material TEXTURE_BRIGHT = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "item/color_applicator_tip_bright"));
+            AppEng.makeId("item/color_applicator_tip_bright"));
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -59,7 +57,7 @@ public class ColorApplicatorModel implements BasicUnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker bakery, Function<Material, TextureAtlasSprite> spriteGetter,
-            ModelState modelTransform, ResourceLocation modelId) {
+            ModelState modelTransform) {
         BakedModel baseModel = bakery.bake(MODEL_BASE, modelTransform);
 
         TextureAtlasSprite texDark = spriteGetter.apply(TEXTURE_DARK);

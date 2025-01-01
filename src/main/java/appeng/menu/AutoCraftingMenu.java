@@ -18,11 +18,10 @@
 
 package appeng.menu;
 
+import appeng.api.implementations.menus.IAutoCraftingMenu;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-
-import appeng.api.implementations.menus.IAutoCraftingMenu;
 
 /*
  * Dummy menu used to instantiate {@link CraftingContainer}s for autocrafting.

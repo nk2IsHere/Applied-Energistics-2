@@ -1,17 +1,16 @@
 package appeng.client.gui.me.search;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-
-import net.minecraft.ChatFormatting;
-
 import appeng.api.client.AEKeyRendering;
 import appeng.api.stacks.AEKey;
 import appeng.core.AEConfig;
 import appeng.menu.me.common.GridInventoryEntry;
 import appeng.util.Platform;
+import net.minecraft.ChatFormatting;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 final class TooltipsSearchPredicate implements Predicate<GridInventoryEntry> {
     private final String tooltip;

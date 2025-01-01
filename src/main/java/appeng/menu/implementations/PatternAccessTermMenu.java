@@ -18,60 +18,55 @@
 
 package appeng.menu.implementations;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-
 import appeng.api.config.Settings;
 import appeng.api.config.ShowPatternProviders;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.IActionHost;
-import appeng.api.util.IConfigurableObject;
+import appeng.api.storage.ILinkStatus;
+import appeng.api.storage.IPatternAccessTermMenuHost;
 import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
 import appeng.core.AELog;
-import appeng.core.sync.packets.ClearPatternAccessTerminalPacket;
-import appeng.core.sync.packets.PatternAccessTerminalPacket;
+import appeng.core.network.clientbound.ClearPatternAccessTerminalPacket;
+import appeng.core.network.clientbound.PatternAccessTerminalPacket;
+import appeng.core.network.clientbound.SetLinkStatusPacket;
 import appeng.helpers.InventoryAction;
 import appeng.helpers.patternprovider.PatternContainer;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
-import appeng.parts.reporting.PatternAccessTerminalPart;
+import appeng.menu.guisync.LinkStatusAwareMenu;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * @see PatternAccessTermScreen
  */
-public class PatternAccessTermMenu extends AEBaseMenu {
+public class PatternAccessTermMenu extends AEBaseMenu implements LinkStatusAwareMenu {
 
-    private final IConfigurableObject host;
+    private final IPatternAccessTermMenuHost host;
     @GuiSync(1)
     public ShowPatternProviders showPatternProviders = ShowPatternProviders.VISIBLE;
+    private ILinkStatus linkStatus = ILinkStatus.ofDisconnected();
 
     public ShowPatternProviders getShownProviders() {
         return showPatternProviders;
     }
 
     public static final MenuType<PatternAccessTermMenu> TYPE = MenuTypeBuilder
-            .create(PatternAccessTermMenu::new, PatternAccessTerminalPart.class)
+            .create(PatternAccessTermMenu::new, IPatternAccessTermMenuHost.class)
             .build("patternaccessterminal");
 
     /**
@@ -89,11 +84,11 @@ public class PatternAccessTermMenu extends AEBaseMenu {
      */
     private final Set<PatternContainer> pinnedHosts = Collections.newSetFromMap(new IdentityHashMap<>());
 
-    public PatternAccessTermMenu(int id, Inventory ip, PatternAccessTerminalPart anchor) {
+    public PatternAccessTermMenu(int id, Inventory ip, IPatternAccessTermMenuHost anchor) {
         this(TYPE, id, ip, anchor, true);
     }
 
-    public PatternAccessTermMenu(MenuType<?> menuType, int id, Inventory ip, IConfigurableObject host,
+    public PatternAccessTermMenu(MenuType<?> menuType, int id, Inventory ip, IPatternAccessTermMenuHost host,
             boolean bindInventory) {
         super(menuType, id, ip, host);
         this.host = host;
@@ -112,6 +107,8 @@ public class PatternAccessTermMenu extends AEBaseMenu {
         showPatternProviders = this.host.getConfigManager().getSetting(Settings.TERMINAL_SHOW_PATTERN_PROVIDERS);
 
         super.broadcastChanges();
+
+        updateLinkStatus();
 
         if (showPatternProviders != ShowPatternProviders.NOT_FULL) {
             this.pinnedHosts.clear();
@@ -142,14 +139,15 @@ public class PatternAccessTermMenu extends AEBaseMenu {
 
     @Nullable
     private IGrid getGrid() {
-        IActionHost host = this.getActionHost();
-        if (host != null) {
-            final IGridNode agn = host.getActionableNode();
-            if (agn != null && agn.isActive()) {
-                return agn.getGrid();
-            }
+        var agn = host.getGridNode();
+        if (agn != null && agn.isActive()) {
+            return agn.getGrid();
         }
         return null;
+    }
+
+    public ILinkStatus getLinkStatus() {
+        return linkStatus;
     }
 
     private static class VisitorState {
@@ -423,5 +421,19 @@ public class PatternAccessTermMenu extends AEBaseMenu {
             return machineClass.asSubclass(PatternContainer.class);
         }
         return null;
+    }
+
+    // When using a custom implementation of ILinkStatus, override this and implement your own packet
+    protected void updateLinkStatus() {
+        var linkStatus = host.getLinkStatus();
+        if (!Objects.equals(this.linkStatus, linkStatus)) {
+            this.linkStatus = linkStatus;
+            sendPacketToClient(new SetLinkStatusPacket(linkStatus));
+        }
+    }
+
+    @Override
+    public void setLinkStatus(ILinkStatus linkStatus) {
+        this.linkStatus = linkStatus;
     }
 }

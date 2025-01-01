@@ -18,6 +18,36 @@
 
 package appeng.client.render.model;
 
+import appeng.decorative.solid.GlassState;
+import appeng.decorative.solid.QuartzGlassBlock;
+import appeng.integration.abstraction.IFabricBakedModel;
+import com.google.common.base.Strings;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.util.TriState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -25,38 +55,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.common.base.Strings;
-
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
-
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
-
-import appeng.decorative.solid.GlassState;
-import appeng.decorative.solid.QuartzGlassBlock;
-
-class GlassBakedModel implements BakedModel, FabricBakedModel {
+class GlassBakedModel implements IFabricBakedModel {
 
     private static final byte[][][] OFFSETS = generateOffsets();
 
@@ -71,14 +70,14 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
             ResourceLocation.parse("ae2:block/glass/quartz_glass_d"));
 
     // Frame texture
-    static final net.minecraft.client.resources.model.Material[] TEXTURES_FRAME = generateTexturesFrame();
-    private final RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder()
+    static final Material[] TEXTURES_FRAME = generateTexturesFrame();
+    private final RenderMaterial material = renderer.materialFinder()
             .disableDiffuse(true).ambientOcclusion(TriState.FALSE).disableColorIndex(true)
             .blendMode(BlendMode.TRANSLUCENT)
             .find();
 
     // Generates the required textures for the frame
-    private static net.minecraft.client.resources.model.Material[] generateTexturesFrame() {
+    private static Material[] generateTexturesFrame() {
         return IntStream.range(1, 16).mapToObj(Integer::toBinaryString).map(s -> Strings.padStart(s, 4, '0'))
                 .map(s -> ResourceLocation.parse("ae2:block/glass/quartz_glass_frame" + s))
                 .map(rl -> new Material(TextureAtlas.LOCATION_BLOCKS, rl)).toArray(Material[]::new);
@@ -88,11 +87,10 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
 
     private final TextureAtlasSprite[] frameTextures;
 
-    public GlassBakedModel(
-            Function<net.minecraft.client.resources.model.Material, TextureAtlasSprite> bakedTextureGetter) {
+    public GlassBakedModel(Function<Material, TextureAtlasSprite> bakedTextureGetter) {
         this.glassTextures = new TextureAtlasSprite[] { bakedTextureGetter.apply(TEXTURE_A),
-                bakedTextureGetter.apply(TEXTURE_B),
-                bakedTextureGetter.apply(TEXTURE_C), bakedTextureGetter.apply(TEXTURE_D) };
+                bakedTextureGetter.apply(TEXTURE_B), bakedTextureGetter.apply(TEXTURE_C),
+                bakedTextureGetter.apply(TEXTURE_D) };
 
         // The first frame texture would be empty, so we simply leave it set to null
         // here
@@ -100,11 +98,6 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
         for (int i = 0; i < TEXTURES_FRAME.length; i++) {
             this.frameTextures[1 + i] = bakedTextureGetter.apply(TEXTURES_FRAME[i]);
         }
-    }
-
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
     }
 
     @Override
@@ -117,8 +110,8 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
         final int cy = Math.abs(glassState.getY() % 10);
         final int cz = Math.abs(glassState.getZ() % 10);
 
-        int u = OFFSETS[cx][cy][cz] % 4;
-        int v = OFFSETS[9 - cx][9 - cy][9 - cz] % 4;
+        var u = (OFFSETS[cx][cy][cz] % 4) / 16f;
+        var v = (OFFSETS[9 - cx][9 - cy][9 - cz] % 4) / 16f;
 
         int texIdx = Math.abs((OFFSETS[cx][cy][cz] + (glassState.getX() + glassState.getY() + glassState.getZ())) % 4);
 
@@ -129,7 +122,7 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
 
         final TextureAtlasSprite glassTexture = this.glassTextures[texIdx];
 
-        QuadEmitter emitter = context.getEmitter();
+        var emitter = context.getEmitter();
 
         // Render the glass side
         for (Direction side : Direction.values()) {
@@ -148,16 +141,6 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
             }
         }
 
-    }
-
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
-        return Collections.emptyList();
     }
 
     @Override
@@ -211,9 +194,7 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
         return bitmask;
     }
 
-    private void emitQuad(QuadEmitter emitter, Direction side, List<Vector3f> corners, TextureAtlasSprite sprite,
-            float uOffset,
-            float vOffset) {
+    private void emitQuad(QuadEmitter emitter, Direction side, List<Vector3f> corners, TextureAtlasSprite sprite, float uOffset, float vOffset) {
         this.emitQuad(emitter, side, corners.get(0), corners.get(1), corners.get(2), corners.get(3), sprite, uOffset,
                 vOffset);
     }
@@ -223,10 +204,10 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
 
         // Apply the u,v shift.
         // This mirrors the logic from OffsetIcon from 1.7
-        float u1 = sprite.getU(Mth.clamp(0 - uOffset, 0, 16));
-        float u2 = sprite.getU(Mth.clamp(16 - uOffset, 0, 16));
-        float v1 = sprite.getV(Mth.clamp(0 - vOffset, 0, 16));
-        float v2 = sprite.getV(Mth.clamp(16 - vOffset, 0, 16));
+        float u1 = Mth.clamp(0 - uOffset, 0, 1);
+        float u2 = Mth.clamp(1 - uOffset, 0, 1);
+        float v1 = Mth.clamp(0 - vOffset, 0, 1);
+        float v2 = Mth.clamp(1 - vOffset, 0, 1);
 
         emitter.nominalFace(side);
         emitter.cullFace(side);
@@ -300,7 +281,7 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
 
     /**
      * Checks if the given block is a glass block.
-     * 
+     *
      * @param face   Face of the glass that we are currently checking for.
      * @param adjDir Direction in which to check.
      */
@@ -310,5 +291,4 @@ class GlassBakedModel implements BakedModel, FabricBakedModel {
         return level.getBlockState(adjacentPos).getAppearance(level, adjacentPos, face, state, pos)
                 .getBlock() instanceof QuartzGlassBlock;
     }
-
 }

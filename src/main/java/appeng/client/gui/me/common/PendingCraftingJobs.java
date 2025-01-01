@@ -1,22 +1,21 @@
 package appeng.client.gui.me.common;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
+import appeng.api.client.AEKeyRendering;
+import appeng.api.stacks.AEKey;
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.core.network.clientbound.CraftingJobStatusPacket;
+import appeng.items.tools.powered.WirelessTerminalItem;
+import appeng.util.SearchInventoryEvent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import appeng.api.client.AEKeyRendering;
-import appeng.api.stacks.AEKey;
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.core.sync.packets.CraftingJobStatusPacket;
-import appeng.items.tools.powered.WirelessTerminalItem;
-import appeng.util.SearchInventoryEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Tracks pending crafting jobs started by this player.

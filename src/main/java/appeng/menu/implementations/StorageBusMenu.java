@@ -18,18 +18,6 @@
 
 package appeng.menu.implementations;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-
-import com.google.common.collect.Iterators;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Settings;
 import appeng.api.config.StorageFilter;
@@ -41,10 +29,19 @@ import appeng.client.gui.implementations.StorageBusScreen;
 import appeng.core.definitions.AEItems;
 import appeng.menu.guisync.GuiSync;
 import appeng.parts.storagebus.StorageBusPart;
+import com.google.common.collect.Iterators;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @see StorageBusScreen
- * @see appeng.client.gui.implementations.StorageBusScreen
+ * @see StorageBusScreen
  */
 public class StorageBusMenu extends UpgradeableMenu<StorageBusPart> {
 

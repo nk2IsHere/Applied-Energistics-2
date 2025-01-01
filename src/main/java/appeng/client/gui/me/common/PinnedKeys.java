@@ -1,20 +1,13 @@
 package appeng.client.gui.me.common;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import appeng.api.stacks.AEKey;
 import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.stacks.AEKey;
+import java.time.Instant;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public final class PinnedKeys {

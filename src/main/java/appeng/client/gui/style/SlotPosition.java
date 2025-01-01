@@ -18,9 +18,8 @@
 
 package appeng.client.gui.style;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.client.gui.layout.SlotGridLayout;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Describes positioning for a slot.

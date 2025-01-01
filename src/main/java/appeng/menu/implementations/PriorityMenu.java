@@ -18,12 +18,11 @@
 
 package appeng.menu.implementations;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.helpers.IPriorityHost;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.ISubMenu;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see appeng.client.gui.implementations.PriorityScreen

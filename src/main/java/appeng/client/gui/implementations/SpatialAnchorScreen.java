@@ -18,9 +18,6 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.client.gui.AEBaseScreen;
@@ -31,6 +28,8 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.SpatialAnchorMenu;
 import appeng.util.Platform;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class SpatialAnchorScreen extends AEBaseScreen<SpatialAnchorMenu> {
 

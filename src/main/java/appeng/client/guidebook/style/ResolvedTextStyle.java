@@ -1,8 +1,7 @@
 package appeng.client.guidebook.style;
 
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.client.guidebook.color.ColorValue;
+import net.minecraft.resources.ResourceLocation;
 
 public record ResolvedTextStyle(
         float fontScale,
@@ -14,5 +13,6 @@ public record ResolvedTextStyle(
         ResourceLocation font,
         ColorValue color,
         WhiteSpaceMode whiteSpace,
-        TextAlignment alignment) {
+        TextAlignment alignment,
+        boolean dropShadow) {
 }

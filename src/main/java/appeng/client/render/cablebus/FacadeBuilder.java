@@ -18,22 +18,12 @@
 
 package appeng.client.render.cablebus;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import appeng.api.parts.PartHelper;
+import appeng.api.util.AEAxisAlignedBB;
+import appeng.block.networking.CableBusBlock;
+import appeng.parts.misc.CableAnchorPart;
+import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.*;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -52,16 +42,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.parts.PartHelper;
-import appeng.api.util.AEAxisAlignedBB;
-import appeng.block.networking.CableBusBlock;
-import appeng.parts.misc.CableAnchorPart;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadClamper;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadCornerKicker;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadFaceStripper;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadReInterpolator;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadTinter;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
+
+import static appeng.integration.abstraction.IFabricBakedModel.renderer;
 
 /**
  * The FacadeBuilder builds for facades..
@@ -69,8 +56,6 @@ import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.QuadTinter;
  * @author covers1624
  */
 public class FacadeBuilder {
-
-    private final Renderer renderer = RendererAccess.INSTANCE.getRenderer();
 
     // Slightly smaller than a pixel to never show the beginning of the second row of pixels of the block's texture.
     public static final double THIN_THICKNESS = 1D / 16D - 2e-3;
@@ -99,8 +84,8 @@ public class FacadeBuilder {
             List<BakedQuad> partQuads = transparentFacadeModel.getQuads(null, null, RandomSource.create());
 
             for (Direction facing : Direction.values()) {
-                MeshBuilder meshBuilder = renderer.meshBuilder();
-                QuadEmitter emitter = meshBuilder.getEmitter();
+                var meshBuilder = renderer.meshBuilder();
+                var emitter = meshBuilder.getEmitter();
 
                 // Rotate quads accordingly
                 RenderContext.QuadTransform rotator = QuadRotator.get(facing, 0);
@@ -143,8 +128,8 @@ public class FacadeBuilder {
         for (Direction side : Direction.values()) {
             RenderContext.QuadTransform rotator = QuadRotator.get(side, 0);
 
-            MeshBuilder meshBuilder = renderer.meshBuilder();
-            QuadEmitter emitter = meshBuilder.getEmitter();
+            var meshBuilder = renderer.meshBuilder();
+            var emitter = meshBuilder.getEmitter();
 
             for (BakedModel model : cableAnchorParts) {
                 for (int cullFaceIdx = 0; cullFaceIdx <= ModelHelper.NULL_FACE_ID; cullFaceIdx++) {
@@ -177,8 +162,8 @@ public class FacadeBuilder {
         BlockPos pos = renderState.getPos();
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
 
-        MeshBuilder meshBuilder = renderer.meshBuilder();
-        QuadEmitter emitter = meshBuilder.getEmitter();
+        var meshBuilder = renderer.meshBuilder();
+        var emitter = meshBuilder.getEmitter();
 
         for (Entry<Direction, FacadeRenderState> entry : facadeStates.entrySet()) {
             Direction side = entry.getKey();
@@ -289,7 +274,9 @@ public class FacadeBuilder {
                     }
 
                     for (AABB box : holeStrips) {
-                        quad.copyTo(emitter);
+                        var material = emitter.material();
+                        emitter.copyFrom(quad);
+                        emitter.material(material);
                         // Keep the cull-face for faces that are flush with the outer block-face on the
                         // side the facade is attached to, but clear it for anything that faces inwards
                         emitter.cullFace(cullFace == side ? side : null);
@@ -328,7 +315,7 @@ public class FacadeBuilder {
                 model.emitBlockQuads(level, blockState, pos, rand, context);
                 context.popTransform();
             } finally {
-                CableBusBlock.RENDERING_FACADE_DIRECTION.set(null);
+                CableBusBlock.RENDERING_FACADE_DIRECTION.remove();
             }
         }
 
@@ -343,8 +330,8 @@ public class FacadeBuilder {
      */
     public Mesh buildFacadeItemQuads(ItemStack textureItem, Direction side) {
 
-        MeshBuilder meshBuilder = renderer.meshBuilder();
-        QuadEmitter emitter = meshBuilder.getEmitter();
+        var meshBuilder = renderer.meshBuilder();
+        var emitter = meshBuilder.getEmitter();
 
         BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(textureItem, null,
                 null, 0);

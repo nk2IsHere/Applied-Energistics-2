@@ -1,16 +1,15 @@
 package appeng.client.gui.me.search;
 
+import appeng.api.stacks.AEKey;
+import appeng.menu.me.common.GridInventoryEntry;
+import it.unimi.dsi.fastutil.longs.Long2BooleanMap;
+import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
-
-import it.unimi.dsi.fastutil.longs.Long2BooleanMap;
-import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
-
-import appeng.api.stacks.AEKey;
-import appeng.menu.me.common.GridInventoryEntry;
 
 public class RepoSearch {
 

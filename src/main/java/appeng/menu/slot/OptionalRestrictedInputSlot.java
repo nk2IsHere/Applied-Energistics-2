@@ -18,9 +18,8 @@
 
 package appeng.menu.slot;
 
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.inventories.InternalInventory;
+import net.minecraft.world.entity.player.Inventory;
 
 public class OptionalRestrictedInputSlot extends RestrictedInputSlot {
 

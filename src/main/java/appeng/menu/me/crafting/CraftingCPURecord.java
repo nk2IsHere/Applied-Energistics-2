@@ -18,9 +18,8 @@
 
 package appeng.menu.me.crafting;
 
-import net.minecraft.network.chat.Component;
-
 import appeng.api.networking.crafting.ICraftingCPU;
+import net.minecraft.network.chat.Component;
 
 public class CraftingCPURecord implements Comparable<CraftingCPURecord> {
     private final ICraftingCPU cpu;

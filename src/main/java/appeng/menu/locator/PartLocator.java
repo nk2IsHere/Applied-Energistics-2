@@ -1,19 +1,17 @@
 package appeng.menu.locator;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.parts.PartHelper;
+import appeng.core.AELog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-
-import appeng.api.parts.PartHelper;
-import appeng.core.AELog;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Locates a part on an {@link appeng.api.parts.IPartHost} using the position of its host and the side it's attached to.
  */
-record PartLocator(BlockPos pos, @Nullable Direction side) implements MenuLocator {
+record PartLocator(BlockPos pos, @Nullable Direction side) implements MenuHostLocator {
     @Override
     public <T> @Nullable T locate(Player player, Class<T> hostInterface) {
         var part = PartHelper.getPart(player.level(), pos, side);

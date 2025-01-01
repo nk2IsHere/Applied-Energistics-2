@@ -18,15 +18,13 @@
 
 package appeng.client.render.model;
 
-import java.util.EnumMap;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-
+import net.minecraft.core.Direction;
 import org.joml.Vector3f;
 
-import net.minecraft.core.Direction;
+import java.util.EnumMap;
+import java.util.List;
 
 // TODO: Investigate use of CubeBuilder instead
 final class RenderHelper {

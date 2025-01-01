@@ -1,13 +1,12 @@
 package appeng.client.gui.me.items;
 
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.client.Point;
 import appeng.client.gui.ICompositeWidget;
+import appeng.client.gui.Icon;
 import appeng.client.gui.WidgetContainer;
 import appeng.menu.me.items.PatternEncodingTermMenu;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
 
 public abstract class EncodingModePanel implements ICompositeWidget {
     protected final PatternEncodingTermScreen<?> screen;
@@ -23,7 +22,10 @@ public abstract class EncodingModePanel implements ICompositeWidget {
         this.widgets = widgets;
     }
 
-    abstract ItemStack getTabIconItem();
+    // TODO (Rid): Replaced the ItemStack and an Icon
+//    abstract ItemStack getTabIconItem();
+
+    abstract Icon getIcon();
 
     abstract Component getTabTooltip();
 
@@ -39,7 +41,7 @@ public abstract class EncodingModePanel implements ICompositeWidget {
 
     @Override
     public Rect2i getBounds() {
-        return new Rect2i(x, y, 126, 68);
+        return new Rect2i(x, y, 124, 66);
     }
 
     @Override

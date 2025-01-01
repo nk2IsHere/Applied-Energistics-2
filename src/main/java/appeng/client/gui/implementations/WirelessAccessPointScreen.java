@@ -18,15 +18,14 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.CommonButtons;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.WirelessAccessPointMenu;
 import appeng.util.Platform;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class WirelessAccessPointScreen extends AEBaseScreen<WirelessAccessPointMenu> {
 

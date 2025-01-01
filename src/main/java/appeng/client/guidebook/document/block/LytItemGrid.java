@@ -1,12 +1,11 @@
 package appeng.client.guidebook.document.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.world.item.Item;
-
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.layout.LayoutContext;
+import net.minecraft.world.item.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Shows items in a grid-like fashion, i.e. to show-case variants.

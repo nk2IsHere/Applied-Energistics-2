@@ -18,18 +18,16 @@
 
 package appeng.client.render.renderable;
 
-import java.util.function.Function;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Transformation;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.function.Function;
 
 public class ItemRenderable<T extends BlockEntity> implements Renderable<T> {
 
@@ -46,7 +44,7 @@ public class ItemRenderable<T extends BlockEntity> implements Renderable<T> {
         if (pair != null && pair.getLeft() != null) {
             poseStack.pushPose();
             if (pair.getRight() != null) {
-                poseStack.mulPoseMatrix(pair.getRight().getMatrix());
+                poseStack.mulPose(pair.getRight().getMatrix());
             }
             Minecraft.getInstance().getItemRenderer().renderStatic(pair.getLeft(),
                     ItemDisplayContext.GROUND, combinedLight, combinedOverlay, poseStack, buffers, be.getLevel(), 0);

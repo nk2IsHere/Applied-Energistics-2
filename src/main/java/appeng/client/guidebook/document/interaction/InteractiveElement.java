@@ -1,8 +1,8 @@
 package appeng.client.guidebook.document.interaction;
 
-import java.util.Optional;
-
 import appeng.client.guidebook.screen.GuideScreen;
+
+import java.util.Optional;
 
 public interface InteractiveElement {
     default boolean mouseMoved(GuideScreen screen, int x, int y) {
@@ -15,6 +15,9 @@ public interface InteractiveElement {
 
     default boolean mouseReleased(GuideScreen screen, int x, int y, int button) {
         return false;
+    }
+
+    default void mouseCaptureLost() {
     }
 
     /**

@@ -18,19 +18,28 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.Comparator;
-
+import appeng.api.stacks.AEKey;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.network.FriendlyByteBuf;
-
-import appeng.api.stacks.AEKey;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Describes an entry in a crafting job, which describes how many items of one type are yet to be crafted, or currently
  * scheduled to be crafted.
  */
 public class CraftingStatusEntry implements Comparable<CraftingStatusEntry> {
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, CraftingStatusEntry> STREAM_CODEC = StreamCodec.of(
+            CraftingStatusEntry::write,
+            CraftingStatusEntry::read);
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, List<CraftingStatusEntry>> LIST_STREAM_CODEC = STREAM_CODEC
+            .apply(ByteBufCodecs.list());
+
     private static final Comparator<CraftingStatusEntry> COMPARATOR = Comparator
             .comparing((CraftingStatusEntry e) -> e.getActiveAmount() + e.getPendingAmount())
             .thenComparing(CraftingStatusEntry::getStoredAmount)
@@ -72,15 +81,15 @@ public class CraftingStatusEntry implements Comparable<CraftingStatusEntry> {
         return what;
     }
 
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeVarLong(serial);
-        buffer.writeVarLong(activeAmount);
-        buffer.writeVarLong(storedAmount);
-        buffer.writeVarLong(pendingAmount);
-        AEKey.writeOptionalKey(buffer, what);
+    public static void write(RegistryFriendlyByteBuf buffer, CraftingStatusEntry entry) {
+        buffer.writeVarLong(entry.serial);
+        buffer.writeVarLong(entry.activeAmount);
+        buffer.writeVarLong(entry.storedAmount);
+        buffer.writeVarLong(entry.pendingAmount);
+        AEKey.writeOptionalKey(buffer, entry.what);
     }
 
-    public static CraftingStatusEntry read(FriendlyByteBuf buffer) {
+    public static CraftingStatusEntry read(RegistryFriendlyByteBuf buffer) {
         long serial = buffer.readVarLong();
         long missingAmount = buffer.readVarLong();
         long storedAmount = buffer.readVarLong();

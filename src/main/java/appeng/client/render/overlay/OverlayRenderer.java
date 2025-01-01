@@ -18,16 +18,14 @@
 
 package appeng.client.render.overlay;
 
-import java.util.Set;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import org.joml.Matrix4f;
-
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.ChunkPos;
+import org.joml.Matrix4f;
+
+import java.util.Set;
 
 /**
  * This is based on the area render of https://github.com/TeamPneumatic/pnc-repressurized/
@@ -41,15 +39,18 @@ public class OverlayRenderer {
     }
 
     public void render(PoseStack poseStack, MultiBufferSource buffer) {
+        RenderType typeLinesOccluded = OverlayRenderType.getBlockHilightLineOccluded();
+        render(poseStack, buffer.getBuffer(typeLinesOccluded), true, 0x30ffffff);
+
         RenderType typeFaces = OverlayRenderType.getBlockHilightFace();
-        render(poseStack, buffer.getBuffer(typeFaces), false);
+        render(poseStack, buffer.getBuffer(typeFaces), false, this.source.getOverlayColor());
 
         RenderType typeLines = OverlayRenderType.getBlockHilightLine();
-        render(poseStack, buffer.getBuffer(typeLines), true);
+        render(poseStack, buffer.getBuffer(typeLines), true, this.source.getOverlayColor());
     }
 
-    private void render(PoseStack poseStack, VertexConsumer builder, boolean renderLines) {
-        int[] cols = OverlayRenderType.decomposeColor(this.source.getOverlayColor());
+    private void render(PoseStack poseStack, VertexConsumer builder, boolean renderLines, int color) {
+        int[] cols = OverlayRenderType.decomposeColor(color);
         for (ChunkPos pos : this.source.getOverlayChunks()) {
             poseStack.pushPose();
             poseStack.translate(pos.getMinBlockX(), 0, pos.getMinBlockZ());
@@ -78,96 +79,96 @@ public class OverlayRenderer {
         if (noNorth) {
             // Face North, Edge Bottom
             wr.addVertex(posMat, x1, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
+                    .setNormal(1, 0, 0);
             wr.addVertex(posMat, x2, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
+                    .setNormal(1, 0, 0);
             // Face North, Edge Top
             wr.addVertex(posMat, x2, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
+                    .setNormal(-1, 0, 0);
             wr.addVertex(posMat, x1, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
+                    .setNormal(-1, 0, 0);
         }
 
         if (noSouth) {
             // Face South, Edge Bottom
             wr.addVertex(posMat, x2, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
+                    .setNormal(-1, 0, 0);
             wr.addVertex(posMat, x1, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
+                    .setNormal(-1, 0, 0);
             // Face South, Edge Top
             wr.addVertex(posMat, x1, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
+                    .setNormal(1, 0, 0);
             wr.addVertex(posMat, x2, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
+                    .setNormal(1, 0, 0);
         }
 
         if (noWest) {
             // Face West, Edge Bottom
             wr.addVertex(posMat, x1, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, 1);
+                    .setNormal(0, 0, 1);
             wr.addVertex(posMat, x1, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, 1);
+                    .setNormal(0, 0, 1);
             // Face West, Edge Top
             wr.addVertex(posMat, x1, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, -1);
+                    .setNormal(0, 0, -1);
             wr.addVertex(posMat, x1, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, -1);
+                    .setNormal(0, 0, -1);
         }
 
         if (noEast) {
             // Face East, Edge Bottom
             wr.addVertex(posMat, x2, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, -1);
+                    .setNormal(0, 0, -1);
             wr.addVertex(posMat, x2, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, -1);
+                    .setNormal(0, 0, -1);
             // Face East, Edge Top
             wr.addVertex(posMat, x2, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, 1);
+                    .setNormal(0, 0, 1);
             wr.addVertex(posMat, x2, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                    .normal(0, 0, 1);
+                    .setNormal(0, 0, 1);
         }
 
         if (renderLines) {
             if (noNorth || noWest) {
                 // Face North, Edge West
                 wr.addVertex(posMat, x1, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, 1, 0);
+                        .setNormal(0, 1, 0);
                 wr.addVertex(posMat, x1, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, 1, 0);
+                        .setNormal(0, 1, 0);
             }
 
             if (noNorth || noEast) {
                 // Face North, Edge East
                 wr.addVertex(posMat, x2, y2, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, -1, 0);
+                        .setNormal(0, -1, 0);
                 wr.addVertex(posMat, x2, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, -1, 0);
+                        .setNormal(0, -1, 0);
             }
 
             if (noSouth || noEast) {
                 // Face South, Edge East
                 wr.addVertex(posMat, x2, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, 1, 0);
+                        .setNormal(0, 1, 0);
                 wr.addVertex(posMat, x2, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, 1, 0);
+                        .setNormal(0, 1, 0);
             }
             if (noSouth || noWest) {
                 // Face South, Edge West
                 wr.addVertex(posMat, x1, y2, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, -1, 0);
+                        .setNormal(0, -1, 0);
                 wr.addVertex(posMat, x1, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
-                        .normal(0, -1, 0);
+                        .setNormal(0, -1, 0);
             }
         } else {
             // Bottom Face
-            wr.addVertex(posMat, x1, y1, z1).color(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
-            wr.addVertex(posMat, x2, y1, z1).color(cols[1], cols[2], cols[3], cols[0])
-                    .normal(1, 0, 0);
-            wr.addVertex(posMat, x2, y1, z2).color(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
-            wr.addVertex(posMat, x1, y1, z2).color(cols[1], cols[2], cols[3], cols[0])
-                    .normal(-1, 0, 0);
+            wr.addVertex(posMat, x1, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
+                    .setNormal(1, 0, 0);
+            wr.addVertex(posMat, x2, y1, z1).setColor(cols[1], cols[2], cols[3], cols[0])
+                    .setNormal(1, 0, 0);
+            wr.addVertex(posMat, x2, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
+                    .setNormal(-1, 0, 0);
+            wr.addVertex(posMat, x1, y1, z2).setColor(cols[1], cols[2], cols[3], cols[0])
+                    .setNormal(-1, 0, 0);
         }
 
     }

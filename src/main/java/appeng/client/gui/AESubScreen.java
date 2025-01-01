@@ -1,13 +1,12 @@
 package appeng.client.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.world.inventory.Slot;
-
 import appeng.client.gui.style.StyleManager;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantic;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for screens that are opened on the client-side to temporarily replace another screen.

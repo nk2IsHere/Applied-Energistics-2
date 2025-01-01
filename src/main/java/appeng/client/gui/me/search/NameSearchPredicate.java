@@ -1,10 +1,10 @@
 package appeng.client.gui.me.search;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-
 import appeng.api.stacks.AEKey;
 import appeng.menu.me.common.GridInventoryEntry;
+
+import java.util.Objects;
+import java.util.function.Predicate;
 
 final class NameSearchPredicate implements Predicate<GridInventoryEntry> {
     private final String term;

@@ -18,23 +18,18 @@
 
 package appeng.hooks.ticking;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.crafting.CraftingCalculation;
+import appeng.me.Grid;
+import appeng.me.GridNode;
+import appeng.util.ILevelRunnable;
+import appeng.util.Platform;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -48,14 +43,9 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.crafting.CraftingCalculation;
-import appeng.me.Grid;
-import appeng.me.GridNode;
-import appeng.util.ILevelRunnable;
-import appeng.util.Platform;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class TickHandler {
 
@@ -97,7 +87,6 @@ public class TickHandler {
         ServerTickEvents.END_WORLD_TICK.register(this::onServerLevelTickEnd);
         ServerChunkEvents.CHUNK_UNLOAD.register(this::onUnloadChunk);
         ServerWorldEvents.UNLOAD.register((server, level) -> onUnloadLevel(level));
-
     }
 
     public void addCallable(LevelAccessor level, Runnable c) {
@@ -110,7 +99,7 @@ public class TickHandler {
      * Callbacks on the client are not support.
      * <p>
      * Using null as level will queue it into the global {@link ServerTickEvent}, otherwise it will be ticked with the
-     * corresponding {@link WorldTickEvent}.
+     * corresponding {@link LevelTickEvent}.
      *
      * @param level null or the specific {@link Level}
      * @param c     the callback
@@ -172,7 +161,7 @@ public class TickHandler {
         this.grids.removeNetwork(grid);
     }
 
-    public Iterable<Grid> getGridList() {
+    public Set<Grid> getGridList() {
         Platform.assertServerThread();
         return this.grids.getNetworks();
     }

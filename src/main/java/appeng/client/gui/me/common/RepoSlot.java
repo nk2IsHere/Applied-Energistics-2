@@ -18,9 +18,8 @@
 
 package appeng.client.gui.me.common;
 
-import net.minecraft.world.item.ItemStack;
-
 import appeng.menu.me.common.GridInventoryEntry;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * This is a virtual slot that has no corresponding slot on the server-side. It displays an item stack from the
@@ -42,7 +41,7 @@ public class RepoSlot extends ClientReadOnlySlot {
     }
 
     public GridInventoryEntry getEntry() {
-        if (this.repo.hasPower()) {
+        if (this.repo.isEnabled()) {
             return this.repo.get(this.offset);
         }
         return null;

@@ -18,15 +18,10 @@
 
 package appeng.client.render.model;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.function.Function;
-
+import appeng.api.client.StorageCellModels;
+import appeng.client.render.BasicUnbakedModel;
+import appeng.init.internal.InitStorageCells;
 import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -35,22 +30,24 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.client.StorageCellModels;
-import appeng.client.render.BasicUnbakedModel;
-import appeng.init.internal.InitStorageCells;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class DriveModel implements BasicUnbakedModel {
 
-    private static final ResourceLocation MODEL_BASE = new ResourceLocation(
+    private static final ResourceLocation MODEL_BASE = ResourceLocation.parse(
             "ae2:block/drive/drive_base");
-    private static final ResourceLocation MODEL_CELL_EMPTY = new ResourceLocation(
+    private static final ResourceLocation MODEL_CELL_EMPTY = ResourceLocation.parse(
             "ae2:block/drive/drive_cell_empty");
 
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter,
-            ModelState modelTransform, ResourceLocation modelLocation) {
+            ModelState modelTransform) {
         final Map<Item, BakedModel> cellModels = new IdentityHashMap<>();
 
         // Load the base model and the model for each cell model.

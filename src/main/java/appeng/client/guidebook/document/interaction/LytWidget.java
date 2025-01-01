@@ -1,19 +1,18 @@
 package appeng.client.guidebook.document.interaction;
 
-import java.util.Optional;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.MultiBufferSource;
-
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.document.block.LytBlock;
 import appeng.client.guidebook.layout.LayoutContext;
 import appeng.client.guidebook.render.RenderContext;
 import appeng.client.guidebook.screen.GuideScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.MultiBufferSource;
+
+import java.util.Optional;
 
 /**
- * Wraps an {@link net.minecraft.client.gui.components.AbstractWidget} for use within the guidebook layout tree.
+ * Wraps an {@link AbstractWidget} for use within the guidebook layout tree.
  */
 public class LytWidget extends LytBlock implements InteractiveElement {
     private final AbstractWidget widget;
@@ -60,7 +59,7 @@ public class LytWidget extends LytBlock implements InteractiveElement {
                 context.guiGraphics(),
                 mouseDocPos != null ? mouseDocPos.getX() : -100,
                 mouseDocPos != null ? mouseDocPos.getY() : -100,
-                minecraft.getDeltaFrameTime());
+                minecraft.getTimer().getRealtimeDeltaTicks());
     }
 
     private void updateWidgetPosition() {

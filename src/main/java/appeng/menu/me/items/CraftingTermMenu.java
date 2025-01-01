@@ -18,36 +18,15 @@
 
 package appeng.menu.me.items;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.base.Preconditions;
-
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.inventory.TransientCraftingContainer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
-
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.storage.ITerminalHost;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.InventoryActionPacket;
-import appeng.helpers.IMenuCraftingPacket;
+import appeng.core.network.serverbound.InventoryActionPacket;
+import appeng.helpers.ICraftingGridMenu;
 import appeng.helpers.InventoryAction;
+import appeng.me.storage.LinkStatusRespectingInventory;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.me.common.MEStorageMenu;
@@ -56,6 +35,18 @@ import appeng.menu.slot.CraftingMatrixSlot;
 import appeng.menu.slot.CraftingTermSlot;
 import appeng.parts.reporting.CraftingTerminalPart;
 import appeng.util.inv.PlayerInternalInventory;
+import com.google.common.base.Preconditions;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * Can only be used with a host that implements {@link ISegmentedInventory} and exposes an inventory named "crafting" to
@@ -63,7 +54,7 @@ import appeng.util.inv.PlayerInternalInventory;
  *
  * @see appeng.client.gui.me.items.CraftingTermScreen
  */
-public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPacket {
+public class CraftingTermMenu extends MEStorageMenu implements ICraftingGridMenu {
 
     public static final MenuType<CraftingTermMenu> TYPE = MenuTypeBuilder
             .create(CraftingTermMenu::new, ITerminalHost.class)
@@ -73,10 +64,10 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
 
     private final ISegmentedInventory craftingInventoryHost;
     private final CraftingMatrixSlot[] craftingSlots = new CraftingMatrixSlot[9];
-    private final CraftingContainer recipeTestContainer = new TransientCraftingContainer(this, 3, 3);
-
+    @Nullable
+    private CraftingInput lastTestedInput;
     private final CraftingTermSlot outputSlot;
-    private Recipe<CraftingContainer> currentRecipe;
+    private RecipeHolder<CraftingRecipe> currentRecipe;
 
     public CraftingTermMenu(int id, Inventory ip, ITerminalHost host) {
         this(TYPE, id, ip, host, true);
@@ -95,13 +86,19 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
                     SlotSemantics.CRAFTING_GRID);
         }
 
+        var linkStatusInventory = new LinkStatusRespectingInventory(host.getInventory(), this::getLinkStatus);
         this.addSlot(this.outputSlot = new CraftingTermSlot(this.getPlayerInventory().player, this.getActionSource(),
-                this.powerSource, host.getInventory(), craftingGridInv, craftingGridInv, this),
+                this.energySource, linkStatusInventory, craftingGridInv, craftingGridInv, this),
                 SlotSemantics.CRAFTING_RESULT);
 
         updateCurrentRecipeAndOutput(true);
 
         registerClientAction(ACTION_CLEAR_TO_PLAYER, this::clearToPlayerInventory);
+    }
+
+    @Override
+    public IEnergySource getEnergySource() {
+        return this.energySource;
     }
 
     /**
@@ -110,34 +107,29 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
 
     @Override
     public void slotsChanged(Container inventory) {
-        // Do not trigger a recursive update from updating the test container
-        if (inventory != recipeTestContainer) {
-            updateCurrentRecipeAndOutput(false);
-        }
+        updateCurrentRecipeAndOutput(false);
     }
 
     private void updateCurrentRecipeAndOutput(boolean forceUpdate) {
-        boolean hasChanged = forceUpdate;
-        for (int x = 0; x < 9; x++) {
-            var stack = this.craftingSlots[x].getItem();
-            if (!ItemStack.isSameItemSameTags(stack, recipeTestContainer.getItem(x))) {
-                hasChanged = true;
-                recipeTestContainer.setItem(x, stack.copy());
-            }
+        var testItems = new ArrayList<ItemStack>(this.craftingSlots.length);
+        for (var craftingSlot : this.craftingSlots) {
+            testItems.add(craftingSlot.getItem().copy());
         }
+        var testInput = CraftingInput.of(3, 3, testItems);
 
-        if (!hasChanged) {
+        if (!forceUpdate && Objects.equals(lastTestedInput, testInput)) {
             return;
         }
 
-        Level level = this.getPlayerInventory().player.level();
-        this.currentRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, recipeTestContainer, level)
+        var level = getPlayer().level();
+        this.currentRecipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, testInput, level)
                 .orElse(null);
+        this.lastTestedInput = testInput;
 
         if (this.currentRecipe == null) {
             this.outputSlot.set(ItemStack.EMPTY);
         } else {
-            this.outputSlot.set(this.currentRecipe.assemble(recipeTestContainer, level.registryAccess()));
+            this.outputSlot.set(this.currentRecipe.value().assemble(testInput, level.registryAccess()));
         }
     }
 
@@ -147,16 +139,11 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
     }
 
     @Override
-    public boolean useRealItems() {
-        return true;
-    }
-
-    @Override
     public void startAutoCrafting(List<AutoCraftEntry> toCraft) {
         CraftConfirmMenu.openWithCraftingList(getActionHost(), (ServerPlayer) getPlayer(), getLocator(), toCraft);
     }
 
-    public Recipe<CraftingContainer> getCurrentRecipe() {
+    public RecipeHolder<CraftingRecipe> getCurrentRecipe() {
         return this.currentRecipe;
     }
 
@@ -167,25 +154,26 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
         Preconditions.checkState(isClientSide());
         CraftingMatrixSlot slot = craftingSlots[0];
         var p = new InventoryActionPacket(InventoryAction.MOVE_REGION, slot.index, 0);
-        NetworkHandler.instance().sendToServer(p);
+        PacketDistributor.sendToServer(p);
     }
 
     @Override
-    public boolean hasItemType(ItemStack itemStack, int amount) {
+    public boolean hasIngredient(Ingredient ingredient, Object2IntOpenHashMap<Object> reservedAmounts) {
         // In addition to the base item repo, also check the crafting grid if it
         // already contains some of the needed items
-        for (Slot slot : getSlots(SlotSemantics.CRAFTING_GRID)) {
-            ItemStack stackInSlot = slot.getItem();
-            if (!stackInSlot.isEmpty() && ItemStack.isSameItemSameTags(itemStack, stackInSlot)) {
-                if (itemStack.getCount() >= amount) {
+        for (var slot : getSlots(SlotSemantics.CRAFTING_GRID)) {
+            var stackInSlot = slot.getItem();
+            if (!stackInSlot.isEmpty() && ingredient.test(stackInSlot)) {
+                var reservedAmount = reservedAmounts.getOrDefault(slot, 0);
+                if (stackInSlot.getCount() > reservedAmount) {
+                    reservedAmounts.merge(slot, 1, Integer::sum);
                     return true;
                 }
-                amount -= itemStack.getCount();
             }
 
         }
 
-        return super.hasItemType(itemStack, amount);
+        return super.hasIngredient(ingredient, reservedAmounts);
     }
 
     /**
@@ -230,15 +218,10 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
 
             // Then check the terminal screen's repository of network items
             if (!found) {
-                for (var stack : ingredient.getItems()) {
-                    // We use AE stacks to get an easily comparable item type key that ignores stack size
-                    var itemKey = AEItemKey.of(stack);
-                    int reservedAmount = reservedGridAmounts.getOrDefault(itemKey, 0) + 1;
-                    if (hasItemType(stack, reservedAmount)) {
-                        reservedGridAmounts.put(itemKey, reservedAmount);
-                        found = true;
-                        break;
-                    }
+                // We use AE stacks to get an easily comparable item type key that ignores stack size
+                if (hasIngredient(ingredient, reservedGridAmounts)) {
+                    reservedGridAmounts.merge(ingredient, 1, Integer::sum);
+                    found = true;
                 }
             }
 
@@ -266,12 +249,16 @@ public class CraftingTermMenu extends MEStorageMenu implements IMenuCraftingPack
             return missingSlots.size() + craftableSlots.size();
         }
 
+        public boolean anyMissingOrCraftable() {
+            return anyMissing() || anyCraftable();
+        }
+
         public boolean anyMissing() {
-            return missingSlots.size() > 0;
+            return !missingSlots.isEmpty();
         }
 
         public boolean anyCraftable() {
-            return craftableSlots.size() > 0;
+            return !craftableSlots.isEmpty();
         }
     }
 

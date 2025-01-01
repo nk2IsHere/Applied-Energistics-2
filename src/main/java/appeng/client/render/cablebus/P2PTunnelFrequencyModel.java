@@ -18,28 +18,26 @@
 
 package appeng.client.render.cablebus;
 
-import java.util.function.Function;
-
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.resources.ResourceLocation;
 
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
+import java.util.function.Function;
 
 public class P2PTunnelFrequencyModel implements BasicUnbakedModel {
 
     private static final Material TEXTURE = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/p2p_tunnel_frequency"));
+            AppEng.makeId("part/p2p_tunnel_frequency"));
 
     @org.jetbrains.annotations.Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter,
-            ModelState modelState, ResourceLocation resourceLocation) {
+            ModelState modelState) {
         final TextureAtlasSprite texture = textureGetter.apply(TEXTURE);
         return new P2PTunnelFrequencyBakedModel(texture);
     }

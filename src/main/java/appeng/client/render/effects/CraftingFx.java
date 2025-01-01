@@ -19,21 +19,15 @@
 package appeng.client.render.effects;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import org.joml.Vector3f;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class CraftingFx extends TextureSheetParticle {
@@ -100,13 +94,13 @@ public class CraftingFx extends TextureSheetParticle {
         float maxV = this.getV1();
         int j = 15728880; // full brightness
         buffer.addVertex(avector3f[0].x(), avector3f[0].y(), avector3f[0].z()).setUv(maxU, maxV)
-                .setColor(this.rCol, this.gCol, this.bCol, alpha).setUv2(j);
+                .setColor(this.rCol, this.gCol, this.bCol, alpha).setLight(j);
         buffer.addVertex(avector3f[1].x(), avector3f[1].y(), avector3f[1].z()).setUv(maxU, minV)
-                .setColor(this.rCol, this.gCol, this.bCol, alpha).setUv2(j);
+                .setColor(this.rCol, this.gCol, this.bCol, alpha).setLight(j);
         buffer.addVertex(avector3f[2].x(), avector3f[2].y(), avector3f[2].z()).setUv(minU, minV)
-                .setColor(this.rCol, this.gCol, this.bCol, alpha).setUv2(j);
+                .setColor(this.rCol, this.gCol, this.bCol, alpha).setLight(j);
         buffer.addVertex(avector3f[3].x(), avector3f[3].y(), avector3f[3].z()).setUv(minU, maxV)
-                .setColor(this.rCol, this.gCol, this.bCol, alpha).setUv2(j);
+                .setColor(this.rCol, this.gCol, this.bCol, alpha).setLight(j);
     }
 
     // https://easings.net/#easeOutCirc

@@ -18,17 +18,20 @@
 
 package appeng.menu.implementations;
 
-import java.util.function.Function;
-
+import appeng.core.AppEng;
+import appeng.init.InitMenuTypes;
+import appeng.menu.AEBaseMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuHostLocator;
+import appeng.menu.locator.MenuLocators;
 import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,13 +40,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.core.AppEng;
-import appeng.init.InitMenuTypes;
-import appeng.menu.AEBaseMenu;
-import appeng.menu.MenuOpener;
-import appeng.menu.locator.MenuLocator;
-import appeng.menu.locator.MenuLocators;
+import java.util.function.Function;
 
 /**
  * Builder that allows creation of menu types which can be opened from multiple types of hosts.
@@ -113,8 +112,8 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
      * Opens a menu that is based around a single block entity. The block entity's position is encoded in the packet
      * buffer.
      */
-    private M fromNetwork(int containerId, Inventory inv, FriendlyByteBuf packetBuf) {
-        var locator = MenuLocators.readFromPacket(packetBuf);
+    private M fromNetwork(int containerId, Inventory inv, RegistryFriendlyByteBuf data) {
+        var locator = MenuLocators.readFromPacket(data);
         I host = locator.locate(inv.player, hostInterface);
         if (host == null) {
             var connection = Minecraft.getInstance().getConnection();
@@ -125,14 +124,14 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
                     + " on client. Closing menu.");
         }
         M menu = factory.create(containerId, inv, host);
-        menu.setReturnedFromSubScreen(packetBuf.readBoolean());
+        menu.setReturnedFromSubScreen(data.readBoolean());
         if (initialDataDeserializer != null) {
-            initialDataDeserializer.deserializeInitialData(host, menu, packetBuf);
+            initialDataDeserializer.deserializeInitialData(host, menu, data);
         }
         return menu;
     }
 
-    private boolean open(Player player, MenuLocator locator, boolean fromSubMenu) {
+    private boolean open(Player player, MenuHostLocator locator, boolean fromSubMenu) {
         if (!(player instanceof ServerPlayer)) {
             // Cannot open menus on the client or for non-players
             // FIXME logging?
@@ -152,9 +151,15 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
         return true;
     }
 
+    private static final StreamCodec<RegistryFriendlyByteBuf, RegistryFriendlyByteBuf> PACKET_IDENTITY_CODEC = StreamCodec
+        .of(
+            (from, to) -> to.writeBytes(from),
+            (to) -> to
+        );
+
     private class HandlerFactory implements ExtendedScreenHandlerFactory {
 
-        private final MenuLocator locator;
+        private final MenuHostLocator locator;
 
         private final I accessInterface;
 
@@ -164,22 +169,13 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
 
         private final boolean fromSubMenu;
 
-        public HandlerFactory(MenuLocator locator, Component title, I accessInterface,
+        public HandlerFactory(MenuHostLocator locator, Component title, I accessInterface,
                 InitialDataSerializer<I> initialDataSerializer, boolean fromSubMenu) {
             this.locator = locator;
             this.title = title;
             this.accessInterface = accessInterface;
             this.initialDataSerializer = initialDataSerializer;
             this.fromSubMenu = fromSubMenu;
-        }
-
-        @Override
-        public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-            MenuLocators.writeToPacket(buf, locator);
-            buf.writeBoolean(fromSubMenu);
-            if (initialDataSerializer != null) {
-                initialDataSerializer.serializeInitialData(accessInterface, buf);
-            }
         }
 
         @Override
@@ -202,25 +198,50 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
             return m;
         }
 
+        @Override
+        public Object getScreenOpeningData(ServerPlayer player) {
+            var buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
+            MenuLocators.writeToPacket(buf, locator);
+            buf.writeBoolean(fromSubMenu);
+            if (initialDataSerializer != null) {
+                initialDataSerializer.serializeInitialData(accessInterface, buf);
+            }
+
+            return buf;
+        }
+    }
+
+    public MenuType<M> build(String id) {
+        return build(AppEng.makeId(id));
     }
 
     /**
      * Creates a menu type that uses this helper as a factory and network deserializer.
      */
-    public MenuType<M> build(String id) {
+    public MenuType<M> buildUnregistered(ResourceLocation id) {
         Preconditions.checkState(menuType == null, "build was already called");
         Preconditions.checkState(this.id == null, "id should not be set");
 
-        this.id = AppEng.makeId(id);
-        menuType = new ExtendedScreenHandlerType<>(this::fromNetwork);
+        this.id = id;
+        menuType = new ExtendedScreenHandlerType<>(this::fromNetwork, PACKET_IDENTITY_CODEC);
         InitMenuTypes.queueRegistration(this.id, menuType);
         MenuOpener.addOpener(menuType, this::open);
         return menuType;
     }
 
+    /**
+     * Creates a menu type that uses this helper as a factory and network deserializer, and queues it for registration
+     * with Vanilla.
+     */
+    public MenuType<M> build(ResourceLocation id) {
+        var menuType = buildUnregistered(id);
+        InitMenuTypes.queueRegistration(this.id, menuType);
+        return menuType;
+    }
+
     @FunctionalInterface
     public interface MenuFactory<C, I> {
-        C create(int containerId, Inventory playerInv, I accessObj);
+        C create(int containerId, Inventory playerInv, I menuHost);
     }
 
     @FunctionalInterface
@@ -234,7 +255,7 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
      */
     @FunctionalInterface
     public interface InitialDataSerializer<I> {
-        void serializeInitialData(I host, FriendlyByteBuf buffer);
+        void serializeInitialData(I host, RegistryFriendlyByteBuf buffer);
     }
 
     /**
@@ -243,7 +264,7 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
      */
     @FunctionalInterface
     public interface InitialDataDeserializer<C, I> {
-        void deserializeInitialData(I host, C menu, FriendlyByteBuf buffer);
+        void deserializeInitialData(I host, C menu, RegistryFriendlyByteBuf buffer);
     }
 
     private Component getDefaultMenuTitle(I accessInterface) {

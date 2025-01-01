@@ -1,30 +1,31 @@
 package appeng.client.guidebook.scene.export;
 
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
+import org.joml.Vector4i;
+
 import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
-
-import org.joml.Vector2f;
-import org.joml.Vector4i;
-
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 /**
  * Captured rendering data.
+ *
+ * @param indexBuffer Can be null if sequential indices are to be used.
  */
-record Mesh(BufferBuilder.DrawState drawState,
+record Mesh(MeshData.DrawState drawState,
         ByteBuffer vertexBuffer,
-        ByteBuffer indexBuffer,
+        @Nullable ByteBuffer indexBuffer,
         RenderType renderType) {
 
     /**
@@ -53,12 +54,12 @@ record Mesh(BufferBuilder.DrawState drawState,
         var offset = 0;
         VertexFormatElement uvElement = null;
         for (var element : renderType.format().getElements()) {
-            if (element.getUsage() == VertexFormatElement.Usage.UV && element.getIndex() == 0
-                    && element.getCount() == 2) {
+            if (element.usage() == VertexFormatElement.Usage.UV && element.index() == 0
+                    && element.count() == 2) {
                 uvElement = element;
                 break;
             }
-            offset += element.getByteSize();
+            offset += element.byteSize();
         }
 
         if (uvElement == null) {
@@ -78,7 +79,7 @@ record Mesh(BufferBuilder.DrawState drawState,
     }
 
     private Stream<Vector4i> streamIndices() {
-        if (drawState.sequentialIndex()) {
+        if (indexBuffer == null) {
             var quadCount = drawState.vertexCount() / 4;
             return IntStream.range(0, quadCount)
                     .mapToObj(quadIdx -> new Vector4i(quadIdx * 4, quadIdx * 4 + 1, quadIdx * 4 + 2, quadIdx * 4 + 3));
@@ -123,8 +124,8 @@ record Mesh(BufferBuilder.DrawState drawState,
         var stride = drawState.format().getVertexSize();
         var dataStart = index * stride + offset;
         return new Vector2f(
-                readFloat(uvElement.getType(), dataStart),
-                readFloat(uvElement.getType(), dataStart + uvElement.getType().getSize()));
+                readFloat(uvElement.type(), dataStart),
+                readFloat(uvElement.type(), dataStart + uvElement.type().size()));
     }
 
     private float readFloat(VertexFormatElement.Type type, int offset) {

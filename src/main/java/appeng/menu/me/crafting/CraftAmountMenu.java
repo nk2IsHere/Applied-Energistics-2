@@ -18,30 +18,29 @@
 
 package appeng.menu.me.crafting;
 
-import java.util.Objects;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.Level;
-
 import appeng.api.networking.crafting.CalculationStrategy;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.ISubMenuHost;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.ConfirmAutoCraftPacket;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.ConfirmAutoCraftPacket;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.SlotSemantics;
 import appeng.menu.implementations.MenuTypeBuilder;
-import appeng.menu.locator.MenuLocator;
+import appeng.menu.locator.MenuHostLocator;
 import appeng.menu.slot.AppEngSlot;
 import appeng.menu.slot.InaccessibleSlot;
 import appeng.util.inv.AppEngInternalInventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * @see appeng.client.gui.me.crafting.CraftAmountScreen
@@ -80,7 +79,7 @@ public class CraftAmountMenu extends AEBaseMenu implements ISubMenu {
     /**
      * Opens the craft amount screen for the given player.
      */
-    public static void open(ServerPlayer player, MenuLocator locator, AEKey whatToCraft, int initialAmount) {
+    public static void open(ServerPlayer player, MenuHostLocator locator, AEKey whatToCraft, int initialAmount) {
         MenuOpener.open(CraftAmountMenu.TYPE, player, locator);
 
         if (player.containerMenu instanceof CraftAmountMenu cca) {
@@ -108,7 +107,8 @@ public class CraftAmountMenu extends AEBaseMenu implements ISubMenu {
      */
     public void confirm(int amount, boolean craftMissingAmount, boolean autoStart) {
         if (!isServerSide()) {
-            NetworkHandler.instance().sendToServer(new ConfirmAutoCraftPacket(amount, craftMissingAmount, autoStart));
+            ServerboundPacket message = new ConfirmAutoCraftPacket(amount, craftMissingAmount, autoStart);
+            PacketDistributor.sendToServer(message);
             return;
         }
 

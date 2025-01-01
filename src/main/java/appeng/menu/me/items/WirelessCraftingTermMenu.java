@@ -1,12 +1,11 @@
 package appeng.menu.me.items;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.networking.IGridNode;
 import appeng.helpers.WirelessCraftingTerminalMenuHost;
 import appeng.menu.implementations.MenuTypeBuilder;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * Can only be used with a host that implements {@link ISegmentedInventory} and exposes an inventory named "crafting" to
@@ -20,7 +19,7 @@ public class WirelessCraftingTermMenu extends CraftingTermMenu {
             .create(WirelessCraftingTermMenu::new, WirelessCraftingTerminalMenuHost.class)
             .build("wirelesscraftingterm");
 
-    private final WirelessCraftingTerminalMenuHost menuHost;
+    private final WirelessCraftingTerminalMenuHost<?> menuHost;
 
     public WirelessCraftingTermMenu(int id, Inventory ip, WirelessCraftingTerminalMenuHost monitorable) {
         super(TYPE, id, ip, monitorable, false);
@@ -28,7 +27,7 @@ public class WirelessCraftingTermMenu extends CraftingTermMenu {
         this.menuHost = monitorable;
     }
 
-    public IGridNode getNetworkNode() {
+    public IGridNode getGridNode() {
         return menuHost.getActionableNode();
     }
 }

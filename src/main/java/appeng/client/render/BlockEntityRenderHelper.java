@@ -18,21 +18,18 @@
 
 package appeng.client.render;
 
+import appeng.api.client.AEKeyRendering;
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AmountFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import org.joml.Quaternionf;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-
-import appeng.api.client.AEKeyRendering;
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.AmountFormat;
+import org.joml.Quaternionf;
 
 /**
  * Helper methods for rendering block entities.

@@ -18,18 +18,15 @@
 
 package appeng.client.render.model;
 
-import java.util.function.Function;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.client.render.BasicUnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.function.Function;
 
 /**
  * Model class for the connected texture glass model.
@@ -39,7 +36,7 @@ public class GlassModel implements BasicUnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter,
-            ModelState rotationContainer, ResourceLocation modelId) {
+            ModelState rotationContainer) {
         return new GlassBakedModel(textureGetter);
     }
 

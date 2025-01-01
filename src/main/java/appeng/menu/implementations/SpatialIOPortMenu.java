@@ -18,15 +18,14 @@
 
 package appeng.menu.implementations;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.blockentity.spatial.SpatialIOPortBlockEntity;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.slot.OutputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see appeng.client.gui.implementations.SpatialIOPortScreen
@@ -60,7 +59,8 @@ public class SpatialIOPortMenu extends AEBaseMenu {
         this.addSlot(new RestrictedInputSlot(RestrictedInputSlot.PlacableItemType.SPATIAL_STORAGE_CELLS,
                 spatialIOPort.getInternalInventory(), 0), SlotSemantics.MACHINE_INPUT);
         this.addSlot(new OutputSlot(spatialIOPort.getInternalInventory(), 1,
-                RestrictedInputSlot.PlacableItemType.SPATIAL_STORAGE_CELLS.icon), SlotSemantics.MACHINE_OUTPUT);
+                RestrictedInputSlot.PlacableItemType.SPATIAL_STORAGE_CELLS_NO_SHADOW.icon),
+                SlotSemantics.MACHINE_OUTPUT);
 
         this.createPlayerInventorySlots(ip);
     }

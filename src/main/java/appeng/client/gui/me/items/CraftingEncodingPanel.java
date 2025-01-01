@@ -1,14 +1,5 @@
 package appeng.client.gui.me.items;
 
-import java.util.List;
-
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-
 import appeng.api.config.ActionItems;
 import appeng.client.Point;
 import appeng.client.gui.Icon;
@@ -19,9 +10,15 @@ import appeng.client.gui.widgets.ToggleButton;
 import appeng.core.localization.ButtonToolTips;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+
+import java.util.List;
 
 public class CraftingEncodingPanel extends EncodingModePanel {
-    private static final Blitter BG = Blitter.texture("guis/pattern_modes.png").src(0, 0, 126, 68);
+    private static final Blitter BG = Blitter.texture("guis/pattern_modes.png").src(0, 0, 124, 66);
 
     private final ActionButton clearBtn;
     private final ToggleButton substitutionsBtn;
@@ -31,8 +28,9 @@ public class CraftingEncodingPanel extends EncodingModePanel {
         super(screen, widgets);
 
         // Add buttons for the crafting mode
-        clearBtn = new ActionButton(ActionItems.CLOSE, act -> menu.clear());
+        clearBtn = new ActionButton(ActionItems.S_CLOSE, act -> menu.clear());
         clearBtn.setHalfSize(true);
+        clearBtn.setDisableBackground(true);
         widgets.add("craftingClearPattern", clearBtn);
 
         this.substitutionsBtn = createCraftingSubstitutionButton(widgets);
@@ -40,8 +38,8 @@ public class CraftingEncodingPanel extends EncodingModePanel {
     }
 
     @Override
-    public ItemStack getTabIconItem() {
-        return Items.CRAFTING_TABLE.getDefaultInstance();
+    Icon getIcon() {
+        return Icon.TAB_CRAFTING;
     }
 
     @Override
@@ -51,10 +49,11 @@ public class CraftingEncodingPanel extends EncodingModePanel {
 
     private ToggleButton createCraftingSubstitutionButton(WidgetContainer widgets) {
         var button = new ToggleButton(
-                Icon.SUBSTITUTION_ENABLED,
-                Icon.SUBSTITUTION_DISABLED,
+                Icon.S_SUBSTITUTION_ENABLED,
+                Icon.S_SUBSTITUTION_DISABLED,
                 menu::setSubstitute);
         button.setHalfSize(true);
+        button.setDisableBackground(true);
         button.setTooltipOn(List.of(
                 ButtonToolTips.SubstitutionsOn.text(),
                 ButtonToolTips.SubstitutionsDescEnabled.text()));
@@ -67,10 +66,11 @@ public class CraftingEncodingPanel extends EncodingModePanel {
 
     private ToggleButton createCraftingFluidSubstitutionButton(WidgetContainer widgets) {
         var button = new ToggleButton(
-                Icon.FLUID_SUBSTITUTION_ENABLED,
-                Icon.FLUID_SUBSTITUTION_DISABLED,
+                Icon.S_FLUID_SUBSTITUTION_ENABLED,
+                Icon.S_FLUID_SUBSTITUTION_DISABLED,
                 menu::setSubstituteFluids);
         button.setHalfSize(true);
+        button.setDisableBackground(true);
         button.setTooltipOn(List.of(
                 ButtonToolTips.FluidSubstitutions.text(),
                 ButtonToolTips.FluidSubstitutionsDescEnabled.text()));
@@ -83,7 +83,7 @@ public class CraftingEncodingPanel extends EncodingModePanel {
 
     @Override
     public void drawBackgroundLayer(GuiGraphics guiGraphics, Rect2i bounds, Point mouse) {
-        BG.dest(bounds.getX() + 9, bounds.getY() + bounds.getHeight() - 164).blit(guiGraphics);
+        BG.dest(bounds.getX() + 8, bounds.getY() + bounds.getHeight() - 165).blit(guiGraphics);
 
         var absMouseX = bounds.getX() + mouse.getX();
         var absMouseY = bounds.getY() + mouse.getY();
@@ -97,7 +97,7 @@ public class CraftingEncodingPanel extends EncodingModePanel {
     private void drawSlotGreenBG(Rect2i bounds, GuiGraphics guiGraphics, Slot slot) {
         int x = bounds.getX() + slot.x;
         int y = bounds.getY() + slot.y;
-        guiGraphics.fill(x, y, x + 16, y + 16, 0x7f00FF00);
+        guiGraphics.fill(x, y, x + 16, y + 16, 0xff7ac25f);
     }
 
     @Override

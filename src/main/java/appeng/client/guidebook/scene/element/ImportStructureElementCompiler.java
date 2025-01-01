@@ -1,11 +1,11 @@
 package appeng.client.guidebook.scene.element;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.Set;
-
+import appeng.client.guidebook.compiler.IdUtils;
+import appeng.client.guidebook.compiler.PageCompiler;
+import appeng.client.guidebook.document.LytErrorSink;
+import appeng.client.guidebook.scene.GuidebookScene;
+import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
 import com.google.common.io.ByteStreams;
-
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -17,11 +17,9 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-import appeng.client.guidebook.compiler.IdUtils;
-import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.document.LytErrorSink;
-import appeng.client.guidebook.scene.GuidebookScene;
-import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Imports a structure into the scene.

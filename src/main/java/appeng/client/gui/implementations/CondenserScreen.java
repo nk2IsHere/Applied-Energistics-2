@@ -18,9 +18,6 @@
 
 package appeng.client.gui.implementations;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.api.config.CondenserOutput;
 import appeng.api.config.Settings;
 import appeng.client.gui.AEBaseScreen;
@@ -31,6 +28,8 @@ import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.CondenserMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 public class CondenserScreen extends AEBaseScreen<CondenserMenu> {
 

@@ -18,16 +18,14 @@
 
 package appeng.client.render.crafting;
 
+import appeng.blockentity.crafting.CraftingMonitorBlockEntity;
+import appeng.client.render.BlockEntityRenderHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-
-import appeng.blockentity.crafting.CraftingMonitorBlockEntity;
-import appeng.client.render.BlockEntityRenderHelper;
 
 /**
  * Renders the item currently being crafted

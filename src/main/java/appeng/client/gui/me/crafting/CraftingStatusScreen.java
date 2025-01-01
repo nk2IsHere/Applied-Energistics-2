@@ -18,13 +18,13 @@
 
 package appeng.client.gui.me.crafting;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
 import appeng.client.gui.implementations.AESubScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.CPUSelectionList;
+import appeng.client.gui.widgets.Scrollbar;
 import appeng.menu.me.crafting.CraftingStatusMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * This specialized version of the {@link CraftingCPUScreen} allows a player to cycle through the CPUs that are
@@ -39,7 +39,7 @@ public class CraftingStatusScreen extends CraftingCPUScreen<CraftingStatusMenu> 
 
         AESubScreen.addBackButton(menu, "back", widgets);
 
-        var scrollbar = widgets.addScrollBar("selectCpuScrollbar");
+        var scrollbar = widgets.addScrollBar("selectCpuScrollbar", Scrollbar.BIG);
         widgets.add("selectCpuList", new CPUSelectionList(menu, scrollbar, style));
     }
 

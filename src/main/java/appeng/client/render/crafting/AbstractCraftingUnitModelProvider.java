@@ -1,13 +1,12 @@
 package appeng.client.render.crafting;
 
-import java.util.List;
-import java.util.function.Function;
-
+import appeng.block.crafting.ICraftingUnitType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 
-import appeng.block.crafting.ICraftingUnitType;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Provides material and model information for custom crafting CPU blocks for use with {@link CraftingCubeModel}.

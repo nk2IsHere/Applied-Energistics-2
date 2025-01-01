@@ -18,22 +18,13 @@
 
 package appeng.client.gui.widgets;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
-import java.util.function.Consumer;
-
+import appeng.client.Point;
+import appeng.client.gui.*;
+import appeng.client.gui.style.PaletteColor;
+import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.style.WidgetStyle;
+import appeng.core.localization.GuiText;
 import com.google.common.primitives.Longs;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -43,16 +34,14 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
-import appeng.client.Point;
-import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.ICompositeWidget;
-import appeng.client.gui.MathExpressionParser;
-import appeng.client.gui.NumberEntryType;
-import appeng.client.gui.Rects;
-import appeng.client.gui.style.PaletteColor;
-import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.style.WidgetStyle;
-import appeng.core.localization.GuiText;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParsePosition;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * A utility widget that consists of a text-field to enter a number with attached buttons to increment/decrement the
@@ -194,14 +183,10 @@ public class NumberEntryWidget implements ICompositeWidget {
 
         List<Button> buttons = new ArrayList<>(9);
 
-        buttons.add(
-                Button.builder(makeLabel(PLUS, STEPS[0]), btn -> addQty(STEPS[0])).bounds(left, top, 22, 20).build());
-        buttons.add(Button.builder(makeLabel(PLUS, STEPS[1]), btn -> addQty(STEPS[1])).bounds(left + 28, top, 28, 20)
-                .build());
-        buttons.add(Button.builder(makeLabel(PLUS, STEPS[2]), btn -> addQty(STEPS[2])).bounds(left + 62, top, 32, 20)
-                .build());
-        buttons.add(Button.builder(makeLabel(PLUS, STEPS[3]), btn -> addQty(STEPS[3])).bounds(left + 100, top, 38, 20)
-                .build());
+        buttons.add(new AE2Button(left, top, 22, 20, makeLabel(PLUS, STEPS[0]), btn -> addQty(STEPS[0])));
+        buttons.add(new AE2Button(left + 28, top, 28, 20, makeLabel(PLUS, STEPS[1]), btn -> addQty(STEPS[1])));
+        buttons.add(new AE2Button(left + 62, top, 32, 20, makeLabel(PLUS, STEPS[2]), btn -> addQty(STEPS[2])));
+        buttons.add(new AE2Button(left + 100, top, 38, 20, makeLabel(PLUS, STEPS[3]), btn -> addQty(STEPS[3])));
 
         // Need to add these now for sensible tab-order
         buttons.forEach(addWidget);
@@ -212,14 +197,10 @@ public class NumberEntryWidget implements ICompositeWidget {
         screen.setInitialFocus(this.textField);
         addWidget.accept(this.textField);
 
-        buttons.add(Button.builder(makeLabel(MINUS, STEPS[0]), btn -> addQty(-STEPS[0])).bounds(left, top + 42, 22, 20)
-                .build());
-        buttons.add(Button.builder(makeLabel(MINUS, STEPS[1]), btn -> addQty(-STEPS[1]))
-                .bounds(left + 28, top + 42, 28, 20).build());
-        buttons.add(Button.builder(makeLabel(MINUS, STEPS[2]), btn -> addQty(-STEPS[2]))
-                .bounds(left + 62, top + 42, 32, 20).build());
-        buttons.add(Button.builder(makeLabel(MINUS, STEPS[3]), btn -> addQty(-STEPS[3]))
-                .bounds(left + 100, top + 42, 38, 20).build());
+        buttons.add(new AE2Button(left, top + 42, 22, 20, makeLabel(MINUS, STEPS[0]), btn -> addQty(-STEPS[0])));
+        buttons.add(new AE2Button(left + 28, top + 42, 28, 20, makeLabel(MINUS, STEPS[1]), btn -> addQty(-STEPS[1])));
+        buttons.add(new AE2Button(left + 62, top + 42, 32, 20, makeLabel(MINUS, STEPS[2]), btn -> addQty(-STEPS[2])));
+        buttons.add(new AE2Button(left + 100, top + 42, 38, 20, makeLabel(MINUS, STEPS[3]), btn -> addQty(-STEPS[3])));
 
         // This element is not focusable
         if (!hideValidationIcon) {
@@ -291,7 +272,7 @@ public class NumberEntryWidget implements ICompositeWidget {
     public void setLongValue(long value) {
         var internalValue = convertToInternalValue(Longs.constrainToRange(value, minValue, maxValue));
         this.textField.setValue(decimalFormat.format(internalValue));
-        this.textField.moveCursorToEnd();
+        this.textField.moveCursorToEnd(false);
         this.textField.setHighlightPos(0);
         validate();
     }

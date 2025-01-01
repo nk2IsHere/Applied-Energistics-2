@@ -1,11 +1,10 @@
 package appeng.client.gui.widgets;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.Rect2i;
-
 import appeng.client.Point;
 import appeng.client.gui.ICompositeWidget;
 import appeng.client.gui.style.Blitter;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
 
 /**
  * Renders a simple panel with a background an no interactivity.

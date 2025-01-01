@@ -18,15 +18,14 @@
 
 package appeng.client.render.tesr;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.storage.MEChestBlockEntity;
+import appeng.client.render.BakedModelUnwrapper;
+import appeng.client.render.DelegateBakedModel;
+import appeng.client.render.model.DriveBakedModel;
+import appeng.core.definitions.AEBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -40,18 +39,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.storage.ChestBlockEntity;
-import appeng.client.render.BakedModelUnwrapper;
-import appeng.client.render.model.DriveBakedModel;
-import appeng.core.definitions.AEBlocks;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The block entity renderer for ME chests takes care of rendering the right model for the inserted cell, as well as the
  * LED.
  */
-public class ChestBlockEntityRenderer implements BlockEntityRenderer<ChestBlockEntity> {
+public class ChestBlockEntityRenderer implements BlockEntityRenderer<MEChestBlockEntity> {
 
     private final ModelManager modelManager;
 
@@ -64,7 +61,7 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<ChestBlockE
     }
 
     @Override
-    public void render(ChestBlockEntity chest, float partialTicks, PoseStack poseStack, MultiBufferSource buffers,
+    public void render(MEChestBlockEntity chest, float partialTicks, PoseStack poseStack, MultiBufferSource buffers,
             int combinedLight, int combinedOverlay) {
 
         Level level = chest.getLevel();
@@ -120,11 +117,11 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<ChestBlockE
      * The actual vertex data will be transformed using the matrix stack, but the faces will not be correctly rotated so
      * the incorrect lighting data would be used to apply diffuse lighting and the lightmap texture.
      */
-    public static class FaceRotatingModel extends ForwardingBakedModel {
+    public static class FaceRotatingModel extends DelegateBakedModel {
         private final BlockOrientation r;
 
         protected FaceRotatingModel(BakedModel base, BlockOrientation r) {
-            this.wrapped = base;
+            super(base);
             this.r = r;
         }
 
@@ -140,6 +137,7 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<ChestBlockE
                 quads.set(i, new BakedQuad(quad.getVertices(), quad.getTintIndex(), r.rotate(quad.getDirection()),
                         quad.getSprite(), quad.isShade()));
             }
+
             return quads;
         }
     }

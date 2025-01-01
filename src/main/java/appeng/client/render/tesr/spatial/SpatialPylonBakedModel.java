@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import appeng.integration.abstraction.IFabricBakedModel;
 import com.google.common.collect.ImmutableMap;
 
 import org.jetbrains.annotations.Nullable;
@@ -48,17 +49,12 @@ import appeng.client.render.cablebus.CubeBuilder;
 /**
  * The baked model that will be used for rendering the spatial pylon.
  */
-class SpatialPylonBakedModel implements BakedModel, FabricBakedModel {
+class SpatialPylonBakedModel implements IFabricBakedModel {
 
     private final Map<SpatialPylonTextureType, TextureAtlasSprite> textures;
 
     SpatialPylonBakedModel(Map<SpatialPylonTextureType, TextureAtlasSprite> textures) {
         this.textures = ImmutableMap.copyOf(textures);
-    }
-
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
     }
 
     @Override

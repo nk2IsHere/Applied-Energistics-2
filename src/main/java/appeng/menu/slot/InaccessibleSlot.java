@@ -18,10 +18,9 @@
 
 package appeng.menu.slot;
 
+import appeng.api.inventories.InternalInventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-
-import appeng.api.inventories.InternalInventory;
 
 public class InaccessibleSlot extends AppEngSlot {
 
@@ -37,14 +36,14 @@ public class InaccessibleSlot extends AppEngSlot {
     }
 
     @Override
-    public void setChanged() {
-        super.setChanged();
-        this.dspStack = ItemStack.EMPTY;
+    public boolean mayPickup(Player player) {
+        return false;
     }
 
     @Override
-    public boolean mayPickup(Player player) {
-        return false;
+    public void setChanged() {
+        super.setChanged();
+        this.dspStack = ItemStack.EMPTY;
     }
 
     @Override

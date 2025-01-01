@@ -18,59 +18,69 @@
 
 package appeng.client.render;
 
-import java.util.function.Supplier;
-
+import appeng.client.render.cablebus.FacadeBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-
-import appeng.client.render.cablebus.FacadeBuilder;
-import appeng.items.parts.FacadeItem;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
- * This baked model class is used as a dispatcher to redirect the renderer to the *real* model that should be used based
- * on the item stack. A custom Item Override List is used to accomplish this.
+ * This model used the provided FacadeBuilder to "slice" the item quads for the facade provided.
+ *
+ * @author covers1624
  */
-public class FacadeBakedItemModel extends ForwardingBakedModel {
-    private final FacadeBuilder facadeBuilder;
-    private final Int2ObjectMap<Mesh> cache = new Int2ObjectArrayMap<>();
+public class FacadeBakedItemModel extends DelegateBakedModel {
 
-    public FacadeBakedItemModel(BakedModel baseModel, FacadeBuilder facadeBuilder) {
-        this.wrapped = baseModel;
+    private final ItemStack textureStack;
+    private final FacadeBuilder facadeBuilder;
+    private Mesh mesh = null;
+
+    protected FacadeBakedItemModel(BakedModel base, ItemStack textureStack, FacadeBuilder facadeBuilder) {
+        super(base);
+        this.textureStack = textureStack;
         this.facadeBuilder = facadeBuilder;
     }
 
     @Override
-    public boolean isVanillaAdapter() {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        if (mesh == null) {
+            mesh = this.facadeBuilder.buildFacadeItemQuads(this.textureStack, Direction.NORTH);
+        }
+
+        mesh.outputTo(context.getEmitter());
+        getBaseModel().emitBlockQuads(blockView, state, pos, randomSupplier, context);
+    }
+
+    @Override
+    public boolean isGui3d() {
         return false;
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        if (!(stack.getItem() instanceof FacadeItem itemFacade)) {
-            return;
-        }
+    public boolean usesBlockLight() {
+        return false;
+    }
 
-        super.emitItemQuads(stack, randomSupplier, context);
+    @Override
+    public boolean isCustomRenderer() {
+        return false;
+    }
 
-        ItemStack textureItem = itemFacade.getTextureItem(stack);
-        if (!textureItem.isEmpty()) {
-            int itemId = Item.getId(textureItem.getItem());
-            Mesh mesh = this.cache.get(itemId);
-            if (mesh == null) {
-                mesh = this.facadeBuilder.buildFacadeItemQuads(textureItem, Direction.NORTH);
-                this.cache.put(itemId, mesh);
-            }
-
-            mesh.outputTo(context.getEmitter());
-        }
+    @Override
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 }

@@ -1,17 +1,5 @@
 package appeng.menu.implementations;
 
-import java.util.Objects;
-
-import com.google.common.primitives.Ints;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.level.Level;
-
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.helpers.InterfaceLogicHost;
@@ -20,9 +8,18 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.SlotSemantics;
 import appeng.menu.guisync.GuiSync;
-import appeng.menu.locator.MenuLocator;
+import appeng.menu.locator.MenuHostLocator;
 import appeng.menu.slot.InaccessibleSlot;
 import appeng.util.inv.AppEngInternalInventory;
+import com.google.common.primitives.Ints;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 /**
  * Allows precisely setting the amount to stock for an interface slot.
@@ -73,7 +70,7 @@ public class SetStockAmountMenu extends AEBaseMenu implements ISubMenu {
     /**
      * Opens the screen to enter the stocked amount for the given player.
      */
-    public static void open(ServerPlayer player, MenuLocator locator,
+    public static void open(ServerPlayer player, MenuHostLocator locator,
             int slot,
             AEKey whatToStock, int initialAmount) {
         MenuOpener.open(SetStockAmountMenu.TYPE, player, locator);

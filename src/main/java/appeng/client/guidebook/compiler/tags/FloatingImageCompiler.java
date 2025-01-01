@@ -1,12 +1,5 @@
 package appeng.client.guidebook.compiler.tags;
 
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.ResourceLocationException;
-
 import appeng.client.guidebook.compiler.IdUtils;
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.document.block.LytImage;
@@ -15,10 +8,15 @@ import appeng.client.guidebook.document.flow.LytFlowInlineBlock;
 import appeng.client.guidebook.document.flow.LytFlowParent;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
 import appeng.libs.mdast.model.MdAstNode;
+import net.minecraft.ResourceLocationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 public class FloatingImageCompiler extends FlowTagCompiler {
     public static final String TAG_NAME = "FloatingImage";
-    private static final Logger LOGGER = LoggerFactory.getLogger(FloatingImageCompiler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FloatingImageCompiler.class);
 
     @Override
     public Set<String> getTagNames() {
@@ -39,12 +37,12 @@ public class FloatingImageCompiler extends FlowTagCompiler {
             var imageId = IdUtils.resolveLink(src, compiler.getPageId());
             var imageContent = compiler.loadAsset(imageId);
             if (imageContent == null) {
-                LOGGER.error("Couldn't find image {}", src);
+                LOG.error("Couldn't find image {}", src);
                 image.setTitle("Missing image: " + src);
             }
             image.setImage(imageId, imageContent);
         } catch (ResourceLocationException e) {
-            LOGGER.error("Invalid image id: {}", src);
+            LOG.error("Invalid image id: {}", src);
             image.setTitle("Invalid image URL: " + src);
         }
 

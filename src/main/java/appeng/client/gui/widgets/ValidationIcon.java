@@ -18,16 +18,14 @@
 
 package appeng.client.gui.widgets;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.client.gui.Icon;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.gui.Icon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Displays a small icon that shows validation errors for some input control.

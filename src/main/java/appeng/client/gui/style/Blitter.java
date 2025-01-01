@@ -18,29 +18,27 @@
 
 package appeng.client.gui.style;
 
-import java.util.Objects;
-
+import appeng.core.AppEng;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
-import appeng.core.AppEng;
+import java.util.Objects;
 
 /**
  * Utility class for drawing rectangular textures in the UI.
@@ -68,6 +66,7 @@ public final class Blitter {
     private Rect2i destRect = new Rect2i(0, 0, 0, 0);
     private boolean blending = true;
     private TextureTransform transform = TextureTransform.NONE;
+    private int zOffset;
 
     Blitter(ResourceLocation texture, int referenceWidth, int referenceHeight) {
         this.texture = texture;
@@ -100,23 +99,27 @@ public final class Blitter {
      * Creates a blitter where the source rectangle is in relation to a texture of the given size.
      */
     public static Blitter texture(String file, int referenceWidth, int referenceHeight) {
-        return new Blitter(ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "textures/" + file), referenceWidth, referenceHeight);
+        return new Blitter(AppEng.makeId("textures/" + file), referenceWidth, referenceHeight);
     }
 
     /**
      * Creates a blitter from a texture atlas sprite.
      */
     public static Blitter sprite(TextureAtlasSprite sprite) {
-        // We use this convoluted method to convert from UV in the range of [0,1] back to pixel values with a
-        // fictitious reference size of a large integer. This is converted back to UV later when we actually blit.
-        final int refSize = Integer.MAX_VALUE / 2; // Don't use max int to prevent overflows after inexact conversions.
+        var atlas = (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(sprite.atlasLocation());
 
-        return new Blitter(sprite.atlasLocation(), refSize, refSize)
+        return new Blitter(sprite.atlasLocation(), atlas.getWidth(), atlas.getHeight())
                 .src(
-                        (int) (sprite.getU0() * refSize),
-                        (int) (sprite.getV0() * refSize),
-                        (int) ((sprite.getU1() - sprite.getU0()) * refSize),
-                        (int) ((sprite.getV1() - sprite.getV0()) * refSize));
+                        sprite.getX(),
+                        sprite.getY(),
+                        sprite.contents().width(),
+                        sprite.contents().height());
+    }
+
+    public static Blitter guiSprite(ResourceLocation resourceLocation) {
+        var sprites = Minecraft.getInstance().getGuiSprites();
+        var sprite = sprites.getSprite(resourceLocation);
+        return sprite(sprite);
     }
 
     public Blitter copy() {
@@ -256,6 +259,11 @@ public final class Blitter {
         return color(r, g, b);
     }
 
+    public Blitter zOffset(int offset) {
+        this.zOffset = offset;
+        return this;
+    }
+
     public void blit(GuiGraphics guiGraphics) {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, this.texture);
@@ -301,24 +309,20 @@ public final class Blitter {
 
         Matrix4f matrix = guiGraphics.pose().last().pose();
 
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        bufferbuilder.addVertex(matrix, x1, y2, 0)
+        var bufferbuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS,
+                DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferbuilder.addVertex(matrix, x1, y2, zOffset)
                 .setUv(minU, maxV)
-                .setColor(r, g, b, a)
-                ;
-        bufferbuilder.addVertex(matrix, x2, y2, 0)
+                .setColor(r, g, b, a);
+        bufferbuilder.addVertex(matrix, x2, y2, zOffset)
                 .setUv(maxU, maxV)
-                .setColor(r, g, b, a)
-                ;
-        bufferbuilder.addVertex(matrix, x2, y1, 0)
+                .setColor(r, g, b, a);
+        bufferbuilder.addVertex(matrix, x2, y1, zOffset)
                 .setUv(maxU, minV)
-                .setColor(r, g, b, a)
-                ;
-        bufferbuilder.addVertex(matrix, x1, y1, 0)
+                .setColor(r, g, b, a);
+        bufferbuilder.addVertex(matrix, x1, y1, zOffset)
                 .setUv(minU, minV)
-                .setColor(r, g, b, a)
-                ;
+                .setColor(r, g, b, a);
 
         if (blending) {
             RenderSystem.enableBlend();
@@ -326,7 +330,7 @@ public final class Blitter {
         } else {
             RenderSystem.disableBlend();
         }
-        BufferUploader.drawWithShader(bufferbuilder.end());
+        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
     }
 
 }

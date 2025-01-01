@@ -18,20 +18,17 @@
 
 package appeng.menu.me.common;
 
+import appeng.api.stacks.AEKey;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.ItemStack;
-
-import appeng.api.stacks.AEKey;
 
 /**
  * This utility class helps menus that need to send a list of information that is grouped by {@link AEKey} to the client

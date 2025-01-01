@@ -1,13 +1,12 @@
 package appeng.client.guidebook.scene.export;
 
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 final class RenderTypeIntrospection {
     private static final Logger LOG = LoggerFactory.getLogger(RenderTypeIntrospection.class);

@@ -1,14 +1,12 @@
 package appeng.client.guidebook.scene.annotation;
 
+import appeng.client.guidebook.color.MutableColor;
+import appeng.core.AppEng;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-
-import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,9 +16,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
-
-import appeng.client.guidebook.color.MutableColor;
-import appeng.core.AppEng;
+import org.joml.Vector3f;
 
 public final class InWorldAnnotationRenderer {
 
@@ -33,10 +29,10 @@ public final class InWorldAnnotationRenderer {
             true,
             RenderType.CompositeState.builder()
                     .setLightmapState(RenderType.LIGHTMAP)
-                    .setShaderState(RenderType.RENDERTYPE_TRANSLUCENT_NO_CRUMBLING_SHADER)
+                    .setShaderState(RenderType.RENDERTYPE_TRANSLUCENT_SHADER)
                     .setTextureState(RenderStateShard.BLOCK_SHEET_MIPPED)
                     .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setDepthTestState(new RenderStateShard.DepthTestStateShard(">", GL11.GL_GREATER))
+                    .setDepthTestState(RenderStateShard.GREATER_DEPTH_TEST)
                     .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                     .createCompositeState(false));
 
@@ -280,8 +276,7 @@ public final class InWorldAnnotationRenderer {
         consumer.addVertex(bottomLeft.x, bottomLeft.y, bottomLeft.z)
                 .setColor(color)
                 .setUv(u, v)
-                .setUv2(LightTexture.FULL_BRIGHT)
-                .normal(faceNormal.x(), faceNormal.y(), faceNormal.z())
-                ;
+                .setLight(LightTexture.FULL_BRIGHT)
+                .setNormal(faceNormal.x(), faceNormal.y(), faceNormal.z());
     }
 }
