@@ -18,21 +18,14 @@
 
 package appeng.recipes.entropy;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.google.common.base.Preconditions;
-
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+
+import java.util.*;
 
 public class EntropyRecipeBuilder {
     private EntropyMode mode;
@@ -106,7 +99,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder addBlockStateMatcher(String property, PropertyValueMatcher valueMatcher) {
         Preconditions.checkState(this.inputBlock != null,
-            "Can only add appliers when an input block is present.");
+                "Can only add appliers when an input block is present.");
 
         this.inputBlockMatchers.put(property, valueMatcher);
 
@@ -115,7 +108,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder setBlockStateMatchers(Map<String, PropertyValueMatcher> properties) {
         Preconditions.checkState(this.inputBlock != null,
-            "Can only add appliers when an input block is present.");
+                "Can only add appliers when an input block is present.");
 
         this.inputBlockMatchers.clear();
         this.inputBlockMatchers.putAll(properties);
@@ -125,7 +118,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder addFluidStateMatcher(String property, PropertyValueMatcher valueMatcher) {
         Preconditions.checkState(this.inputFluid != null,
-            "Can only add appliers when an input fluid is present.");
+                "Can only add appliers when an input fluid is present.");
 
         this.inputFluidMatchers.put(property, valueMatcher);
 
@@ -134,7 +127,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder setFluidStateMatchers(Map<String, PropertyValueMatcher> properties) {
         Preconditions.checkState(this.inputFluid != null,
-            "Can only add appliers when an input fluid is present.");
+                "Can only add appliers when an input fluid is present.");
 
         this.inputFluidMatchers.clear();
         this.inputFluidMatchers.putAll(properties);
@@ -144,7 +137,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder addBlockStateAppliers(String property, String value) {
         Preconditions.checkState(this.outputBlock != null,
-            "Can only add appliers when an output block is present.");
+                "Can only add appliers when an output block is present.");
 
         this.outputBlockStateAppliers.put(property, value);
 
@@ -153,7 +146,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder setBlockStateAppliers(Map<String, String> properties) {
         Preconditions.checkState(this.outputBlock != null,
-            "Can only add appliers when an output block is present.");
+                "Can only add appliers when an output block is present.");
 
         this.outputBlockStateAppliers.clear();
         this.outputBlockStateAppliers.putAll(properties);
@@ -163,7 +156,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder addFluidStateAppliers(String property, String value) {
         Preconditions.checkState(this.outputFluid != null,
-            "Can only add appliers when an output fluid is present.");
+                "Can only add appliers when an output fluid is present.");
 
         this.outputFluidStateAppliers.put(property, value);
 
@@ -172,7 +165,7 @@ public class EntropyRecipeBuilder {
 
     public EntropyRecipeBuilder setFluidStateAppliers(Map<String, String> properties) {
         Preconditions.checkState(this.outputFluid != null,
-            "Can only add appliers when an output fluid is present.");
+                "Can only add appliers when an output fluid is present.");
 
         this.outputFluidStateAppliers.clear();
         this.outputFluidStateAppliers.putAll(properties);
@@ -183,7 +176,7 @@ public class EntropyRecipeBuilder {
     public EntropyRecipe build() {
         Preconditions.checkState(mode != null);
         Preconditions.checkState(inputBlock != null || inputFluid != null,
-            "Either inputBlock or inputFluid needs to be not null");
+                "Either inputBlock or inputFluid needs to be not null");
 
         EntropyRecipe.BlockInput blockInput = null;
         if (inputBlock != null) {
@@ -205,7 +198,7 @@ public class EntropyRecipeBuilder {
         }
 
         var output = new EntropyRecipe.Output(Optional.ofNullable(blockOutput), Optional.ofNullable(fluidOutput),
-            drops);
+                drops);
 
         return new EntropyRecipe(mode, input, output);
     }

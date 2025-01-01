@@ -18,18 +18,16 @@
 
 package appeng.items.tools.powered;
 
-import java.util.List;
-import java.util.Objects;
-
+import appeng.api.util.AEColor;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.EnumHashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import appeng.api.util.AEColor;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Allows recoloring a variety of vanilla blocks.

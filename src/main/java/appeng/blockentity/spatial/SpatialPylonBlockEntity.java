@@ -18,32 +18,33 @@
 
 package appeng.blockentity.spatial;
 
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import com.google.common.collect.Iterators;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.grid.AENetworkBlockEntity;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
 import appeng.me.cluster.IAEMultiBlock;
 import appeng.me.cluster.implementations.SpatialPylonCalculator;
 import appeng.me.cluster.implementations.SpatialPylonCluster;
 import appeng.util.iterators.ChainedIterator;
+import com.google.common.collect.Iterators;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class SpatialPylonBlockEntity extends AENetworkBlockEntity implements IAEMultiBlock<SpatialPylonCluster> {
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
+
+public class SpatialPylonBlockEntity extends AENetworkedBlockEntity implements IAEMultiBlock<SpatialPylonCluster> {
+
     private final SpatialPylonCalculator calc = new SpatialPylonCalculator(this);
     private SpatialPylonCluster cluster;
     private ClientState clientState = ClientState.DEFAULT;
@@ -53,12 +54,6 @@ public class SpatialPylonBlockEntity extends AENetworkBlockEntity implements IAE
         this.getMainNode().setFlags(GridFlags.REQUIRE_CHANNEL, GridFlags.MULTIBLOCK)
                 .setIdlePowerUsage(0.5)
                 .addService(IGridMultiblock.class, this::getMultiblockNodes);
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        this.disconnect(false);
-        super.onChunkUnloaded();
     }
 
     @Override
@@ -157,7 +152,7 @@ public class SpatialPylonBlockEntity extends AENetworkBlockEntity implements IAE
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         final boolean c = super.readFromStream(data);
         var state = ClientState.readFromStream(data);
         if (!clientState.equals(state)) {
@@ -168,7 +163,7 @@ public class SpatialPylonBlockEntity extends AENetworkBlockEntity implements IAE
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         clientState.writeToStream(data);
     }
@@ -197,7 +192,7 @@ public class SpatialPylonBlockEntity extends AENetworkBlockEntity implements IAE
     }
 
     @Override
-    public Object getRenderAttachmentData() {
+    public Object getRenderData() {
         return getClientState();
     }
 

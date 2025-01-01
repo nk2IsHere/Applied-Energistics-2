@@ -18,28 +18,6 @@
 
 package appeng.blockentity.networking;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.redstone.NeighborUpdater;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.IFacadeContainer;
 import appeng.api.parts.IPart;
@@ -53,7 +31,32 @@ import appeng.client.render.cablebus.CableBusRenderState;
 import appeng.core.AppEng;
 import appeng.helpers.AEMultiBlockEntity;
 import appeng.parts.CableBusContainer;
+import appeng.util.IDebugExportable;
 import appeng.util.Platform;
+import com.google.gson.stream.JsonWriter;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.redstone.NeighborUpdater;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlockEntity {
 
@@ -66,19 +69,19 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.getCableBus().readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.getCableBus().readFromNBT(data, registries);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.getCableBus().writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.getCableBus().writeToNBT(data, registries);
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         final boolean c = super.readFromStream(data);
         boolean ret = this.getCableBus().readFromStream(data);
 
@@ -94,7 +97,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         this.getCableBus().writeToStream(data);
     }
@@ -131,12 +134,6 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     @Override
     public float getCableConnectionLength(AECableType cable) {
         return this.getCableBus().getCableConnectionLength(cable);
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        this.getCableBus().removeFromWorld();
     }
 
     @Override
@@ -197,13 +194,13 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     @Override
     @Nullable
     public <T extends IPart> T addPart(IPartItem<T> partItem, Direction side,
-            @org.jetbrains.annotations.Nullable Player player) {
+            @Nullable Player player) {
         return cb.addPart(partItem, side, player);
     }
 
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     @Override
-    public <T extends IPart> T replacePart(IPartItem<T> partItem, @org.jetbrains.annotations.Nullable Direction side,
+    public <T extends IPart> T replacePart(IPartItem<T> partItem, @Nullable Direction side,
             Player owner, InteractionHand hand) {
         return cb.replacePart(partItem, side, owner, hand);
     }
@@ -307,7 +304,7 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     }
 
     @Override
-    public CableBusRenderState getRenderAttachmentData() {
+    public CableBusRenderState getRenderData() {
         if (level == null) {
             return null;
         }
@@ -315,7 +312,6 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
         CableBusRenderState renderState = this.cb.getRenderState();
         renderState.setPos(getBlockPos());
         return renderState;
-
     }
 
     @Override
@@ -373,5 +369,27 @@ public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlo
     @Override
     public VoxelShape getCollisionShape(CollisionContext context) {
         return cb.getCollisionShape(context);
+    }
+
+    @Override
+    public void debugExport(JsonWriter writer, HolderLookup.Provider registries, Reference2IntMap<Object> machineIds,
+            Reference2IntMap<IGridNode> nodeIds)
+            throws IOException {
+        super.debugExport(writer, registries, machineIds, nodeIds);
+
+        writer.name("parts");
+        writer.beginObject();
+        for (var side : Platform.DIRECTIONS_WITH_NULL) {
+            var part = getPart(side);
+            if (part != null) {
+                writer.name(side == null ? "center" : side.getSerializedName());
+                writer.beginObject();
+                if (part instanceof IDebugExportable exportable) {
+                    exportable.debugExport(writer, registries, machineIds, nodeIds);
+                }
+                writer.endObject();
+            }
+        }
+        writer.endObject();
     }
 }

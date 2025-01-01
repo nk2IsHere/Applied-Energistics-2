@@ -1,12 +1,11 @@
 package appeng.crafting.execution;
 
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.networking.crafting.CraftingSubmitErrorCode;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingSubmitResult;
 import appeng.api.networking.crafting.UnsuitableCpus;
 import appeng.api.stacks.GenericStack;
+import org.jetbrains.annotations.Nullable;
 
 public record CraftingSubmitResult(@Nullable ICraftingLink link,
         @Nullable CraftingSubmitErrorCode errorCode,

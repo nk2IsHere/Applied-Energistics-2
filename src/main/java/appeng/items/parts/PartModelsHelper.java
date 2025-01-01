@@ -18,6 +18,10 @@
 
 package appeng.items.parts;
 
+import appeng.api.parts.IPartModel;
+import appeng.core.AELog;
+import net.minecraft.resources.ResourceLocation;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,11 +29,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.api.parts.IPartModel;
-import appeng.core.AELog;
 
 /**
  * Helps with the reflection magic needed to gather all models for AE2 cable bus parts.
@@ -122,7 +121,7 @@ public class PartModelsHelper {
             locations.add((ResourceLocation) value);
         } else if (value instanceof IPartModel) {
             locations.addAll(((IPartModel) value).getModels());
-        } else if (value instanceof Collection<?>values) {
+        } else if (value instanceof Collection<?> values) {
             // Check that each object is an IPartModel
             for (Object candidate : values) {
                 if (!(candidate instanceof IPartModel)) {

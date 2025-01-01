@@ -18,49 +18,39 @@
 
 package appeng.block.paint;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.core.AppEng;
+import appeng.helpers.Splotch;
+import appeng.integration.abstraction.IFabricBakedModel;
 import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.core.AppEng;
-import appeng.helpers.Splotch;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Renders paint blocks, which render multiple "splotches" that have been applied to the sides of adjacent blocks using
  * a matter cannon with paint balls.
  */
-class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
+class PaintSplotchesBakedModel implements IFabricBakedModel {
 
     private static final Material TEXTURE_PAINT1 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint1"));
+            AppEng.makeId("block/paint1"));
     private static final Material TEXTURE_PAINT2 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint2"));
+            AppEng.makeId("block/paint2"));
     private static final Material TEXTURE_PAINT3 = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/paint3"));
+            AppEng.makeId("block/paint3"));
 
     private final TextureAtlasSprite[] textures;
 
@@ -70,19 +60,20 @@ class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
-
-    @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
-            Supplier<RandomSource> randomSupplier, RenderContext context) {
+                               Supplier<RandomSource> randomSupplier, RenderContext context) {
 
-        Object renderAttachment = ((RenderAttachedBlockView) blockView).getBlockEntityRenderAttachment(pos);
-        if (!(renderAttachment instanceof PaintSplotches)) {
+        var modelData = blockView.getBlockEntityRenderData(pos);
+        var splotchesState = modelData instanceof PaintSplotches paintSplotches ? paintSplotches : null;
+
+        if (splotchesState == null) {
+            // This is the inventory model which should usually not be used other than in
+            // special cases
+            CubeBuilder builder = new CubeBuilder(context.getEmitter());
+            builder.setTexture(this.textures[0]);
+            builder.addCube(0, 0, 0, 16, 16, 16);
             return;
         }
-        PaintSplotches splotchesState = (PaintSplotches) renderAttachment;
 
         List<Splotch> splotches = splotchesState.getSplotches();
 
@@ -112,7 +103,7 @@ class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
 
             TextureAtlasSprite ico = this.textures[s.getSeed() % this.textures.length];
             builder.setTexture(ico);
-            builder.setCustomUv(s.getSide().getOpposite(), 0, 0, 16, 16);
+            builder.setCustomUv(s.getSide().getOpposite(), 0, 0, 1, 1);
 
             switch (s.getSide()) {
                 case UP:
@@ -154,20 +145,6 @@ class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return ItemTransforms.NO_TRANSFORMS;
-    }
-
-    @Override
     public boolean useAmbientOcclusion() {
         return false;
     }
@@ -185,6 +162,11 @@ class PaintSplotchesBakedModel implements BakedModel, FabricBakedModel {
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return this.textures[0];
+    }
+
+    @Override
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override

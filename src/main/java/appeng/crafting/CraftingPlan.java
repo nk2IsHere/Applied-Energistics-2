@@ -18,12 +18,12 @@
 
 package appeng.crafting;
 
-import java.util.Map;
-
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.crafting.ICraftingPlan;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
+
+import java.util.Map;
 
 public record CraftingPlan(GenericStack finalOutput,
         long bytes,

@@ -18,12 +18,6 @@
 
 package appeng.blockentity.grid;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.orientation.BlockOrientation;
@@ -32,15 +26,21 @@ import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.me.helpers.BlockEntityNodeListener;
 import appeng.me.helpers.IGridConnectedBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class AENetworkBlockEntity extends AEBaseBlockEntity implements IGridConnectedBlockEntity {
+public class AENetworkedBlockEntity extends AEBaseBlockEntity implements IGridConnectedBlockEntity {
 
     private final IManagedGridNode mainNode = createMainNode()
             .setVisualRepresentation(getItemFromBlockEntity())
             .setInWorldNode(true)
             .setTagName("proxy");
 
-    public AENetworkBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
+    public AENetworkedBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
         onGridConnectableSidesChanged();
     }
@@ -50,14 +50,14 @@ public class AENetworkBlockEntity extends AEBaseBlockEntity implements IGridConn
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         this.getMainNode().loadFromNBT(data);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         this.getMainNode().saveToNBT(data);
     }
 
@@ -71,12 +71,6 @@ public class AENetworkBlockEntity extends AEBaseBlockEntity implements IGridConn
     }
 
     @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        this.getMainNode().destroy();
-    }
-
-    @Override
     public void onReady() {
         super.onReady();
         this.getMainNode().create(getLevel(), getBlockEntity().getBlockPos());
@@ -86,7 +80,7 @@ public class AENetworkBlockEntity extends AEBaseBlockEntity implements IGridConn
         // the state that was saved to disk. This ensures the BlockState after readying
         // the entity is up-to-date.
         BlockState currentState = getBlockState();
-        if (currentState.getBlock() instanceof AEBaseEntityBlock<?>block) {
+        if (currentState.getBlock() instanceof AEBaseEntityBlock<?> block) {
             BlockState newState = block.getBlockEntityBlockState(currentState, this);
             if (currentState != newState) {
                 this.markForUpdate();

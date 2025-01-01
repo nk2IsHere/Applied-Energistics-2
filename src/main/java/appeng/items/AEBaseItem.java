@@ -18,17 +18,16 @@
 
 package appeng.items;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.item.v1.FabricItem;
+import appeng.hooks.AEToolItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class AEBaseItem extends Item implements FabricItem {
+public abstract class AEBaseItem extends Item implements AEToolItem {
 
-    public AEBaseItem(Item.Properties properties) {
+    public AEBaseItem(Properties properties) {
         super(properties);
     }
 
@@ -38,7 +37,7 @@ public abstract class AEBaseItem extends Item implements FabricItem {
         return id != BuiltInRegistries.ITEM.getDefaultKey() ? id : null;
     }
 
-    public void addToMainCreativeTab(CreativeModeTab.Output output) {
+    public void addToMainCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         output.accept(this);
     }
 
@@ -47,4 +46,5 @@ public abstract class AEBaseItem extends Item implements FabricItem {
         String regName = this.getRegistryName() != null ? this.getRegistryName().getPath() : "unregistered";
         return this.getClass().getSimpleName() + "[" + regName + "]";
     }
+
 }

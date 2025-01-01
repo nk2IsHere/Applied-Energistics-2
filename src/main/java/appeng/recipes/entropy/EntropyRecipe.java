@@ -18,17 +18,13 @@
 
 package appeng.recipes.entropy;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import appeng.core.AppEng;
+import appeng.items.tools.powered.EntropyManipulatorItem;
+import appeng.recipes.AERecipeTypes;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,11 +35,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -52,10 +44,11 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.core.AppEng;
-import appeng.items.tools.powered.EntropyManipulatorItem;
-import appeng.recipes.AERecipeTypes;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * A special recipe used for the {@link EntropyManipulatorItem}.
@@ -63,18 +56,18 @@ import appeng.recipes.AERecipeTypes;
 public class EntropyRecipe implements Recipe<RecipeInput> {
 
     public static final MapCodec<EntropyRecipe> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
-        EntropyMode.CODEC.fieldOf("mode").forGetter(EntropyRecipe::getMode),
-        Input.CODEC.fieldOf("input").forGetter(EntropyRecipe::getInput),
-        Output.CODEC.fieldOf("output").forGetter(EntropyRecipe::getOutput)).apply(builder, EntropyRecipe::new));
+            EntropyMode.CODEC.fieldOf("mode").forGetter(EntropyRecipe::getMode),
+            Input.CODEC.fieldOf("input").forGetter(EntropyRecipe::getInput),
+            Output.CODEC.fieldOf("output").forGetter(EntropyRecipe::getOutput)).apply(builder, EntropyRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EntropyRecipe> STREAM_CODEC = StreamCodec.composite(
-        NeoForgeStreamCodecs.enumCodec(EntropyMode.class),
-        EntropyRecipe::getMode,
-        Input.STREAM_CODEC,
-        EntropyRecipe::getInput,
-        Output.STREAM_CODEC,
-        EntropyRecipe::getOutput,
-        EntropyRecipe::new);
+            NeoForgeStreamCodecs.enumCodec(EntropyMode.class),
+            EntropyRecipe::getMode,
+            Input.STREAM_CODEC,
+            EntropyRecipe::getInput,
+            Output.STREAM_CODEC,
+            EntropyRecipe::getOutput,
+            EntropyRecipe::new);
 
     @Deprecated(forRemoval = true, since = "1.21.1")
     public static final ResourceLocation TYPE_ID = AppEng.makeId("entropy");
@@ -157,7 +150,7 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
      * Copies a property from one stateholder to another (if that stateholder also has that property).
      */
     private static <T extends Comparable<T>, SH extends StateHolder<?, SH>> SH copyProperty(SH from, SH to,
-                                                                                            Property<T> property) {
+            Property<T> property) {
         if (to.hasProperty(property)) {
             return to.setValue(property, from.getValue(property));
         } else {
@@ -175,15 +168,15 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
 
     public record Input(Optional<BlockInput> block, Optional<FluidInput> fluid) {
         public static Codec<Input> CODEC = RecordCodecBuilder.create(builder -> builder.group(
-            BlockInput.CODEC.optionalFieldOf("block").forGetter(Input::block),
-            FluidInput.CODEC.optionalFieldOf("fluid").forGetter(Input::fluid)).apply(builder, Input::new));
+                BlockInput.CODEC.optionalFieldOf("block").forGetter(Input::block),
+                FluidInput.CODEC.optionalFieldOf("fluid").forGetter(Input::fluid)).apply(builder, Input::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, Input> STREAM_CODEC = StreamCodec.composite(
-            BlockInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            Input::block,
-            FluidInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            Input::fluid,
-            Input::new);
+                BlockInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
+                Input::block,
+                FluidInput.STREAM_CODEC.apply(ByteBufCodecs::optional),
+                Input::fluid,
+                Input::new);
 
         public boolean matches(BlockState blockState, FluidState fluidState) {
             if (block.isPresent()) {
@@ -217,32 +210,32 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
         public static Codec<BlockInput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("id").forGetter(BlockInput::block),
                 PropertyValueMatcher.MAP_CODEC.optionalFieldOf("properties", Map.of())
-                    .forGetter(BlockInput::properties))
-            .apply(builder, BlockInput::new));
+                        .forGetter(BlockInput::properties))
+                .apply(builder, BlockInput::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, BlockInput> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.BLOCK),
-            BlockInput::block,
-            ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                PropertyValueMatcher.STREAM_CODEC),
-            BlockInput::properties,
-            BlockInput::new);
+                ByteBufCodecs.registry(Registries.BLOCK),
+                BlockInput::block,
+                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
+                        PropertyValueMatcher.STREAM_CODEC),
+                BlockInput::properties,
+                BlockInput::new);
     }
 
     public record FluidInput(Fluid fluid, Map<String, PropertyValueMatcher> properties) {
         public static Codec<FluidInput> CODEC = RecordCodecBuilder.create(builder -> builder.group(
                 BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidInput::fluid),
                 PropertyValueMatcher.MAP_CODEC.optionalFieldOf("properties", Map.of())
-                    .forGetter(FluidInput::properties))
-            .apply(builder, FluidInput::new));
+                        .forGetter(FluidInput::properties))
+                .apply(builder, FluidInput::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, FluidInput> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.FLUID),
-            FluidInput::fluid,
-            ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                PropertyValueMatcher.STREAM_CODEC),
-            FluidInput::properties,
-            FluidInput::new);
+                ByteBufCodecs.registry(Registries.FLUID),
+                FluidInput::fluid,
+                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
+                        PropertyValueMatcher.STREAM_CODEC),
+                FluidInput::properties,
+                FluidInput::new);
     }
 
     public record Output(Optional<BlockOutput> block, Optional<FluidOutput> fluid, List<ItemStack> drops) {
@@ -251,16 +244,16 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
                 BlockOutput.CODEC.optionalFieldOf("block").forGetter(Output::block),
                 FluidOutput.CODEC.optionalFieldOf("fluid").forGetter(Output::fluid),
                 ItemStack.CODEC.listOf().optionalFieldOf("drops", List.of()).forGetter(Output::drops))
-            .apply(builder, Output::new));
+                .apply(builder, Output::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, Output> STREAM_CODEC = StreamCodec.composite(
-            BlockOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            Output::block,
-            FluidOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
-            Output::fluid,
-            ItemStack.LIST_STREAM_CODEC,
-            Output::drops,
-            Output::new);
+                BlockOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
+                Output::block,
+                FluidOutput.STREAM_CODEC.apply(ByteBufCodecs::optional),
+                Output::fluid,
+                ItemStack.LIST_STREAM_CODEC,
+                Output::drops,
+                Output::new);
     }
 
     public record BlockOutput(Block block, boolean keepProperties, Map<String, String> properties) {
@@ -269,18 +262,18 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("id").forGetter(BlockOutput::block),
                 Codec.BOOL.optionalFieldOf("", false).forGetter(BlockOutput::keepProperties),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("properties", Map.of())
-                    .forGetter(BlockOutput::properties))
-            .apply(builder, BlockOutput::new));
+                        .forGetter(BlockOutput::properties))
+                .apply(builder, BlockOutput::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, BlockOutput> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.BLOCK),
-            BlockOutput::block,
-            ByteBufCodecs.BOOL,
-            BlockOutput::keepProperties,
-            ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                ByteBufCodecs.STRING_UTF8),
-            BlockOutput::properties,
-            BlockOutput::new);
+                ByteBufCodecs.registry(Registries.BLOCK),
+                BlockOutput::block,
+                ByteBufCodecs.BOOL,
+                BlockOutput::keepProperties,
+                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
+                        ByteBufCodecs.STRING_UTF8),
+                BlockOutput::properties,
+                BlockOutput::new);
 
         public BlockState apply(BlockState originalBlockState) {
             BlockState state = block.defaultBlockState();
@@ -304,18 +297,18 @@ public class EntropyRecipe implements Recipe<RecipeInput> {
                 BuiltInRegistries.FLUID.byNameCodec().fieldOf("id").forGetter(FluidOutput::fluid),
                 Codec.BOOL.optionalFieldOf("", false).forGetter(FluidOutput::keepProperties),
                 Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("properties", Map.of())
-                    .forGetter(FluidOutput::properties))
-            .apply(builder, FluidOutput::new));
+                        .forGetter(FluidOutput::properties))
+                .apply(builder, FluidOutput::new));
 
         public static StreamCodec<RegistryFriendlyByteBuf, FluidOutput> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.registry(Registries.FLUID),
-            FluidOutput::fluid,
-            ByteBufCodecs.BOOL,
-            FluidOutput::keepProperties,
-            ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
-                ByteBufCodecs.STRING_UTF8),
-            FluidOutput::properties,
-            FluidOutput::new);
+                ByteBufCodecs.registry(Registries.FLUID),
+                FluidOutput::fluid,
+                ByteBufCodecs.BOOL,
+                FluidOutput::keepProperties,
+                ByteBufCodecs.map(Maps::newHashMapWithExpectedSize, ByteBufCodecs.STRING_UTF8,
+                        ByteBufCodecs.STRING_UTF8),
+                FluidOutput::properties,
+                FluidOutput::new);
 
         public FluidState apply(FluidState originalFluidState) {
             FluidState state = fluid.defaultFluidState();

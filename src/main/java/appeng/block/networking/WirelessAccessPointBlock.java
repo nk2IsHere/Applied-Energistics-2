@@ -18,15 +18,17 @@
 
 package appeng.block.networking;
 
-import java.util.Locale;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.api.orientation.RelativeSide;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.WirelessAccessPointMenu;
+import appeng.menu.locator.MenuLocators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -47,16 +49,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.api.orientation.RelativeSide;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.WirelessAccessPointMenu;
-import appeng.menu.locator.MenuLocators;
-import appeng.util.InteractionUtil;
+import java.util.Locale;
 
 public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPointBlockEntity>
         implements SimpleWaterloggedBlock {
@@ -101,20 +97,18 @@ public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPo
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-            BlockHitResult hit) {
-        final WirelessAccessPointBlockEntity tg = this.getBlockEntity(level, pos);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
+        var be = this.getBlockEntity(level, pos);
 
-        if (tg != null && !InteractionUtil.isInAlternateUseMode(player)) {
+        if (be != null) {
             if (!level.isClientSide()) {
-                hit.getDirection();
-                MenuOpener.open(WirelessAccessPointMenu.TYPE, player,
-                        MenuLocators.forBlockEntity(tg));
+                MenuOpener.open(WirelessAccessPointMenu.TYPE, player, MenuLocators.forBlockEntity(be));
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
-        return super.use(state, level, pos, player, hand, hit);
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override

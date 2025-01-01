@@ -18,14 +18,12 @@
 
 package appeng.recipes.mattercannon;
 
-import java.util.Objects;
-
+import appeng.core.AppEng;
+import appeng.recipes.AERecipeTypes;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
-import net.fabricmc.fabric.impl.resource.conditions.conditions.NotResourceCondition;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -36,16 +34,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
-import appeng.core.AppEng;
-import appeng.recipes.AERecipeTypes;
+import java.util.Objects;
 
 /**
  * Defines a type of ammo that can be used for the {@link appeng.items.tools.powered.MatterCannonItem}.
@@ -61,15 +54,15 @@ public class MatterCannonAmmo implements Recipe<RecipeInput> {
         return builder.group(
                 Ingredient.CODEC_NONEMPTY.fieldOf("ammo").forGetter(MatterCannonAmmo::getAmmo),
                 Codec.FLOAT.fieldOf("weight").forGetter(MatterCannonAmmo::getWeight))
-            .apply(builder, MatterCannonAmmo::new);
+                .apply(builder, MatterCannonAmmo::new);
     });
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MatterCannonAmmo> STREAM_CODEC = StreamCodec.composite(
-        Ingredient.CONTENTS_STREAM_CODEC,
-        MatterCannonAmmo::getAmmo,
-        ByteBufCodecs.FLOAT,
-        MatterCannonAmmo::getWeight,
-        MatterCannonAmmo::new);
+            Ingredient.CONTENTS_STREAM_CODEC,
+            MatterCannonAmmo::getAmmo,
+            ByteBufCodecs.FLOAT,
+            MatterCannonAmmo::getWeight,
+            MatterCannonAmmo::new);
 
     private final Ingredient ammo;
 

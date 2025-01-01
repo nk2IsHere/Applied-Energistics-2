@@ -1,21 +1,24 @@
 package appeng.items.tools.fluix;
 
-import java.util.function.Supplier;
-
+import appeng.core.AppEng;
+import appeng.datagen.providers.tags.ConventionTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
-import appeng.core.AppEng;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.function.Supplier;
 
 public enum FluixToolType {
     FLUIX("fluix", () -> Ingredient.of(ConventionTags.FLUIX_CRYSTAL)),
     ;
 
+    private final String name;
     private final Tier toolTier;
 
     FluixToolType(String name, Supplier<Ingredient> repairIngredient) {
+        this.name = name;
         this.toolTier = new Tier() {
             @Override
             public int getUses() {
@@ -33,8 +36,8 @@ public enum FluixToolType {
             }
 
             @Override
-            public int getLevel() {
-                return Tiers.IRON.getLevel();
+            public TagKey<Block> getIncorrectBlocksForDrops() {
+                return Tiers.IRON.getIncorrectBlocksForDrops();
             }
 
             @Override
@@ -53,6 +56,10 @@ public enum FluixToolType {
                 return AppEng.MOD_ID + ":" + name;
             }
         };
+    }
+
+    public final String getName() {
+        return name;
     }
 
     public final Tier getToolTier() {

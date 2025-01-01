@@ -20,7 +20,6 @@ package appeng.blockentity.powersink;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnit;
-import appeng.api.config.PowerUnits;
 import appeng.api.networking.energy.IAEPowerStorage;
 
 public interface IExternalPowerSink extends IAEPowerStorage {

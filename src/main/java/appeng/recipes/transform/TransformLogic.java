@@ -1,15 +1,8 @@
 package appeng.recipes.transform;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import com.google.common.collect.Lists;
-
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -20,11 +13,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import java.util.*;
+import java.util.function.Predicate;
 
-@SuppressWarnings("removal")
 public final class TransformLogic {
     public static boolean canTransformInFluid(ItemEntity entity, FluidState fluid) {
         return getTransformableItems(entity.level(), fluid.getType()).contains(entity.getItem().getItem());
@@ -42,9 +38,9 @@ public final class TransformLogic {
         var level = entity.level();
 
         var region = new AABB(entity.getX() - 1, entity.getY() - 1, entity.getZ() - 1, entity.getX() + 1,
-            entity.getY() + 1, entity.getZ() + 1);
+                entity.getY() + 1, entity.getZ() + 1);
         List<ItemEntity> itemEntities = level.getEntities(null, region).stream()
-            .filter(e -> e instanceof ItemEntity && !e.isRemoved()).map(e -> (ItemEntity) e).toList();
+                .filter(e -> e instanceof ItemEntity && !e.isRemoved()).map(e -> (ItemEntity) e).toList();
 
         for (var holder : level.getRecipeManager().byType(TransformRecipe.TYPE)) {
             var recipe = holder.value();

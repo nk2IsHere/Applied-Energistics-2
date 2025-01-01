@@ -20,6 +20,7 @@ package appeng.core;
 
 import java.util.Collection;
 
+import appeng.core.network.TargetPoint;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
@@ -62,6 +63,8 @@ public interface AppEng {
 
     void sendToAllNearExcept(Player p, double x, double y, double z, double dist, Level level,
                              ClientboundPacket packet);
+
+    void sendToAllAround(ClientboundPacket message, TargetPoint point);
 
     void spawnEffect(EffectType effect, Level level, double posX, double posY,
                      double posZ, Object o);

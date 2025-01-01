@@ -1,9 +1,6 @@
 package appeng.decorative.solid;
 
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.block.AEBaseBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -11,12 +8,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -29,8 +21,9 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.block.AEBaseBlock;
+import java.util.List;
 
 public class CertusQuartzClusterBlock extends AEBaseBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -42,7 +35,7 @@ public class CertusQuartzClusterBlock extends AEBaseBlock implements SimpleWater
     protected final VoxelShape upAabb;
     protected final VoxelShape downAabb;
 
-    public CertusQuartzClusterBlock(int i, int j, BlockBehaviour.Properties properties) {
+    public CertusQuartzClusterBlock(int i, int j, Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(FACING, Direction.UP));
         this.upAabb = Block.box(j, 0.0, j, (16 - j), i, (16 - j));

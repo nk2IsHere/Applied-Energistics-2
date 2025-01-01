@@ -18,44 +18,9 @@
 
 package appeng.items.tools.powered;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.ClipContext.Block;
-import net.minecraft.world.level.ClipContext.Fluid;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.HitResult.Type;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
+import appeng.api.ids.AEComponents;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
@@ -68,31 +33,63 @@ import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalBlockPos;
 import appeng.blockentity.misc.PaintSplotchesBlockEntity;
 import appeng.core.AEConfig;
-import appeng.core.AELog;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEDamageTypes;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.PlayerMessages;
-import appeng.core.sync.packets.MatterCannonPacket;
+import appeng.core.network.clientbound.MatterCannonPacket;
 import appeng.items.contents.CellConfig;
 import appeng.items.misc.PaintBallItem;
 import appeng.items.tools.powered.powersink.AEBasePoweredItem;
 import appeng.me.helpers.PlayerSource;
-import appeng.recipes.mattercannon.MatterCannonAmmo;
+import appeng.recipes.AERecipeTypes;
 import appeng.util.ConfigInventory;
 import appeng.util.InteractionUtil;
 import appeng.util.LookDirection;
 import appeng.util.Platform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.HitResult.Type;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellItem {
+
+    private static final Logger LOG = LoggerFactory.getLogger(MatterCannonItem.class);
 
     /**
      * AE energy units consumer per shot fired.
      */
     private static final int ENERGY_PER_SHOT = 1600;
 
-    public MatterCannonItem(Item.Properties props) {
+    public MatterCannonItem(Properties props) {
         super(AEConfig.instance().getMatterCannonBattery(), props);
     }
 
@@ -103,9 +100,9 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines,
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines,
             TooltipFlag advancedTooltips) {
-        super.appendHoverText(stack, level, lines, advancedTooltips);
+        super.appendHoverText(stack, context, lines, advancedTooltips);
         addCellInformationToTooltip(stack, lines);
     }
 
@@ -179,11 +176,11 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
         var y = rayFrom.y;
         var z = rayFrom.z;
 
-        var ammoStack = itemKey.toStack();
-        var penetration = getPenetration(ammoStack) * shotPower; // 196.96655f;
+        var penetration = getPenetration(itemKey) * shotPower; // 196.96655f;
         if (penetration <= 0) {
-            if (ammoStack.getItem() instanceof PaintBallItem) {
-                shootPaintBalls(ammoStack, level, player, rayFrom, rayTo, direction, x, y, z);
+            if (itemKey.getItem() instanceof PaintBallItem paintBallItem) {
+                shootPaintBalls(paintBallItem.getColor(), paintBallItem.isLumen(), level, player, rayFrom, rayTo,
+                        direction, x, y, z);
                 return true;
             }
         } else {
@@ -193,7 +190,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
         return true;
     }
 
-    private void shootPaintBalls(ItemStack type, Level level, @Nullable Player p, Vec3 Vector3d,
+    private void shootPaintBalls(AEColor color, boolean lit, Level level, @Nullable Player p, Vec3 Vector3d,
             Vec3 Vector3d1, Vec3 direction, double d0, double d1, double d2) {
         final AABB bb = new AABB(Math.min(Vector3d.x, Vector3d1.x), Math.min(Vector3d.y, Vector3d1.y),
                 Math.min(Vector3d.z, Vector3d1.z), Math.max(Vector3d.x, Vector3d1.x), Math.max(Vector3d.y, Vector3d1.y),
@@ -243,16 +240,12 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
                         (byte) (pos.getType() == Type.MISS ? 32
                                 : pos.getLocation().distanceToSqr(vec) + 1)));
 
-        if (pos.getType() != Type.MISS && type != null && type.getItem() instanceof PaintBallItem ipb) {
-
-            final AEColor col = ipb.getColor();
-            // boolean lit = ipb.isLumen( type );
-
+        if (pos.getType() != Type.MISS) {
             if (pos instanceof EntityHitResult entityResult) {
                 var entityHit = entityResult.getEntity();
 
                 if (entityHit instanceof Sheep sh) {
-                    sh.setColor(col.dye);
+                    sh.setColor(color.dye);
                 }
 
                 entityHit.hurt(level.damageSources().playerAttack(p), 0);
@@ -272,7 +265,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
                 final BlockEntity te = level.getBlockEntity(hitPos);
                 if (te instanceof PaintSplotchesBlockEntity) {
                     final Vec3 hp = pos.getLocation().subtract(hitPos.getX(), hitPos.getY(), hitPos.getZ());
-                    ((PaintSplotchesBlockEntity) te).addBlot(type, side.getOpposite(), hp);
+                    ((PaintSplotchesBlockEntity) te).addBlot(color, lit, side.getOpposite(), hp);
                 }
             }
         }
@@ -295,6 +288,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
             double closest = 9999999.0D;
 
             for (Entity entity1 : list) {
+                // Do not shoot your horse.
                 if (p.isPassenger() && entity1.hasPassenger(p)) {
                     continue;
                 }
@@ -332,7 +326,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
                                     : pos.getLocation().distanceToSqr(vec) + 1)));
 
             if (pos.getType() != Type.MISS) {
-                final DamageSource dmgSrc = level.damageSources().source(AEDamageTypes.MATTER_CANNON, p);
+                var dmgSrc = level.damageSources().source(AEDamageTypes.MATTER_CANNON, p);
 
                 if (pos instanceof EntityHitResult entityResult) {
                     Entity entityHit = entityResult.getEntity();
@@ -341,8 +335,6 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
                     if (entityHit instanceof LivingEntity el) {
                         penetration -= dmg;
                         el.knockback(0, -direction.x, -direction.z);
-                        // el.knockBack( p, 0, Vector3d.x,
-                        // Vector3d.z );
                         el.hurt(dmgSrc, dmg);
                         if (!el.isAlive()) {
                             hasDestroyed = true;
@@ -366,7 +358,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
                                 && Platform.hasPermissions(new DimensionalBlockPos(level, blockPos), p)) {
                             hasDestroyed = true;
                             penetration -= hardness;
-                            penetration *= 0.60;
+                            penetration *= 0.60F;
                             level.destroyBlock(blockPos, true);
                         }
                     }
@@ -391,22 +383,17 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
 
     @Override
     public ConfigInventory getConfigInventory(ItemStack is) {
-        return CellConfig.create(AEItemKey.filter(), is);
+        return CellConfig.create(Set.of(AEKeyType.items()), is);
     }
 
     @Override
     public FuzzyMode getFuzzyMode(ItemStack is) {
-        final String fz = is.getOrCreateTag().getString("FuzzyMode");
-        try {
-            return FuzzyMode.valueOf(fz);
-        } catch (Throwable t) {
-            return FuzzyMode.IGNORE_ALL;
-        }
+        return is.getOrDefault(AEComponents.STORAGE_CELL_FUZZY_MODE, FuzzyMode.IGNORE_ALL);
     }
 
     @Override
     public void setFuzzyMode(ItemStack is, FuzzyMode fzMode) {
-        is.getOrCreateTag().putString("FuzzyMode", fzMode.name());
+        is.set(AEComponents.STORAGE_CELL_FUZZY_MODE, fzMode);
     }
 
     @Override
@@ -428,7 +415,7 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
     public boolean isBlackListed(ItemStack cellItem, AEKey requestedAddition) {
 
         if (requestedAddition instanceof AEItemKey itemKey) {
-            var pen = getPenetration(itemKey.toStack());
+            var pen = getPenetration(itemKey);
             if (pen > 0) {
                 return false;
             }
@@ -439,17 +426,18 @@ public class MatterCannonItem extends AEBasePoweredItem implements IBasicCellIte
         return true;
     }
 
-    private float getPenetration(ItemStack itemStack) {
+    private float getPenetration(AEItemKey what) {
         // We need a server to query the recipes if the cache is empty
         var server = AppEng.instance().getCurrentServer();
         if (server == null) {
-            AELog.warn("Tried to get penetration of matter cannon ammo for %s while no server was running", itemStack);
+            LOG.warn("Tried to get penetration of matter cannon ammo for {} while no server was running", what);
             return 0;
         }
 
-        var recipes = server.getRecipeManager().byType(MatterCannonAmmo.TYPE);
-        for (var ammoRecipe : recipes.values()) {
-            if (ammoRecipe.getAmmo().test(itemStack)) {
+        var recipes = server.getRecipeManager().byType(AERecipeTypes.MATTER_CANNON_AMMO);
+        for (var holder : recipes) {
+            var ammoRecipe = holder.value();
+            if (what.matches(ammoRecipe.getAmmo())) {
                 return ammoRecipe.getWeight();
             }
         }

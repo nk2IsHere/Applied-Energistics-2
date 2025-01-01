@@ -18,12 +18,13 @@
 
 package appeng.debug;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.InternalInventoryHost;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -33,10 +34,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.InternalInventoryHost;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInventoryHost {
 
@@ -76,18 +75,18 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         data.putString("filter", BuiltInRegistries.ITEM.getKey(filter).toString());
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
         if (data.contains("filter")) {
             Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(data.getString("filter")));
             this.setItem(item);
         }
-        super.loadTag(data);
+        super.loadTag(data, registries);
     }
 
     public Storage<ItemVariant> getItemHandler() {
@@ -111,8 +110,8 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
             return;
         }
 
-        if (item.canBeDepleted()) {
-            ItemStack sampleStack = new ItemStack(item);
+        ItemStack sampleStack = item.getDefaultInstance();
+        if (sampleStack.isDamageableItem()) {
             int maxDamage = sampleStack.getMaxDamage();
             for (int dmg = 0; dmg < maxDamage; dmg++) {
                 ItemStack is = sampleStack.copy();
@@ -125,7 +124,12 @@ public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInv
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        saveChanges();
+    }
+
+    @Override
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         if (inv.getStackInSlot(slot).isEmpty()) {
             refillSlot(slot);
         }

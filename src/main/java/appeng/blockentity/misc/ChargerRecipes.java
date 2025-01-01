@@ -1,23 +1,23 @@
 package appeng.blockentity.misc;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-
+import appeng.recipes.AERecipeTypes;
 import appeng.recipes.handlers.ChargerRecipe;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class ChargerRecipes {
 
-    public static Iterable<ChargerRecipe> getRecipes(Level level) {
-        return level.getRecipeManager().byType(ChargerRecipe.TYPE).values();
+    public static Iterable<RecipeHolder<ChargerRecipe>> getRecipes(Level level) {
+        return level.getRecipeManager().byType(AERecipeTypes.CHARGER);
     }
 
     @Nullable
     public static ChargerRecipe findRecipe(Level level, ItemStack input) {
-        for (ChargerRecipe recipe : getRecipes(level)) {
-            if (recipe.ingredient.test(input)) {
-                return recipe;
+        for (var recipe : getRecipes(level)) {
+            if (recipe.value().ingredient.test(input)) {
+                return recipe.value();
             }
         }
 

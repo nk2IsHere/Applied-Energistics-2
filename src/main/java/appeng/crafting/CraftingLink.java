@@ -18,15 +18,14 @@
 
 package appeng.crafting;
 
-import java.util.UUID;
-
-import net.minecraft.nbt.CompoundTag;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.api.stacks.AEKey;
+import net.minecraft.nbt.CompoundTag;
+
+import java.util.UUID;
 
 public class CraftingLink implements ICraftingLink {
 

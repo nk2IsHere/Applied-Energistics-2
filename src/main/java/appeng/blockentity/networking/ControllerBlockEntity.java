@@ -18,12 +18,6 @@
 
 package appeng.blockentity.networking;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.api.config.Actionable;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.GridFlags;
@@ -36,10 +30,15 @@ import appeng.api.networking.pathing.ControllerState;
 import appeng.api.util.AECableType;
 import appeng.block.networking.ControllerBlock;
 import appeng.block.networking.ControllerBlock.ControllerBlockState;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.util.Platform;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class ControllerBlockEntity extends AENetworkPowerBlockEntity {
+public class ControllerBlockEntity extends AENetworkedPoweredBlockEntity {
 
     static {
         GridHelper.addNodeOwnerEventHandler(
@@ -134,10 +133,6 @@ public class ControllerBlockEntity extends AENetworkPowerBlockEntity {
     @Override
     public InternalInventory getInternalInventory() {
         return InternalInventory.empty();
-    }
-
-    @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
     }
 
     /**

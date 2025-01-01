@@ -24,10 +24,14 @@ import java.util.Collections;
 
 import appeng.core.definitions.*;
 import appeng.core.network.ClientboundPacket;
+import appeng.core.network.TargetPoint;
 import appeng.recipes.AERecipeTypes;
 import com.mojang.brigadier.CommandDispatcher;
 
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -234,6 +238,17 @@ public abstract class AppEngBase implements AppEng {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void sendToAllAround(ClientboundPacket message, TargetPoint point) {
+        PlayerLookup
+            .around((ServerLevel) point.level, new Vec3(point.x, point.y, point.z), point.radius)
+            .forEach(player -> {
+                if (player != point.excluded) {
+                    ServerPlayNetworking.send(player, message);
+                }
+            });
     }
 
     @Override

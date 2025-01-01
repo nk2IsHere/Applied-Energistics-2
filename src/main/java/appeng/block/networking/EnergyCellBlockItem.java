@@ -18,52 +18,39 @@
 
 package appeng.block.networking;
 
-import java.util.List;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.item.v1.FabricItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.block.AEBaseBlockItem;
 import appeng.core.localization.Tooltips;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.block.Block;
+
+import java.util.List;
 
 public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPowerStorage {
 
-    public EnergyCellBlockItem(Block block, Item.Properties props) {
+    public EnergyCellBlockItem(Block block, Properties props) {
         super(block, props);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void addCheckedInformation(ItemStack stack, Level level, List<Component> lines,
+    public void addCheckedInformation(ItemStack stack, TooltipContext context, List<Component> lines,
             TooltipFlag advancedTooltips) {
-        double internalCurrentPower = 0;
-        final double internalMaxPower = this.getMaxEnergyCapacity();
-
-        if (internalMaxPower > 0) {
-            final CompoundTag tag = stack.getTag();
-            if (tag != null) {
-                internalCurrentPower = tag.getDouble("internalCurrentPower");
-            }
-
-            lines.add(
-                    Tooltips.energyStorageComponent(internalCurrentPower, internalMaxPower));
-        }
+        var storedEnergy = getAECurrentPower(stack);
+        var maxEnergy = getAEMaxPower(stack);
+        lines.add(Tooltips.energyStorageComponent(storedEnergy, maxEnergy));
     }
 
     @Override
     public double injectAEPower(ItemStack is, double amount, Actionable mode) {
-        final double internalCurrentPower = this.getInternal(is);
+        final double internalCurrentPower = getAECurrentPower(is);
         final double internalMaxPower = this.getAEMaxPower(is);
         final double required = internalMaxPower - internalCurrentPower;
         final double overflow = Math.max(0, Math.min(amount - required, amount));
@@ -72,7 +59,7 @@ public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPower
             final double toAdd = Math.min(required, amount);
             final double newPowerStored = internalCurrentPower + toAdd;
 
-            this.setInternal(is, newPowerStored);
+            setAECurrentPower(is, newPowerStored);
         }
 
         return overflow;
@@ -80,13 +67,13 @@ public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPower
 
     @Override
     public double extractAEPower(ItemStack is, double amount, Actionable mode) {
-        final double internalCurrentPower = this.getInternal(is);
+        final double internalCurrentPower = getAECurrentPower(is);
         final double fulfillable = Math.min(amount, internalCurrentPower);
 
         if (mode == Actionable.MODULATE) {
             final double newPowerStored = internalCurrentPower - fulfillable;
 
-            this.setInternal(is, newPowerStored);
+            setAECurrentPower(is, newPowerStored);
         }
 
         return fulfillable;
@@ -99,7 +86,7 @@ public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPower
 
     @Override
     public double getAECurrentPower(ItemStack is) {
-        return this.getInternal(is);
+        return is.getOrDefault(AEComponents.STORED_ENERGY, 0.0);
     }
 
     @Override
@@ -116,14 +103,12 @@ public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPower
         return ((EnergyCellBlock) getBlock()).getMaxPower();
     }
 
-    private double getInternal(ItemStack is) {
-        final CompoundTag nbt = is.getOrCreateTag();
-        return nbt.getDouble("internalCurrentPower");
-    }
-
-    private void setInternal(ItemStack is, double amt) {
-        final CompoundTag nbt = is.getOrCreateTag();
-        nbt.putDouble("internalCurrentPower", amt);
+    private void setAECurrentPower(ItemStack is, double amt) {
+        if (amt < 0.00001) {
+            is.remove(AEComponents.STORED_ENERGY);
+        } else {
+            is.set(AEComponents.STORED_ENERGY, amt);
+        }
     }
 
 }

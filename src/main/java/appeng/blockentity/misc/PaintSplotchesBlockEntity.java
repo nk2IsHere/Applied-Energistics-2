@@ -18,28 +18,28 @@
 
 package appeng.blockentity.misc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import io.netty.buffer.Unpooled;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.util.AEColor;
 import appeng.block.paint.PaintSplotches;
 import appeng.block.paint.PaintSplotchesBlock;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.helpers.Splotch;
 import appeng.items.misc.PaintBallItem;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
 
@@ -50,8 +50,8 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         final FriendlyByteBuf myDat = new FriendlyByteBuf(Unpooled.buffer());
         this.writeBuffer(myDat);
         if (myDat.hasArray()) {
@@ -73,8 +73,8 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         if (data.contains("dots")) {
             this.readBuffer(new FriendlyByteBuf(Unpooled.copiedBuffer(data.getByteArray("dots"))));
         }
@@ -95,13 +95,13 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
         this.writeBuffer(data);
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         super.readFromStream(data);
         this.readBuffer(data);
         return true;
@@ -166,15 +166,14 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     public void addBlot(ItemStack type, Direction side, Vec3 hitVec) {
-        final BlockPos p = this.worldPosition.relative(side);
+        PaintBallItem paintBallItem = (PaintBallItem) type.getItem();
+        addBlot(paintBallItem.getColor(), paintBallItem.isLumen(), side, hitVec);
+    }
 
-        final BlockState blk = this.level.getBlockState(p);
+    public void addBlot(AEColor color, boolean lit, Direction side, Vec3 hitVec) {
+        var p = this.worldPosition.relative(side);
+        var blk = this.level.getBlockState(p);
         if (blk.isFaceSturdy(this.level, p, side.getOpposite())) {
-            final PaintBallItem ipb = (PaintBallItem) type.getItem();
-
-            final AEColor col = ipb.getColor();
-            final boolean lit = ipb.isLumen();
-
             if (this.dots == null) {
                 this.dots = new ArrayList<>();
             }
@@ -183,7 +182,7 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
                 this.dots.remove(0);
             }
 
-            this.dots.add(new Splotch(col, lit, side, hitVec));
+            this.dots.add(new Splotch(color, lit, side, hitVec));
 
             updateData();
             this.markForUpdate();
@@ -200,7 +199,7 @@ public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
     }
 
     @Override
-    public Object getRenderAttachmentData() {
+    public Object getRenderData() {
         return new PaintSplotches(getDots());
     }
 

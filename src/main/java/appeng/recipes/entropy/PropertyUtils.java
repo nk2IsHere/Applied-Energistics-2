@@ -18,15 +18,14 @@
 
 package appeng.recipes.entropy;
 
-import java.util.Map;
-import java.util.Objects;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Objects;
 
 final class PropertyUtils {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyUtils.class);
@@ -48,17 +47,17 @@ final class PropertyUtils {
         Objects.requireNonNull(property, "property must be not null");
 
         return property.getValue(name)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid value '" + name + "' for property "
-                + property.getName()));
+                .orElseThrow(() -> new IllegalArgumentException("Invalid value '" + name + "' for property "
+                        + property.getName()));
     }
 
     static void validatePropertyMatchers(StateDefinition<?, ?> stateDefinition,
-                                         Map<String, PropertyValueMatcher> properties) {
+            Map<String, PropertyValueMatcher> properties) {
         for (var entry : properties.entrySet()) {
             var property = stateDefinition.getProperty(entry.getKey());
             if (property == null) {
                 throw new IllegalArgumentException("State definition " + stateDefinition
-                    + " does not have property '" + entry.getKey() + "'");
+                        + " does not have property '" + entry.getKey() + "'");
             }
 
             // this will throw if it doesnt have the value
@@ -67,12 +66,12 @@ final class PropertyUtils {
     }
 
     public static <SH extends StateHolder<?, SH>> boolean doPropertiesMatch(StateDefinition<?, SH> stateDefinition,
-                                                                            SH state, Map<String, PropertyValueMatcher> properties) {
+            SH state, Map<String, PropertyValueMatcher> properties) {
         for (var entry : properties.entrySet()) {
             var property = stateDefinition.getProperty(entry.getKey());
             if (property == null) {
                 throw new IllegalArgumentException("State definition " + stateDefinition
-                    + " does not have property '" + entry.getKey() + "'");
+                        + " does not have property '" + entry.getKey() + "'");
             }
 
             if (!entry.getValue().matches(property, state)) {
@@ -83,7 +82,7 @@ final class PropertyUtils {
     }
 
     static <SH extends StateHolder<?, SH>> SH applyProperties(StateDefinition<?, SH> stateDefinition, SH state,
-                                                              Map<String, String> properties) {
+            Map<String, String> properties) {
         for (var entry : properties.entrySet()) {
             // Get property
             var property = stateDefinition.getProperty(entry.getKey());
@@ -91,14 +90,14 @@ final class PropertyUtils {
                 state = applyProperty(state, property, entry.getValue());
             } else {
                 LOG.warn("Cannot apply property {} since {} does not have that property", entry.getKey(),
-                    stateDefinition);
+                        stateDefinition);
             }
         }
         return state;
     }
 
     static <T extends Comparable<T>, SH extends StateHolder<?, SH>> SH applyProperty(SH state, Property<T> property,
-                                                                                     String value) {
+            String value) {
         var parsedValue = property.getValue(value);
         return parsedValue.map(t -> state.trySetValue(property, t)).orElse(state);
     }

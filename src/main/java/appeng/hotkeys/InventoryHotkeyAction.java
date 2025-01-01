@@ -1,25 +1,18 @@
 package appeng.hotkeys;
 
+import appeng.api.features.HotkeyAction;
+import appeng.menu.locator.ItemMenuHostLocator;
+import appeng.menu.locator.MenuLocators;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+
 import java.util.function.Predicate;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+public record InventoryHotkeyAction(Predicate<ItemStack> locatable, Opener opener) implements HotkeyAction {
 
-import appeng.api.features.HotkeyAction;
-
-public class InventoryHotkeyAction implements HotkeyAction {
-
-    private final Predicate<ItemStack> locatable;
-    private final Opener opener;
-
-    public InventoryHotkeyAction(Predicate<ItemStack> locatable, Opener opener) {
-        this.locatable = locatable;
-        this.opener = opener;
-    }
-
-    public InventoryHotkeyAction(Item item, Opener opener) {
-        this((stack) -> stack.getItem() == item, opener);
+    public InventoryHotkeyAction(ItemLike item, Opener opener) {
+        this((stack) -> stack.is(item.asItem()), opener);
     }
 
     @Override
@@ -27,7 +20,7 @@ public class InventoryHotkeyAction implements HotkeyAction {
         var items = player.getInventory().items;
         for (int i = 0; i < items.size(); i++) {
             if (locatable.test(items.get(i))) {
-                if (opener.open(player, i)) {
+                if (opener.open(player, MenuLocators.forInventorySlot(i))) {
                     return true;
                 }
             }
@@ -37,6 +30,6 @@ public class InventoryHotkeyAction implements HotkeyAction {
 
     @FunctionalInterface
     public interface Opener {
-        boolean open(Player player, int inventorySlot);
+        boolean open(Player player, ItemMenuHostLocator locator);
     }
 }

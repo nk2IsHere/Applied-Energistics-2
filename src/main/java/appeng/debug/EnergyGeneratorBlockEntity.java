@@ -18,27 +18,28 @@
 
 package appeng.debug;
 
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
 import com.google.common.math.IntMath;
-
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
 import team.reborn.energy.api.EnergyStorage;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.ServerTickingBlockEntity;
 
 public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements ServerTickingBlockEntity, EnergyStorage {
     /**
      * The base energy injected each tick. Adjacent energy generators will increase it to pow(base, #generators).
      */
-    private static final int BASE_ENERGY = 8;
+    private int generationRate = 8;
 
     public EnergyGeneratorBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
@@ -57,7 +58,7 @@ public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements Ser
             }
         }
 
-        final int energyToInsert = IntMath.pow(BASE_ENERGY, tier);
+        final int energyToInsert = IntMath.pow(generationRate, tier);
 
         for (Direction facing : Direction.values()) {
             EnergyStorage consumer = EnergyStorage.SIDED.find(getLevel(), getBlockPos().relative(facing),
@@ -72,27 +73,42 @@ public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements Ser
     }
 
     @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        if (data.contains("generationRate", Tag.TAG_INT)) {
+            generationRate = data.getInt("generationRate");
+        }
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        data.putInt("generationRate", generationRate);
+    }
+
+    @Override
+    public long insert(
+        long l,
+        TransactionContext transactionContext
+    ) {
         return 0;
     }
 
     @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        return maxAmount;
+    public long extract(
+        long maxExtract,
+        TransactionContext transactionContext
+    ) {
+        return maxExtract;
     }
 
     @Override
     public long getAmount() {
-        return Long.MAX_VALUE;
+        return Integer.MAX_VALUE;
     }
 
     @Override
     public long getCapacity() {
-        return Long.MAX_VALUE;
-    }
-
-    @Override
-    public boolean supportsInsertion() {
-        return false;
+        return Integer.MAX_VALUE;
     }
 }

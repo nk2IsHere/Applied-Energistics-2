@@ -18,15 +18,15 @@
 
 package appeng.crafting;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.crafting.inv.CraftingSimulationState;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * A crafting tree process is what represents a pattern in the crafting process. It has a parent node (its output), and

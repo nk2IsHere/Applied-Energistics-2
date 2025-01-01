@@ -1,16 +1,11 @@
 package appeng.recipes.transform;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import io.netty.handler.codec.DecoderException;
-
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -22,6 +17,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
+import java.util.List;
+import java.util.Objects;
+
 public class TransformCircumstance {
 
     public static final TransformCircumstance EXPLOSION = new TransformCircumstance("explosion");
@@ -30,7 +28,7 @@ public class TransformCircumstance {
 
     private static final MapCodec<FluidType> FLUID_CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
             TagKey.codec(Registries.FLUID).fieldOf("tag").forGetter(FluidType::getFluidTag))
-        .apply(builder, FluidType::new));
+            .apply(builder, FluidType::new));
 
     public static final Codec<TransformCircumstance> CODEC = Codec.STRING.dispatch(t -> t.type, type -> switch (type) {
         case "explosion" -> EXPLOSION_CODEC;
@@ -39,8 +37,8 @@ public class TransformCircumstance {
     });
 
     public static final StreamCodec<RegistryFriendlyByteBuf, TransformCircumstance> STREAM_CODEC = StreamCodec.ofMember(
-        TransformCircumstance::toNetwork,
-        TransformCircumstance::fromNetwork);
+            TransformCircumstance::toNetwork,
+            TransformCircumstance::fromNetwork);
 
     private final String type;
 
@@ -178,7 +176,7 @@ public class TransformCircumstance {
         @Override
         public List<Fluid> getFluidsForRendering() {
             return BuiltInRegistries.FLUID.getTag(fluidTag).map(t -> t.stream().map(Holder::value).toList())
-                .orElse(List.of());
+                    .orElse(List.of());
         }
     }
 }

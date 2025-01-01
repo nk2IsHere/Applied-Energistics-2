@@ -18,20 +18,15 @@
 
 package appeng.block.qnb;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
+import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.integration.abstraction.IFabricBakedModel;
 import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.Nullable;
-
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -41,32 +36,33 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-class QnbFormedBakedModel implements BakedModel, FabricBakedModel {
-
+class QnbFormedBakedModel implements IFabricBakedModel {
     private static final Material TEXTURE_LINK = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_link"));
+            AppEng.makeId("block/quantum_link"));
     private static final Material TEXTURE_RING = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring"));
+            AppEng.makeId("block/quantum_ring"));
     private static final Material TEXTURE_RING_LIGHT = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring_light"));
+            AppEng.makeId("block/quantum_ring_light"));
     private static final Material TEXTURE_RING_LIGHT_CORNER = new Material(
             TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/quantum_ring_light_corner"));
+            AppEng.makeId("block/quantum_ring_light_corner"));
     private static final Material TEXTURE_CABLE_GLASS = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/glass/transparent"));
+            AppEng.makeId("part/cable/glass/transparent"));
     private static final Material TEXTURE_COVERED_CABLE = new Material(TextureAtlas.LOCATION_BLOCKS,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable/covered/transparent"));
+            AppEng.makeId("part/cable/covered/transparent"));
 
     private static final float DEFAULT_RENDER_MIN = 2.0f;
     private static final float DEFAULT_RENDER_MAX = 14.0f;
@@ -100,51 +96,21 @@ class QnbFormedBakedModel implements BakedModel, FabricBakedModel {
     }
 
     @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
-
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
-
-    }
-
-    @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
-            Supplier<RandomSource> randomSupplier, RenderContext context) {
-        QnbFormedState formedState = getState(blockView, pos);
+    public void emitBlockQuads(
+        BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+        Supplier<RandomSource> randomSupplier, RenderContext context) {
+        var modelData = blockView.getBlockEntityRenderData(pos);
+        QnbFormedState formedState = modelData instanceof QnbFormedState qnbFormedState ? qnbFormedState : null;
 
         if (formedState == null) {
-//            context.bakedModelConsumer().accept(this.baseModel);
-            BakedModel.super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            baseModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
             return;
         }
 
-        buildQuads(context.getEmitter(), formedState, state);
-
+        emitQuads(context.getEmitter(), formedState, state);
     }
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
-        return baseModel.getQuads(state, face, random);
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return ItemTransforms.NO_TRANSFORMS;
-    }
-
-    private static QnbFormedState getState(BlockAndTintGetter view, BlockPos pos) {
-        if (view instanceof RenderAttachedBlockView renderAttachedBlockView) {
-            Object attachment = renderAttachedBlockView.getBlockEntityRenderAttachment(pos);
-            if (attachment instanceof QnbFormedState qnbFormedState) {
-                return qnbFormedState;
-            }
-        }
-        return null;
-    }
-
-    private void buildQuads(QuadEmitter emitter, QnbFormedState formedState, BlockState state) {
+    private void emitQuads(QuadEmitter emitter, QnbFormedState formedState, BlockState state) {
         CubeBuilder builder = new CubeBuilder(emitter);
 
         if (state.getBlock() == this.linkBlock) {
@@ -262,6 +228,11 @@ class QnbFormedBakedModel implements BakedModel, FabricBakedModel {
     @Override
     public TextureAtlasSprite getParticleIcon() {
         return this.baseModel.getParticleIcon();
+    }
+
+    @Override
+    public ItemTransforms getTransforms() {
+        return this.baseModel.getTransforms();
     }
 
     @Override

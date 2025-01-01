@@ -18,14 +18,12 @@
 
 package appeng.blockentity.networking;
 
+import appeng.api.parts.IPart;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-
-import appeng.api.parts.IPart;
 
 public class CableBusTESR implements BlockEntityRenderer<CableBusBlockEntity> {
 

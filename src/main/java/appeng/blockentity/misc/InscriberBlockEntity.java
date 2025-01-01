@@ -18,30 +18,7 @@
 
 package appeng.blockentity.misc;
 
-import java.util.EnumSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
-import appeng.api.config.Setting;
-import appeng.api.config.Settings;
-import appeng.api.config.YesNo;
+import appeng.api.config.*;
 import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.inventories.InternalInventory;
@@ -59,17 +36,29 @@ import appeng.api.upgrades.UpgradeInventories;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
 import appeng.api.util.IConfigurableObject;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.recipes.handlers.InscriberProcessType;
 import appeng.recipes.handlers.InscriberRecipe;
-import appeng.util.ConfigManager;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.FilteredInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
 
 /**
  * @author AlgorithmX2
@@ -77,12 +66,12 @@ import appeng.util.inv.filter.IAEItemFilter;
  * @version rv2
  * @since rv0
  */
-public class InscriberBlockEntity extends AENetworkPowerBlockEntity
+public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
         implements IGridTickable, IUpgradeableObject, IConfigurableObject {
     private static final int MAX_PROCESSING_STEPS = 200;
 
     private final IUpgradeInventory upgrades;
-    private final ConfigManager configManager;
+    private final IConfigManager configManager;
     private int processingTime = 0;
     // cycles from 0 - 16, at 8 it preforms the action, at 16 it re-enables the
     // normal routine.
@@ -126,10 +115,11 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
         this.setInternalMaxPower(1600);
 
         this.upgrades = UpgradeInventories.forMachine(AEBlocks.INSCRIBER, 4, this::saveChanges);
-        this.configManager = new ConfigManager(this::onConfigChanged);
-        this.configManager.registerSetting(Settings.INSCRIBER_SEPARATE_SIDES, YesNo.NO);
-        this.configManager.registerSetting(Settings.AUTO_EXPORT, YesNo.NO);
-        this.configManager.registerSetting(Settings.INSCRIBER_BUFFER_SIZE, YesNo.YES);
+        this.configManager = IConfigManager.builder(this::onConfigChanged)
+                .registerSetting(Settings.INSCRIBER_SEPARATE_SIDES, YesNo.NO)
+                .registerSetting(Settings.AUTO_EXPORT, YesNo.NO)
+                .registerSetting(Settings.INSCRIBER_INPUT_CAPACITY, InscriberInputCapacity.SIXTY_FOUR)
+                .build();
 
         var automationFilter = new AutomationFilter();
         this.topItemHandlerExtern = new FilteredInternalInventory(this.topItemHandler, automationFilter);
@@ -148,17 +138,21 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.upgrades.writeToNBT(data, "upgrades");
-        this.configManager.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.upgrades.writeToNBT(data, "upgrades", registries);
+        this.configManager.writeToNBT(data, registries);
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.upgrades.readFromNBT(data, "upgrades");
-        this.configManager.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.upgrades.readFromNBT(data, "upgrades", registries);
+        this.configManager.readFromNBT(data, registries);
+        // TODO 1.22: Remove compat with old format.
+        if ("NO".equals(data.getString("inscriber_buffer_size"))) {
+            this.configManager.putSetting(Settings.INSCRIBER_INPUT_CAPACITY, InscriberInputCapacity.FOUR);
+        }
 
         // Update stack tracker
         lastStacks.put(topItemHandler, topItemHandler.getStackInSlot(0));
@@ -167,7 +161,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         var c = super.readFromStream(data);
 
         var oldSmash = isSmash();
@@ -178,7 +172,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
         }
 
         for (int i = 0; i < this.inv.size(); i++) {
-            this.inv.setItemDirect(i, data.readItem());
+            this.inv.setItemDirect(i, ItemStack.OPTIONAL_STREAM_CODEC.decode(data));
         }
         this.cachedTask = null;
 
@@ -186,12 +180,12 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
 
         data.writeBoolean(isSmash());
         for (int i = 0; i < this.inv.size(); i++) {
-            data.writeItem(inv.getStackInSlot(i));
+            ItemStack.OPTIONAL_STREAM_CODEC.encode(data, inv.getStackInSlot(i));
         }
     }
 
@@ -242,9 +236,9 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         if (slot == 0) {
-            boolean sameItemSameTags = ItemStack.isSameItemSameTags(inv.getStackInSlot(0), lastStacks.get(inv));
+            boolean sameItemSameTags = ItemStack.isSameItemSameComponents(inv.getStackInSlot(0), lastStacks.get(inv));
             lastStacks.put(inv, inv.getStackInSlot(0).copy());
             if (sameItemSameTags) {
                 return; // Don't care if it's just a count change
@@ -267,7 +261,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     // @Override
     @Override
     public TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(TickRates.Inscriber, !hasAutoExportWork() && !this.hasCraftWork(), false);
+        return new TickingRequest(TickRates.Inscriber, !hasAutoExportWork() && !this.hasCraftWork());
     }
 
     private boolean hasAutoExportWork() {
@@ -424,7 +418,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public InternalInventory getExposedInventoryForSide(Direction facing) {
+    protected InternalInventory getExposedInventoryForSide(Direction facing) {
         if (isSeparateSides()) {
             if (facing == this.getTop()) {
                 return this.topItemHandlerExtern;
@@ -444,7 +438,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public ConfigManager getConfigManager() {
+    public IConfigManager getConfigManager() {
         return configManager;
     }
 
@@ -459,16 +453,11 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
             markForUpdate();
         }
 
-        if (setting == Settings.INSCRIBER_BUFFER_SIZE) {
-            if (configManager.getSetting(Settings.INSCRIBER_BUFFER_SIZE) == YesNo.YES) {
-                topItemHandler.setMaxStackSize(0, 64);
-                sideItemHandler.setMaxStackSize(0, 64);
-                bottomItemHandler.setMaxStackSize(0, 64);
-            } else {
-                topItemHandler.setMaxStackSize(0, 4);
-                sideItemHandler.setMaxStackSize(0, 4);
-                bottomItemHandler.setMaxStackSize(0, 4);
-            }
+        if (setting == Settings.INSCRIBER_INPUT_CAPACITY) {
+            var capacity = configManager.getSetting(Settings.INSCRIBER_INPUT_CAPACITY).capacity;
+            topItemHandler.setMaxStackSize(0, capacity);
+            sideItemHandler.setMaxStackSize(0, capacity);
+            bottomItemHandler.setMaxStackSize(0, capacity);
         }
 
         saveChanges();
@@ -516,7 +505,7 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
     /**
      * Allow cranking from any side other than the front.
      */
-    @org.jetbrains.annotations.Nullable
+    @Nullable
     public ICrankable getCrankable(Direction direction) {
         if (direction != getFront()) {
             return new Crankable();
@@ -536,13 +525,13 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
 
             // always allow name press
             if (inv == topItemHandler || inv == bottomItemHandler) {
-                if (AEItems.NAME_PRESS.isSameAs(stack)) {
+                if (AEItems.NAME_PRESS.is(stack)) {
                     return true;
                 }
             }
 
-            if (inv == sideItemHandler && (AEItems.NAME_PRESS.isSameAs(topItemHandler.getStackInSlot(0))
-                    || AEItems.NAME_PRESS.isSameAs(bottomItemHandler.getStackInSlot(0)))) {
+            if (inv == sideItemHandler && (AEItems.NAME_PRESS.is(topItemHandler.getStackInSlot(0))
+                    || AEItems.NAME_PRESS.is(bottomItemHandler.getStackInSlot(0)))) {
                 // can always rename anything
                 return true;
             }
@@ -559,7 +548,8 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
             if (inv == topItemHandler)
                 top = stack;
 
-            for (var recipe : InscriberRecipes.getRecipes(getLevel())) {
+            for (var holder : InscriberRecipes.getRecipes(level)) {
+                var recipe = holder.value();
                 if (!middle.isEmpty() && !recipe.getMiddleInput().test(middle)) {
                     continue;
                 }
@@ -607,18 +597,6 @@ public class InscriberBlockEntity extends AENetworkPowerBlockEntity
                 return false; // No inserting into the output slot
             }
             return !isSmash();
-        }
-    }
-
-    class Crankable implements ICrankable {
-        @Override
-        public boolean canTurn() {
-            return getInternalCurrentPower() < getInternalMaxPower();
-        }
-
-        @Override
-        public void applyTurn() {
-            injectExternalPower(PowerUnits.AE, CrankBlockEntity.POWER_PER_CRANK_TURN, Actionable.MODULATE);
         }
     }
 }

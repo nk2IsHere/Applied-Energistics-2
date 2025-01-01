@@ -18,11 +18,10 @@
 
 package appeng.debug;
 
-import java.util.ArrayDeque;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.items.AEBaseItem;
+import appeng.util.InteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,26 +29,24 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.hooks.AEToolItem;
-import appeng.items.AEBaseItem;
-import appeng.util.InteractionUtil;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 
-public class EraserItem extends AEBaseItem implements AEToolItem {
+public class EraserItem extends AEBaseItem {
 
     private static final int BOX_SIZE = 48;
     private static final int BLOCK_ERASE_LIMIT = BOX_SIZE * BOX_SIZE * BOX_SIZE;
     final static Set<Block> COMMON_BLOCKS = new HashSet<>();
 
-    public EraserItem(Item.Properties properties) {
+    public EraserItem(Properties properties) {
         super(properties);
     }
 
@@ -157,7 +154,7 @@ public class EraserItem extends AEBaseItem implements AEToolItem {
     }
 
     @Override
-    public void addToMainCreativeTab(CreativeModeTab.Output output) {
+    public void addToMainCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         if (AEConfig.instance().isDebugToolsEnabled()) {
             output.accept(this);
         }

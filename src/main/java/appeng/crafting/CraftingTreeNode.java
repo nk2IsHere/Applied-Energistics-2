@@ -18,15 +18,6 @@
 
 package appeng.crafting;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.level.Level;
-
 import appeng.api.config.Actionable;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.crafting.ICraftingService;
@@ -38,6 +29,12 @@ import appeng.crafting.execution.InputTemplate;
 import appeng.crafting.inv.ChildCraftingSimulationState;
 import appeng.crafting.inv.CraftingSimulationState;
 import appeng.crafting.inv.ICraftingInventory;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A crafting tree node is what represents a single requested stack in the crafting process. It can either be the
@@ -233,7 +230,8 @@ public class CraftingTreeNode {
                     }
                 } else {
                     var pattern = pro.details.getDefinition();
-                    String outputs = Stream.of(pro.details.getOutputs())
+                    String outputs = pro.details.getOutputs()
+                            .stream()
                             .map(GenericStack::toString)
                             .collect(Collectors.joining(", "));
                     String errorMessage = """
@@ -241,10 +239,9 @@ public class CraftingTreeNode {
                             This is an AE2 bug, please report it, with the following important information:
 
                             - Found none of %s. Remaining request: %d of %d*%d.
-                            - Tried crafting %d times the pattern %s with tag %s.
+                            - Tried crafting %d times the pattern %s.
                             - Pattern outputs: %s.
-                            """.formatted(what, totalRequestedItems, requestedAmount, amount, times, pattern,
-                            pattern.getTag(), outputs);
+                            """.formatted(what, totalRequestedItems, requestedAmount, amount, times, pattern, outputs);
                     throw new UnsupportedOperationException(errorMessage);
                 }
             }

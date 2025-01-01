@@ -18,23 +18,26 @@
 
 package appeng.items.tools.quartz;
 
-import java.util.function.Supplier;
-
+import appeng.core.AppEng;
+import appeng.datagen.providers.tags.ConventionTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
-import appeng.core.AppEng;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.function.Supplier;
 
 public enum QuartzToolType {
     CERTUS("certus_quartz", () -> Ingredient.of(ConventionTags.CERTUS_QUARTZ)),
     NETHER("nether_quartz", () -> Ingredient.of(ConventionTags.NETHER_QUARTZ)),
     ;
 
+    private final String name;
     private final Tier toolTier;
 
     QuartzToolType(String name, Supplier<Ingredient> repairIngredient) {
+        this.name = name;
         this.toolTier = new Tier() {
             @Override
             public int getUses() {
@@ -52,8 +55,8 @@ public enum QuartzToolType {
             }
 
             @Override
-            public int getLevel() {
-                return Tiers.IRON.getLevel();
+            public TagKey<Block> getIncorrectBlocksForDrops() {
+                return Tiers.IRON.getIncorrectBlocksForDrops();
             }
 
             @Override
@@ -72,6 +75,10 @@ public enum QuartzToolType {
                 return AppEng.MOD_ID + ":" + name;
             }
         };
+    }
+
+    public String getName() {
+        return name;
     }
 
     public final Tier getToolTier() {

@@ -18,13 +18,12 @@
 
 package appeng.blockentity.misc;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.CommonTickingBlockEntity;
 import appeng.util.Platform;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class LightDetectorBlockEntity extends AEBaseBlockEntity implements CommonTickingBlockEntity {
 
@@ -35,7 +34,7 @@ public class LightDetectorBlockEntity extends AEBaseBlockEntity implements Commo
         super(blockEntityType, pos, blockState);
     }
 
-    public boolean isReady() {
+    public boolean isExposedToLight() {
         return this.lastLight > 0;
     }
 

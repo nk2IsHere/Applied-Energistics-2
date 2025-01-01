@@ -1,19 +1,18 @@
 package appeng.hotkeys;
 
-import static appeng.api.features.HotkeyAction.PORTABLE_FLUID_CELL;
-import static appeng.api.features.HotkeyAction.PORTABLE_ITEM_CELL;
-import static appeng.api.features.HotkeyAction.WIRELESS_TERMINAL;
+import appeng.api.features.HotkeyAction;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.ItemDefinition;
+import appeng.items.tools.powered.AbstractPortableCell;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import appeng.api.features.HotkeyAction;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.ItemDefinition;
-import appeng.items.tools.powered.AbstractPortableCell;
+import static appeng.api.features.HotkeyAction.*;
 
 /**
  * Registry of {@link HotkeyAction}
@@ -22,13 +21,11 @@ public class HotkeyActions {
     public static final Map<String, List<HotkeyAction>> REGISTRY = new HashMap<>();
 
     public static void init() {
-        register(
-                new InventoryHotkeyAction(AEItems.WIRELESS_TERMINAL.asItem(),
-                        (player, i) -> AEItems.WIRELESS_TERMINAL.asItem().openFromInventory(player, i)),
+        register(AEItems.WIRELESS_TERMINAL,
+                (player, locator) -> AEItems.WIRELESS_TERMINAL.get().openFromInventory(player, locator),
                 WIRELESS_TERMINAL);
-        register(
-                new InventoryHotkeyAction(AEItems.WIRELESS_CRAFTING_TERMINAL.asItem(),
-                        (player, i) -> AEItems.WIRELESS_CRAFTING_TERMINAL.asItem().openFromInventory(player, i)),
+        register(AEItems.WIRELESS_CRAFTING_TERMINAL,
+                (player, locator) -> AEItems.WIRELESS_CRAFTING_TERMINAL.get().openFromInventory(player, locator),
                 WIRELESS_TERMINAL);
 
         registerPortableCell(AEItems.PORTABLE_ITEM_CELL1K, PORTABLE_ITEM_CELL);
@@ -48,7 +45,14 @@ public class HotkeyActions {
      * a convenience helper for registering hotkeys for portable cells
      */
     public static void registerPortableCell(ItemDefinition<? extends AbstractPortableCell> cell, String id) {
-        register(new InventoryHotkeyAction(cell.asItem(), cell.asItem()::openFromInventory), id);
+        register(cell, (player, locator) -> cell.get().openFromInventory(player, locator), id);
+    }
+
+    /**
+     * a convenience Helper for registering Hotkeys for both the Inventory and Curios (if applicable)
+     */
+    public static void register(ItemLike item, InventoryHotkeyAction.Opener opener, String id) {
+        register(new InventoryHotkeyAction(item, opener), id);
     }
 
     /**
@@ -56,7 +60,7 @@ public class HotkeyActions {
      */
     public static synchronized void register(HotkeyAction hotkeyAction, String id) {
         if (REGISTRY.containsKey(id)) {
-            REGISTRY.get(id).add(0, hotkeyAction);
+            REGISTRY.get(id).addFirst(hotkeyAction);
         } else {
             REGISTRY.put(id, new ArrayList<>(List.of(hotkeyAction)));
             AppEng.instance().registerHotkey(id);

@@ -18,10 +18,13 @@
 
 package appeng.items.misc;
 
-import java.util.Objects;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.behaviors.ContainerItemStrategies;
+import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.core.definitions.AEItems;
+import appeng.items.AEBaseItem;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -29,13 +32,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.behaviors.ContainerItemStrategies;
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.core.definitions.AEItems;
-import appeng.items.AEBaseItem;
+import java.util.Objects;
 
 /**
  * Wraps a {@link GenericStack} in an {@link ItemStack}. Even stacks that actually represent vanilla {@link Item items}
@@ -43,28 +42,21 @@ import appeng.items.AEBaseItem;
  * item.
  */
 public class WrappedGenericStack extends AEBaseItem {
-    private static final String NBT_AMOUNT = "#";
-
     public static ItemStack wrap(GenericStack stack) {
         Objects.requireNonNull(stack, "stack");
-        return wrap(stack.what(), stack.amount());
+        var item = AEItems.WRAPPED_GENERIC_STACK.asItem();
+        var result = new ItemStack(item);
+        result.set(AEComponents.WRAPPED_STACK, stack);
+        return result;
     }
 
     public static ItemStack wrap(AEKey what, long amount) {
         Objects.requireNonNull(what, "what");
 
-        var item = AEItems.WRAPPED_GENERIC_STACK.asItem();
-        var result = new ItemStack(item);
-
-        var tag = what.toTagGeneric();
-        if (amount != 0) {
-            tag.putLong(NBT_AMOUNT, amount);
-        }
-        result.setTag(tag);
-        return result;
+        return wrap(new GenericStack(what, amount));
     }
 
-    public WrappedGenericStack(Item.Properties properties) {
+    public WrappedGenericStack(Properties properties) {
         super(properties.stacksTo(1));
     }
 
@@ -74,12 +66,13 @@ public class WrappedGenericStack extends AEBaseItem {
             return null;
         }
 
-        var tag = stack.getTag();
-        if (tag == null) {
+        var wrapped = stack.get(AEComponents.WRAPPED_STACK);
+
+        if (wrapped == null) {
             return null;
         }
 
-        return AEKey.fromTagGeneric(tag);
+        return wrapped.what();
     }
 
     public long unwrapAmount(ItemStack stack) {
@@ -87,12 +80,13 @@ public class WrappedGenericStack extends AEBaseItem {
             return 0;
         }
 
-        long amount = 0;
-        if (stack.getTag() != null && stack.getTag().contains(NBT_AMOUNT)) {
-            amount = stack.getTag().getLong(NBT_AMOUNT);
+        var wrapped = stack.get(AEComponents.WRAPPED_STACK);
+
+        if (wrapped == null) {
+            return 0;
         }
 
-        return amount;
+        return wrapped.amount();
     }
 
     /**
@@ -133,7 +127,7 @@ public class WrappedGenericStack extends AEBaseItem {
     }
 
     @Override
-    public void addToMainCreativeTab(CreativeModeTab.Output output) {
+    public void addToMainCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // Don't show this item in CreativeTabs
     }
 }

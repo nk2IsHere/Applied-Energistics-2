@@ -18,45 +18,14 @@
 
 package appeng.items.tools.powered;
 
-import java.util.List;
-import java.util.function.DoubleSupplier;
-
-import com.mojang.datafixers.util.Pair;
-
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-
 import appeng.api.config.Actionable;
-import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
-import appeng.api.config.TypeFilter;
 import appeng.api.config.ViewItems;
 import appeng.api.features.IGridLinkableHandler;
+import appeng.api.ids.AEComponents;
 import appeng.api.implementations.blockentities.IWirelessAccessPoint;
 import appeng.api.implementations.menuobjects.IMenuItem;
-import appeng.api.implementations.menuobjects.ItemMenuHost;
 import appeng.api.networking.IGrid;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableItem;
@@ -67,22 +36,41 @@ import appeng.core.localization.GuiText;
 import appeng.core.localization.PlayerMessages;
 import appeng.core.localization.Tooltips;
 import appeng.helpers.WirelessTerminalMenuHost;
-import appeng.items.tools.powered.powersink.AEBasePoweredItem;
 import appeng.menu.MenuOpener;
+import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.menu.locator.MenuLocators;
 import appeng.menu.me.common.MEStorageMenu;
-import appeng.util.ConfigManager;
 import appeng.util.Platform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem, IUpgradeableItem {
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+public class WirelessTerminalItem extends PoweredContainerItem implements IMenuItem, IUpgradeableItem {
 
     private static final Logger LOG = LoggerFactory.getLogger(WirelessTerminalItem.class);
 
     public static final IGridLinkableHandler LINKABLE_HANDLER = new LinkableHandler();
 
-    private static final String TAG_ACCESS_POINT_POS = "accessPoint";
-
-    public WirelessTerminalItem(DoubleSupplier powerCapacity, Item.Properties props) {
+    public WirelessTerminalItem(DoubleSupplier powerCapacity, Properties props) {
         super(powerCapacity, props);
     }
 
@@ -96,8 +84,8 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
      *
      * @return True if the menu was opened.
      */
-    public boolean openFromInventory(Player player, int inventorySlot) {
-        return openFromInventory(player, inventorySlot, false);
+    public boolean openFromInventory(Player player, ItemMenuHostLocator locator) {
+        return openFromInventory(player, locator, false);
     }
 
     /**
@@ -107,12 +95,11 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
      *                             restore previous search, scrollbar, etc.
      * @return True if the menu was opened.
      */
-    protected boolean openFromInventory(Player player, int inventorySlot, boolean returningFromSubmenu) {
-        var is = player.getInventory().getItem(inventorySlot);
+    protected boolean openFromInventory(Player player, ItemMenuHostLocator locator, boolean returningFromSubmenu) {
+        var is = locator.locateItem(player);
 
-        if (checkPreconditions(is, player)) {
-            return MenuOpener.open(getMenuType(), player, MenuLocators.forInventorySlot(inventorySlot),
-                    returningFromSubmenu);
+        if (!player.level().isClientSide() && checkPreconditions(is)) {
+            return MenuOpener.open(getMenuType(), player, locator, returningFromSubmenu);
         }
         return false;
     }
@@ -124,7 +111,7 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var is = player.getItemInHand(hand);
 
-        if (checkPreconditions(is, player)) {
+        if (!player.level().isClientSide() && checkPreconditions(is)) {
             if (MenuOpener.open(getMenuType(), player, MenuLocators.forHand(player, hand))) {
                 return new InteractionResultHolder<>(InteractionResult.sidedSuccess(level.isClientSide()), is);
             }
@@ -135,9 +122,9 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines,
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines,
             TooltipFlag advancedTooltips) {
-        super.appendHoverText(stack, level, lines, advancedTooltips);
+        super.appendHoverText(stack, context, lines, advancedTooltips);
 
         if (getLinkedPosition(stack) == null) {
             lines.add(Tooltips.of(GuiText.Unlinked, Tooltips.RED));
@@ -153,51 +140,43 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
      */
     @Nullable
     public GlobalPos getLinkedPosition(ItemStack item) {
-        CompoundTag tag = item.getTag();
-        if (tag != null && tag.contains(TAG_ACCESS_POINT_POS, Tag.TAG_COMPOUND)) {
-            return GlobalPos.CODEC.decode(NbtOps.INSTANCE, tag.get(TAG_ACCESS_POINT_POS))
-                    .resultOrPartial(Util.prefix("Linked position", LOG::error))
-                    .map(Pair::getFirst)
-                    .orElse(null);
-        } else {
-            return null;
-        }
+        return item.get(AEComponents.WIRELESS_LINK_TARGET);
     }
 
     @Nullable
-    public IGrid getLinkedGrid(ItemStack item, Level level, @Nullable Player sendMessagesTo) {
+    public IGrid getLinkedGrid(ItemStack item, Level level, @Nullable Consumer<Component> errorConsumer) {
         if (!(level instanceof ServerLevel serverLevel)) {
             return null;
         }
 
         var linkedPos = getLinkedPosition(item);
         if (linkedPos == null) {
-            if (sendMessagesTo != null) {
-                sendMessagesTo.displayClientMessage(PlayerMessages.DeviceNotLinked.text(), true);
+            if (errorConsumer != null) {
+                errorConsumer.accept(PlayerMessages.DeviceNotLinked.text());
             }
             return null;
         }
 
         var linkedLevel = serverLevel.getServer().getLevel(linkedPos.dimension());
         if (linkedLevel == null) {
-            if (sendMessagesTo != null) {
-                sendMessagesTo.displayClientMessage(PlayerMessages.LinkedNetworkNotFound.text(), true);
+            if (errorConsumer != null) {
+                errorConsumer.accept(PlayerMessages.LinkedNetworkNotFound.text());
             }
             return null;
         }
 
         var be = Platform.getTickingBlockEntity(linkedLevel, linkedPos.pos());
         if (!(be instanceof IWirelessAccessPoint accessPoint)) {
-            if (sendMessagesTo != null) {
-                sendMessagesTo.displayClientMessage(PlayerMessages.LinkedNetworkNotFound.text(), true);
+            if (errorConsumer != null) {
+                errorConsumer.accept(PlayerMessages.LinkedNetworkNotFound.text());
             }
             return null;
         }
 
         var grid = accessPoint.getGrid();
         if (grid == null) {
-            if (sendMessagesTo != null) {
-                sendMessagesTo.displayClientMessage(PlayerMessages.LinkedNetworkNotFound.text(), true);
+            if (errorConsumer != null) {
+                errorConsumer.accept(PlayerMessages.LinkedNetworkNotFound.text());
             }
         }
         return grid;
@@ -212,9 +191,10 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
 
     @Nullable
     @Override
-    public ItemMenuHost getMenuHost(Player player, int inventorySlot, ItemStack stack, @Nullable BlockPos pos) {
-        return new WirelessTerminalMenuHost(player, inventorySlot, stack,
-                (p, subMenu) -> openFromInventory(p, inventorySlot, true));
+    public WirelessTerminalMenuHost<?> getMenuHost(Player player, ItemMenuHostLocator locator,
+            @Nullable BlockHitResult hitResult) {
+        return new WirelessTerminalMenuHost<>(this, player, locator,
+                (p, subMenu) -> openFromInventory(p, locator, true));
     }
 
     /**
@@ -222,21 +202,8 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
      *
      * @return True if the wireless terminal can be opened (it's linked, network in range, power, etc.)
      */
-    protected boolean checkPreconditions(ItemStack item, Player player) {
-        if (item.isEmpty() || item.getItem() != this) {
-            return false;
-        }
-
-        var level = player.getCommandSenderWorld();
-        if (getLinkedGrid(item, player.level(), player) == null) {
-            return false;
-        }
-
-        if (!hasPower(player, 0.5, item)) {
-            player.displayClientMessage(PlayerMessages.DeviceNotPowered.text(), true);
-            return false;
-        }
-        return true;
+    protected boolean checkPreconditions(ItemStack item) {
+        return !item.isEmpty() && item.getItem() == this;
     }
 
     /**
@@ -264,18 +231,12 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
      *
      * @return config manager of wireless terminal
      */
-    public IConfigManager getConfigManager(ItemStack target) {
-        var out = new ConfigManager((manager, settingName) -> {
-            manager.writeToNBT(target.getOrCreateTag());
-        });
-
-        out.registerSetting(Settings.SORT_BY, SortOrder.NAME);
-        out.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
-        out.registerSetting(Settings.TYPE_FILTER, TypeFilter.ALL);
-        out.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
-
-        out.readFromNBT(target.getOrCreateTag().copy());
-        return out;
+    public IConfigManager getConfigManager(Supplier<ItemStack> target) {
+        return IConfigManager.builder(target)
+                .registerSetting(appeng.api.config.Settings.SORT_BY, SortOrder.NAME)
+                .registerSetting(appeng.api.config.Settings.VIEW_MODE, ViewItems.ALL)
+                .registerSetting(appeng.api.config.Settings.SORT_DIRECTION, SortDir.ASCENDING)
+                .build();
     }
 
     @Override
@@ -295,14 +256,12 @@ public class WirelessTerminalItem extends AEBasePoweredItem implements IMenuItem
 
         @Override
         public void link(ItemStack itemStack, GlobalPos pos) {
-            GlobalPos.CODEC.encodeStart(NbtOps.INSTANCE, pos)
-                    .result()
-                    .ifPresent(tag -> itemStack.getOrCreateTag().put(TAG_ACCESS_POINT_POS, tag));
+            itemStack.set(AEComponents.WIRELESS_LINK_TARGET, pos);
         }
 
         @Override
         public void unlink(ItemStack itemStack) {
-            itemStack.removeTagKey(TAG_ACCESS_POINT_POS);
+            itemStack.remove(AEComponents.WIRELESS_LINK_TARGET);
         }
     }
 }

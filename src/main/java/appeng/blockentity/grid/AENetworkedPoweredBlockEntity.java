@@ -18,22 +18,26 @@
 
 package appeng.blockentity.grid;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerUnit;
+import appeng.api.implementations.blockentities.ICrankable;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.orientation.BlockOrientation;
 import appeng.api.util.AECableType;
+import appeng.blockentity.misc.CrankBlockEntity;
 import appeng.blockentity.powersink.AEBasePoweredBlockEntity;
 import appeng.me.helpers.BlockEntityNodeListener;
 import appeng.me.helpers.IGridConnectedBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-public abstract class AENetworkPowerBlockEntity extends AEBasePoweredBlockEntity
+public abstract class AENetworkedPoweredBlockEntity extends AEBasePoweredBlockEntity
         implements IGridConnectedBlockEntity {
 
     private final IManagedGridNode mainNode = createMainNode()
@@ -42,7 +46,7 @@ public abstract class AENetworkPowerBlockEntity extends AEBasePoweredBlockEntity
             .setInWorldNode(true)
             .setTagName("proxy");
 
-    public AENetworkPowerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
+    public AENetworkedPoweredBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
         onGridConnectableSidesChanged();
     }
@@ -52,14 +56,14 @@ public abstract class AENetworkPowerBlockEntity extends AEBasePoweredBlockEntity
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         this.getMainNode().loadFromNBT(data);
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         this.getMainNode().saveToNBT(data);
     }
 
@@ -85,12 +89,6 @@ public abstract class AENetworkPowerBlockEntity extends AEBasePoweredBlockEntity
     }
 
     @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        this.getMainNode().destroy();
-    }
-
-    @Override
     public void onReady() {
         super.onReady();
         this.getMainNode().create(getLevel(), getBlockEntity().getBlockPos());
@@ -108,5 +106,17 @@ public abstract class AENetworkPowerBlockEntity extends AEBasePoweredBlockEntity
      */
     protected final void onGridConnectableSidesChanged() {
         getMainNode().setExposedOnSides(getGridConnectableSides(getOrientation()));
+    }
+
+    public final class Crankable implements ICrankable {
+        @Override
+        public boolean canTurn() {
+            return getInternalCurrentPower() < getInternalMaxPower();
+        }
+
+        @Override
+        public void applyTurn() {
+            injectExternalPower(PowerUnit.AE, CrankBlockEntity.POWER_PER_CRANK_TURN, Actionable.MODULATE);
+        }
     }
 }

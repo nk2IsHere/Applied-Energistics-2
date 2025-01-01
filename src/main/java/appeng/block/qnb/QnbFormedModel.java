@@ -18,25 +18,19 @@
 
 package appeng.block.qnb;
 
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.Collection;
 import java.util.function.Function;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
-
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
-
 public class QnbFormedModel implements BasicUnbakedModel {
 
-    private static final ResourceLocation MODEL_RING = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "block/qnb/ring");
+    private static final ResourceLocation MODEL_RING = AppEng.makeId("block/qnb/ring");
 
     @org.jetbrains.annotations.Nullable
     @Override

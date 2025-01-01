@@ -18,14 +18,27 @@
 
 package appeng.blockentity.crafting;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.Set;
-
+import appeng.api.implementations.IPowerChannelState;
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGridMultiblock;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IGridNodeListener;
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.util.IConfigManager;
+import appeng.api.util.IConfigurableObject;
+import appeng.block.crafting.AbstractCraftingUnitBlock;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.me.cluster.IAEMultiBlock;
+import appeng.me.cluster.implementations.CraftingCPUCalculator;
+import appeng.me.cluster.implementations.CraftingCPUCluster;
+import appeng.util.NullConfigManager;
+import appeng.util.Platform;
+import appeng.util.iterators.ChainedIterator;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
@@ -36,25 +49,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.implementations.IPowerChannelState;
-import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGridMultiblock;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.util.IConfigManager;
-import appeng.api.util.IConfigurableObject;
-import appeng.block.crafting.AbstractCraftingUnitBlock;
-import appeng.blockentity.grid.AENetworkBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.me.cluster.IAEMultiBlock;
-import appeng.me.cluster.implementations.CraftingCPUCalculator;
-import appeng.me.cluster.implementations.CraftingCPUCluster;
-import appeng.util.NullConfigManager;
-import appeng.util.Platform;
-import appeng.util.iterators.ChainedIterator;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class CraftingBlockEntity extends AENetworkBlockEntity
+public class CraftingBlockEntity extends AENetworkedBlockEntity
         implements IAEMultiBlock<CraftingCPUCluster>, IPowerChannelState, IConfigurableObject {
 
     private final CraftingCPUCalculator calc = new CraftingCPUCalculator(this);
@@ -168,21 +168,21 @@ public class CraftingBlockEntity extends AENetworkBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         data.putBoolean("core", this.isCoreBlock());
         if (this.isCoreBlock() && this.cluster != null) {
-            this.cluster.writeToNBT(data);
+            this.cluster.writeToNBT(data, registries);
         }
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         this.setCoreBlock(data.getBoolean("core"));
         if (this.isCoreBlock()) {
             if (this.cluster != null) {
-                this.cluster.readFromNBT(data);
+                this.cluster.readFromNBT(data, registries);
             } else {
                 this.setPreviousState(data.copy());
             }
@@ -289,7 +289,7 @@ public class CraftingBlockEntity extends AENetworkBlockEntity
     }
 
     @Override
-    public Object getRenderAttachmentData() {
+    public Object getRenderData() {
         return new CraftingCubeModelData(getConnections());
     }
 

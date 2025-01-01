@@ -18,9 +18,9 @@
 
 package appeng.block.qnb;
 
-import java.util.Set;
-
 import net.minecraft.core.Direction;
+
+import java.util.Set;
 
 public class QnbFormedState {
 

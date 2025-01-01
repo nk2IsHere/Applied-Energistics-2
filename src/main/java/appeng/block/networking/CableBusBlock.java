@@ -18,14 +18,19 @@
 
 package appeng.block.networking;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.parts.IFacadeContainer;
+import appeng.api.parts.IFacadePart;
+import appeng.api.util.AEColor;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.networking.CableBusBlockEntity;
+import appeng.client.render.cablebus.CableBusBakedModel;
+import appeng.client.render.cablebus.CableBusBreakingParticle;
+import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.integration.abstraction.IAEFacade;
+import appeng.parts.ICableBusContainer;
+import appeng.parts.NullCableBusContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -38,6 +43,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -45,11 +51,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -70,26 +72,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.parts.IFacadeContainer;
-import appeng.api.parts.IFacadePart;
-import appeng.api.util.AEColor;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.client.render.cablebus.CableBusBakedModel;
-import appeng.client.render.cablebus.CableBusBreakingParticle;
-import appeng.client.render.cablebus.CableBusRenderState;
-import appeng.hooks.ICustomBlockDestroyEffect;
-import appeng.hooks.ICustomBlockHitEffect;
-import appeng.hooks.ICustomPickBlock;
-import appeng.hooks.IDynamicLadder;
-import appeng.hooks.INeighborChangeSensitive;
-import appeng.integration.abstraction.IAEFacade;
-import appeng.parts.ICableBusContainer;
-import appeng.parts.NullCableBusContainer;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implements IAEFacade, SimpleWaterloggedBlock,
-        ICustomBlockHitEffect, ICustomBlockDestroyEffect, INeighborChangeSensitive, IDynamicLadder, ICustomPickBlock {
+public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implements IAEFacade, SimpleWaterloggedBlock {
 
     private static final ICableBusContainer NULL_CABLE_BUS = new NullCableBusContainer();
 
@@ -108,7 +96,7 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
@@ -159,7 +147,6 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
         builder.add(LIGHT_LEVEL, WATERLOGGED);
     }
 
-    @Override
     public boolean isLadder(BlockState state, LevelReader level, BlockPos pos, LivingEntity entity) {
         return this.cb(level, pos).isLadder(entity);
     }
@@ -181,7 +168,6 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
         return this.cb(level, pos).canConnectRedstone(side.getOpposite());
     }
 
-    @Override
     public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter level, BlockPos pos,
             Player player) {
         var v3 = target.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
@@ -228,13 +214,23 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
     }
 
     @Override
-    public InteractionResult onActivated(Level level, BlockPos pos, Player player,
-            InteractionHand hand,
-            @Nullable ItemStack heldItem, BlockHitResult hit) {
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos,
+            Player player, InteractionHand hand, BlockHitResult hit) {
         // Transform from world into block space
         Vec3 hitVec = hit.getLocation();
         Vec3 hitInBlock = new Vec3(hitVec.x - pos.getX(), hitVec.y - pos.getY(), hitVec.z - pos.getZ());
-        return this.cb(level, pos).activate(player, hand, hitInBlock)
+        return this.cb(level, pos).useItemOn(heldItem, player, hand, hitInBlock)
+                ? ItemInteractionResult.sidedSuccess(level.isClientSide())
+                : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+            BlockHitResult hitResult) {
+        // Transform from world into block space
+        Vec3 hitVec = hitResult.getLocation();
+        Vec3 hitInBlock = new Vec3(hitVec.x - pos.getX(), hitVec.y - pos.getY(), hitVec.z - pos.getZ());
+        return this.cb(level, pos).useWithoutItem(player, hitInBlock)
                 ? InteractionResult.sidedSuccess(level.isClientSide())
                 : InteractionResult.PASS;
     }
@@ -242,13 +238,13 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
     public boolean recolorBlock(BlockGetter level, BlockPos pos, Direction side,
             DyeColor color, Player who) {
         try {
-            return this.cb(level, pos).recolourBlock(side, AEColor.values()[color.ordinal()], who);
+            return this.cb(level, pos).recolourBlock(side, AEColor.fromDye(color), who);
         } catch (Throwable ignored) {
         }
         return false;
     }
 
-    public void addToMainCreativeTab(CreativeModeTab.Output output) {
+    public void addToMainCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // do nothing
     }
 
@@ -325,13 +321,11 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
         return super.updateShape(blockState, facing, facingState, level, currentPos, facingPos);
     }
 
-    @Override
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         this.cb(level, pos).onNeighborChanged(level, pos, neighbor);
     }
 
     @Environment(EnvType.CLIENT)
-    @Override
     public boolean addHitEffects(BlockState state, Level level, HitResult target,
             ParticleEngine effectRenderer) {
 
@@ -376,7 +370,6 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
     }
 
     @Environment(EnvType.CLIENT)
-    @Override
     public boolean addDestroyEffects(BlockState state, Level level, BlockPos pos,
             ParticleEngine effectRenderer) {
         ICableBusContainer cb = cb(level, pos);
@@ -438,8 +431,8 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
     @Override
     public BlockState getAppearance(BlockState state, BlockAndTintGetter renderView, BlockPos pos, Direction side,
             @Nullable BlockState sourceState, @Nullable BlockPos sourcePos) {
-        if (((RenderAttachedBlockView) renderView)
-                .getBlockEntityRenderAttachment(pos) instanceof CableBusRenderState cableBusRenderState) {
+        var attachedBlockView = renderView.getBlockEntityRenderData(pos);
+        if (attachedBlockView instanceof CableBusRenderState cableBusRenderState) {
             var renderingFacadeDir = RENDERING_FACADE_DIRECTION.get();
             var facades = cableBusRenderState.getFacades();
 

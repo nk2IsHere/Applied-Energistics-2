@@ -18,13 +18,12 @@
 
 package appeng.crafting;
 
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingRequester;
 import appeng.me.service.CraftingService;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class CraftingLinkNexus {
 

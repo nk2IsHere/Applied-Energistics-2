@@ -18,14 +18,13 @@
 
 package appeng.blockentity.misc;
 
-import net.minecraft.network.chat.Component;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
+import net.minecraft.network.chat.Component;
 
 class CondenserMEStorage implements MEStorage {
     private final CondenserBlockEntity target;

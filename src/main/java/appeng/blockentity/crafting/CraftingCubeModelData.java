@@ -18,12 +18,11 @@
 
 package appeng.blockentity.crafting;
 
-import java.util.EnumSet;
-import java.util.Objects;
-
+import appeng.client.render.model.AEModelData;
 import net.minecraft.core.Direction;
 
-import appeng.client.render.model.AEModelData;
+import java.util.EnumSet;
+import java.util.Objects;
 
 public class CraftingCubeModelData extends AEModelData {
 
@@ -63,5 +62,4 @@ public class CraftingCubeModelData extends AEModelData {
     public int hashCode() {
         return Objects.hash(super.hashCode(), connections);
     }
-
 }

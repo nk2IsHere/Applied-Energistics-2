@@ -18,20 +18,19 @@
 
 package appeng.block.spatial;
 
+import appeng.block.AEBaseBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import appeng.block.AEBaseBlock;
 
 /**
  * This block is used to fill empty space in spatial dimensions and delinates the border of a spatial dimensions's
@@ -40,7 +39,7 @@ import appeng.block.AEBaseBlock;
 public class MatrixFrameBlock extends AEBaseBlock {
 
     public MatrixFrameBlock() {
-        super(BlockBehaviour.Properties.of().strength(-1.0F, 6000000.0F).noOcclusion().noLootTable());
+        super(Properties.of().strength(-1.0F, 6000000.0F).noOcclusion().noLootTable());
     }
 
     @Override
@@ -49,7 +48,7 @@ public class MatrixFrameBlock extends AEBaseBlock {
     }
 
     @Override
-    public void addToMainCreativeTab(CreativeModeTab.Output output) {
+    public void addToMainCreativeTab(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         // do nothing
     }
 

@@ -18,8 +18,8 @@
 
 package appeng.block.qnb;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -28,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -39,9 +38,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBlockEntity>
         implements SimpleWaterloggedBlock {
@@ -56,7 +53,7 @@ public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBl
         SHAPE = Shapes.create(new AABB(shave, shave, shave, 1.0f - shave, 1.0f - shave, 1.0f - shave));
     }
 
-    public QuantumBaseBlock(BlockBehaviour.Properties props) {
+    public QuantumBaseBlock(Properties props) {
         super(props);
         this.registerDefaultState(this.defaultBlockState().setValue(FORMED, false)
                 .setValue(WATERLOGGED, false));

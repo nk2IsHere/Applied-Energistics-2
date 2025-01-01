@@ -117,7 +117,7 @@ public class ReiPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
-        if (AEConfig.instance().isEnableFacadeRecipesInJEI()) {
+        if (AEConfig.instance().isEnableFacadeRecipesInRecipeViewer()) {
             registry.registerGlobalDisplayGenerator(new FacadeRegistryGenerator());
         }
 
@@ -178,16 +178,16 @@ public class ReiPlugin implements REIClientPlugin {
     public void registerEntries(EntryRegistry registry) {
         // Will be hidden if developer items are disabled in the config
         developerItems = ImmutableList.of(
-                AEBlocks.DEBUG_CUBE_GEN::isSameAs,
-                AEBlocks.DEBUG_CHUNK_LOADER::isSameAs,
-                AEBlocks.DEBUG_ENERGY_GEN::isSameAs,
-                AEBlocks.DEBUG_ITEM_GEN::isSameAs,
-                AEBlocks.DEBUG_PHANTOM_NODE::isSameAs,
+                AEBlocks.DEBUG_CUBE_GEN::is,
+                AEBlocks.DEBUG_CHUNK_LOADER::is,
+                AEBlocks.DEBUG_ENERGY_GEN::is,
+                AEBlocks.DEBUG_ITEM_GEN::is,
+                AEBlocks.DEBUG_PHANTOM_NODE::is,
 
-                AEItems.DEBUG_CARD::isSameAs,
-                AEItems.DEBUG_ERASER::isSameAs,
-                AEItems.DEBUG_METEORITE_PLACER::isSameAs,
-                AEItems.DEBUG_REPLICATOR_CARD::isSameAs);
+                AEItems.DEBUG_CARD::is,
+                AEItems.DEBUG_ERASER::is,
+                AEItems.DEBUG_METEORITE_PLACER::is,
+                AEItems.DEBUG_REPLICATOR_CARD::is);
 
         // Will be hidden if colored cables are hidden
         List<Predicate<ItemStack>> predicates = new ArrayList<>();
@@ -206,7 +206,7 @@ public class ReiPlugin implements REIClientPlugin {
 
         registry.removeEntryIf(this::shouldEntryBeHidden);
 
-        if (AEConfig.instance().isEnableFacadesInJEI()) {
+        if (AEConfig.instance().isEnableFacadesInRecipeViewer()) {
             registry.addEntries(
                     EntryIngredients.ofItemStacks(FacadeCreativeTab.getDisplayItems()));
         }
@@ -214,7 +214,7 @@ public class ReiPlugin implements REIClientPlugin {
 
     @Override
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
-        if (AEConfig.instance().isEnableFacadesInJEI()) {
+        if (AEConfig.instance().isEnableFacadesInRecipeViewer()) {
             FacadeItem facadeItem = AEItems.FACADE.asItem();
             registry.group(AppEng.makeId("facades"), Component.translatable("itemGroup.ae2.facades"),
                     stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(facadeItem));
@@ -296,7 +296,7 @@ public class ReiPlugin implements REIClientPlugin {
             addDescription(registry, AEItems.SILICON_PRESS, GuiText.inWorldCraftingPresses.getTranslationKey());
         }
 
-        addDescription(registry, AEBlocks.CRANK, ItemModText.CRANK_DESCRIPTION.getTranslationKey());
+        addDescription(registry, AEBlocks.CRANK.item(), ItemModText.CRANK_DESCRIPTION.getTranslationKey());
     }
 
     private static void addDescription(DisplayRegistry registry, ItemDefinition<?> itemDefinition, String... message) {
@@ -312,11 +312,11 @@ public class ReiPlugin implements REIClientPlugin {
         }
         ItemStack stack = entryStack.castValue();
 
-        if (AEItems.WRAPPED_GENERIC_STACK.isSameAs(stack)
-                || AEItems.FACADE.isSameAs(stack) // REI will add a broken facade with no NBT
-                || AEBlocks.CABLE_BUS.isSameAs(stack)
-                || AEBlocks.MATRIX_FRAME.isSameAs(stack)
-                || AEBlocks.PAINT.isSameAs(stack)) {
+        if (AEItems.WRAPPED_GENERIC_STACK.is(stack)
+                || AEItems.FACADE.is(stack) // REI will add a broken facade with no NBT
+                || AEBlocks.CABLE_BUS.is(stack)
+                || AEBlocks.MATRIX_FRAME.is(stack)
+                || AEBlocks.PAINT.is(stack)) {
             return true;
         }
 
@@ -328,7 +328,7 @@ public class ReiPlugin implements REIClientPlugin {
             }
         }
 
-        if (AEConfig.instance().isDisableColoredCableRecipesInJEI()) {
+        if (AEConfig.instance().isDisableColoredCableRecipesInRecipeViewer()) {
             for (var predicate : coloredCables) {
                 if (predicate.test(stack)) {
                     return true;

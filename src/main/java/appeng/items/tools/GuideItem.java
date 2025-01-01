@@ -1,8 +1,7 @@
 package appeng.items.tools;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import appeng.core.AppEng;
+import appeng.items.AEBaseItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -10,15 +9,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import appeng.core.AppEng;
-import appeng.items.AEBaseItem;
-
 /**
  * Shows the guidebook when used.
  */
 public class GuideItem extends AEBaseItem {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GuideItem.class);
-
     public GuideItem(Properties properties) {
         super(properties);
     }

@@ -18,38 +18,36 @@
 
 package appeng.block;
 
-import java.util.List;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+
+import java.util.List;
 
 public class AEBaseBlockItem extends BlockItem {
 
     private final AEBaseBlock blockType;
 
-    public AEBaseBlockItem(Block id, Item.Properties props) {
+    public AEBaseBlockItem(Block id, Properties props) {
         super(id, props);
         this.blockType = (AEBaseBlock) id;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void appendHoverText(ItemStack itemStack, Level level, List<Component> toolTip,
+    public final void appendHoverText(ItemStack itemStack, TooltipContext context, List<Component> toolTip,
             TooltipFlag advancedTooltips) {
-        this.addCheckedInformation(itemStack, level, toolTip, advancedTooltips);
+        this.addCheckedInformation(itemStack, context, toolTip, advancedTooltips);
     }
 
     @Environment(EnvType.CLIENT)
-    public void addCheckedInformation(ItemStack itemStack, Level level, List<Component> toolTip,
+    public void addCheckedInformation(ItemStack itemStack, TooltipContext context, List<Component> toolTip,
             TooltipFlag advancedTooltips) {
-        this.blockType.appendHoverText(itemStack, level, toolTip, advancedTooltips);
+        this.blockType.appendHoverText(itemStack, context, toolTip, advancedTooltips);
     }
 
     @Override

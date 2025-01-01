@@ -18,44 +18,7 @@
 
 package appeng.blockentity.storage;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.BlankVariantView;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.InsertionOnlyStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
-import appeng.api.config.Settings;
-import appeng.api.config.SortDir;
-import appeng.api.config.SortOrder;
-import appeng.api.config.TypeFilter;
-import appeng.api.config.ViewItems;
+import appeng.api.config.*;
 import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.api.implementations.blockentities.IMEChest;
 import appeng.api.inventories.InternalInventory;
@@ -68,38 +31,66 @@ import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import appeng.api.storage.IStorageMounts;
-import appeng.api.storage.IStorageProvider;
-import appeng.api.storage.ITerminalHost;
-import appeng.api.storage.MEStorage;
-import appeng.api.storage.StorageCells;
-import appeng.api.storage.StorageHelper;
-import appeng.api.storage.SupplierStorage;
+import appeng.api.storage.*;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.StorageCell;
 import appeng.api.util.AEColor;
 import appeng.api.util.IConfigManager;
+import appeng.api.util.KeyTypeSelection;
+import appeng.api.util.KeyTypeSelectionHost;
 import appeng.blockentity.ServerTickingBlockEntity;
-import appeng.blockentity.grid.AENetworkPowerBlockEntity;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.definitions.AEBlocks;
+import appeng.core.localization.GuiText;
+import appeng.core.localization.PlayerMessages;
 import appeng.helpers.IPriorityHost;
 import appeng.me.helpers.MachineSource;
 import appeng.me.storage.DelegatingMEInventory;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
-import appeng.menu.implementations.ChestMenu;
+import appeng.menu.implementations.MEChestMenu;
 import appeng.menu.locator.MenuLocators;
-import appeng.util.ConfigManager;
+import appeng.menu.me.items.BasicCellChestMenu;
 import appeng.util.Platform;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.CombinedInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.BlankVariantView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.InsertionOnlyStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ChestBlockEntity extends AENetworkPowerBlockEntity
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+
+public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
         implements IMEChest, ITerminalHost, IPriorityHost, IColorableBlockEntity,
-        ServerTickingBlockEntity, IStorageProvider {
+        ServerTickingBlockEntity, IStorageProvider, KeyTypeSelectionHost {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChestBlockEntity.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MEChestBlockEntity.class);
 
     private final AppEngInternalInventory inputInventory = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory cellInventory = new AppEngInternalInventory(this, 1);
@@ -107,7 +98,12 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
             this.cellInventory);
 
     private final IActionSource mySrc = new MachineSource(this);
-    private final IConfigManager config = new ConfigManager(this::saveChanges);
+    private final IConfigManager config = IConfigManager.builder(this::saveChanges)
+            .registerSetting(Settings.SORT_BY, SortOrder.NAME)
+            .registerSetting(Settings.VIEW_MODE, ViewItems.ALL)
+            .registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING)
+            .build();
+    private final KeyTypeSelection keyTypeSelection = new KeyTypeSelection(this::saveChanges, keyType -> true);
     private int priority = 0;
     // Client-side cell state or last cell-state sent to client (for update-checking)
     private CellState clientCellState = CellState.ABSENT;
@@ -124,16 +120,12 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     private SupplierStorage supplierStorage;
     private double idlePowerUsage;
 
-    public ChestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
+    public MEChestBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState) {
         super(blockEntityType, pos, blockState);
         this.setInternalMaxPower(PowerMultiplier.CONFIG.multiply(500));
         this.getMainNode()
                 .addService(IStorageProvider.class, this)
                 .setFlags(GridFlags.REQUIRE_CHANNEL);
-        this.config.registerSetting(Settings.SORT_BY, SortOrder.NAME);
-        this.config.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
-        this.config.registerSetting(Settings.TYPE_FILTER, TypeFilter.ALL);
-        this.config.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
 
         this.setInternalPublicPowerStorage(true);
         this.setInternalPowerFlow(AccessRestriction.WRITE);
@@ -219,6 +211,19 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
         }
 
         return new ChestMonitorHandler(cellInventory);
+    }
+
+    @Override
+    public ILinkStatus getLinkStatus() {
+        updateHandler();
+        if (cellHandler == null) {
+            return ILinkStatus.ofDisconnected(PlayerMessages.ChestCannotReadStorageCell.text());
+        }
+        // The Chest GUI works independently of the grid the chest may be connected to
+        if (!isPowered()) {
+            return ILinkStatus.ofDisconnected(GuiText.OutOfPower.text());
+        }
+        return ILinkStatus.ofConnected();
     }
 
     @Override
@@ -321,7 +326,7 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
 
         data.writeEnum(clientCellState = getCellStatus(0));
@@ -336,7 +341,7 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         final boolean c = super.readFromStream(data);
 
         var oldCellState = clientCellState;
@@ -396,9 +401,10 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.config.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.config.readFromNBT(data, registries);
+        this.keyTypeSelection.readFromNBT(data, registries);
         this.priority = data.getInt("priority");
         if (data.contains("paintedColor")) {
             this.paintedColor = AEColor.values()[data.getByte("paintedColor")];
@@ -406,9 +412,10 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.config.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.config.writeToNBT(data, registries);
+        this.keyTypeSelection.writeToNBT(data);
         data.putInt("priority", this.priority);
         data.putByte("paintedColor", (byte) this.paintedColor.ordinal());
     }
@@ -425,12 +432,10 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
 
     @Override
     public MEStorage getInventory() {
-        this.updateHandler();
-
-        if (this.supplierStorage != null) {
-            return this.supplierStorage;
-        }
-        return null;
+        return new SupplierStorage(() -> {
+            updateHandler();
+            return this.cellHandler;
+        });
     }
 
     @Override
@@ -439,10 +444,9 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         if (inv == this.cellInventory) {
             this.cellHandler = null;
-            this.supplierStorage = null;
             this.isCached = false; // recalculate the storage cell.
 
             IStorageProvider.requestUpdate(getMainNode());
@@ -459,7 +463,7 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     @Override
-    public InternalInventory getExposedInventoryForSide(Direction side) {
+    protected InternalInventory getExposedInventoryForSide(Direction side) {
         if (side == this.getFront()) {
             return this.cellInventory;
         } else {
@@ -511,7 +515,6 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     public void setPriority(int newValue) {
         this.priority = newValue;
         this.cellHandler = null;
-        this.supplierStorage = null;
         this.isCached = false; // recalculate the storage cell.
 
         IStorageProvider.requestUpdate(getMainNode());
@@ -526,17 +529,19 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
         return this.config;
     }
 
+    @Override
+    public KeyTypeSelection getKeyTypeSelection() {
+        return this.keyTypeSelection;
+    }
+
     public boolean openGui(Player p) {
         this.updateHandler();
         if (this.cellHandler != null) {
             var ch = StorageCells.getHandler(this.getCell());
 
             if (ch != null) {
-                var chg = StorageCells.getGuiHandler(this.getCell());
-                if (chg != null) {
-                    chg.openChestGui(p, this, ch, this.getCell());
-                    return true;
-                }
+                MenuOpener.open(BasicCellChestMenu.TYPE, p, MenuLocators.forBlockEntity(this));
+                return true;
             }
         }
 
@@ -568,7 +573,7 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
     }
 
     public void openCellInventoryMenu(Player player) {
-        MenuOpener.open(ChestMenu.TYPE, player, MenuLocators.forBlockEntity(this));
+        MenuOpener.open(MEChestMenu.TYPE, player, MenuLocators.forBlockEntity(this));
     }
 
     private class ChestMonitorHandler extends DelegatingMEInventory {
@@ -627,7 +632,7 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
                 new BlankVariantView<>(FluidVariant.blank(), AEFluidKey.AMOUNT_BUCKET));
 
         private boolean canAcceptLiquids() {
-            return ChestBlockEntity.this.cellHandler != null;
+            return MEChestBlockEntity.this.cellHandler != null;
         }
 
         @Override
@@ -638,9 +643,9 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
                 return 0; // Can only insert once per action
             }
 
-            ChestBlockEntity.this.updateHandler();
+            MEChestBlockEntity.this.updateHandler();
             if (canAcceptLiquids()) {
-                var what = AEFluidKey.of(resource);
+                var what = AEFluidKey.of(resource.getFluid());
                 var inserted = pushToNetwork(what, maxAmount, Actionable.SIMULATE);
                 if (inserted > 0) {
                     updateSnapshots(transaction);
@@ -678,14 +683,14 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
         }
 
         private long pushToNetwork(AEKey what, long amount, Actionable mode) {
-            ChestBlockEntity.this.updateHandler();
+            MEChestBlockEntity.this.updateHandler();
             if (canAcceptLiquids()) {
                 return StorageHelper.poweredInsert(
-                        ChestBlockEntity.this,
-                        ChestBlockEntity.this.cellHandler,
+                        MEChestBlockEntity.this,
+                        MEChestBlockEntity.this.cellHandler,
                         what,
                         amount,
-                        ChestBlockEntity.this.mySrc,
+                        MEChestBlockEntity.this.mySrc,
                         mode);
             }
             return 0;
@@ -733,11 +738,11 @@ public class ChestBlockEntity extends AENetworkPowerBlockEntity
 
     @Override
     public ItemStack getMainMenuIcon() {
-        return AEBlocks.CHEST.stack();
+        return AEBlocks.ME_CHEST.stack();
     }
 
     @Override
     public void returnToMainMenu(Player player, ISubMenu subMenu) {
-        MenuOpener.returnTo(ChestMenu.TYPE, player, MenuLocators.forBlockEntity(this));
+        MenuOpener.returnTo(MEChestMenu.TYPE, player, MenuLocators.forBlockEntity(this));
     }
 }

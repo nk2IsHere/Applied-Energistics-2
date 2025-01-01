@@ -18,19 +18,23 @@
 
 package appeng.blockentity;
 
-import java.util.List;
-
+import appeng.api.inventories.InternalInventory;
+import appeng.api.stacks.GenericStack;
+import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.InternalInventoryHost;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.api.stacks.GenericStack;
-import appeng.util.inv.InternalInventoryHost;
+import java.util.List;
 
 public abstract class AEBaseInvBlockEntity extends AEBaseBlockEntity implements InternalInventoryHost {
 
@@ -39,14 +43,14 @@ public abstract class AEBaseInvBlockEntity extends AEBaseBlockEntity implements 
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
         var inv = this.getInternalInventory();
         if (inv != InternalInventory.empty()) {
             var opt = data.getCompound("inv");
             for (int x = 0; x < inv.size(); x++) {
                 var item = opt.getCompound("item" + x);
-                inv.setItemDirect(x, ItemStack.of(item));
+                inv.setItemDirect(x, ItemStack.parseOptional(registries, item));
             }
         }
     }
@@ -54,18 +58,14 @@ public abstract class AEBaseInvBlockEntity extends AEBaseBlockEntity implements 
     public abstract InternalInventory getInternalInventory();
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
         var inv = this.getInternalInventory();
         if (inv != InternalInventory.empty()) {
             final CompoundTag opt = new CompoundTag();
             for (int x = 0; x < inv.size(); x++) {
-                final CompoundTag item = new CompoundTag();
-                final ItemStack is = inv.getStackInSlot(x);
-                if (!is.isEmpty()) {
-                    is.save(item);
-                }
-                opt.put("item" + x, item);
+                var is = inv.getStackInSlot(x);
+                opt.put("item" + x, is.saveOptional(registries));
             }
             data.put("inv", opt);
         }
@@ -95,10 +95,25 @@ public abstract class AEBaseInvBlockEntity extends AEBaseBlockEntity implements 
     }
 
     @Override
-    public abstract void onChangeInventory(InternalInventory inv, int slot);
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        this.saveChanges();
+    }
 
-    public InternalInventory getExposedInventoryForSide(Direction side) {
+    protected InternalInventory getExposedInventoryForSide(Direction side) {
         return this.getInternalInventory();
     }
 
+    @Nullable
+    public Storage<ItemVariant> getExposedItemHandler(@Nullable Direction side) {
+        if (side == null) {
+            return getInternalInventory().toStorage();
+        } else {
+            var exposed = getExposedInventoryForSide(side);
+            // If the inventory has 0 slots, it's probably a dummy.
+            // Return null to avoid pipe connections to it.
+            // isEmpty checks for stacks, use size to only check the slot count.
+            // noinspection SizeReplaceableByIsEmpty
+            return exposed.size() == 0 ? null : exposed.toStorage();
+        }
+    }
 }

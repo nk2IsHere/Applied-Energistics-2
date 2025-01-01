@@ -165,3 +165,4 @@ accessible field net/minecraft/world/level/entity/PersistentEntitySectionManager
 accessible method net/minecraft/world/level/levelgen/structure/StructureType register (Ljava/lang/String;Lcom/mojang/serialization/MapCodec;)Lnet/minecraft/world/level/levelgen/structure/StructureType;
 accessible method net/minecraft/world/item/crafting/RecipeManager byType (Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Collection;
 accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)Lnet/minecraft/core/particles/SimpleParticleType;
+accessible field net/minecraft/world/item/ItemStackLinkedSet TYPE_AND_TAG Ljava/util/Set;

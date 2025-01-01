@@ -18,179 +18,175 @@
 
 package appeng.items.tools;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.ResourceLocationException;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeableLeatherItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-
+import appeng.api.components.ExportedUpgrades;
+import appeng.api.ids.AEComponents;
 import appeng.api.implementations.items.IMemoryCard;
 import appeng.api.implementations.items.MemoryCardMessages;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.upgrades.IUpgradeableObject;
-import appeng.api.util.AEColor;
 import appeng.api.util.IConfigurableObject;
-import appeng.core.AELog;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.InGameTooltip;
 import appeng.core.localization.PlayerMessages;
 import appeng.core.localization.Tooltips;
+import appeng.datagen.providers.tags.ConventionTags;
 import appeng.helpers.IConfigInvHost;
 import appeng.helpers.IPriorityHost;
-import appeng.hooks.AEToolItem;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
 import appeng.util.Platform;
 import appeng.util.inv.PlayerInternalInventory;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackLinkedSet;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.Nullable;
 
-public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolItem, DyeableLeatherItem {
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-    private static final int DEFAULT_BASE_COLOR = 0xDDDDDD;
+public class MemoryCardItem extends AEBaseItem implements IMemoryCard {
+    private static final int DEFAULT_BASE_COLOR = 0x9cd3ff;
 
-    private static final AEColor[] DEFAULT_COLOR_CODE = new AEColor[] { AEColor.TRANSPARENT, AEColor.TRANSPARENT,
-            AEColor.TRANSPARENT, AEColor.TRANSPARENT, AEColor.TRANSPARENT, AEColor.TRANSPARENT, AEColor.TRANSPARENT,
-            AEColor.TRANSPARENT, };
-
-    public MemoryCardItem(Item.Properties properties) {
+    public MemoryCardItem(Properties properties) {
         super(properties);
     }
 
-    public static Set<SettingsCategory> exportGenericSettings(Object exportFrom, CompoundTag output) {
-        var exported = EnumSet.noneOf(SettingsCategory.class);
-
+    public static void exportGenericSettings(Object exportFrom, DataComponentMap.Builder builder) {
         if (exportFrom instanceof IUpgradeableObject upgradeableObject) {
-            MemoryCardItem.storeUpgrades(upgradeableObject, output);
-            exported.add(SettingsCategory.UPGRADES);
+            builder.set(AEComponents.EXPORTED_UPGRADES, MemoryCardItem.storeUpgrades(upgradeableObject));
         }
 
         if (exportFrom instanceof IConfigurableObject configurableObject) {
-            configurableObject.getConfigManager().writeToNBT(output);
-            exported.add(SettingsCategory.SETTINGS);
+            builder.set(AEComponents.EXPORTED_SETTINGS, configurableObject.getConfigManager().exportSettings());
         }
 
         if (exportFrom instanceof IPriorityHost pHost) {
-            output.putInt("priority", pHost.getPriority());
-            exported.add(SettingsCategory.PRIORITY);
+            builder.set(AEComponents.EXPORTED_PRIORITY, pHost.getPriority());
         }
 
         if (exportFrom instanceof IConfigInvHost configInvHost) {
-            configInvHost.getConfig().writeToChildTag(output, "config");
-            exported.add(SettingsCategory.CONFIG_INV);
+            builder.set(AEComponents.EXPORTED_CONFIG_INV, configInvHost.getConfig().toList());
         }
-
-        return exported;
     }
 
-    public static Set<SettingsCategory> importGenericSettings(Object importTo, CompoundTag input,
+    /**
+     * @return Set of {@link DataComponentType} ids that were imported
+     */
+    public static Set<DataComponentType<?>> importGenericSettings(Object importTo,
+            DataComponentMap input,
             @Nullable Player player) {
-        var imported = EnumSet.noneOf(SettingsCategory.class);
+        var imported = new HashSet<DataComponentType<?>>();
 
         if (player != null && importTo instanceof IUpgradeableObject upgradeableObject) {
-            if (restoreUpgrades(player, input, upgradeableObject)) {
-                imported.add(SettingsCategory.UPGRADES);
+            var desiredUpgrades = input.get(AEComponents.EXPORTED_UPGRADES);
+            if (desiredUpgrades != null) {
+                restoreUpgrades(player, desiredUpgrades, upgradeableObject);
+                imported.add(AEComponents.EXPORTED_UPGRADES);
             }
         }
 
         if (importTo instanceof IConfigurableObject configurableObject) {
-            if (configurableObject.getConfigManager().readFromNBT(input)) {
-                imported.add(SettingsCategory.SETTINGS);
+            var exportedSettings = input.get(AEComponents.EXPORTED_SETTINGS);
+            if (exportedSettings != null) {
+                if (configurableObject.getConfigManager().importSettings(exportedSettings)) {
+                    imported.add(AEComponents.EXPORTED_SETTINGS);
+                }
             }
         }
 
-        if (importTo instanceof IPriorityHost pHost && input.contains("priority", Tag.TAG_INT)) {
-            pHost.setPriority(input.getInt("priority"));
-            imported.add(SettingsCategory.PRIORITY);
+        if (importTo instanceof IPriorityHost pHost) {
+            var exportedPriority = input.get(AEComponents.EXPORTED_PRIORITY);
+            if (exportedPriority != null) {
+                pHost.setPriority(exportedPriority);
+                imported.add(AEComponents.EXPORTED_PRIORITY);
+            }
         }
 
-        if (importTo instanceof IConfigInvHost configInvHost && input.contains("config")) {
-            configInvHost.getConfig().readFromChildTag(input, "config");
-            imported.add(SettingsCategory.CONFIG_INV);
+        if (importTo instanceof IConfigInvHost configInvHost) {
+            var exportedConfigInv = input.get(AEComponents.EXPORTED_CONFIG_INV);
+            if (exportedConfigInv != null) {
+                configInvHost.getConfig().readFromList(exportedConfigInv);
+                imported.add(AEComponents.EXPORTED_CONFIG_INV);
+            }
         }
 
         return imported;
     }
 
-    public static void importGenericSettingsAndNotify(Object importTo, CompoundTag input, @Nullable Player player) {
+    public static void importGenericSettingsAndNotify(Object importTo, DataComponentMap input,
+            @Nullable Player player) {
         var imported = importGenericSettings(importTo, input, player);
 
         if (player != null && !player.getCommandSenderWorld().isClientSide()) {
             if (imported.isEmpty()) {
                 player.displayClientMessage(PlayerMessages.InvalidMachine.text(), true);
             } else {
-                var restored = Tooltips.conjunction(imported.stream().map(SettingsCategory::getLabel).toList());
+                var restored = Tooltips
+                        .conjunction(imported.stream().map(MemoryCardItem::getSettingComponent)
+                                .distinct().toList());
                 player.displayClientMessage(PlayerMessages.InvalidMachinePartiallyRestored.text(restored), true);
             }
         }
     }
 
-    private static void storeUpgrades(IUpgradeableObject upgradeableObject, CompoundTag output) {
-        // Accumulate upgrades as itemId->count NBT
-        var desiredUpgradesTag = new CompoundTag();
-        for (var upgrade : upgradeableObject.getUpgrades()) {
-            var itemId = BuiltInRegistries.ITEM.getKey(upgrade.getItem());
-            if (itemId.equals(BuiltInRegistries.ITEM.getDefaultKey())) {
-                AELog.warn("Cannot save unregistered upgrade to memory card %s", upgrade.getItem());
-                continue;
+    private static Set<DataComponentType<?>> getExportedSettings(DataComponentMap input) {
+        var result = new HashSet<DataComponentType<?>>();
+        for (var type : input.keySet()) {
+            if (BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(type).is(ConventionTags.EXPORTED_SETTINGS)) {
+                result.add(type);
             }
-            var key = itemId.toString();
-            desiredUpgradesTag.putInt(key, desiredUpgradesTag.getInt(key) + upgrade.getCount());
         }
-
-        output.put("upgrades", desiredUpgradesTag);
+        return result;
     }
 
-    private static boolean restoreUpgrades(Player player, CompoundTag input, IUpgradeableObject upgradeableObject) {
-        if (!input.contains("upgrades", Tag.TAG_COMPOUND)) {
-            return false;
+    public static String getSettingTranslationKey(DataComponentType<?> settingsType) {
+        var id = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(settingsType);
+        return Util.makeDescriptionId("exported_setting", id);
+    }
+
+    private static Component getSettingComponent(DataComponentType<?> settingsType) {
+        return Component.translatable(getSettingTranslationKey(settingsType));
+    }
+
+    private static ExportedUpgrades storeUpgrades(IUpgradeableObject upgradeableObject) {
+        // Accumulate upgrades as itemId->count NBT
+        Object2IntMap<ItemStack> upgradeCount = new Object2IntOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG);
+        for (var upgrade : upgradeableObject.getUpgrades()) {
+            upgradeCount.mergeInt(upgrade, upgrade.getCount(), Integer::sum);
         }
 
-        var desiredUpgradesTag = input.getCompound("upgrades");
-        var desiredUpgrades = new IdentityHashMap<Item, Integer>();
-        for (String itemIdStr : desiredUpgradesTag.getAllKeys()) {
-            ResourceLocation itemId;
-            try {
-                itemId = ResourceLocation.parse(itemIdStr);
-            } catch (ResourceLocationException e) {
-                AELog.warn("Memory card contains invalid item id %s", itemIdStr);
-                continue;
-            }
-
-            var item = BuiltInRegistries.ITEM.getOptional(itemId).orElse(null);
-            if (item == null) {
-                AELog.warn("Memory card contains unknown item id %s", itemId);
-                continue;
-            }
-
-            int desiredCount = desiredUpgradesTag.getInt(itemIdStr);
-            if (desiredCount > 0) {
-                desiredUpgrades.put(item, desiredCount);
-            }
+        var result = new ArrayList<ItemStack>(upgradeCount.size());
+        for (var entry : upgradeCount.object2IntEntrySet()) {
+            result.add(entry.getKey().copyWithCount(entry.getIntValue()));
         }
+        return new ExportedUpgrades(result);
+    }
 
+    private static void restoreUpgrades(Player player, ExportedUpgrades desiredUpgrades,
+            IUpgradeableObject upgradeableObject) {
         var upgrades = upgradeableObject.getUpgrades();
 
         // In creative mode, just set it exactly as the memory card says
@@ -199,10 +195,9 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
             for (int i = 0; i < upgrades.size(); i++) {
                 upgrades.setItemDirect(i, ItemStack.EMPTY);
             }
-            for (var entry : desiredUpgrades.entrySet()) {
-                upgrades.addItems(new ItemStack(entry.getKey(), entry.getValue()));
+            for (var upgrade : desiredUpgrades.upgrades()) {
+                upgrades.addItems(upgrade);
             }
-            return true;
         }
 
         var upgradeSources = new ArrayList<InternalInventory>();
@@ -214,6 +209,12 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
             upgradeSources.add(networkTool.getInventory());
         }
 
+        // Map of desired upgrade (ignoring the count in the key) to the desired count
+        var desiredUpgradeCounts = new Reference2IntOpenHashMap<Item>(desiredUpgrades.upgrades().size());
+        for (var desiredUpgrade : desiredUpgrades.upgrades()) {
+            desiredUpgradeCounts.put(desiredUpgrade.getItem(), desiredUpgrade.getCount());
+        }
+
         // Move out excess
         for (int i = 0; i < upgrades.size(); i++) {
             var current = upgrades.getStackInSlot(i);
@@ -221,7 +222,7 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
                 continue;
             }
 
-            var desiredCount = desiredUpgrades.getOrDefault(current.getItem(), 0);
+            var desiredCount = desiredUpgradeCounts.getOrDefault(current, 0);
             var totalInstalled = upgradeableObject.getInstalledUpgrades(current.getItem());
             var toRemove = totalInstalled - desiredCount;
             if (toRemove > 0) {
@@ -239,8 +240,8 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
         }
 
         // Move in what's still missing
-        for (var entry : desiredUpgrades.entrySet()) {
-            var missingAmount = entry.getValue() - upgradeableObject.getInstalledUpgrades(entry.getKey());
+        for (var entry : desiredUpgradeCounts.reference2IntEntrySet()) {
+            var missingAmount = entry.getIntValue() - upgradeableObject.getInstalledUpgrades(entry.getKey());
             if (missingAmount > 0) {
                 var potential = new ItemStack(entry.getKey(), missingAmount);
                 // Determine how many can we *actually* insert
@@ -270,90 +271,25 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
                 }
             }
         }
-        return true;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines,
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines,
             TooltipFlag advancedTooltips) {
 
-        String firstLineKey = this.getFirstValidTranslationKey(this.getSettingsName(stack) + ".name",
-                this.getSettingsName(stack));
-        lines.add(Tooltips.of(Component.translatable(firstLineKey)));
-
-        final CompoundTag data = this.getData(stack);
-        if (data.contains("tooltip")) {
-            String tooltipKey = getFirstValidTranslationKey(data.getString("tooltip") + ".name",
-                    data.getString("tooltip"));
-            lines.add(Tooltips.of(Component.translatable(tooltipKey)));
+        var settingsSource = stack.get(AEComponents.EXPORTED_SETTINGS_SOURCE);
+        if (settingsSource != null) {
+            lines.add(Tooltips.of(settingsSource));
+        } else {
+            lines.add(Tooltips.of(GuiText.Blank.text()));
         }
 
-        if (data.contains("p2pFreq")) {
-            final short freq = data.getShort("p2pFreq");
-            var freqTooltip = Platform.p2p().toColoredHexString(freq).withStyle(ChatFormatting.BOLD);
-
+        var p2pFreq = stack.get(AEComponents.EXPORTED_P2P_FREQUENCY);
+        if (p2pFreq != null) {
+            var freqTooltip = Platform.p2p().toColoredHexString(p2pFreq).withStyle(ChatFormatting.BOLD);
             lines.add(Tooltips.of(Component.translatable(InGameTooltip.P2PFrequency.getTranslationKey(), freqTooltip)));
         }
-    }
-
-    /**
-     * Find the localized string...
-     *
-     * @param name possible names for the localized string
-     * @return localized name
-     */
-    private String getFirstValidTranslationKey(String... name) {
-        for (String n : name) {
-            if (I18n.exists(n)) {
-                return n;
-            }
-        }
-
-        for (String n : name) {
-            return n;
-        }
-
-        return "";
-    }
-
-    @Override
-    public void setMemoryCardContents(ItemStack is, String settingsName, CompoundTag data) {
-        final CompoundTag c = is.getOrCreateTag();
-        c.putString("Config", settingsName);
-        c.put("Data", data);
-    }
-
-    @Override
-    public String getSettingsName(ItemStack is) {
-        final CompoundTag c = is.getOrCreateTag();
-        final String name = c.getString("Config");
-        return name.isEmpty() ? GuiText.Blank.getTranslationKey() : name;
-    }
-
-    @Override
-    public CompoundTag getData(ItemStack is) {
-        final CompoundTag c = is.getOrCreateTag();
-        CompoundTag o = c.getCompound("Data");
-        return o.copy();
-    }
-
-    @Override
-    public AEColor[] getColorCode(ItemStack is) {
-        final CompoundTag tag = this.getData(is);
-
-        if (tag.contains(IMemoryCard.NBT_COLOR_CODE, Tag.TAG_INT_ARRAY)) {
-            var frequency = tag.getIntArray(IMemoryCard.NBT_COLOR_CODE);
-            var colorArray = AEColor.values();
-
-            if (frequency.length == 8) {
-                return new AEColor[] { colorArray[frequency[0]], colorArray[frequency[1]], colorArray[frequency[2]],
-                        colorArray[frequency[3]], colorArray[frequency[4]], colorArray[frequency[5]],
-                        colorArray[frequency[6]], colorArray[frequency[7]], };
-            }
-        }
-
-        return DEFAULT_COLOR_CODE;
     }
 
     @Override
@@ -374,25 +310,21 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
     }
 
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        var player = context.getPlayer();
-        if (player != null && InteractionUtil.isInAlternateUseMode(player)) {
-            var level = context.getLevel();
+    public InteractionResult useOn(UseOnContext context) {
+        if (InteractionUtil.isInAlternateUseMode(context.getPlayer())) {
+            Level level = context.getLevel();
             if (!level.isClientSide()) {
-                var state = context.getLevel().getBlockState(context.getClickedPos());
-                var useResult = state.use(context.getLevel(), context.getPlayer(),
-                        context.getHand(),
-                        new BlockHitResult(context.getClickLocation(), context.getClickedFace(),
-                                context.getClickedPos(),
-                                context.isInside()));
-                if (!useResult.consumesAction()) {
-                    clearCard(context.getPlayer(), context.getLevel(), context.getHand());
-                }
+                this.clearCard(context.getPlayer(), context.getLevel(), context.getHand());
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
+        } else {
+            return super.useOn(context);
         }
+    }
 
-        return InteractionResult.PASS;
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
+        return true;
     }
 
     @Override
@@ -407,17 +339,19 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard, AEToolIte
     private void clearCard(Player player, Level level, InteractionHand hand) {
         final IMemoryCard mem = (IMemoryCard) player.getItemInHand(hand).getItem();
         mem.notifyUser(player, MemoryCardMessages.SETTINGS_CLEARED);
-        player.getItemInHand(hand).setTag(null);
+        clearCard(player.getItemInHand(hand));
+    }
+
+    public static void clearCard(ItemStack card) {
+        for (var holder : BuiltInRegistries.DATA_COMPONENT_TYPE.getTagOrEmpty(ConventionTags.EXPORTED_SETTINGS)) {
+            card.remove(holder.value());
+        }
+        card.remove(AEComponents.MEMORY_CARD_COLORS);
     }
 
     // Override to change the default color
-    @Override
     public int getColor(ItemStack stack) {
-        CompoundTag compoundTag = stack.getTagElement(TAG_DISPLAY);
-        if (compoundTag != null && compoundTag.contains(TAG_COLOR, 99)) {
-            return compoundTag.getInt(TAG_COLOR);
-        }
-        return DEFAULT_BASE_COLOR;
+        return DyedItemColor.getOrDefault(stack, DEFAULT_BASE_COLOR);
     }
 
     public static int getTintColor(ItemStack stack, int tintIndex) {

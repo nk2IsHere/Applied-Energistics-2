@@ -1,11 +1,10 @@
 package appeng.items.storage;
 
-import java.util.function.Supplier;
-
+import appeng.api.ids.AEItemIds;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
-import appeng.api.ids.AEItemIds;
+import java.util.function.Supplier;
 
 public record StorageTier(int index, String namePrefix, int bytes, double idleDrain, Supplier<Item> componentSupplier) {
     public static final StorageTier SIZE_1K = new StorageTier(1, "1k", 1024, 0.5,

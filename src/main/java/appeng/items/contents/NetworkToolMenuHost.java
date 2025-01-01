@@ -18,61 +18,42 @@
 
 package appeng.items.contents;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-
+import appeng.api.config.Actionable;
 import appeng.api.implementations.menuobjects.ItemMenuHost;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IInWorldGridNodeHost;
-import appeng.api.upgrades.Upgrades;
-import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.InternalInventoryHost;
-import appeng.util.inv.filter.IAEItemFilter;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.items.tools.NetworkToolItem;
+import appeng.menu.locator.ItemMenuHostLocator;
+import appeng.util.inv.SupplierInternalInventory;
+import com.google.common.primitives.Ints;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
 
-public class NetworkToolMenuHost extends ItemMenuHost implements InternalInventoryHost {
-
-    private final AppEngInternalInventory inv;
+public class NetworkToolMenuHost<T extends NetworkToolItem> extends ItemMenuHost<T> {
     @Nullable
     private final IInWorldGridNodeHost host;
 
-    public NetworkToolMenuHost(Player player, @Nullable Integer slot, ItemStack is,
+    private final SupplierInternalInventory<InternalInventory> supplierInv;
+
+    public NetworkToolMenuHost(T item, Player player, ItemMenuHostLocator locator,
             @Nullable IInWorldGridNodeHost host) {
-        super(player, slot, is);
+        super(item, player, locator);
         this.host = host;
-        this.inv = new AppEngInternalInventory(this, 9);
-        this.inv.setEnableClientEvents(true); // Also write to NBT on the client to prevent desyncs
-        this.inv.setFilter(new NetworkToolInventoryFilter());
-        if (is.hasTag()) // prevent crash when opening network status screen.
-        {
-            this.inv.readFromNBT(is.getOrCreateTag(), "inv");
-        }
+        this.supplierInv = new SupplierInternalInventory<>(
+                new StackDependentSupplier<>(this::getItemStack, NetworkToolItem::getInventory));
     }
 
     @Override
-    public void saveChanges() {
-        this.inv.writeToNBT(getItemStack().getOrCreateTag(), "inv");
-    }
-
-    @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
-    }
-
-    private static class NetworkToolInventoryFilter implements IAEItemFilter {
-        @Override
-        public boolean allowExtract(InternalInventory inv, int slot, int amount) {
-            return true;
+    public long insert(Player player, AEKey what, long amount, Actionable mode) {
+        if (what instanceof AEItemKey itemKey) {
+            var stack = itemKey.toStack(Ints.saturatedCast(amount));
+            var overflow = getInventory().addItems(stack, mode.isSimulate());
+            return stack.getCount() - overflow.getCount();
         }
 
-        @Override
-        public boolean allowInsert(InternalInventory inv, int slot, ItemStack stack) {
-            return Upgrades.isUpgradeCardItem(stack.getItem());
-        }
-    }
-
-    public InternalInventory getInternalInventory() {
-        return this.inv;
+        return 0;
     }
 
     @Nullable
@@ -81,6 +62,6 @@ public class NetworkToolMenuHost extends ItemMenuHost implements InternalInvento
     }
 
     public InternalInventory getInventory() {
-        return this.inv;
+        return this.supplierInv;
     }
 }

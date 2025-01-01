@@ -18,23 +18,14 @@
 
 package appeng.crafting;
 
+import appeng.api.crafting.IPatternDetails;
+import appeng.util.Platform;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.util.Platform;
-
 public class CraftingEvent {
-
-    public static void fireCraftingEvent(Player player,
-            ItemStack craftedItem,
-            Container container) {
-        // TODO FABRIC 117 Expose an event for this in the API
-//        MinecraftForge.EVENT_BUS.post(new PlayerEvent.ItemCraftedEvent(player, craftedItem, container));
-    }
 
     public static void fireAutoCraftingEvent(Level level,
             // NOTE: We want to be able to include the recipe in the event later

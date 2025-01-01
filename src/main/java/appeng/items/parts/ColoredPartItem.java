@@ -18,18 +18,16 @@
 
 package appeng.items.parts;
 
-import java.util.function.Function;
-
-import net.minecraft.world.item.Item;
-
 import appeng.api.parts.IPart;
 import appeng.api.util.AEColor;
+
+import java.util.function.Function;
 
 public class ColoredPartItem<T extends IPart> extends PartItem<T> {
 
     private final AEColor color;
 
-    public ColoredPartItem(Item.Properties properties, Class<T> partClass, Function<ColoredPartItem<T>, T> factory,
+    public ColoredPartItem(Properties properties, Class<T> partClass, Function<ColoredPartItem<T>, T> factory,
             AEColor color) {
         super(properties, partClass, item -> factory.apply((ColoredPartItem<T>) item));
         this.color = color;

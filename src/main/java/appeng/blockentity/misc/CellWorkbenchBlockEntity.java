@@ -18,16 +18,6 @@
 
 package appeng.blockentity.misc;
 
-import java.util.List;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
 import appeng.api.config.CopyMode;
 import appeng.api.config.Settings;
 import appeng.api.inventories.ISegmentedInventory;
@@ -45,6 +35,16 @@ import appeng.util.ConfigInventory;
 import appeng.util.ConfigManager;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class CellWorkbenchBlockEntity extends AEBaseBlockEntity
         implements IConfigurableObject, IUpgradeableObject, InternalInventoryHost, IConfigInvHost {
@@ -77,19 +77,19 @@ public class CellWorkbenchBlockEntity extends AEBaseBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        this.cell.writeToNBT(data, "cell");
-        this.config.writeToChildTag(data, "config");
-        this.manager.writeToNBT(data);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        this.cell.writeToNBT(data, "cell", registries);
+        this.config.writeToChildTag(data, "config", registries);
+        this.manager.writeToNBT(data, registries);
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        this.cell.readFromNBT(data, "cell");
-        this.config.readFromChildTag(data, "config");
-        this.manager.readFromNBT(data);
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        this.cell.readFromNBT(data, "cell", registries);
+        this.config.readFromChildTag(data, "config", registries);
+        this.manager.readFromNBT(data, registries);
     }
 
     @Override
@@ -102,7 +102,12 @@ public class CellWorkbenchBlockEntity extends AEBaseBlockEntity
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        saveChanges();
+    }
+
+    @Override
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         if (inv == this.cell && !this.locked) {
             this.locked = true;
             try {
@@ -153,7 +158,11 @@ public class CellWorkbenchBlockEntity extends AEBaseBlockEntity
 
     public static void copy(GenericStackInv from, GenericStackInv to) {
         for (int i = 0; i < Math.min(from.size(), to.size()); ++i) {
-            to.setStack(i, from.getStack(i));
+            var fromStack = from.getStack(i);
+            if (fromStack != null && !to.isAllowedIn(i, fromStack.what())) {
+                fromStack = null; // Thing is not allowed in slot
+            }
+            to.setStack(i, fromStack);
         }
         for (int i = from.size(); i < to.size(); i++) {
             to.setStack(i, null);

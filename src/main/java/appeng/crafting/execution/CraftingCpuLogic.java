@@ -17,19 +17,6 @@
  */
 package appeng.crafting.execution;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import com.google.common.base.Preconditions;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.features.IPlayerRegistry;
@@ -44,12 +31,26 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.core.AELog;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.CraftingJobStatusPacket;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.clientbound.CraftingJobStatusPacket;
 import appeng.crafting.CraftingLink;
 import appeng.crafting.inv.ListCraftingInventory;
+import appeng.hooks.ticking.TickHandler;
 import appeng.me.cluster.implementations.CraftingCPUCluster;
 import appeng.me.service.CraftingService;
+import com.google.common.base.Preconditions;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Stores the crafting logic of a crafting CPU.
@@ -73,6 +74,8 @@ public class CraftingCpuLogic {
      * True if the CPU is currently trying to clear its inventory but is not able to.
      */
     private boolean cantStoreItems = false;
+
+    private long lastModifiedOnTick = TickHandler.instance().getCurrentTick();
 
     public CraftingCpuLogic(CraftingCPUCluster cluster) {
         this.cluster = cluster;
@@ -390,9 +393,14 @@ public class CraftingCpuLogic {
     }
 
     private void postChange(AEKey what) {
+        lastModifiedOnTick = TickHandler.instance().getCurrentTick();
         for (var listener : listeners) {
             listener.accept(what);
         }
+    }
+
+    public long getLastModifiedOnTick() {
+        return lastModifiedOnTick;
     }
 
     public boolean hasJob() {
@@ -412,20 +420,24 @@ public class CraftingCpuLogic {
         }
     }
 
-    public void readFromNBT(CompoundTag data) {
-        this.inventory.readFromNBT(data.getList("inventory", 10));
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        this.inventory.readFromNBT(data.getList("inventory", 10), registries);
         if (data.contains("job")) {
-            this.job = new ExecutingCraftingJob(data.getCompound("job"), this::postChange, this);
-            cluster.updateOutput(new GenericStack(job.finalOutput.what(), job.remainingAmount));
+            this.job = new ExecutingCraftingJob(data.getCompound("job"), registries, this::postChange, this);
+            if (this.job.finalOutput == null) {
+                finishJob(false);
+            } else {
+                cluster.updateOutput(new GenericStack(job.finalOutput.what(), job.remainingAmount));
+            }
         } else {
             cluster.updateOutput(null);
         }
     }
 
-    public void writeToNBT(CompoundTag data) {
-        data.put("inventory", this.inventory.writeToNBT());
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        data.put("inventory", this.inventory.writeToNBT(registries));
         if (this.job != null) {
-            data.put("job", this.job.writeToNBT());
+            data.put("job", this.job.writeToNBT(registries));
         }
     }
 
@@ -505,6 +517,8 @@ public class CraftingCpuLogic {
     }
 
     private void notifyJobOwner(ExecutingCraftingJob job, CraftingJobStatusPacket.Status status) {
+        this.lastModifiedOnTick = TickHandler.instance().getCurrentTick();
+
         var playerId = job.playerId;
         if (playerId == null) {
             return;
@@ -514,14 +528,13 @@ public class CraftingCpuLogic {
         var connectedPlayer = IPlayerRegistry.getConnected(server, playerId);
         if (connectedPlayer != null) {
             var jobId = job.link.getCraftingID();
-            NetworkHandler.instance().sendTo(
-                    new CraftingJobStatusPacket(
-                            jobId,
-                            job.finalOutput.what(),
-                            job.finalOutput.amount(),
-                            job.remainingAmount,
-                            status),
-                    connectedPlayer);
+            ClientboundPacket message = new CraftingJobStatusPacket(
+                    jobId,
+                    job.finalOutput.what(),
+                    job.finalOutput.amount(),
+                    job.remainingAmount,
+                    status);
+            ServerPlayNetworking.send(connectedPlayer, message);
         }
     }
 }

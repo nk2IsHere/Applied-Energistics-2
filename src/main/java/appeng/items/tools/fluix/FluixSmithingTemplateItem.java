@@ -1,16 +1,15 @@
 package appeng.items.tools.fluix;
 
-import java.util.List;
-
+import appeng.api.ids.AEItemIds;
+import appeng.core.AppEng;
+import appeng.core.localization.GuiText;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.SmithingTemplateItem;
 
-import appeng.api.ids.AEItemIds;
-import appeng.core.AppEng;
-import appeng.core.localization.GuiText;
+import java.util.List;
 
 public class FluixSmithingTemplateItem extends SmithingTemplateItem {
     // Copy-pasted from superclass

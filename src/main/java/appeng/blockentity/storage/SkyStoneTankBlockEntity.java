@@ -1,31 +1,27 @@
 package appeng.blockentity.storage;
 
+import appeng.blockentity.AEBaseBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.blockentity.AEBaseBlockEntity;
-
 public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
 
     public static final int BUCKET_CAPACITY = 16;
 
-    private final SingleVariantStorage<FluidVariant> storage = new SingleVariantStorage<>() {
-
-        @Override
-        protected FluidVariant getBlankVariant() {
-            return FluidVariant.blank();
-        }
+    private final SingleFluidStorage storage = new SingleFluidStorage() {
 
         @Override
         protected long getCapacity(FluidVariant variant) {
@@ -44,17 +40,19 @@ public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag data) {
-        super.saveAdditional(data);
-        data.put("variant", storage.variant.toNbt());
-        data.putLong("amount", storage.amount);
+    public void saveAdditional(CompoundTag data, HolderLookup.Provider registries) {
+        super.saveAdditional(data, registries);
+        var tankNbt = new CompoundTag();
+        storage.writeNbt(tankNbt, registries);
+        if (!tankNbt.isEmpty()) {
+            data.put("content", tankNbt);
+        }
     }
 
     @Override
-    public void loadTag(CompoundTag data) {
-        super.loadTag(data);
-        storage.variant = FluidVariant.fromNbt(data.getCompound("variant"));
-        storage.amount = data.getLong("amount");
+    public void loadTag(CompoundTag data, HolderLookup.Provider registries) {
+        super.loadTag(data, registries);
+        storage.readNbt(data.getCompound("tank"), registries);
     }
 
     public boolean onPlayerUse(Player player, InteractionHand hand) {
@@ -69,17 +67,16 @@ public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
         return storage;
     }
 
-    protected boolean readFromStream(FriendlyByteBuf data) {
+    protected boolean readFromStream(RegistryFriendlyByteBuf data) {
         boolean ret = super.readFromStream(data);
-        storage.amount = data.readLong();
-        storage.variant = FluidVariant.fromNbt(data.readNbt());
+        storage.readNbt(data.readNbt(), data.registryAccess());
         return ret;
     }
 
-    protected void writeToStream(FriendlyByteBuf data) {
+    protected void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
-        data.writeLong(storage.amount);
-        data.writeNbt(storage.getResource().toNbt());
-
+        var tag = new CompoundTag();
+        storage.writeNbt(tag, data.registryAccess());
+        data.writeNbt(tag);
     }
 }

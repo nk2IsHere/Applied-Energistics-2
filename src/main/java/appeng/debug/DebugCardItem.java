@@ -18,26 +18,6 @@
 
 package appeng.debug;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.google.common.collect.Iterables;
-import com.google.common.math.StatsAccumulator;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IAEPowerStorage;
@@ -47,7 +27,6 @@ import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.blockentity.networking.ControllerBlockEntity;
-import appeng.hooks.AEToolItem;
 import appeng.hooks.ticking.TickHandler;
 import appeng.items.AEBaseItem;
 import appeng.me.Grid;
@@ -58,10 +37,27 @@ import appeng.parts.networking.CablePart;
 import appeng.parts.p2p.P2PTunnelPart;
 import appeng.util.InteractionUtil;
 import appeng.util.Platform;
+import com.google.common.collect.Iterables;
+import com.google.common.math.StatsAccumulator;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
-public class DebugCardItem extends AEBaseItem implements AEToolItem {
+import java.util.HashSet;
+import java.util.Set;
 
-    public DebugCardItem(Item.Properties properties) {
+public class DebugCardItem extends AEBaseItem {
+
+    public DebugCardItem(Properties properties) {
         super(properties);
     }
 
@@ -196,7 +192,7 @@ public class DebugCardItem extends AEBaseItem implements AEToolItem {
                     this.outputSecondaryMessage(player, "Cable Distance", Integer.toString(length));
                 }
 
-                if (center.getOwner() instanceof P2PTunnelPart<?>tunnelPart) {
+                if (center.getOwner() instanceof P2PTunnelPart<?> tunnelPart) {
                     this.outputSecondaryMessage(player, "Freq", Integer.toString(tunnelPart.getFrequency()));
                 }
             } else {
