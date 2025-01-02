@@ -127,7 +127,7 @@ public abstract class AppEngBase implements AppEng {
         AEBlockEntities.DR.register();
         registerMenuTypes(BuiltInRegistries.MENU);
         AERecipeTypes.DR.register();
-        registerStructures(BuiltInRegistries.STRUCTURE_TYPE);
+        registerStructures();
         registerSounds(BuiltInRegistries.SOUND_EVENT);
 
         postRegistrationInitialization();
@@ -168,8 +168,10 @@ public abstract class AppEngBase implements AppEng {
         InitParticleTypes.init(registry);
     }
 
-    public void registerStructures(Registry<StructureType<?>> registry) {
+    public void registerStructures() {
         InitStructures.init();
+        InitStructures.STRUCTURE_PIECES.register();
+        InitStructures.STRUCTURE_TYPES.register();
     }
 
     public void registerCommands(MinecraftServer server) {

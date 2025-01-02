@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemStackMap {
-    private static final Hash.Strategy<? super ItemStack> TYPE_AND_TAG = new Hash.Strategy<>() {
+    public static final Hash.Strategy<? super ItemStack> TYPE_AND_TAG = new Hash.Strategy<>() {
         public int hashCode(@Nullable ItemStack stack) {
             return ItemStack.hashItemAndComponents(stack);
         }

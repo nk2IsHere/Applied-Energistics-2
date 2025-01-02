@@ -1,18 +1,16 @@
 package appeng.mixins.chunkloading;
 
+import appeng.core.AEConfig;
+import appeng.server.services.ChunkLoadingService;
+import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-
-import appeng.core.AEConfig;
-import appeng.server.services.ChunkLoadingService;
 
 /**
  * Make spawning and random ticks work in force-loaded chunks. Thank you FTB Chunks for mixin inspiration.

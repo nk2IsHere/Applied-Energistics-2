@@ -5,6 +5,7 @@ import appeng.core.network.CustomAppEngPayload;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.clientbound.CompassResponsePacket;
 import appeng.server.services.compass.ServerCompassService;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,6 +33,6 @@ public record RequestClosestMeteoritePacket(ChunkPos pos) implements Serverbound
     public void handleOnServer(ServerPlayer player) {
         var result = ServerCompassService.getClosestMeteorite(player.serverLevel(), pos);
         LOG.trace("{} requested closest meteorite for {} in {} -> {}", player, pos, player.serverLevel(), result);
-        player.connection.send(new CompassResponsePacket(pos, result));
+        ServerPlayNetworking.send(player, new CompassResponsePacket(pos, result));
     }
 }

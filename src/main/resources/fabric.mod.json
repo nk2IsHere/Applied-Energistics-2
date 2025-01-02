@@ -10,14 +10,13 @@
     "sources": "https://github.com/AppliedEnergistics/Applied-Energistics-2/"
   },
   "license": "LGPL",
-  "icon": "assets/ae2/logo.png",
+  "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
     "client": ["appeng.core.AppEngClientStartup"],
     "server": ["appeng.core.AppEngServerStartup"],
     "fabric-datagen": ["appeng.datagen.DatagenEntrypoint"],
     "rei_client": ["appeng.integration.modules.rei.ReiPlugin"],
-    "jei_mod_plugin": ["appeng.integration.modules.jei.JEIPlugin"],
     "jade": ["appeng.integration.modules.jade.JadeModule"]
   },
   "mixins": ["ae2.mixins.json"],

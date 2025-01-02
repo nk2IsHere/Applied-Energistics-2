@@ -418,7 +418,7 @@ public class InscriberBlockEntity extends AENetworkedPoweredBlockEntity
     }
 
     @Override
-    protected InternalInventory getExposedInventoryForSide(Direction facing) {
+    public InternalInventory getExposedInventoryForSide(Direction facing) {
         if (isSeparateSides()) {
             if (facing == this.getTop()) {
                 return this.topItemHandlerExtern;

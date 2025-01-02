@@ -60,7 +60,7 @@ class DeferredBlockEntityUnloader implements ILevelRunnable {
     @Override
     public void call(Level world) {
         for (AEBaseBlockEntity blockEntity : entitiesToRemove) {
-            blockEntity.onChunkUnloaded();
+            blockEntity.setRemoved();
         }
     }
 

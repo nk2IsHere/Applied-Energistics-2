@@ -17,6 +17,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.*;
 import java.util.function.Predicate;
 
+@SuppressWarnings("removal")
 public final class TransformLogic {
     public static boolean canTransformInFluid(ItemEntity entity, FluidState fluid) {
         return getTransformableItems(entity.level(), fluid.getType()).contains(entity.getItem().getItem());

@@ -99,7 +99,7 @@ public abstract class AEBaseInvBlockEntity extends AEBaseBlockEntity implements 
         this.saveChanges();
     }
 
-    protected InternalInventory getExposedInventoryForSide(Direction side) {
+    public InternalInventory getExposedInventoryForSide(Direction side) {
         return this.getInternalInventory();
     }
 

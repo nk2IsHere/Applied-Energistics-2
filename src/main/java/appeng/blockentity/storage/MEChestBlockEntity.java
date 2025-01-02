@@ -463,7 +463,7 @@ public class MEChestBlockEntity extends AENetworkedPoweredBlockEntity
     }
 
     @Override
-    protected InternalInventory getExposedInventoryForSide(Direction side) {
+    public InternalInventory getExposedInventoryForSide(Direction side) {
         if (side == this.getFront()) {
             return this.cellInventory;
         } else {

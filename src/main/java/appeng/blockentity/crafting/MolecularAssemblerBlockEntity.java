@@ -340,7 +340,7 @@ public class MolecularAssemblerBlockEntity extends AENetworkedInvBlockEntity
     }
 
     @Override
-    protected InternalInventory getExposedInventoryForSide(Direction side) {
+    public InternalInventory getExposedInventoryForSide(Direction side) {
         return this.gridInvExt;
     }
 

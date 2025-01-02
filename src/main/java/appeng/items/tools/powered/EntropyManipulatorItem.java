@@ -277,6 +277,7 @@ public class EntropyManipulatorItem extends AEBasePoweredItem implements IBlockT
         return true;
     }
 
+    @SuppressWarnings("removal")
     @Nullable
     private static EntropyRecipe findRecipe(Level level, EntropyMode mode, BlockState blockState,
             FluidState fluidState) {

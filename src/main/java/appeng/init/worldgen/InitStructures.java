@@ -21,6 +21,8 @@ package appeng.init.worldgen;
 import java.util.List;
 import java.util.Map;
 
+import appeng.core.AppEng;
+import dev.architectury.registry.registries.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
@@ -35,6 +38,10 @@ import appeng.worldgen.meteorite.MeteoriteStructure;
 import appeng.worldgen.meteorite.MeteoriteStructurePiece;
 
 public final class InitStructures {
+    public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister
+        .create(AppEng.MOD_ID, Registries.STRUCTURE_TYPE);
+    public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister
+        .create(AppEng.MOD_ID, Registries.STRUCTURE_PIECE);
 
     private InitStructures() {
     }
@@ -65,7 +72,7 @@ public final class InitStructures {
     }
 
     public static void init() {
-        MeteoriteStructurePiece.register();
-        MeteoriteStructure.TYPE = StructureType.register("ae2mtrt", MeteoriteStructure.CODEC);
+        STRUCTURE_PIECES.register("ae2mtrt", () -> MeteoriteStructurePiece.TYPE);
+        STRUCTURE_TYPES.register("ae2mtrt", () -> MeteoriteStructure.TYPE);
     }
 }

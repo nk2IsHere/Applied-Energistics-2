@@ -41,9 +41,8 @@ public class SkyRenderMixin {
     private Minecraft minecraft;
 
     @SuppressWarnings("ConstantConditions")
-    @Inject(method = "renderSky(Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/Camera;ZLjava/lang/Runnable;)V", at = @At("HEAD"), cancellable = true)
-    public void renderSky(PoseStack poseStack, Matrix4f matrix, float f, Camera camera, boolean bl, Runnable runnable,
-            CallbackInfo ci) {
+    @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
+    public void renderSky(Matrix4f poseStack, Matrix4f matrix, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
         if (minecraft.level.dimension() == SpatialStorageDimensionIds.WORLD_ID) {
             SpatialSkyRender.getInstance().render(poseStack, matrix);
             ci.cancel();

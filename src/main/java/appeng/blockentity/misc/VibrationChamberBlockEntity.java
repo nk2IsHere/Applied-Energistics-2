@@ -175,7 +175,7 @@ public class VibrationChamberBlockEntity extends AENetworkedInvBlockEntity
     }
 
     @Override
-    protected InternalInventory getExposedInventoryForSide(Direction facing) {
+    public InternalInventory getExposedInventoryForSide(Direction facing) {
         return this.invExt;
     }
 

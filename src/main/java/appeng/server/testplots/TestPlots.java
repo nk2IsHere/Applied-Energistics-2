@@ -818,9 +818,9 @@ public final class TestPlots {
             helper.succeedWhen(() -> {
                 helper.assertBlockPresent(Blocks.CAULDRON, origin.east());
                 var tank = (SkyStoneTankBlockEntity) helper.getBlockEntity(origin.west());
-                helper.check(tank.getTank().getFluidAmount() == AEFluidKey.AMOUNT_BUCKET,
+                helper.check(tank.getStorage().getAmount() == AEFluidKey.AMOUNT_BUCKET,
                         "Less than a bucket stored");
-                helper.check(tank.getTank().getFluid().getFluid() == Fluids.LAVA,
+                helper.check(tank.getStorage().getResource().getFluid() == Fluids.LAVA,
                         "Something other than lava stored");
             });
         });

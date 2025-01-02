@@ -42,12 +42,18 @@ import appeng.hooks.UnlitQuadHooks;
 public class BlockModelMixin {
 
     @Inject(method = "bakeFace", at = @At("RETURN"), cancellable = true, require = 1, allow = 1)
-    private static void onBakeFace(BlockElement partIn, BlockElementFace partFaceIn, TextureAtlasSprite spriteIn,
-            Direction directionIn, ModelState transformIn, ResourceLocation locationIn,
-            CallbackInfoReturnable<BakedQuad> cri) {
-        if (partFaceIn instanceof UnlitQuadHooks.UnlitBlockPartFace) {
-            cri.setReturnValue(UnlitQuadHooks.makeUnlit(cri.getReturnValue()));
-        }
+    private static void onBakeFace(
+        BlockElement partIn,
+        BlockElementFace partFaceIn,
+        TextureAtlasSprite spriteIn,
+        Direction directionIn,
+        ModelState transformIn,
+        CallbackInfoReturnable<BakedQuad> cir
+    ) {
+        // TODO Do nothing - seems its broken now
+//        if (partFaceIn instanceof UnlitQuadHooks.UnlitBlockPartFace) {
+//            cir.setReturnValue(UnlitQuadHooks.makeUnlit(cir.getReturnValue()));
+//        }
     }
 
 }

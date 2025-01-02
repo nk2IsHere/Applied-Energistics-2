@@ -111,4 +111,12 @@ public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements Ser
     public long getCapacity() {
         return Integer.MAX_VALUE;
     }
+
+    public int getGenerationRate() {
+        return generationRate;
+    }
+
+    public void setGenerationRate(int generationRate) {
+        this.generationRate = generationRate;
+    }
 }

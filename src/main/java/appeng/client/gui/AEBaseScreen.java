@@ -73,6 +73,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -1064,5 +1065,19 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends AbstractContain
             return itemIndex.get(itemId);
         }
         return null;
+    }
+
+    public void renderCustomSlotHighlight(GuiGraphics guiGraphics, int x, int y, int z) {
+        int w, h;
+        if (this.hoveredSlot instanceof ResizableSlot resizableSlot) {
+            w = resizableSlot.getWidth();
+            h = resizableSlot.getHeight();
+        } else {
+            w = 16;
+            h = 16;
+        }
+
+        // Same as the Vanilla method, just with dynamic width and height
+        guiGraphics.fillGradient(RenderType.guiOverlay(), x, y, x + w, y + h, 0x80ffffff, 0x80ffffff, z);
     }
 }

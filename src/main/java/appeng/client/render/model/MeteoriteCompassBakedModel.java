@@ -176,13 +176,13 @@ public class MeteoriteCompassBakedModel implements IFabricBakedModel {
                 timeMillis %= 500;
                 return timeMillis / 500.f * (float) Math.PI * 2;
             } else {
-                var dx = pos.x - closestMeteorite.getX();
-                var dz = pos.z - closestMeteorite.getZ();
+                var dx = pos.getX() - closestMeteorite.getX();
+                var dz = pos.getZ() - closestMeteorite.getZ();
                 var distanceSq = dx * dx + dz * dz;
                 if (distanceSq > 6 * 6) {
                     var x = closestMeteorite.getX();
                     var z = closestMeteorite.getZ();
-                    return (float) rad(pos.x(), pos.z(), x, z) + playerRotation;
+                    return (float) rad(pos.getX(), pos.getZ(), x, z) + playerRotation;
                 }
             }
         }

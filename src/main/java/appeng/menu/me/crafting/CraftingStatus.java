@@ -137,8 +137,8 @@ public class CraftingStatus {
         }
 
         long elapsedTime = logic.getElapsedTimeTracker().getElapsedTime();
-        long remainingItems = logic.getElapsedTimeTracker().getRemainingItemCount();
-        long startItems = logic.getElapsedTimeTracker().getStartItemCount();
+        @SuppressWarnings("removal")long remainingItems = logic.getElapsedTimeTracker().getRemainingItemCount();
+        @SuppressWarnings("removal") long startItems = logic.getElapsedTimeTracker().getStartItemCount();
 
         return new CraftingStatus(
                 full,

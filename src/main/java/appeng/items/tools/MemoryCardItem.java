@@ -60,6 +60,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.neoforged.neoforge.common.util.ItemStackMap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -173,7 +174,7 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard {
 
     private static ExportedUpgrades storeUpgrades(IUpgradeableObject upgradeableObject) {
         // Accumulate upgrades as itemId->count NBT
-        Object2IntMap<ItemStack> upgradeCount = new Object2IntOpenCustomHashMap<>(ItemStackLinkedSet.TYPE_AND_TAG);
+        Object2IntMap<ItemStack> upgradeCount = new Object2IntOpenCustomHashMap<>(ItemStackMap.TYPE_AND_TAG);
         for (var upgrade : upgradeableObject.getUpgrades()) {
             upgradeCount.mergeInt(upgrade, upgrade.getCount(), Integer::sum);
         }
@@ -320,11 +321,6 @@ public class MemoryCardItem extends AEBaseItem implements IMemoryCard {
         } else {
             return super.useOn(context);
         }
-    }
-
-    @Override
-    public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
-        return true;
     }
 
     @Override

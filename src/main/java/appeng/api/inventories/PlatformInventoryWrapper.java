@@ -23,10 +23,10 @@
 
 package appeng.api.inventories;
 
-import appeng.util.Platform;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -65,7 +65,7 @@ public class PlatformInventoryWrapper implements InternalInventory {
 
     @Override
     public void setItemDirect(int slotIndex, ItemStack stack) {
-        try (var tx = Platform.openOrJoinTx()) {
+        try (var tx = Transaction.openOuter()) {
             var slotView = handler.getSlot(slotIndex);
             var variant = ItemVariant.of(stack);
             var amount = stack.getCount();
@@ -88,7 +88,7 @@ public class PlatformInventoryWrapper implements InternalInventory {
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        try (var tx = Platform.openOrJoinTx()) {
+        try (var tx = Transaction.openOuter()) {
             var slotView = handler.getSlot(slot);
             var inserted = slotView.insert(ItemVariant.of(stack), stack.getCount(), tx);
 
@@ -103,7 +103,7 @@ public class PlatformInventoryWrapper implements InternalInventory {
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        try (var tx = Platform.openOrJoinTx()) {
+        try (var tx = Transaction.openOuter()) {
             var slotView = handler.getSlot(slot);
             var resource = slotView.getResource();
             var extracted = slotView.extract(resource, amount, tx);

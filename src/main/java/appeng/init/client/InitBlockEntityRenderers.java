@@ -21,10 +21,9 @@ package appeng.init.client;
 import appeng.core.definitions.DeferredBlockEntityType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import appeng.blockentity.networking.CableBusTESR;
 import appeng.client.render.crafting.CraftingMonitorRenderer;
@@ -61,8 +60,9 @@ public final class InitBlockEntityRenderers {
 
     private static <T extends BlockEntity> void register(
         DeferredBlockEntityType<T> type,
-        BlockEntityRendererProvider<T> factory) {
-        BlockEntityRendererRegistry.register(type, factory);
+        BlockEntityRendererProvider<T> factory
+    ) {
+        BlockEntityRenderers.register(type.get(), factory);
     }
 
 }
