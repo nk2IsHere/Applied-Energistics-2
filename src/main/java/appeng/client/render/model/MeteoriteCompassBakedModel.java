@@ -32,7 +32,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
@@ -139,17 +138,10 @@ public class MeteoriteCompassBakedModel implements IFabricBakedModel {
          */
         return new ItemOverrides() {
             @Override
-            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level,
-                    @Nullable LivingEntity entity, int seed) {
-                // FIXME: This check prevents compasses being held by OTHERS from getting the
-                // rotation, BUT do we actually still need this???
-                if (level != null && entity instanceof LocalPlayer) {
-                    Player player = (Player) entity;
-
+            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
+                if (level != null && entity instanceof LocalPlayer player) {
                     float offRads = (float) (player.getYRot() / 180.0f * (float) Math.PI + Math.PI);
-
-                    MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(player.blockPosition(), true,
-                            offRads);
+                    MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(player.blockPosition(), true, offRads);
                 } else {
                     MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(null, false, 0);
                 }
