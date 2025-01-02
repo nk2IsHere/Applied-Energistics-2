@@ -37,6 +37,7 @@ import appeng.datagen.providers.models.PartModelProvider;
 import appeng.init.worldgen.InitBiomes;
 import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 public class AE2DataGenerators {
 
@@ -47,8 +48,7 @@ public class AE2DataGenerators {
         var pack = generator.createPack();
         var localization = new LocalizationProvider(generator);
 
-//        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
-//            createDatapackEntriesBuilder()));
+        pack.addProvider((packOutput, registries) -> new DatapackBuiltinEntriesProvider(packOutput, registries, createDatapackEntriesBuilder()));
 
         // Loot
         pack.addProvider(BlockDropProvider::new);
