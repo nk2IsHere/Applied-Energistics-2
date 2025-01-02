@@ -1,16 +1,12 @@
 package appeng.integration.modules.igtooltip.parts;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
 import appeng.api.integrations.igtooltip.providers.IconProvider;
 import appeng.api.integrations.igtooltip.providers.NameProvider;
 import appeng.api.integrations.igtooltip.providers.ServerDataProvider;
+
+import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class PartTooltipProviders {
     private static final Comparator<Registration<?>> COMPARATOR = Comparator.comparingInt(Registration::priority);
@@ -124,10 +120,10 @@ public final class PartTooltipProviders {
                 compatibleNameProviders);
     }
 
-    private record Registration<T> (Class<?> baseClass, T provider, int priority) {
+    private record Registration<T>(Class<?> baseClass, T provider, int priority) {
     }
 
-    record CachedProviders<U> (List<ServerDataProvider<? super U>> serverDataProviders,
+    record CachedProviders<U>(List<ServerDataProvider<? super U>> serverDataProviders,
             List<BodyProvider<? super U>> bodyProviders,
             List<IconProvider<? super U>> iconProviders,
             List<NameProvider<? super U>> nameProviders) {

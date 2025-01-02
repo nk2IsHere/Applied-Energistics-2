@@ -1,17 +1,15 @@
 package appeng.integration.modules.rei.transfer;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.item.crafting.Recipe;
-
+import appeng.integration.modules.itemlists.EncodingHelper;
+import appeng.menu.AEBaseMenu;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandler;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-
-import appeng.integration.modules.jeirei.EncodingHelper;
-import appeng.menu.AEBaseMenu;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractTransferHandler<T extends AEBaseMenu> implements TransferHandler {
     protected static final int CRAFTING_GRID_WIDTH = 3;
@@ -25,7 +23,7 @@ public abstract class AbstractTransferHandler<T extends AEBaseMenu> implements T
     }
 
     protected abstract Result transferRecipe(T menu,
-            @Nullable Recipe<?> recipe,
+            @Nullable RecipeHolder<?> holder,
             Display display,
             boolean doTransfer);
 
@@ -39,17 +37,17 @@ public abstract class AbstractTransferHandler<T extends AEBaseMenu> implements T
 
         T menu = containerClass.cast(context.getMenu());
 
-        var recipe = getRecipe(display);
+        var holder = getRecipeHolder(display);
 
-        return transferRecipe(menu, recipe, display, context.isActuallyCrafting());
+        return transferRecipe(menu, holder, display, context.isActuallyCrafting());
     }
 
     @Nullable
-    private Recipe<?> getRecipe(Display display) {
+    private RecipeHolder<?> getRecipeHolder(Display display) {
         // Displays can be based on completely custom objects, or on actual Vanilla recipes
         var origin = DisplayRegistry.getInstance().getDisplayOrigin(display);
 
-        return origin instanceof Recipe<?>recipe ? recipe : null;
+        return origin instanceof RecipeHolder<?> holder ? holder : null;
     }
 
     protected final boolean isCraftingRecipe(Recipe<?> recipe, Display display) {

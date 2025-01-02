@@ -1,21 +1,19 @@
 package appeng.integration.modules.igtooltip;
 
+import appeng.api.integrations.igtooltip.BaseClassRegistration;
+import appeng.api.parts.IPartHost;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
-import appeng.api.integrations.igtooltip.BaseClassRegistration;
-import appeng.api.parts.IPartHost;
-
 public class BaseClassRegistrationImpl implements BaseClassRegistration {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseClassRegistrationImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BaseClassRegistrationImpl.class);
 
     private final List<BaseClass> baseClasses = new ArrayList<>();
     private final Set<BaseClass> partHostClasses = new HashSet<>();
@@ -27,7 +25,7 @@ public class BaseClassRegistrationImpl implements BaseClassRegistration {
         // If any superclass is already in the list, don't add it
         for (var registeredClass : baseClasses) {
             if (registeredClass.isSuperclassOf(defaultClass)) {
-                LOGGER.info("Not registering {}, because superclass {} is already registered.",
+                LOG.info("Not registering {}, because superclass {} is already registered.",
                         defaultClass, registeredClass);
                 return;
             }
@@ -36,7 +34,7 @@ public class BaseClassRegistrationImpl implements BaseClassRegistration {
         // Remove any subclasses of this class
         baseClasses.removeIf(otherClass -> {
             if (defaultClass.isSuperclassOf(otherClass)) {
-                LOGGER.info("Replacing default server-data registration for {} with superclass {}.",
+                LOG.info("Replacing default server-data registration for {} with superclass {}.",
                         defaultClass, otherClass);
                 return true;
             }

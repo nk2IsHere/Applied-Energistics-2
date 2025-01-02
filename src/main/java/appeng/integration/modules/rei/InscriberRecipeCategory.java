@@ -18,12 +18,8 @@
 
 package appeng.integration.modules.rei;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -33,18 +29,20 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
+import java.util.ArrayList;
+import java.util.List;
 
-class InscriberRecipeCategory implements DisplayCategory<InscriberRecipeWrapper> {
+class InscriberRecipeCategory implements DisplayCategory<InscriberRecipeDisplay> {
 
     private static final int PADDING = 5;
     private static final int SLOT_INPUT_TOP = 0;
     private static final int SLOT_INPUT_MIDDLE = 1;
     private static final int SLOT_INPUT_BOTTOM = 2;
 
-    static final CategoryIdentifier<InscriberRecipeWrapper> ID = CategoryIdentifier
+    static final CategoryIdentifier<InscriberRecipeDisplay> ID = CategoryIdentifier
             .of(AppEng.makeId("ae2.inscriber"));
 
     @Override
@@ -54,16 +52,16 @@ class InscriberRecipeCategory implements DisplayCategory<InscriberRecipeWrapper>
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block.ae2.inscriber");
+        return AEBlocks.INSCRIBER.asItem().getDescription();
     }
 
     @Override
-    public CategoryIdentifier<InscriberRecipeWrapper> getCategoryIdentifier() {
+    public CategoryIdentifier<InscriberRecipeDisplay> getCategoryIdentifier() {
         return ID;
     }
 
     @Override
-    public List<Widget> setupDisplay(InscriberRecipeWrapper recipeDisplay, Rectangle bounds) {
+    public List<Widget> setupDisplay(InscriberRecipeDisplay recipeDisplay, Rectangle bounds) {
         ResourceLocation location = AppEng.makeId("textures/guis/inscriber.png");
 
         List<Widget> widgets = new ArrayList<>();
@@ -94,7 +92,7 @@ class InscriberRecipeCategory implements DisplayCategory<InscriberRecipeWrapper>
     }
 
     @Override
-    public int getDisplayWidth(InscriberRecipeWrapper display) {
+    public int getDisplayWidth(InscriberRecipeDisplay display) {
         return 97 + 2 * PADDING;
     }
 }

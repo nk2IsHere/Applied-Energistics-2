@@ -1,15 +1,13 @@
 package appeng.api.integrations.igtooltip;
 
-import org.jetbrains.annotations.ApiStatus;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
 import appeng.api.integrations.igtooltip.providers.IconProvider;
 import appeng.api.integrations.igtooltip.providers.ModNameProvider;
 import appeng.api.integrations.igtooltip.providers.NameProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 @ApiStatus.NonExtendable

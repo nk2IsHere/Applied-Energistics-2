@@ -1,11 +1,9 @@
 package appeng.api.integrations.rei;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.stacks.GenericStack;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
-
-import appeng.api.stacks.GenericStack;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implement this interface to provide AE2s REI integration with a new ingredient type converter for use in:

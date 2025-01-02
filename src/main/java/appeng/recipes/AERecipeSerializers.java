@@ -8,16 +8,16 @@ import appeng.recipes.handlers.InscriberRecipeSerializer;
 import appeng.recipes.mattercannon.MatterCannonAmmoSerializer;
 import appeng.recipes.quartzcutting.QuartzCuttingRecipeSerializer;
 import appeng.recipes.transform.TransformRecipeSerializer;
+import dev.architectury.registry.registries.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public final class AERecipeSerializers {
     private AERecipeSerializers() {
     }
 
     public static final DeferredRegister<RecipeSerializer<?>> DR = DeferredRegister
-            .create(Registries.RECIPE_SERIALIZER, AppEng.MOD_ID);
+            .create(AppEng.MOD_ID, Registries.RECIPE_SERIALIZER);
 
     static {
         register("inscriber", InscriberRecipeSerializer.INSTANCE);

@@ -1,9 +1,8 @@
 package appeng.api.integrations.igtooltip.providers;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.NonExtendable
 @ApiStatus.OverrideOnly

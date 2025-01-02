@@ -1,16 +1,15 @@
 package appeng.integration.modules.igtooltip.parts;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
 import appeng.api.integrations.igtooltip.providers.ServerDataProvider;
 import appeng.api.parts.IPart;
 import appeng.integration.modules.igtooltip.GridNodeState;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Provide info about the grid connection status of a part.

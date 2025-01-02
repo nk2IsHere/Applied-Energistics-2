@@ -1,13 +1,10 @@
 package appeng.integration.modules.rei;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.ItemModText;
+import appeng.recipes.transform.TransformCircumstance;
 import dev.architectury.fluid.FluidStack;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -15,16 +12,16 @@ import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
-import me.shedaniel.rei.api.client.util.ClientEntryStacks;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.localization.ItemModText;
-import appeng.recipes.transform.TransformCircumstance;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class TransformCategory implements DisplayCategory<TransformRecipeWrapper> {
     public static final CategoryIdentifier<TransformRecipeWrapper> ID = CategoryIdentifier
@@ -140,9 +137,7 @@ public class TransformCategory implements DisplayCategory<TransformRecipeWrapper
      */
     private static EntryStack<FluidStack> makeCustomRenderingFluidEntry(Fluid fluid) {
         var fluidStack = EntryStacks.of(fluid);
-        ClientEntryStacks.setRenderer(fluidStack, entryStack -> {
-            return new FluidBlockRenderer();
-        });
+        fluidStack.withRenderer(entryStack -> new FluidBlockRenderer());
         return fluidStack;
     }
 

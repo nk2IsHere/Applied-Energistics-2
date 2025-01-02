@@ -1,8 +1,7 @@
 package appeng.integration.modules.jade;
 
-import snownee.jade.api.BlockAccessor;
-
 import appeng.api.integrations.igtooltip.TooltipContext;
+import snownee.jade.api.BlockAccessor;
 
 class ContextHelper {
     private ContextHelper() {

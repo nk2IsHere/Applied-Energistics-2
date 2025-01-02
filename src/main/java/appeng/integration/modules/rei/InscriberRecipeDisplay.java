@@ -18,27 +18,26 @@
 
 package appeng.integration.modules.rei;
 
-import java.util.List;
-import java.util.Optional;
-
+import appeng.recipes.handlers.InscriberRecipe;
 import com.google.common.collect.ImmutableList;
-
-import net.minecraft.resources.ResourceLocation;
-
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-import appeng.recipes.handlers.InscriberRecipe;
+import java.util.List;
+import java.util.Optional;
 
-class InscriberRecipeWrapper implements Display {
-    private final InscriberRecipe recipe;
+class InscriberRecipeDisplay implements Display {
+    private final RecipeHolder<InscriberRecipe> holder;
     private final List<EntryIngredient> inputs;
     private final List<EntryIngredient> outputs;
 
-    public InscriberRecipeWrapper(InscriberRecipe recipe) {
-        this.recipe = recipe;
+    public InscriberRecipeDisplay(RecipeHolder<InscriberRecipe> holder) {
+        this.holder = holder;
+        var recipe = holder.value();
         this.inputs = ImmutableList.of(
                 EntryIngredients.ofIngredient(recipe.getTopOptional()),
                 EntryIngredients.ofIngredient(recipe.getMiddleInput()),
@@ -63,6 +62,6 @@ class InscriberRecipeWrapper implements Display {
 
     @Override
     public Optional<ResourceLocation> getDisplayLocation() {
-        return Optional.of(recipe.getId());
+        return Optional.of(holder.id());
     }
 }

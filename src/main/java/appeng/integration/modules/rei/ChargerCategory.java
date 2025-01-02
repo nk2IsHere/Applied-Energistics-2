@@ -1,10 +1,9 @@
 package appeng.integration.modules.rei;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.network.chat.Component;
-
+import appeng.blockentity.misc.ChargerBlockEntity;
+import appeng.blockentity.misc.CrankBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.localization.ItemModText;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -14,11 +13,10 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import net.minecraft.network.chat.Component;
 
-import appeng.blockentity.misc.ChargerBlockEntity;
-import appeng.blockentity.misc.CrankBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.localization.ItemModText;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChargerCategory implements DisplayCategory<ChargerDisplay> {
     private final Renderer icon;
@@ -50,16 +48,18 @@ public class ChargerCategory implements DisplayCategory<ChargerDisplay> {
         var y = bounds.y;
         widgets.add(Widgets.createRecipeBase(bounds));
 
+        var recipe = display.holder().value();
+
         widgets.add(
                 Widgets.createSlot(new Point(x + 31, y + 8))
                         .markInput()
                         .backgroundEnabled(true)
-                        .entries(EntryIngredients.ofIngredient(display.recipe().getIngredient())));
+                        .entries(EntryIngredients.ofIngredient(recipe.getIngredient())));
         widgets.add(
                 Widgets.createSlot(new Point(x + 81, y + 8))
                         .markOutput()
                         .backgroundEnabled(true)
-                        .entry(EntryStacks.of(display.recipe().getResultItem())));
+                        .entry(EntryStacks.of(recipe.getResultItem())));
 
         widgets.add(
                 Widgets.createSlot(new Point(x + 3, y + 30))

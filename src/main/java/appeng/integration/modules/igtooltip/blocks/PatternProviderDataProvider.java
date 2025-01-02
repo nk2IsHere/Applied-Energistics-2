@@ -1,10 +1,5 @@
 package appeng.integration.modules.igtooltip.blocks;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.client.AEKeyRendering;
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
@@ -14,6 +9,10 @@ import appeng.api.stacks.AmountFormat;
 import appeng.api.stacks.GenericStack;
 import appeng.core.localization.InGameTooltip;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Shows information about the current crafting lock.
@@ -28,11 +27,11 @@ public final class PatternProviderDataProvider
     public void buildTooltip(PatternProviderLogicHost host, TooltipContext context, TooltipBuilder tooltip) {
         var lockReason = context.serverData().getString(NBT_LOCK_REASON);
         if (!lockReason.isEmpty()) {
-            tooltip.addLine(Component.Serializer.fromJson(lockReason));
+            tooltip.addLine(Component.Serializer.fromJson(lockReason, context.registries()));
         }
         var stack = context.serverData().getCompound(NBT_LOCK_UNTIL_RESULT_STACK);
         if (!stack.isEmpty()) {
-            var genericStack = GenericStack.readTag(stack);
+            var genericStack = GenericStack.readTag(context.registries(), stack);
             Component stackName;
             Component stackAmount;
             if (genericStack == null) {
@@ -66,7 +65,7 @@ public final class PatternProviderDataProvider
             case LOCK_UNTIL_RESULT -> {
                 var stack = logic.getUnlockStack();
                 if (stack != null) {
-                    serverData.put(NBT_LOCK_UNTIL_RESULT_STACK, GenericStack.writeTag(stack));
+                    serverData.put(NBT_LOCK_UNTIL_RESULT_STACK, GenericStack.writeTag(player.registryAccess(), stack));
                 } else {
                     // Put a non-empty compound tag, so we get "ERROR" when handling this on the client
                     final CompoundTag errorDummy = new CompoundTag();
@@ -79,7 +78,7 @@ public final class PatternProviderDataProvider
 
         if (reason != null) {
             serverData.putString(NBT_LOCK_REASON,
-                    Component.Serializer.toJson(reason.copy().withStyle(ChatFormatting.RED)));
+                    Component.Serializer.toJson(reason.copy().withStyle(ChatFormatting.RED), player.registryAccess()));
         }
     }
 }

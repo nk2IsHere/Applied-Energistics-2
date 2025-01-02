@@ -1,20 +1,22 @@
-package appeng.integration.modules.jeirei;
-
-import java.util.Comparator;
-import java.util.Map;
-
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+package appeng.integration.modules.itemlists;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.core.AELog;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.FillCraftingGridFromRecipePacket;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.FillCraftingGridFromRecipePacket;
 import appeng.menu.me.common.GridInventoryEntry;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.util.CraftingRecipeUtil;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Comparator;
+import java.util.Map;
 
 public final class CraftingHelper {
     private static final Comparator<GridInventoryEntry> ENTRY_COMPARATOR = Comparator
@@ -23,21 +25,21 @@ public final class CraftingHelper {
     private CraftingHelper() {
     }
 
-    public static void performTransfer(CraftingTermMenu menu, Recipe<?> recipe, boolean craftMissing) {
+    public static void performTransfer(CraftingTermMenu menu, @Nullable ResourceLocation recipeId, Recipe<?> recipe,
+            boolean craftMissing) {
 
         // We send the items in the recipe in any case to serve as a fallback in case the recipe is transient
         var templateItems = findGoodTemplateItems(recipe, menu);
 
-        var recipeId = recipe.getId();
         // Don't transmit a recipe id to the server in case the recipe is not actually resolvable
         // this is the case for recipes synthetically generated for JEI
-        if (menu.getPlayer().level().getRecipeManager().byKey(recipe.getId()).isEmpty()) {
+        if (recipeId != null && menu.getPlayer().level().getRecipeManager().byKey(recipeId).isEmpty()) {
             AELog.debug("Cannot send recipe id %s to server because it's transient", recipeId);
             recipeId = null;
         }
 
-        NetworkHandler.instance()
-                .sendToServer(new FillCraftingGridFromRecipePacket(recipeId, templateItems, craftMissing));
+        ServerboundPacket message = new FillCraftingGridFromRecipePacket(recipeId, templateItems, craftMissing);
+        PacketDistributor.sendToServer(message);
     }
 
     private static NonNullList<ItemStack> findGoodTemplateItems(Recipe<?> recipe, MEStorageMenu menu) {
@@ -52,7 +54,7 @@ public final class CraftingHelper {
                 // player doesn't actually have
                 var stack = ingredientPriorities.entrySet()
                         .stream()
-                        .filter(e -> e.getKey() instanceof AEItemKey itemKey && ingredient.test(itemKey.toStack()))
+                        .filter(e -> e.getKey() instanceof AEItemKey itemKey && itemKey.matches(ingredient))
                         .max(Comparator.comparingInt(Map.Entry::getValue))
                         .map(e -> ((AEItemKey) e.getKey()).toStack())
                         .orElse(ingredient.getItems()[0]);

@@ -1,28 +1,10 @@
-package appeng.integration.modules.jeirei;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Predicate;
-
-import com.google.common.math.LongMath;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+package appeng.integration.modules.itemlists;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
-import appeng.core.sync.network.NetworkHandler;
-import appeng.core.sync.packets.InventoryActionPacket;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.me.common.GridInventoryEntry;
 import appeng.menu.me.common.MEStorageMenu;
@@ -30,6 +12,18 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.slot.FakeSlot;
 import appeng.parts.encoding.EncodingMode;
 import appeng.util.CraftingRecipeUtil;
+import com.google.common.math.LongMath;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.neoforged.neoforge.network.PacketDistributor;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 public final class EncodingHelper {
     private EncodingHelper() {
@@ -79,8 +73,9 @@ public final class EncodingHelper {
             var slot = slots[i];
             var stack = (i < encodedInputs.size()) ? GenericStack.wrapInItemStack(encodedInputs.get(i))
                     : ItemStack.EMPTY;
-            NetworkHandler.instance().sendToServer(new InventoryActionPacket(
-                    InventoryAction.SET_FILTER, slot.index, stack));
+            ServerboundPacket message = new InventoryActionPacket(
+                    InventoryAction.SET_FILTER, slot.index, stack);
+            PacketDistributor.sendToServer(message);
         }
     }
 
@@ -96,13 +91,13 @@ public final class EncodingHelper {
     }
 
     public static void encodeCraftingRecipe(PatternEncodingTermMenu menu,
-            @Nullable Recipe<?> recipe,
+            @Nullable RecipeHolder<?> recipe,
             List<List<GenericStack>> genericIngredients,
             Predicate<ItemStack> visiblePredicate) {
-        if (recipe != null && recipe.getType().equals(RecipeType.STONECUTTING)) {
+        if (recipe != null && recipe.value().getType().equals(RecipeType.STONECUTTING)) {
             menu.setMode(EncodingMode.STONECUTTING);
-            menu.setStonecuttingRecipeId(recipe.getId());
-        } else if (recipe != null && recipe.getType().equals(RecipeType.SMITHING)) {
+            menu.setStonecuttingRecipeId(recipe.id());
+        } else if (recipe != null && recipe.value().getType().equals(RecipeType.SMITHING)) {
             menu.setMode(EncodingMode.SMITHING_TABLE);
         } else {
             menu.setMode(EncodingMode.CRAFTING);
@@ -116,7 +111,7 @@ public final class EncodingHelper {
         if (recipe != null) {
             // When we have access to a crafting recipe, we'll switch modes and try to find suitable
             // ingredients based on the recipe ingredients, which allows for fuzzy-matching.
-            var ingredients3x3 = CraftingRecipeUtil.ensure3by3CraftingMatrix(recipe);
+            var ingredients3x3 = CraftingRecipeUtil.ensure3by3CraftingMatrix(recipe.value());
 
             // Find a good match for every ingredient
             for (int slot = 0; slot < ingredients3x3.size(); slot++) {
@@ -129,7 +124,7 @@ public final class EncodingHelper {
                 // network inventory. We'll find all network inventory entries that it matches and sort them
                 // according to their suitability for encoding a pattern
                 var bestNetworkIngredient = prioritizedNetworkInv.entrySet().stream()
-                        .filter(ni -> ni.getKey() instanceof AEItemKey itemKey && ingredient.test(itemKey.toStack()))
+                        .filter(ni -> ni.getKey() instanceof AEItemKey itemKey && itemKey.matches(ingredient))
                         .max(Comparator.comparingInt(Map.Entry::getValue))
                         .map(entry -> entry.getKey() instanceof AEItemKey itemKey ? itemKey.toStack() : null);
 
@@ -166,14 +161,16 @@ public final class EncodingHelper {
 
         for (int i = 0; i < encodedInputs.size(); i++) {
             ItemStack encodedInput = encodedInputs.get(i);
-            NetworkHandler.instance().sendToServer(new InventoryActionPacket(
-                    InventoryAction.SET_FILTER, menu.getCraftingGridSlots()[i].index, encodedInput));
+            ServerboundPacket message = new InventoryActionPacket(
+                    InventoryAction.SET_FILTER, menu.getCraftingGridSlots()[i].index, encodedInput);
+            PacketDistributor.sendToServer(message);
         }
 
         // Clear out the processing outputs
         for (var outputSlot : menu.getProcessingOutputSlots()) {
-            NetworkHandler.instance().sendToServer(new InventoryActionPacket(
-                    InventoryAction.SET_FILTER, outputSlot.index, ItemStack.EMPTY));
+            ServerboundPacket message = new InventoryActionPacket(
+                    InventoryAction.SET_FILTER, outputSlot.index, ItemStack.EMPTY);
+            PacketDistributor.sendToServer(message);
         }
 
     }

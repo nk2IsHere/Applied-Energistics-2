@@ -1,19 +1,5 @@
 package appeng.integration.modules.igtooltip;
 
-import java.util.ArrayList;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
 import appeng.api.networking.IGridNode;
@@ -26,6 +12,18 @@ import appeng.me.helpers.IGridConnectedBlockEntity;
 import appeng.me.service.TickManagerService;
 import appeng.parts.AEBasePart;
 import appeng.util.Platform;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public final class DebugProvider {
     private static final String TAG_NODES = "debugNodes";
@@ -220,8 +218,8 @@ public final class DebugProvider {
     }
 
     private static boolean isVisible(Player player) {
-        return AEItems.DEBUG_CARD.isSameAs(player.getItemInHand(InteractionHand.OFF_HAND))
-                || AEItems.DEBUG_CARD.isSameAs(player.getItemInHand(InteractionHand.MAIN_HAND));
+        return AEItems.DEBUG_CARD.is(player.getItemInHand(InteractionHand.OFF_HAND))
+                || AEItems.DEBUG_CARD.is(player.getItemInHand(InteractionHand.MAIN_HAND));
     }
 
 }

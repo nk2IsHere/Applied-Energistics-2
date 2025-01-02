@@ -1,15 +1,6 @@
 package appeng.integration.modules.igtooltip;
 
-import java.util.ServiceLoader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import appeng.api.integrations.igtooltip.BaseClassRegistration;
-import appeng.api.integrations.igtooltip.ClientRegistration;
-import appeng.api.integrations.igtooltip.CommonRegistration;
-import appeng.api.integrations.igtooltip.PartTooltips;
-import appeng.api.integrations.igtooltip.TooltipProvider;
+import appeng.api.integrations.igtooltip.*;
 import appeng.api.parts.IPart;
 import appeng.block.AEBaseEntityBlock;
 import appeng.block.crafting.CraftingMonitorBlock;
@@ -23,28 +14,24 @@ import appeng.blockentity.crafting.PatternProviderBlockEntity;
 import appeng.blockentity.misc.ChargerBlockEntity;
 import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.blockentity.networking.CrystalResonanceGeneratorBlockEntity;
+import appeng.core.AppEng;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import appeng.integration.modules.igtooltip.blocks.ChargerDataProvider;
-import appeng.integration.modules.igtooltip.blocks.CraftingMonitorDataProvider;
-import appeng.integration.modules.igtooltip.blocks.CrystalResonanceGeneratorProvider;
-import appeng.integration.modules.igtooltip.blocks.GridNodeStateDataProvider;
-import appeng.integration.modules.igtooltip.blocks.PatternProviderDataProvider;
-import appeng.integration.modules.igtooltip.blocks.PowerStorageDataProvider;
-import appeng.integration.modules.igtooltip.parts.AnnihilationPlaneDataProvider;
-import appeng.integration.modules.igtooltip.parts.ChannelDataProvider;
-import appeng.integration.modules.igtooltip.parts.GridNodeStateProvider;
-import appeng.integration.modules.igtooltip.parts.P2PStateDataProvider;
-import appeng.integration.modules.igtooltip.parts.PartHostTooltips;
-import appeng.integration.modules.igtooltip.parts.StorageMonitorDataProvider;
+import appeng.integration.modules.igtooltip.blocks.*;
+import appeng.integration.modules.igtooltip.parts.*;
 import appeng.parts.AEBasePart;
 import appeng.parts.automation.AnnihilationPlanePart;
 import appeng.parts.networking.IUsedChannelProvider;
 import appeng.parts.p2p.P2PTunnelPart;
 import appeng.parts.reporting.AbstractMonitorPart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Locale;
+import java.util.ServiceLoader;
 
 public final class TooltipProviders implements TooltipProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TooltipProviders.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TooltipProviders.class);
 
     public static final ServiceLoader<TooltipProvider> LOADER = ServiceLoader.load(TooltipProvider.class);
 
@@ -74,14 +61,14 @@ public final class TooltipProviders implements TooltipProvider {
         }
 
         for (var clazz : baseClasses.getBaseClasses()) {
-            LOGGER.debug("Registering default-data for BE {} and sub-classes", clazz);
+            LOG.debug("Registering default-data for BE {} and sub-classes", clazz);
             registration.addBlockEntityData(clazz.blockEntity(), new GridNodeStateDataProvider());
             registration.addBlockEntityData(clazz.blockEntity(), new PowerStorageDataProvider());
             registration.addBlockEntityData(clazz.blockEntity(), DebugProvider::provideBlockEntityData);
         }
 
         for (var clazz : baseClasses.getPartHostClasses()) {
-            LOGGER.debug("Registering part host provider for {} and sub-classes", clazz);
+            LOG.debug("Registering part host provider for {} and sub-classes", clazz);
             registration.addBlockEntityData(clazz.blockEntity(), PartHostTooltips::provideServerData);
         }
     }
@@ -95,7 +82,7 @@ public final class TooltipProviders implements TooltipProvider {
         }
 
         for (var clazz : baseClasses.getBaseClasses()) {
-            LOGGER.debug("Registering default client providers for BE {} and sub-classes", clazz);
+            LOG.debug("Registering default client providers for BE {} and sub-classes", clazz);
             registration.addBlockEntityBody(
                     clazz.blockEntity(),
                     clazz.block(),
@@ -115,7 +102,7 @@ public final class TooltipProviders implements TooltipProvider {
         }
 
         for (var clazz : baseClasses.getPartHostClasses()) {
-            LOGGER.debug("Registering part host provider for {} and sub-classes", clazz);
+            LOG.debug("Registering part host provider for {} and sub-classes", clazz);
             registration.addBlockEntityName(
                     clazz.blockEntity(),
                     clazz.block(),
@@ -141,9 +128,7 @@ public final class TooltipProviders implements TooltipProvider {
 
     @Override
     public void registerCommon(CommonRegistration registration) {
-        registration.addBlockEntityData(
-                PatternProviderBlockEntity.class,
-                new PatternProviderDataProvider());
+        registration.addBlockEntityData(PatternProviderBlockEntity.class, new PatternProviderDataProvider());
     }
 
     @Override
