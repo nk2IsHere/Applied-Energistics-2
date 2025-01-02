@@ -9,10 +9,9 @@ public interface ClientboundPacket extends CustomAppEngPayload {
     Logger LOG = LoggerFactory.getLogger(ClientboundPacket.class);
 
     default void handleOnClient(ClientPlayNetworking.Context context) {
-        try(var client = context.client()) {
-            LOG.info("Handling packet {} on client", this);
-            client.execute(() -> handleOnClient(context.player()));
-        }
+        var client = context.client();
+        LOG.info("Handling packet {} on client", this);
+        client.execute(() -> handleOnClient(context.player()));
     }
 
     default void handleOnClient(Player player) {

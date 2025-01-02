@@ -9,10 +9,9 @@ public interface ServerboundPacket extends CustomAppEngPayload {
     Logger LOG = LoggerFactory.getLogger(ServerboundPacket.class);
 
     default void handleOnServer(ServerPlayNetworking.Context context) {
-        try(var server = context.server()) {
-            LOG.info("Handling packet {} on server", this);
-            server.execute(() -> handleOnServer(context.player()));
-        }
+        var server = context.server();
+        LOG.info("Handling packet {} on server", this);
+        server.execute(() -> handleOnServer(context.player()));
     }
 
     void handleOnServer(ServerPlayer player);
