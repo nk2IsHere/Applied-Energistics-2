@@ -18,16 +18,15 @@
 
 package appeng.parts;
 
-import java.util.List;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.List;
 
 /**
  * While creation of a {@link VoxelShape} with {@link Shapes#create(AABB)} is fast enough, combining voxel shapes with
@@ -48,7 +47,7 @@ final class VoxelShapeCache {
     // be the same for a same set of parts.
     private static final LoadingCache<List<AABB>, VoxelShape> CACHE = CacheBuilder.newBuilder()//
             .maximumSize(10000L)//
-            .build(new CacheLoader<List<AABB>, VoxelShape>() {
+            .build(new CacheLoader<>() {
                 @Override
                 public VoxelShape load(List<AABB> key) {
                     return create(key);

@@ -18,8 +18,12 @@
 
 package appeng.datagen.providers.recipes;
 
-import java.util.concurrent.CompletableFuture;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.datagen.providers.tags.ConventionTags;
+import appeng.recipes.transform.TransformCircumstance;
+import appeng.recipes.transform.TransformRecipeBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -27,23 +31,11 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.datagen.providers.tags.ConventionTags;
-import appeng.recipes.transform.TransformCircumstance;
-import appeng.recipes.transform.TransformRecipeBuilder;
+import java.util.concurrent.CompletableFuture;
 
 public class TransformRecipes extends AE2RecipeProvider {
-
-    public TransformRecipes(
-        PackOutput packOutput,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
-        super(
-            packOutput,
-            completableFuture
-        );
+    public TransformRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override

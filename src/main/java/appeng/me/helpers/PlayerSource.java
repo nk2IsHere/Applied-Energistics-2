@@ -18,15 +18,13 @@
 
 package appeng.me.helpers;
 
-import java.util.Objects;
-import java.util.Optional;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
 
 public class PlayerSource implements IActionSource {
 

@@ -18,34 +18,22 @@
 
 package appeng.datagen.providers.recipes;
 
-import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
-
-import java.util.concurrent.CompletableFuture;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.*;
+import appeng.datagen.providers.tags.ConventionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.core.definitions.BlockDefinition;
-import appeng.core.definitions.ItemDefinition;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.concurrent.CompletableFuture;
+
+import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
 
 public class DecorationBlockRecipes extends AE2RecipeProvider {
-
-    public DecorationBlockRecipes(
-        PackOutput packOutput,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
-        super(
-            packOutput,
-            completableFuture
-        );
+    public DecorationBlockRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override

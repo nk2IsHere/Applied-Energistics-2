@@ -18,14 +18,13 @@
 
 package appeng.me.service.helpers;
 
-import java.util.LongSummaryStatistics;
-
-import net.minecraft.CrashReportCategory;
-import net.minecraft.util.Mth;
-
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickingRequest;
+import net.minecraft.CrashReportCategory;
+import net.minecraft.util.Mth;
+
+import java.util.LongSummaryStatistics;
 
 public class TickTracker implements Comparable<TickTracker> {
 

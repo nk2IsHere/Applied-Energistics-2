@@ -18,24 +18,24 @@
 
 package appeng.parts.reporting;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.implementations.parts.IMonitorPart;
 import appeng.api.networking.GridFlags;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
+import appeng.client.render.model.AEModelData;
 import appeng.parts.AEBasePart;
 import appeng.util.InteractionUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * The most basic class for any part reporting information, like terminals or monitors. This can also include basic
@@ -82,26 +82,26 @@ public abstract class AbstractReportingPart extends AEBasePart implements IMonit
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
         this.spin = data.getByte("spin");
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
         data.putByte("spin", this.getSpin());
     }
 
     @Override
-    public void writeToStream(FriendlyByteBuf data) {
+    public void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
 
         data.writeByte(this.getSpin());
     }
 
     @Override
-    public boolean readFromStream(FriendlyByteBuf data) {
+    public boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
         var oldSpin = this.spin;
 
@@ -116,7 +116,7 @@ public abstract class AbstractReportingPart extends AEBasePart implements IMonit
     }
 
     @Override
-    public boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (InteractionUtil.canWrenchRotate(player.getInventory().getSelected())) {
             if (!isClientSide()) {
                 this.spin = (byte) ((this.spin + 1) % 4);
@@ -125,7 +125,7 @@ public abstract class AbstractReportingPart extends AEBasePart implements IMonit
             }
             return true;
         } else {
-            return super.onPartActivate(player, hand, pos);
+            return super.onUseWithoutItem(player, pos);
         }
     }
 
@@ -161,7 +161,7 @@ public abstract class AbstractReportingPart extends AEBasePart implements IMonit
     }
 
     @Override
-    public Object getRenderAttachmentData() {
+    public Object getRenderData() {
         return new ReportingModelData(getSpin());
     }
 

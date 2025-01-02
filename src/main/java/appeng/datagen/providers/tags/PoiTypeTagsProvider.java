@@ -1,13 +1,12 @@
 package appeng.datagen.providers.tags;
 
-import java.util.concurrent.CompletableFuture;
-
+import appeng.datagen.providers.IAE2DataProvider;
+import appeng.init.InitVillager;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.PoiTypeTags;
 
-import appeng.datagen.providers.IAE2DataProvider;
-import appeng.init.InitVillager;
+import java.util.concurrent.CompletableFuture;
 
 public class PoiTypeTagsProvider extends net.minecraft.data.tags.PoiTypeTagsProvider implements IAE2DataProvider {
     public PoiTypeTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
@@ -15,7 +14,7 @@ public class PoiTypeTagsProvider extends net.minecraft.data.tags.PoiTypeTagsProv
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
+    protected void addTags(HolderLookup.Provider registries) {
         tag(PoiTypeTags.ACQUIRABLE_JOB_SITE).add(InitVillager.POI_KEY);
     }
 }

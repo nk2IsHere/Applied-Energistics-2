@@ -18,14 +18,13 @@
 
 package appeng.parts.p2p;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.parts.PartModel;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Helper for maintaining the models used for a variant of the P2P bus.

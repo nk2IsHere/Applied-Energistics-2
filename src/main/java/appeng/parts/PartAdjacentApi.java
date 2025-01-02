@@ -1,31 +1,35 @@
 package appeng.parts;
 
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.parts.IPartHost;
+import appeng.util.Platform;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-
-import appeng.util.Platform;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility class to cache an API that is adjacent to a part.
- *
- * @param <A>
  */
-public class PartAdjacentApi<A> {
+public class PartAdjacentApi<T> {
     private final AEBasePart part;
-    private final BlockApiLookup<A, Direction> apiLookup;
-    private BlockApiCache<A, Direction> apiCache;
+    private final BlockApiLookup<T, Direction> apiLookup;
+    private final Runnable invalidationListener;
+    private BlockApiCache<T, Direction> apiCache;
 
-    public PartAdjacentApi(AEBasePart part, BlockApiLookup<A, Direction> apiLookup) {
+    public PartAdjacentApi(AEBasePart part, BlockApiLookup<T, Direction> apiLookup) {
+        this(part, apiLookup, () -> {
+        });
+    }
+
+    public PartAdjacentApi(AEBasePart part, BlockApiLookup<T, Direction> apiLookup, Runnable invalidationListener) {
         this.apiLookup = apiLookup;
         this.part = part;
+        this.invalidationListener = invalidationListener;
     }
 
     @Nullable
-    public A find() {
+    public T find() {
         if (!(part.getLevel() instanceof ServerLevel serverLevel)) {
             return null;
         }
@@ -43,5 +47,10 @@ public class PartAdjacentApi<A> {
         }
 
         return apiCache.find(attachedSide.getOpposite());
+    }
+
+    public static boolean isPartValid(AEBasePart part) {
+        var be = part.getBlockEntity();
+        return be instanceof IPartHost host && host.getPart(part.getSide()) == part && !be.isRemoved();
     }
 }

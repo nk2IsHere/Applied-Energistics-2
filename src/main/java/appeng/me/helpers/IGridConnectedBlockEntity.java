@@ -18,25 +18,19 @@
 
 package appeng.me.helpers;
 
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.function.Consumer;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
-
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.networking.IInWorldGridNodeHost;
-import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.*;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.orientation.BlockOrientation;
 import appeng.block.IOwnerAwareBlockEntity;
 import appeng.blockentity.AEBaseBlockEntity;
 import appeng.me.InWorldGridNode;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Interface implemented by the various AE2 block entities that connect to the grid, to support callbacks from the block

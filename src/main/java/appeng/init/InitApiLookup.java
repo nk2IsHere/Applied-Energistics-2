@@ -87,22 +87,16 @@ public final class InitApiLookup {
     }
 
     private static void initEnergyAcceptors() {
-        PartApiLookup.register(EnergyStorage.SIDED, (part, context) -> part.getEnergyAdapter(),
-            EnergyAcceptorPart.class);
+        PartApiLookup.register(EnergyStorage.SIDED, (part, context) -> part.getEnergyStorage(), EnergyAcceptorPart.class);
         // The block version is handled by the generic fallback registration for AEBasePoweredBlockEntity
     }
 
     private static void initInterface() {
-        PartApiLookup.register(GenericInternalInventory.SIDED, (part, context) -> part.getInterfaceLogic().getStorage(),
-            InterfacePart.class);
-        GenericInternalInventory.SIDED.registerForBlockEntity(
-            (blockEntity, context) -> blockEntity.getInterfaceLogic().getStorage(), AEBlockEntities.INTERFACE.get());
+        PartApiLookup.register(GenericInternalInventory.SIDED, (part, context) -> part.getInterfaceLogic().getStorage(), InterfacePart.class);
+        GenericInternalInventory.SIDED.registerForBlockEntity((blockEntity, context) -> blockEntity.getInterfaceLogic().getStorage(), AEBlockEntities.INTERFACE.get());
 
-        PartApiLookup.register(MEStorage.SIDED,
-            (part, context) -> part.getInterfaceLogic().getInventory(), InterfacePart.class);
-        MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
-            return blockEntity.getInterfaceLogic().getInventory();
-        }, AEBlockEntities.INTERFACE.get());
+        PartApiLookup.register(MEStorage.SIDED, (part, context) -> part.getInterfaceLogic().getInventory(), InterfacePart.class);
+        MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> blockEntity.getInterfaceLogic().getInventory(), AEBlockEntities.INTERFACE.get());
     }
 
     private static void initPatternProvider() {
@@ -115,15 +109,9 @@ public final class InitApiLookup {
     private static void initCondenser() {
         // Condenser will always return its external inventory, even when context is null
         // (unlike the base class it derives from)
-        ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
-            return blockEntity.getExternalInv().toStorage();
-        }, AEBlockEntities.CONDENSER.get());
-        FluidStorage.SIDED.registerForBlockEntity(((blockEntity, context) -> {
-            return blockEntity.getFluidHandler();
-        }), AEBlockEntities.CONDENSER.get());
-        MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
-            return blockEntity.getMEStorage();
-        }, AEBlockEntities.CONDENSER.get());
+        ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> blockEntity.getExternalInv().toStorage(), AEBlockEntities.CONDENSER.get());
+        FluidStorage.SIDED.registerForBlockEntity(((blockEntity, context) -> blockEntity.getFluidHandler()), AEBlockEntities.CONDENSER.get());
+        MEStorage.SIDED.registerForBlockEntity((blockEntity, context) -> blockEntity.getMEStorage(), AEBlockEntities.CONDENSER.get());
     }
 
     private static void initMEChest() {
@@ -133,9 +121,7 @@ public final class InitApiLookup {
 
     private static void initMisc() {
         ICraftingMachine.SIDED.registerSelf(AEBlockEntities.MOLECULAR_ASSEMBLER.get());
-        ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> {
-            return blockEntity.getItemHandler();
-        }, AEBlockEntities.DEBUG_ITEM_GEN.get());
+        ItemStorage.SIDED.registerForBlockEntity((blockEntity, context) -> blockEntity.getItemHandler(), AEBlockEntities.DEBUG_ITEM_GEN.get());
         EnergyStorage.SIDED.registerSelf(AEBlockEntities.DEBUG_ENERGY_GEN.get());
         FluidStorage.SIDED.registerForBlockEntity(SkyStoneTankBlockEntity::getStorage, AEBlockEntities.SKY_STONE_TANK.get());
         PartApiLookup.register(ItemStorage.SIDED, (part, direction) -> part.getLogic().getBlankPatternInv().toStorage(),
@@ -144,8 +130,8 @@ public final class InitApiLookup {
 
     private static void initPoweredItem() {
         EnergyStorage.ITEM.registerFallback((itemStack, context) -> {
-            if (itemStack.getItem() instanceof IAEItemPowerStorage) {
-                return new PoweredItemCapabilities(context);
+            if (itemStack.getItem() instanceof IAEItemPowerStorage iaeItemPowerStorage) {
+                return new PoweredItemCapabilities(itemStack, iaeItemPowerStorage);
             }
             return null;
         });

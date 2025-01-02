@@ -18,16 +18,15 @@
 
 package appeng.me.cluster.implementations;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.BlockDefinition;
 import appeng.me.cluster.IAEMultiBlock;
 import appeng.me.cluster.MBCalculator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class QuantumCalculator extends MBCalculator<QuantumBridgeBlockEntity, QuantumCluster> {
 

@@ -18,26 +18,24 @@
 
 package appeng.datagen.providers.tags;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
+import appeng.api.ids.AETags;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.BlockDefinition;
+import appeng.datagen.providers.IAE2DataProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import appeng.api.ids.AETags;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.BlockDefinition;
-import appeng.datagen.providers.IAE2DataProvider;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implements IAE2DataProvider {
     public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
@@ -45,14 +43,22 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
+    protected void addTags(HolderLookup.Provider registries) {
         // Black- and whitelist tags
         tag(AETags.SPATIAL_BLACKLIST)
                 .add(Blocks.BEDROCK)
                 .addOptionalTag(ConventionTags.IMMOVABLE_BLOCKS.location());
         tag(AETags.ANNIHILATION_PLANE_BLOCK_BLACKLIST);
         tag(AETags.FACADE_BLOCK_WHITELIST)
-                .add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block())
+                .add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block(),
+                        Blocks.CHISELED_BOOKSHELF, Blocks.JUKEBOX, Blocks.FURNACE, Blocks.BLAST_FURNACE, Blocks.DROPPER,
+                        Blocks.DISPENSER, Blocks.CRAFTER, Blocks.BARREL, Blocks.BEE_NEST, Blocks.BEEHIVE,
+                        Blocks.SCULK_CATALYST, Blocks.SOUL_SAND, Blocks.HONEY_BLOCK,
+                        AEBlocks.CONTROLLER.block(), AEBlocks.CRAFTING_STORAGE_1K.block(),
+                        AEBlocks.CRAFTING_STORAGE_4K.block(), AEBlocks.CRAFTING_STORAGE_16K.block(),
+                        AEBlocks.CRAFTING_STORAGE_64K.block(), AEBlocks.CRAFTING_STORAGE_256K.block(),
+                        AEBlocks.CRAFTING_MONITOR.block(), AEBlocks.CRAFTING_UNIT.block(),
+                        AEBlocks.CRAFTING_ACCELERATOR.block())
                 .addOptionalTag(ConventionTags.GLASS_BLOCK.location());
         tag(AETags.GROWTH_ACCELERATABLE)
                 // TODO: Should all be in some conventional tag
@@ -63,9 +69,7 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
                 .addOptionalTag(ConventionTags.SAPLINGS.location())
                 .addTag(ConventionTags.BUDDING_BLOCKS_BLOCKS);
 
-        // Only provide amethyst in the budding tag since that's the one we use; the other tags are for other mods
         tag(ConventionTags.BUDDING_BLOCKS_BLOCKS)
-                .add(Blocks.BUDDING_AMETHYST)
                 .add(AEBlocks.FLAWLESS_BUDDING_QUARTZ.block())
                 .add(AEBlocks.FLAWED_BUDDING_QUARTZ.block())
                 .add(AEBlocks.CHIPPED_BUDDING_QUARTZ.block())
@@ -79,7 +83,7 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
 
         tag(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK)
                 .add(AEBlocks.QUARTZ_BLOCK.block());
-        tag("c:storage_blocks")
+        tag(ConventionalBlockTags.STORAGE_BLOCKS)
                 .addTag(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK);
 
         // Special behavior is associated with this tag, so our walls need to be added to it
@@ -95,6 +99,9 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
                 AEBlocks.QUARTZ_BRICK_WALL.block(),
                 AEBlocks.CHISELED_QUARTZ_WALL.block(),
                 AEBlocks.QUARTZ_PILLAR_WALL.block());
+
+        tag(ConventionalBlockTags.CHESTS).add(AEBlocks.SKY_STONE_CHEST.block(), AEBlocks.SMOOTH_SKY_STONE_CHEST.block());
+        tag(ConventionTags.GLASS_BLOCK).add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block());
 
         // Fixtures should cause walls to have posts
         tag(BlockTags.WALL_POST_OVERRIDE).add(AEBlocks.QUARTZ_FIXTURE.block(), AEBlocks.LIGHT_DETECTOR.block());
@@ -139,9 +146,5 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
             }
         }
 
-    }
-
-    private TagsProvider.TagAppender<Block> tag(String name) {
-        return tag(TagKey.create(Registries.BLOCK, ResourceLocation.parse(name)));
     }
 }

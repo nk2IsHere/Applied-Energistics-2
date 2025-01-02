@@ -18,21 +18,6 @@
 
 package appeng.parts.crafting;
 
-import java.util.EnumSet;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
@@ -48,24 +33,38 @@ import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
 import appeng.util.SettingsFrom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
+import java.util.List;
 
 public class PatternProviderPart extends AEBasePart implements PatternProviderLogicHost {
 
-    public static final ResourceLocation MODEL_BASE = new ResourceLocation(AppEng.MOD_ID,
+    public static final ResourceLocation MODEL_BASE = AppEng.makeId(
             "part/pattern_provider_base");
 
     // TODO: unify the following between the 3 interface parts?
     @PartModels
     public static final PartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_off"));
+            AppEng.makeId("part/interface_off"));
 
     @PartModels
     public static final PartModel MODELS_ON = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_on"));
+            AppEng.makeId("part/interface_on"));
 
     @PartModels
     public static final PartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/interface_has_channel"));
+            AppEng.makeId("part/interface_has_channel"));
 
     protected final PatternProviderLogic logic = createLogic();
 
@@ -100,15 +99,15 @@ public class PatternProviderPart extends AEBasePart implements PatternProviderLo
     }
 
     @Override
-    public void readFromNBT(CompoundTag data) {
-        super.readFromNBT(data);
-        this.logic.readFromNBT(data);
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.readFromNBT(data, registries);
+        this.logic.readFromNBT(data, registries);
     }
 
     @Override
-    public void writeToNBT(CompoundTag data) {
-        super.writeToNBT(data);
-        this.logic.writeToNBT(data);
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
+        super.writeToNBT(data, registries);
+        this.logic.writeToNBT(data, registries);
     }
 
     @Override
@@ -135,16 +134,16 @@ public class PatternProviderPart extends AEBasePart implements PatternProviderLo
     }
 
     @Override
-    public void exportSettings(SettingsFrom mode, CompoundTag output) {
-        super.exportSettings(mode, output);
+    public void exportSettings(SettingsFrom mode, DataComponentMap.Builder builder) {
+        super.exportSettings(mode, builder);
 
         if (mode == SettingsFrom.MEMORY_CARD) {
-            logic.exportSettings(output);
+            logic.exportSettings(builder);
         }
     }
 
     @Override
-    public void importSettings(SettingsFrom mode, CompoundTag input, @Nullable Player player) {
+    public void importSettings(SettingsFrom mode, DataComponentMap input, @Nullable Player player) {
         super.importSettings(mode, input, player);
 
         if (mode == SettingsFrom.MEMORY_CARD) {
@@ -158,7 +157,7 @@ public class PatternProviderPart extends AEBasePart implements PatternProviderLo
     }
 
     @Override
-    public boolean onPartActivate(Player p, InteractionHand hand, Vec3 pos) {
+    public boolean onUseWithoutItem(Player p, Vec3 pos) {
         if (!p.getCommandSenderWorld().isClientSide()) {
             openMenu(p, MenuLocators.forPart(this));
         }

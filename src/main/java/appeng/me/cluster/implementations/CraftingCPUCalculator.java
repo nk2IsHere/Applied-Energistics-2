@@ -18,17 +18,16 @@
 
 package appeng.me.cluster.implementations;
 
-import java.util.Iterator;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.networking.IGrid;
 import appeng.api.networking.events.GridCraftingCpuChange;
 import appeng.blockentity.crafting.CraftingBlockEntity;
 import appeng.me.cluster.IAEMultiBlock;
 import appeng.me.cluster.MBCalculator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.Iterator;
 
 public class CraftingCPUCalculator extends MBCalculator<CraftingBlockEntity, CraftingCPUCluster> {
 

@@ -18,13 +18,12 @@
 
 package appeng.datagen.providers.tags;
 
-import java.util.concurrent.CompletableFuture;
-
+import appeng.api.ids.AETags;
+import appeng.datagen.providers.IAE2DataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
-import appeng.api.ids.AETags;
-import appeng.datagen.providers.IAE2DataProvider;
+import java.util.concurrent.CompletableFuture;
 
 public class FluidTagsProvider extends net.minecraft.data.tags.FluidTagsProvider implements IAE2DataProvider {
 
@@ -33,7 +32,7 @@ public class FluidTagsProvider extends net.minecraft.data.tags.FluidTagsProvider
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider provider) {
+    protected void addTags(HolderLookup.Provider registries) {
         // Provide an empty fluid blacklist
         tag(AETags.ANNIHILATION_PLANE_FLUID_BLACKLIST);
     }

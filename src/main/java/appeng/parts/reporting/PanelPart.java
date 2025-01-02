@@ -18,20 +18,19 @@
 
 package appeng.parts.reporting;
 
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
+import net.minecraft.resources.ResourceLocation;
 
 public class PanelPart extends AbstractPanelPart {
 
     @PartModels
-    public static final ResourceLocation MODEL_OFF = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/monitor_bright_off");
+    public static final ResourceLocation MODEL_OFF = AppEng.makeId("part/monitor_bright_off");
     @PartModels
-    public static final ResourceLocation MODEL_ON = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/monitor_bright_on");
+    public static final ResourceLocation MODEL_ON = AppEng.makeId("part/monitor_bright_on");
 
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE, MODEL_OFF);
     public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE, MODEL_ON);

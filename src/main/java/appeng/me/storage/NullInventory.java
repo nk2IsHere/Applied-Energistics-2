@@ -18,10 +18,9 @@
 
 package appeng.me.storage;
 
-import net.minecraft.network.chat.Component;
-
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
+import net.minecraft.network.chat.Component;
 
 /**
  * An immutable inventory that is empty.

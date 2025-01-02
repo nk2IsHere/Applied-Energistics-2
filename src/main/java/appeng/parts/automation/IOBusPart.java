@@ -18,17 +18,6 @@
 
 package appeng.parts.automation;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.phys.Vec3;
-
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Setting;
@@ -41,34 +30,49 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
-import appeng.api.storage.AEKeyFilter;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.storage.ISubMenuHost;
 import appeng.api.util.AECableType;
 import appeng.api.util.IConfigManager;
+import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
 import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
+import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuLocators;
 import appeng.parts.PartModel;
 import appeng.util.ConfigInventory;
 import appeng.util.Platform;
 import appeng.util.prioritylist.IPartitionList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class IOBusPart extends UpgradeablePart implements IGridTickable, IConfigInvHost {
+import java.util.Set;
 
-    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/import_bus_base");
+public abstract class IOBusPart extends UpgradeablePart implements IGridTickable, IConfigInvHost, ISubMenuHost {
+
+    public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/import_bus_base");
     @PartModels
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/import_bus_off"));
+            AppEng.makeId("part/import_bus_off"));
     @PartModels
     public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/import_bus_on"));
+            AppEng.makeId("part/import_bus_on"));
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/import_bus_has_channel"));
+            AppEng.makeId("part/import_bus_has_channel"));
 
     private final ConfigInventory config;
     // Filter derived from the config
@@ -83,15 +87,20 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
      */
     private boolean pendingPulse = false;
 
-    public IOBusPart(TickRates tickRates, @Nullable AEKeyFilter filter, IPartItem<?> partItem) {
+    public IOBusPart(TickRates tickRates, Set<AEKeyType> supportedKeyTypes, IPartItem<?> partItem) {
         super(partItem);
         this.tickRates = tickRates;
         this.source = new MachineSource(this);
-        this.config = ConfigInventory.configTypes(filter, 63, this::updateState);
+        this.config = ConfigInventory.configTypes(63).supportedTypes(supportedKeyTypes)
+                .changeListener(this::updateState).build();
         getMainNode().addService(IGridTickable.class, this);
+    }
 
-        this.getConfigManager().registerSetting(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
-        this.getConfigManager().registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+    @Override
+    protected void registerSettings(IConfigManagerBuilder builder) {
+        super.registerSettings(builder);
+        builder.registerSetting(Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
+        builder.registerSetting(Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
     }
 
     @Override
@@ -124,18 +133,18 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
-        config.readFromChildTag(extra, "config");
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
+        config.readFromChildTag(extra, "config", registries);
         // Ensure the filter is rebuilt
         filter = null;
         pendingPulse = isInPulseMode() && extra.getBoolean("pendingPulse");
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
-        config.writeToChildTag(extra, "config");
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
+        config.writeToChildTag(extra, "config", registries);
         if (isInPulseMode() && pendingPulse) {
             extra.putBoolean("pendingPulse", true);
         }
@@ -269,7 +278,7 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
     }
 
     @Override
-    public final boolean onPartActivate(Player player, InteractionHand hand, Vec3 pos) {
+    public final boolean onUseWithoutItem(Player player, Vec3 pos) {
         if (!isClientSide()) {
             MenuOpener.open(getMenuType(), player, MenuLocators.forPart(this));
         }
@@ -278,7 +287,7 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
 
     @Override
     public final TickingRequest getTickingRequest(IGridNode node) {
-        return new TickingRequest(tickRates.getMin(), tickRates.getMax(), isSleeping(), true);
+        return new TickingRequest(tickRates.getMin(), tickRates.getMax(), isSleeping());
     }
 
     @Override
@@ -304,5 +313,15 @@ public abstract class IOBusPart extends UpgradeablePart implements IGridTickable
         if (pendingPulse) {
             getMainNode().ifPresent((grid, node) -> grid.getTickManager().alertDevice(node));
         }
+    }
+
+    @Override
+    public void returnToMainMenu(Player player, ISubMenu subMenu) {
+        MenuOpener.open(getMenuType(), player, subMenu.getLocator(), true);
+    }
+
+    @Override
+    public ItemStack getMainMenuIcon() {
+        return getPartItem().asItem().getDefaultInstance();
     }
 }

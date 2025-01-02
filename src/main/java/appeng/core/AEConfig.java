@@ -496,6 +496,10 @@ public final class AEConfig {
         return COMMON.craftingCalculationTimePerTick.get();
     }
 
+    public boolean isAnnihilationPlaneSkyDustGenerationEnabled() {
+        return COMMON.annihilationPlaneSkyDustGeneration.get();
+    }
+
     public void save() {
     }
 

@@ -437,7 +437,7 @@ public interface IPart extends ICustomCableConnection, Clearable {
      * @return The model data to pass to the model. Only useful if custom models are used.
      */
     @Nullable
-    default Object getRenderAttachmentData() {
+    default Object getRenderData() {
         return null;
     }
 

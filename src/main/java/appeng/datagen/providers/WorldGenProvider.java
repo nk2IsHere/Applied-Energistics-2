@@ -1,29 +1,26 @@
 package appeng.datagen.providers;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
-
+import appeng.core.AppEng;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.JsonOps;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryOps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import appeng.core.AppEng;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 public class WorldGenProvider implements DataProvider {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorldGenProvider.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WorldGenProvider.class);
 
     private final PackOutput output;
     private final CompletableFuture<HolderLookup.Provider> registries;
@@ -44,10 +41,10 @@ public class WorldGenProvider implements DataProvider {
         });
     }
 
-    private <T> CompletableFuture<Void> writeRegistryEntries(CachedOutput writer, HolderLookup.Provider provider,
+    private <T> CompletableFuture<Void> writeRegistryEntries(CachedOutput writer, HolderLookup.Provider registries,
             DynamicOps<JsonElement> ops, RegistryDataLoader.RegistryData<T> registryData) {
         var registryKey = registryData.key();
-        var registry = provider.lookup(registryKey).orElse(null);
+        var registry = registries.lookup(registryKey).orElse(null);
         if (registry == null) {
             return CompletableFuture.completedFuture(null);
         }
@@ -72,7 +69,7 @@ public class WorldGenProvider implements DataProvider {
             DynamicOps<JsonElement> json, Encoder<E> encoder,
             E value) {
         var optional = encoder.encodeStart(json, value).resultOrPartial((error) -> {
-            LOGGER.error("Couldn't serialize element {}: {}", path, error);
+            LOG.error("Couldn't serialize element {}: {}", path, error);
         });
 
         return optional.map(data -> DataProvider.saveStable(cache, data, path));

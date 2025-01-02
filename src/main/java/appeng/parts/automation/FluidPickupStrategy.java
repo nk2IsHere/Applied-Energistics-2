@@ -1,19 +1,5 @@
 package appeng.parts.automation;
 
-import java.util.Map;
-import java.util.UUID;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-
 import appeng.api.behaviors.PickupSink;
 import appeng.api.behaviors.PickupStrategy;
 import appeng.api.config.Actionable;
@@ -21,13 +7,28 @@ import appeng.api.ids.AETags;
 import appeng.api.networking.energy.IEnergySource;
 import appeng.api.stacks.AEFluidKey;
 import appeng.core.AppEng;
-import appeng.core.sync.packets.BlockTransitionEffectPacket;
+import appeng.core.network.clientbound.BlockTransitionEffectPacket;
 import appeng.util.GenericContainerHelper;
+import appeng.util.Platform;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class FluidPickupStrategy implements PickupStrategy {
     private final ServerLevel level;
     private final BlockPos pos;
     private final Direction side;
+    @Nullable
+    private final UUID owningPlayerId;
 
     /**
      * {@link System#currentTimeMillis()} of when the last sound/visual effect was played by this plane.
@@ -35,10 +36,11 @@ public class FluidPickupStrategy implements PickupStrategy {
     private long lastEffect;
 
     public FluidPickupStrategy(ServerLevel level, BlockPos pos, Direction side, BlockEntity host,
-            Map<?, ?> enchantments, @Nullable UUID owningPlayerId) {
+            ItemEnchantments enchantments, @Nullable UUID owningPlayerId) {
         this.level = level;
         this.pos = pos;
         this.side = side;
+        this.owningPlayerId = owningPlayerId;
     }
 
     @Override
@@ -74,7 +76,8 @@ public class FluidPickupStrategy implements PickupStrategy {
                     // bucket
                     // This _MIGHT_ change the liquid, and if it does, and we dont have enough
                     // space, tough luck. you loose the source block.
-                    var fluidContainer = bucketPickup.pickupBlock(level, pos, blockstate);
+                    var fakePlayer = Platform.getFakePlayer(level, owningPlayerId);
+                    var fluidContainer = bucketPickup.pickupBlock(fakePlayer, level, pos, blockstate);
                     var pickedUpStack = GenericContainerHelper.getContainedFluidStack(fluidContainer);
                     if (pickedUpStack != null && pickedUpStack.what() instanceof AEFluidKey fluidKey) {
                         this.storeFluid(sink, fluidKey, pickedUpStack.amount(), true);

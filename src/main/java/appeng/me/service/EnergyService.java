@@ -18,44 +18,11 @@
 
 package appeng.me.service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NavigableSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Sets;
-
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-
-import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
-
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.networking.IGridServiceProvider;
-import appeng.api.networking.energy.IAEPowerStorage;
-import appeng.api.networking.energy.IEnergyService;
-import appeng.api.networking.energy.IEnergyWatcher;
-import appeng.api.networking.energy.IEnergyWatcherNode;
-import appeng.api.networking.energy.IPassiveEnergyGenerator;
+import appeng.api.networking.*;
+import appeng.api.networking.energy.*;
 import appeng.api.networking.events.GridPowerIdleChange;
 import appeng.api.networking.events.GridPowerStatusChange;
 import appeng.api.networking.events.GridPowerStorageStateChanged;
@@ -66,6 +33,17 @@ import appeng.me.energy.EnergyThreshold;
 import appeng.me.energy.EnergyWatcher;
 import appeng.me.energy.GridEnergyStorage;
 import appeng.me.energy.IEnergyOverlayGridConnection;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Sets;
+import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import java.util.*;
 
 public class EnergyService implements IEnergyService, IGridServiceProvider {
     private static final String TAG_STORED_ENERGY = "e";

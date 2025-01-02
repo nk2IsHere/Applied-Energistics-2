@@ -18,32 +18,8 @@
 
 package appeng.parts.networking;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.function.Predicate;
-
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-
-import io.netty.buffer.Unpooled;
-
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-
 import appeng.api.implementations.parts.ICablePart;
-import appeng.api.networking.GridFlags;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.networking.IManagedGridNode;
+import appeng.api.networking.*;
 import appeng.api.networking.pathing.ChannelMode;
 import appeng.api.parts.BusSupport;
 import appeng.api.parts.IPartCollisionHelper;
@@ -54,6 +30,23 @@ import appeng.core.definitions.AEParts;
 import appeng.items.parts.ColoredPartItem;
 import appeng.items.tools.powered.ColorApplicatorItem;
 import appeng.parts.AEBasePart;
+import io.netty.buffer.Unpooled;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public abstract class CablePart extends AEBasePart implements ICablePart {
 
@@ -91,7 +84,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
 
     @Override
     public AEColor getCableColor() {
-        if (getPartItem() instanceof ColoredPartItem<?>coloredPartItem) {
+        if (getPartItem() instanceof ColoredPartItem<?> coloredPartItem) {
             return coloredPartItem.getColor();
         }
         return AEColor.TRANSPARENT;
@@ -241,7 +234,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
     }
 
     @Override
-    public void writeToStream(FriendlyByteBuf data) {
+    public void writeToStream(RegistryFriendlyByteBuf data) {
         super.writeToStream(data);
 
         boolean[] writeChannels = new boolean[Direction.values().length];
@@ -315,7 +308,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
     }
 
     @Override
-    public boolean readFromStream(FriendlyByteBuf data) {
+    public boolean readFromStream(RegistryFriendlyByteBuf data) {
         var changed = super.readFromStream(data);
 
         int connectedSidesPacked = data.readByte();
@@ -357,7 +350,7 @@ public abstract class CablePart extends AEBasePart implements ICablePart {
         // Hacky hacky hacky, but it works. Refreshes the client-side state even if we're on the server
         if (!isClientSide()) {
             updateConnections();
-            var packet = new FriendlyByteBuf(Unpooled.buffer());
+            var packet = new RegistryFriendlyByteBuf(Unpooled.buffer(), getLevel().registryAccess());
             writeToStream(packet);
             readFromStream(packet);
         }

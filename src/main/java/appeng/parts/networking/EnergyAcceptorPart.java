@@ -18,12 +18,10 @@
 
 package appeng.parts.networking;
 
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
-import appeng.api.config.PowerUnits;
+import appeng.api.config.PowerUnit;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -34,21 +32,22 @@ import appeng.helpers.ForgeEnergyAdapter;
 import appeng.items.parts.PartModels;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
+import team.reborn.energy.api.EnergyStorage;
 
 public class EnergyAcceptorPart extends AEBasePart implements IExternalPowerSink {
 
     @PartModels
-    private static final IPartModel MODELS = new PartModel(ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/energy_acceptor"));
-    private final ForgeEnergyAdapter energyAdapter;
+    private static final IPartModel MODELS = new PartModel(AppEng.makeId("part/energy_acceptor"));
+    private final ForgeEnergyAdapter forgeEnergyAdapter;
 
     public EnergyAcceptorPart(IPartItem<?> partItem) {
         super(partItem);
         this.getMainNode().setIdlePowerUsage(0);
-        this.energyAdapter = new ForgeEnergyAdapter(this);
+        this.forgeEnergyAdapter = new ForgeEnergyAdapter(this);
     }
 
-    public ForgeEnergyAdapter getEnergyAdapter() {
-        return energyAdapter;
+    public EnergyStorage getEnergyStorage() {
+        return forgeEnergyAdapter;
     }
 
     @Override
@@ -68,9 +67,9 @@ public class EnergyAcceptorPart extends AEBasePart implements IExternalPowerSink
     }
 
     @Override
-    public final double getExternalPowerDemand(PowerUnits externalUnit, double maxPowerRequired) {
-        return PowerUnits.AE.convertTo(externalUnit,
-                Math.max(0.0, this.getFunnelPowerDemand(externalUnit.convertTo(PowerUnits.AE, maxPowerRequired))));
+    public final double getExternalPowerDemand(PowerUnit externalUnit, double maxPowerRequired) {
+        return PowerUnit.AE.convertTo(externalUnit,
+                Math.max(0.0, this.getFunnelPowerDemand(externalUnit.convertTo(PowerUnit.AE, maxPowerRequired))));
     }
 
     protected double getFunnelPowerDemand(double maxRequired) {
@@ -83,8 +82,8 @@ public class EnergyAcceptorPart extends AEBasePart implements IExternalPowerSink
     }
 
     @Override
-    public final double injectExternalPower(PowerUnits input, double amt, Actionable mode) {
-        return PowerUnits.AE.convertTo(input, this.funnelPowerIntoStorage(input.convertTo(PowerUnits.AE, amt), mode));
+    public final double injectExternalPower(PowerUnit input, double amt, Actionable mode) {
+        return PowerUnit.AE.convertTo(input, this.funnelPowerIntoStorage(input.convertTo(PowerUnit.AE, amt), mode));
     }
 
     protected double funnelPowerIntoStorage(double power, Actionable mode) {

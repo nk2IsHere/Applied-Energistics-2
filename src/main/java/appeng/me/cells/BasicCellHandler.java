@@ -18,16 +18,6 @@
 
 package appeng.me.cells;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.config.IncludeExclude;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.ICellHandler;
@@ -36,6 +26,11 @@ import appeng.core.AEConfig;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.items.storage.StorageCellTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.*;
 
 /**
  * Cell handler that manages all normal storage cells (items, fluids).
@@ -65,7 +60,7 @@ public class BasicCellHandler implements ICellHandler {
         if (handler.isPreformatted()) {
             var list = (handler.getPartitionListMode() == IncludeExclude.WHITELIST ? GuiText.Included
                     : GuiText.Excluded)
-                            .text();
+                    .text();
 
             if (handler.isFuzzy()) {
                 lines.add(GuiText.Partitioned.withSuffix(" - ").append(list).append(" ").append(GuiText.Fuzzy.text()));

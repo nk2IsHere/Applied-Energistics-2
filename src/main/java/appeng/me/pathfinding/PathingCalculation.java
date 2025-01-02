@@ -18,18 +18,6 @@
 
 package appeng.me.pathfinding;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridMultiblock;
@@ -37,6 +25,11 @@ import appeng.api.networking.IGridNode;
 import appeng.blockentity.networking.ControllerBlockEntity;
 import appeng.me.GridConnection;
 import appeng.me.GridNode;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * Calculation to assign channels starting from the controllers. The full computation is split in two steps, each linear
@@ -229,10 +222,10 @@ public class PathingCalculation {
         }
 
         while (!stack.isEmpty()) {
-            Object current = stack.get(stack.size() - 1);
+            Object current = stack.getLast();
             if (current == SUBTREE_END) {
-                stack.remove(stack.size() - 1);
-                IPathItem item = (IPathItem) stack.remove(stack.size() - 1);
+                stack.removeLast();
+                IPathItem item = (IPathItem) stack.removeLast();
                 // We have visited the entire subtree and can now propagate channels upwards.
                 if (item instanceof GridNode node) {
                     boolean hasChannel = channelNodes.contains(item);

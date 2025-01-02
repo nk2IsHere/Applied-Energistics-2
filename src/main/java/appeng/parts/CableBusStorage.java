@@ -18,13 +18,11 @@
 
 package appeng.parts;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.core.Direction;
-
 import appeng.api.implementations.parts.ICablePart;
 import appeng.api.parts.IFacadePart;
 import appeng.api.parts.IPart;
+import net.minecraft.core.Direction;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Thin data storage to optimize memory usage for cables.

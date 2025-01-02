@@ -1,6 +1,10 @@
 package appeng.datagen.providers.recipes;
 
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.ItemDefinition;
+import appeng.datagen.providers.tags.ConventionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -10,25 +14,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.ItemDefinition;
-import appeng.datagen.providers.tags.ConventionTags;
-
 import java.util.concurrent.CompletableFuture;
 
 public class SmithingRecipes extends AE2RecipeProvider {
-
-
-    public SmithingRecipes(
-        PackOutput packOutput,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
-        super(
-            packOutput,
-            completableFuture
-        );
+    public SmithingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override

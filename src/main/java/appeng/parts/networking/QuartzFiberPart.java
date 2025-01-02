@@ -18,22 +18,10 @@
 
 package appeng.parts.networking;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
-
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
-import appeng.api.networking.energy.IEnergyService;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
@@ -45,6 +33,16 @@ import appeng.me.energy.IEnergyOverlayGridConnection;
 import appeng.me.service.EnergyService;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A quartz fiber consists of two grid nodes which are not connected directly.
@@ -57,7 +55,7 @@ import appeng.parts.PartModel;
 public class QuartzFiberPart extends AEBasePart {
 
     @PartModels
-    private static final IPartModel MODELS = new PartModel(ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/quartz_fiber"));
+    private static final IPartModel MODELS = new PartModel(AppEng.makeId("part/quartz_fiber"));
 
     private final IManagedGridNode outerNode;
 
@@ -80,12 +78,12 @@ public class QuartzFiberPart extends AEBasePart {
 
     private List<EnergyService> getOurEnergyServices() {
         var grid = Objects.requireNonNull(getMainNode().getGrid());
-        return Collections.singletonList((EnergyService) grid.getService(IEnergyService.class));
+        return Collections.singletonList((EnergyService) grid.getEnergyService());
     }
 
     private List<EnergyService> getTheirEnergyServices() {
         var grid = Objects.requireNonNull(outerNode.getGrid());
-        return Collections.singletonList((EnergyService) grid.getService(IEnergyService.class));
+        return Collections.singletonList((EnergyService) grid.getEnergyService());
     }
 
     @Override
@@ -94,14 +92,14 @@ public class QuartzFiberPart extends AEBasePart {
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
         this.outerNode.loadFromNBT(extra);
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
         this.outerNode.saveToNBT(extra);
     }
 

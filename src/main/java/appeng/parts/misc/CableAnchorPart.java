@@ -18,32 +18,25 @@
 
 package appeng.parts.misc;
 
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
 import appeng.api.networking.IGridNode;
-import appeng.api.parts.BusSupport;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
+import appeng.api.parts.*;
 import appeng.api.util.AECableType;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CableAnchorPart implements IPart {
 
     @PartModels
     public static final PartModel DEFAULT_MODELS = new PartModel(false,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable_anchor"));
+            AppEng.makeId("part/cable_anchor"));
 
     @PartModels
     public static final PartModel FACADE_MODELS = new PartModel(false,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/cable_anchor_short"));
+            AppEng.makeId("part/cable_anchor_short"));
 
     private final IPartItem<CableAnchorPart> partItem;
     private IPartHost host = null;

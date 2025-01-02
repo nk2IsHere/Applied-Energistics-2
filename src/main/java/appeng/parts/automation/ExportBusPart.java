@@ -18,17 +18,6 @@
 
 package appeng.parts.automation;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.inventory.MenuType;
-
 import appeng.api.behaviors.StackExportStrategy;
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
@@ -45,6 +34,7 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.api.stacks.AEKey;
+import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
@@ -53,6 +43,15 @@ import appeng.items.parts.PartModels;
 import appeng.menu.implementations.IOBusMenu;
 import appeng.parts.PartModel;
 import appeng.util.prioritylist.DefaultPriorityList;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.inventory.MenuType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Generalized base class for export buses that move stacks from network storage to an adjacent block using a non-AE
@@ -60,19 +59,19 @@ import appeng.util.prioritylist.DefaultPriorityList;
  */
 public class ExportBusPart extends IOBusPart implements ICraftingRequester {
 
-    public static final ResourceLocation MODEL_BASE = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_base");
+    public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/export_bus_base");
 
     @PartModels
     public static final IPartModel MODELS_OFF = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_off"));
+            AppEng.makeId("part/export_bus_off"));
 
     @PartModels
     public static final IPartModel MODELS_ON = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_on"));
+            AppEng.makeId("part/export_bus_on"));
 
     @PartModels
     public static final IPartModel MODELS_HAS_CHANNEL = new PartModel(MODEL_BASE,
-            ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, "part/export_bus_has_channel"));
+            AppEng.makeId("part/export_bus_has_channel"));
 
     private final MultiCraftingTracker craftingTracker;
     private int nextSlot = 0;
@@ -80,24 +79,28 @@ public class ExportBusPart extends IOBusPart implements ICraftingRequester {
     private StackExportStrategy exportStrategy;
 
     public ExportBusPart(IPartItem<?> partItem) {
-        super(TickRates.ExportBus, StackWorldBehaviors.hasExportStrategyFilter(), partItem);
+        super(TickRates.ExportBus, StackWorldBehaviors.withExportStrategy(), partItem);
         this.craftingTracker = new MultiCraftingTracker(this, getConfig().size());
         getMainNode().addService(ICraftingRequester.class, this);
-
-        this.getConfigManager().registerSetting(Settings.CRAFT_ONLY, YesNo.NO);
-        this.getConfigManager().registerSetting(Settings.SCHEDULING_MODE, SchedulingMode.DEFAULT);
     }
 
     @Override
-    public void readFromNBT(CompoundTag extra) {
-        super.readFromNBT(extra);
+    protected void registerSettings(IConfigManagerBuilder builder) {
+        super.registerSettings(builder);
+        builder.registerSetting(Settings.CRAFT_ONLY, YesNo.NO);
+        builder.registerSetting(Settings.SCHEDULING_MODE, SchedulingMode.DEFAULT);
+    }
+
+    @Override
+    public void readFromNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.readFromNBT(extra, registries);
         this.craftingTracker.readFromNBT(extra);
         this.nextSlot = extra.getInt("nextSlot");
     }
 
     @Override
-    public void writeToNBT(CompoundTag extra) {
-        super.writeToNBT(extra);
+    public void writeToNBT(CompoundTag extra, HolderLookup.Provider registries) {
+        super.writeToNBT(extra, registries);
         this.craftingTracker.writeToNBT(extra);
         extra.putInt("nextSlot", this.nextSlot);
     }

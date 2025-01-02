@@ -18,26 +18,24 @@
 
 package appeng.parts.automation;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.resources.ResourceLocation;
-
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.parts.PartModel;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.List;
 
 /**
  * Contains a mapping from a Plane's connections to the models to use for that state.
  */
 public class PlaneModels {
 
-    public static final ResourceLocation MODEL_CHASSIS_OFF = new ResourceLocation(AppEng.MOD_ID,
+    public static final ResourceLocation MODEL_CHASSIS_OFF = AppEng.makeId(
             "part/transition_plane_off");
-    public static final ResourceLocation MODEL_CHASSIS_ON = new ResourceLocation(AppEng.MOD_ID,
+    public static final ResourceLocation MODEL_CHASSIS_ON = AppEng.makeId(
             "part/transition_plane_on");
-    public static final ResourceLocation MODEL_CHASSIS_HAS_CHANNEL = new ResourceLocation(AppEng.MOD_ID,
+    public static final ResourceLocation MODEL_CHASSIS_HAS_CHANNEL = AppEng.makeId(
             "part/transition_plane_has_channel");
 
     private final IPartModel modelOff;
@@ -47,8 +45,8 @@ public class PlaneModels {
     private final IPartModel modelHasChannel;
 
     public PlaneModels(String planeOffLocation, String planeOnLocation) {
-        ResourceLocation planeOff = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, planeOffLocation);
-        ResourceLocation planeOn = ResourceLocation.fromNamespaceAndPath(AppEng.MOD_ID, planeOnLocation);
+        ResourceLocation planeOff = AppEng.makeId(planeOffLocation);
+        ResourceLocation planeOn = AppEng.makeId(planeOnLocation);
 
         this.modelOff = new PartModel(MODEL_CHASSIS_OFF, planeOff);
         this.modelOn = new PartModel(MODEL_CHASSIS_ON, planeOff);

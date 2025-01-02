@@ -1,13 +1,5 @@
 package appeng.datagen.providers.models;
 
-import static appeng.core.AppEng.makeId;
-
-import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
-
 import appeng.api.ids.AEItemIds;
 import appeng.api.util.AEColor;
 import appeng.client.render.model.MemoryCardModel;
@@ -16,20 +8,25 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.ItemDefinition;
 import appeng.datagen.providers.IAE2DataProvider;
-import appeng.init.client.InitItemModelsProperties;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemModelProvider
         implements IAE2DataProvider {
-    public ItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, AppEng.MOD_ID, existingFileHelper);
+    public ItemModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+        super(packOutput, AppEng.MOD_ID, existingFileHelper);
     }
 
     @Override
     protected void registerModels() {
         registerPaintballs();
 
-        flatSingleLayer(MemoryCardModel.MODEL_BASE, "item/memory_card_pins")
-                .texture("layer1", "item/memory_card_base");
+        flatSingleLayer(AEItems.MISSING_CONTENT, "minecraft:item/barrier");
+
+        flatSingleLayer(MemoryCardModel.MODEL_BASE, "item/memory_card_base")
+                .texture("layer1", "item/memory_card_led");
         builtInItemModel("memory_card");
 
         builtInItemModel("facade");
@@ -71,7 +68,6 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         storageCell(AEItems.FLUID_CELL_16K, "item/fluid_storage_cell_16k");
         storageCell(AEItems.FLUID_CELL_64K, "item/fluid_storage_cell_64k");
         storageCell(AEItems.FLUID_CELL_256K, "item/fluid_storage_cell_256k");
-        flatSingleLayer(AEItems.FLUID_CELL_CREATIVE, "item/creative_fluid_cell");
         flatSingleLayer(AEItems.FLUID_CELL_HOUSING, "item/fluid_cell_housing");
         flatSingleLayer(AEItems.FLUIX_CRYSTAL, "item/fluix_crystal");
         flatSingleLayer(AEItems.FLUIX_DUST, "item/fluix_dust");
@@ -85,7 +81,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         flatSingleLayer(AEItems.CELL_COMPONENT_4K, "item/cell_component_4k");
         flatSingleLayer(AEItems.CELL_COMPONENT_64K, "item/cell_component_64k");
         flatSingleLayer(AEItems.CELL_COMPONENT_256K, "item/cell_component_256k");
-        flatSingleLayer(AEItems.ITEM_CELL_CREATIVE, "item/creative_item_cell");
+        flatSingleLayer(AEItems.CREATIVE_CELL, "item/creative_storage_cell");
         flatSingleLayer(AEItems.ITEM_CELL_HOUSING, "item/item_cell_housing");
         flatSingleLayer(AEItems.LOGIC_PROCESSOR, "item/logic_processor");
         flatSingleLayer(AEItems.LOGIC_PROCESSOR_PRESS, "item/logic_processor_press");
@@ -94,7 +90,6 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         flatSingleLayer(AEItems.NAME_PRESS, "item/name_press");
         flatSingleLayer(AEItems.NETHER_QUARTZ_KNIFE, "item/nether_quartz_cutting_knife");
         flatSingleLayer(AEItems.NETHER_QUARTZ_WRENCH, "item/nether_quartz_wrench");
-        flatSingleLayer(AEItems.NETWORK_TOOL, "item/network_tool");
         portableCell(AEItems.PORTABLE_ITEM_CELL1K, "item", "1k");
         portableCell(AEItems.PORTABLE_ITEM_CELL4K, "item", "4k");
         portableCell(AEItems.PORTABLE_ITEM_CELL16K, "item", "16k");
@@ -129,7 +124,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         flatSingleLayer(AEItems.WIRELESS_RECEIVER, "item/wireless_receiver");
         flatSingleLayer(AEItems.WIRELESS_TERMINAL, "item/wireless_terminal");
         registerEmptyModel(AEItems.WRAPPED_GENERIC_STACK);
-        registerEmptyModel(AEBlocks.CABLE_BUS);
+        registerEmptyModel(AEBlocks.CABLE_BUS.item());
         registerHandheld();
     }
 
@@ -140,7 +135,7 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
                 mcLoc("item/generated"),
                 "layer0",
                 makeId(background))
-                        .texture("layer1", "item/storage_cell_led");
+                .texture("layer1", "item/storage_cell_led");
     }
 
     private void portableCell(ItemDefinition<?> item, String housingType, String tier) {
@@ -149,10 +144,10 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
                 id,
                 mcLoc("item/generated"),
                 "layer0",
-                makeId("item/portable_cell_screen"))
-                        .texture("layer1", "item/portable_cell_led")
-                        .texture("layer2", "item/portable_cell_%s_housing".formatted(housingType))
-                        .texture("layer3", "item/portable_cell_side_%s".formatted(tier));
+                makeId("item/portable_cell_%s_housing".formatted(housingType)))
+                .texture("layer1", "item/portable_cell_led")
+                .texture("layer2", "item/portable_cell_screen")
+                .texture("layer3", "item/portable_cell_side_%s".formatted(tier));
     }
 
     private void registerHandheld() {
@@ -177,21 +172,6 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
         handheld(AEItems.FLUIX_SWORD);
         handheld(AEItems.ENTROPY_MANIPULATOR);
         handheld(AEItems.CHARGED_STAFF);
-
-        // The color applicator uses a separate model when colored
-        var coloredColorApplicator = withExistingParent(AEItems.COLOR_APPLICATOR.id().getPath() + "_colored",
-                "item/generated")
-                        .texture("layer0", makeId("item/color_applicator"))
-                        .texture("layer1", makeId("item/color_applicator_tip_dark"))
-                        .texture("layer2", makeId("item/color_applicator_tip_medium"))
-                        .texture("layer3", makeId("item/color_applicator_tip_bright"));
-        withExistingParent(AEItems.COLOR_APPLICATOR.id().getPath(), "item/generated")
-                .texture("layer0", makeId("item/color_applicator"))
-                // Use different model when colored
-                .override()
-                .predicate(InitItemModelsProperties.COLORED_PREDICATE_ID, 1)
-                .model(coloredColorApplicator)
-                .end();
     }
 
     private void handheld(ItemDefinition<?> item) {
@@ -244,9 +224,10 @@ public class ItemModelProvider extends net.minecraftforge.client.model.generator
 
     private ItemModelBuilder builtInItemModel(String name) {
         var model = getBuilder("item/" + name);
-        var loaderId = AppEng.makeId("item/" + name);
-        model.customLoader((bmb, efh) -> new CustomLoaderBuilder<>(loaderId, bmb, efh) {
-        });
         return model;
+    }
+
+    private static ResourceLocation makeId(String id) {
+        return id.contains(":") ? ResourceLocation.parse(id) : AppEng.makeId(id);
     }
 }

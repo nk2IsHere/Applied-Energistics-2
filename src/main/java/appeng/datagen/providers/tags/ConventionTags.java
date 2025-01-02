@@ -18,14 +18,11 @@
 
 package appeng.datagen.providers.tags;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import appeng.core.AppEng;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBiomeTags;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -34,6 +31,11 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Contains various tags:
@@ -48,6 +50,14 @@ public final class ConventionTags {
     private ConventionTags() {
     }
 
+    /**
+     * This tag contains all data component types that should be cleared from a memory card when it is
+     * shift+right-clicked.
+     */
+    public static final TagKey<DataComponentType<?>> EXPORTED_SETTINGS = TagKey.create(
+            Registries.DATA_COMPONENT_TYPE,
+            AppEng.makeId("exported_settings"));
+
     public static final TagKey<Item> DUSTS = tag("c:dusts");
     public static final TagKey<Item> GEMS = tag("c:gems");
 
@@ -60,42 +70,41 @@ public final class ConventionTags {
 
     // Includes charged, synthetic/purified and natural certus quartz
     public static final TagKey<Item> ALL_CERTUS_QUARTZ = tag("ae2:all_certus_quartz");
-    public static final TagKey<Item> CERTUS_QUARTZ = tag("c:certus_quartz");
-    public static final TagKey<Block> CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK = blockTag("c:certus_quartz_blocks");
-    public static final TagKey<Item> CERTUS_QUARTZ_DUST = tag("c:certus_quartz_dusts");
+    public static final TagKey<Item> CERTUS_QUARTZ = tag("c:gems/certus_quartz");
+    public static final TagKey<Block> CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK = blockTag(
+            "c:storage_blocks/certus_quartz");
+    public static final TagKey<Item> CERTUS_QUARTZ_DUST = tag("c:dusts/certus_quartz");
 
     // Includes synthetic/purified
     public static final TagKey<Item> ALL_NETHER_QUARTZ = tag("ae2:all_nether_quartz");
-    public static final TagKey<Item> NETHER_QUARTZ = tag("c:quartz");
-    public static final TagKey<Item> NETHER_QUARTZ_ORE = tag("c:quartz_ores");
+    public static final TagKey<Item> NETHER_QUARTZ = ConventionalItemTags.QUARTZ_GEMS;
 
     // Includes synthetic/purified
     public static final TagKey<Item> ALL_FLUIX = tag("ae2:all_fluix");
-    public static final TagKey<Item> FLUIX_DUST = tag("c:fluix_dusts");
-    public static final TagKey<Item> FLUIX_CRYSTAL = tag("c:fluix");
+    public static final TagKey<Item> FLUIX_DUST = tag("c:dusts/fluix");
+    public static final TagKey<Item> FLUIX_CRYSTAL = tag("c:gems/fluix");
 
     public static final TagKey<Item> COPPER_INGOT = tag("c:copper_ingots");
 
     public static final TagKey<Item> GOLD_NUGGET = tag("c:gold_nuggets");
     public static final TagKey<Item> GOLD_INGOT = tag("c:gold_ingots");
-    public static final TagKey<Item> GOLD_ORE = tag("c:gold_ores");
 
     public static final TagKey<Item> IRON_NUGGET = tag("c:iron_nuggets");
     public static final TagKey<Item> IRON_INGOT = tag("c:iron_ingots");
-    public static final TagKey<Item> IRON_ORE = tag("c:iron_ores");
 
     public static final TagKey<Item> DIAMOND = tag("c:diamonds");
     public static final TagKey<Item> REDSTONE = tag("c:redstone_dusts");
     public static final TagKey<Item> GLOWSTONE = tag("c:glowstone_dusts");
 
-    public static final TagKey<Item> ENDER_PEARL = tag("c:ender_pearls");
-    public static final TagKey<Item> ENDER_PEARL_DUST = tag("c:ender_pearl_dusts");
+    public static final TagKey<Item> ENDER_PEARL = ConventionalItemTags.ENDER_PEARLS;
+    public static final TagKey<Item> ENDER_PEARL_DUST = tag("c:dusts/ender_pearl");
 
-    public static final TagKey<Item> WOOD_STICK = tag("c:wooden_rods");
-    public static final TagKey<Item> CHEST = tag("c:wooden_chests");
+    public static final TagKey<Item> SKY_STONE_DUST = tag("c:dusts/sky_stone");
+
+    public static final TagKey<Item> WOOD_STICK = ConventionalItemTags.WOODEN_RODS;
+    public static final TagKey<Item> CHEST = ConventionalItemTags.WOODEN_CHESTS;
 
     public static final TagKey<Item> STONE = tag("c:stone");
-    public static final TagKey<Item> COBBLESTONE = tag("c:cobblestone");
     public static final TagKey<Item> GLASS = ConventionalItemTags.GLASS_BLOCKS;
     public static final TagKey<Block> GLASS_BLOCK = ConventionalBlockTags.GLASS_BLOCKS;
 
@@ -115,6 +124,7 @@ public final class ConventionTags {
     public static final TagKey<Item> QUARTZ_WRENCH = tag("ae2:quartz_wrench");
     public static final TagKey<Item> QUARTZ_KNIFE = tag("ae2:knife");
     public static final TagKey<Item> PAINT_BALLS = tag("ae2:paint_balls");
+    public static final TagKey<Item> LUMEN_PAINT_BALLS = tag("ae2:lumen_paint_balls");
     public static final TagKey<Item> INSCRIBER_PRESSES = tag("ae2:inscriber_presses");
     /**
      * Items that can be used in recipes to remove color from colored items.
@@ -146,12 +156,14 @@ public final class ConventionTags {
     /**
      * Used to identify items that act as wrenches.
      */
-    public static final TagKey<Item> WRENCH = tag("c:wrenches");
+    public static final TagKey<Item> WRENCH = tag("c:tools/wrench");
 
     public static final Map<DyeColor, TagKey<Item>> DYES = Arrays.stream(DyeColor.values())
             .collect(Collectors.toMap(
                     Function.identity(),
-                    dye -> tag("c:" + dye.getSerializedName() + "_dyes")));
+                    dye -> tag("c:dyes/" + dye.getSerializedName())));
+
+    public static final TagKey<Item> CURIOS = tag("curios:curio");
 
     public static TagKey<Item> dye(DyeColor color) {
         return DYES.get(color);

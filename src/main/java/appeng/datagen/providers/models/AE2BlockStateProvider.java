@@ -1,18 +1,14 @@
 package appeng.datagen.providers.models;
 
-import java.util.function.Supplier;
-
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.core.AppEng;
+import appeng.core.definitions.BlockDefinition;
+import appeng.datagen.providers.IAE2DataProvider;
 import com.google.gson.JsonPrimitive;
-
 import net.minecraft.core.Direction;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.models.blockstates.Condition;
-import net.minecraft.data.models.blockstates.MultiPartGenerator;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
-import net.minecraft.data.models.blockstates.VariantProperty;
+import net.minecraft.data.models.blockstates.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -24,18 +20,14 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.core.AppEng;
-import appeng.core.definitions.BlockDefinition;
-import appeng.datagen.providers.IAE2DataProvider;
+import java.util.function.Supplier;
 
 public abstract class AE2BlockStateProvider extends BlockStateProvider implements IAE2DataProvider {
     private static final VariantProperty<VariantProperties.Rotation> Z_ROT = new VariantProperty<>("ae2:z",
             r -> new JsonPrimitive(r.ordinal() * 90));
 
-    public AE2BlockStateProvider(PackOutput output, String modid, ExistingFileHelper exFileHelper) {
-        super(output, modid, exFileHelper);
+    public AE2BlockStateProvider(PackOutput packOutput, String modid, ExistingFileHelper exFileHelper) {
+        super(packOutput, modid, exFileHelper);
     }
 
     /**

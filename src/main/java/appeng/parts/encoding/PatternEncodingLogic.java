@@ -18,13 +18,6 @@
 
 package appeng.parts.encoding;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.stacks.AEItemKey;
@@ -39,6 +32,14 @@ import appeng.util.ConfigInventory;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.AEItemDefinitionFilter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class PatternEncodingLogic implements InternalInventoryHost {
 
@@ -48,10 +49,11 @@ public class PatternEncodingLogic implements InternalInventoryHost {
             AEProcessingPattern.MAX_INPUT_SLOTS);
     private static final int MAX_OUTPUT_SLOTS = AEProcessingPattern.MAX_OUTPUT_SLOTS;
 
-    private final ConfigInventory encodedInputInv = ConfigInventory.configStacks(null, MAX_INPUT_SLOTS,
-            this::onEncodedInputChanged, true);
-    private final ConfigInventory encodedOutputInv = ConfigInventory.configStacks(null, MAX_OUTPUT_SLOTS,
-            this::onEncodedOutputChanged, true);
+    private final ConfigInventory encodedInputInv = ConfigInventory.configStacks(MAX_INPUT_SLOTS)
+            .changeListener(this::onEncodedInputChanged).allowOverstacking(true).build();
+    private final ConfigInventory encodedOutputInv = ConfigInventory.configStacks(MAX_OUTPUT_SLOTS)
+            .changeListener(this::onEncodedOutputChanged).allowOverstacking(true).build();
+
     private final AppEngInternalInventory blankPatternInv = new AppEngInternalInventory(this, 1);
     private final AppEngInternalInventory encodedPatternInv = new AppEngInternalInventory(this, 1);
 
@@ -68,7 +70,7 @@ public class PatternEncodingLogic implements InternalInventoryHost {
     }
 
     @Override
-    public void onChangeInventory(InternalInventory inv, int slot) {
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
         // Load the encoded inputs and outputs of a pattern if it changes
         if (inv == this.encodedPatternInv) {
             loadEncodedPattern(encodedPatternInv.getStackInSlot(0));
@@ -77,12 +79,16 @@ public class PatternEncodingLogic implements InternalInventoryHost {
         saveChanges();
     }
 
-    @Override
     public void saveChanges() {
         // Do not re-save while we're loading since it could overwrite the NBT with incomplete data
         if (!isLoading) {
             host.markForSave();
         }
+    }
+
+    @Override
+    public void saveChangedInventory(AppEngInternalInventory inv) {
+        saveChanges();
     }
 
     @Override
@@ -157,11 +163,11 @@ public class PatternEncodingLogic implements InternalInventoryHost {
         encodedOutputInv.clear();
     }
 
-    private static void fillInventoryFromSparseStacks(ConfigInventory inv, GenericStack[] stacks) {
+    private static void fillInventoryFromSparseStacks(ConfigInventory inv, List<GenericStack> stacks) {
         inv.beginBatch();
         try {
             for (int i = 0; i < inv.size(); i++) {
-                inv.setStack(i, i < stacks.length ? stacks[i] : null);
+                inv.setStack(i, i < stacks.size() ? stacks.get(i) : null);
             }
         } finally {
             inv.endBatch();
@@ -238,7 +244,7 @@ public class PatternEncodingLogic implements InternalInventoryHost {
         return encodedPatternInv;
     }
 
-    public void readFromNBT(CompoundTag data) {
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
         isLoading = true;
         try {
             try {
@@ -255,27 +261,27 @@ public class PatternEncodingLogic implements InternalInventoryHost {
                 this.stonecuttingRecipeId = null;
             }
 
-            blankPatternInv.readFromNBT(data, "blankPattern");
-            encodedPatternInv.readFromNBT(data, "encodedPattern");
+            blankPatternInv.readFromNBT(data, "blankPattern", registries);
+            encodedPatternInv.readFromNBT(data, "encodedPattern", registries);
 
-            encodedInputInv.readFromChildTag(data, "encodedInputs");
-            encodedOutputInv.readFromChildTag(data, "encodedOutputs");
+            encodedInputInv.readFromChildTag(data, "encodedInputs", registries);
+            encodedOutputInv.readFromChildTag(data, "encodedOutputs", registries);
         } finally {
             isLoading = false;
         }
     }
 
-    public void writeToNBT(CompoundTag data) {
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
         data.putString("mode", this.mode.name());
         data.putBoolean("substitute", this.substitute);
         data.putBoolean("substituteFluids", this.substituteFluids);
         if (this.stonecuttingRecipeId != null) {
             data.putString("stonecuttingRecipeId", this.stonecuttingRecipeId.toString());
         }
-        blankPatternInv.writeToNBT(data, "blankPattern");
-        encodedPatternInv.writeToNBT(data, "encodedPattern");
-        encodedInputInv.writeToChildTag(data, "encodedInputs");
-        encodedOutputInv.writeToChildTag(data, "encodedOutputs");
+        blankPatternInv.writeToNBT(data, "blankPattern", registries);
+        encodedPatternInv.writeToNBT(data, "encodedPattern", registries);
+        encodedInputInv.writeToChildTag(data, "encodedInputs", registries);
+        encodedOutputInv.writeToChildTag(data, "encodedOutputs", registries);
     }
 
     private void fixCraftingRecipes() {

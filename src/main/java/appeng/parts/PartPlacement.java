@@ -1,13 +1,17 @@
 package appeng.parts;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.PartHelper;
+import appeng.core.AELog;
+import appeng.core.definitions.AEAttachmentTypes;
+import appeng.core.definitions.AEBlocks;
+import appeng.parts.networking.CablePart;
+import appeng.util.Platform;
+import appeng.util.SettingsFrom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,18 +20,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.PartHelper;
-import appeng.core.AELog;
-import appeng.core.definitions.AEBlocks;
-import appeng.parts.networking.CablePart;
-import appeng.util.Platform;
-import appeng.util.SettingsFrom;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PartPlacement {
-
     public static InteractionResult place(UseOnContext context) {
 
         var player = context.getPlayer();
@@ -36,7 +34,7 @@ public class PartPlacement {
         var partStack = context.getItemInHand();
         var side = context.getClickedFace();
 
-        if (!(partStack.getItem() instanceof IPartItem<?>partItem)) {
+        if (!(partStack.getItem() instanceof IPartItem<?> partItem)) {
             return InteractionResult.PASS;
         }
 
@@ -47,7 +45,7 @@ public class PartPlacement {
         }
 
         // Then try to place it
-        var part = placePart(player, level, partItem, partStack.getTag(), placement.pos(), placement.side());
+        var part = placePart(player, level, partItem, partStack.getComponents(), placement.pos(), placement.side());
         if (part == null) {
             // Resend the host to the client. Failure to connect for security reasons is only possible to know
             // server-side, and this will cause ghost parts on the client.
@@ -74,7 +72,7 @@ public class PartPlacement {
     public static <T extends IPart> T placePart(@Nullable Player player,
             Level level,
             IPartItem<T> partItem,
-            @Nullable CompoundTag configTag,
+            @Nullable DataComponentMap configData,
             BlockPos pos,
             Direction side) {
 
@@ -105,9 +103,9 @@ public class PartPlacement {
         }
 
         // Import settings from the item if possible
-        if (configTag != null) {
+        if (configData != null) {
             try {
-                addedPart.importSettings(SettingsFrom.DISMANTLE_ITEM, configTag, player);
+                addedPart.importSettings(SettingsFrom.DISMANTLE_ITEM, configData, player);
             } catch (Exception e) {
                 AELog.warn(e, "Failed to import part settings during placement.");
             }
@@ -133,7 +131,11 @@ public class PartPlacement {
         // If a cable segment was clicked, try replacing that cable segment by the part
         var replaceCablePlacement = tryReplaceCableSegment(level, partStack, pos, clickLocation);
         if (replaceCablePlacement != null) {
-            return replaceCablePlacement;
+            side = replaceCablePlacement;
+        }
+
+        if (player != null) {
+            side = player.getAttachedOrElse(AEAttachmentTypes.HOLDING_CTRL, false) ? side.getOpposite() : side;
         }
 
         if (canPlacePartOnBlock(player, level, partStack, pos, side)) {
@@ -153,7 +155,7 @@ public class PartPlacement {
     }
 
     @Nullable
-    private static Placement tryReplaceCableSegment(Level level, ItemStack partStack, BlockPos pos,
+    private static Direction tryReplaceCableSegment(Level level, ItemStack partStack, BlockPos pos,
             Vec3 clickLocation) {
         // Check if there exists a host with a cable in its center
         var host = PartHelper.getPartHost(level, pos);
@@ -183,7 +185,7 @@ public class PartPlacement {
         }
 
         if (host.canAddPart(partStack, hitSide)) {
-            return new Placement(pos, hitSide);
+            return hitSide;
         } else {
             return null;
         }

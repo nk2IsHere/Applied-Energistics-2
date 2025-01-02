@@ -18,8 +18,7 @@
 
 package appeng.parts.automation;
 
-import java.util.function.Function;
-
+import appeng.client.render.BasicUnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -28,7 +27,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.function.Function;
 
 /**
  * Built-in model for annihilation planes that supports connected textures.
@@ -47,8 +46,7 @@ public class PlaneModel implements BasicUnbakedModel {
 
     @Override
     public BakedModel bake(ModelBaker bakery,
-            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
-            ResourceLocation modelLocation) {
+            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform) {
         TextureAtlasSprite frontSprite = spriteGetter.apply(this.frontTexture);
         TextureAtlasSprite sidesSprite = spriteGetter.apply(this.sidesTexture);
         TextureAtlasSprite backSprite = spriteGetter.apply(this.backTexture);

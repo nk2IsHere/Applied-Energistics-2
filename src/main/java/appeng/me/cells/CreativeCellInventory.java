@@ -18,12 +18,6 @@
 
 package appeng.me.cells;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
@@ -31,6 +25,11 @@ import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.cells.CellState;
 import appeng.api.storage.cells.StorageCell;
 import appeng.items.contents.CellConfig;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.HashSet;
+import java.util.Set;
 
 class CreativeCellInventory implements StorageCell {
     private final Set<AEKey> configured;

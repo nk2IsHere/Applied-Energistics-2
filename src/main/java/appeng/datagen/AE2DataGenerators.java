@@ -18,9 +18,13 @@
 
 package appeng.datagen;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiFunction;
 
+import appeng.datagen.providers.loot.AE2LootTableProvider;
+import appeng.datagen.providers.recipes.*;
+import appeng.datagen.providers.tags.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
@@ -28,33 +32,17 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import appeng.core.definitions.AEDamageTypes;
-import appeng.datagen.providers.WorldGenProvider;
 import appeng.datagen.providers.advancements.AdvancementGenerator;
 import appeng.datagen.providers.localization.LocalizationProvider;
-import appeng.datagen.providers.loot.BlockDropProvider;
 import appeng.datagen.providers.models.BlockModelProvider;
 import appeng.datagen.providers.models.CableModelProvider;
 import appeng.datagen.providers.models.DecorationModelProvider;
 import appeng.datagen.providers.models.ItemModelProvider;
 import appeng.datagen.providers.models.PartModelProvider;
-import appeng.datagen.providers.recipes.ChargerRecipes;
-import appeng.datagen.providers.recipes.CraftingRecipes;
-import appeng.datagen.providers.recipes.DecorationBlockRecipes;
-import appeng.datagen.providers.recipes.DecorationRecipes;
-import appeng.datagen.providers.recipes.EntropyRecipes;
-import appeng.datagen.providers.recipes.InscriberRecipes;
-import appeng.datagen.providers.recipes.MatterCannonAmmoProvider;
-import appeng.datagen.providers.recipes.SmeltingRecipes;
-import appeng.datagen.providers.recipes.SmithingRecipes;
-import appeng.datagen.providers.recipes.TransformRecipes;
-import appeng.datagen.providers.tags.BiomeTagsProvider;
-import appeng.datagen.providers.tags.BlockTagsProvider;
-import appeng.datagen.providers.tags.FluidTagsProvider;
-import appeng.datagen.providers.tags.ItemTagsProvider;
-import appeng.datagen.providers.tags.PoiTypeTagsProvider;
 import appeng.init.worldgen.InitBiomes;
 import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
@@ -63,28 +51,28 @@ import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 public class AE2DataGenerators {
 
     public static void onGatherData(
-        FabricDataGenerator generator, ExistingFileHelper existingFileHelper,
-        DataGenerator.PackGenerator pack) {
+        FabricDataGenerator generator,
+        ExistingFileHelper existingFileHelper,
+        DataGenerator.PackGenerator pack
+    ) {
         var registries = generator.getRegistries();
-
         var localization = new LocalizationProvider(generator);
 
         pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
             createDatapackEntriesBuilder()));
 
-        // Worldgen et al
-        pack.addProvider(bindRegistries(WorldGenProvider::new, registries));
-
         // Loot
-        pack.addProvider(BlockDropProvider::new);
+        pack.addProvider(packOutput -> new AE2LootTableProvider(packOutput, registries));
 
         // Tags
-        var blockTagsProvider = pack.addProvider(bindRegistries(BlockTagsProvider::new, registries));
+        var blockTagsProvider = pack
+            .addProvider(packOutput -> new BlockTagsProvider(packOutput, registries));
         pack.addProvider(
-                packOutput -> new ItemTagsProvider(packOutput, registries, blockTagsProvider.contentsGetter()));
-        pack.addProvider(bindRegistries(FluidTagsProvider::new, registries));
-        pack.addProvider(bindRegistries(BiomeTagsProvider::new, registries));
-        pack.addProvider(bindRegistries(PoiTypeTagsProvider::new, registries));
+            packOutput -> new ItemTagsProvider(packOutput, registries, blockTagsProvider.contentsGetter()));
+        pack.addProvider(packOutput -> new FluidTagsProvider(packOutput, registries));
+        pack.addProvider(packOutput -> new BiomeTagsProvider(packOutput, registries));
+        pack.addProvider(packOutput -> new PoiTypeTagsProvider(packOutput, registries));
+        pack.addProvider(packOutput -> new DataComponentTypeTagProvider(packOutput, registries, localization));
 
         // Models
         pack.addProvider(packOutput -> new BlockModelProvider(packOutput, existingFileHelper));
@@ -94,7 +82,7 @@ public class AE2DataGenerators {
         pack.addProvider(packOutput -> new PartModelProvider(packOutput, existingFileHelper));
 
         // Misc
-        pack.addProvider(packOutput -> new AdvancementGenerator(packOutput, localization));
+        pack.addProvider(packOutput -> new AdvancementProvider(packOutput, registries, List.of(new AdvancementGenerator(localization))));
 
         // Recipes
         pack.addProvider(bindRegistries(DecorationRecipes::new, registries));
@@ -107,6 +95,8 @@ public class AE2DataGenerators {
         pack.addProvider(bindRegistries(SmithingRecipes::new, registries));
         pack.addProvider(bindRegistries(TransformRecipes::new, registries));
         pack.addProvider(bindRegistries(ChargerRecipes::new, registries));
+        pack.addProvider(bindRegistries(QuartzCuttingRecipesProvider::new, registries));
+        pack.addProvider(bindRegistries(UpgradeRecipes::new, registries));
 
         // Must run last
         pack.addProvider(packOutput -> localization);

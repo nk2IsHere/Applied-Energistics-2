@@ -18,17 +18,31 @@
 
 package appeng.parts;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-
-import org.jetbrains.annotations.Nullable;
-
+import appeng.api.config.YesNo;
+import appeng.api.implementations.parts.ICablePart;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.parts.*;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalBlockPos;
+import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.client.render.cablebus.CableCoreType;
+import appeng.client.render.cablebus.FacadeRenderState;
+import appeng.core.AELog;
+import appeng.facade.FacadeContainer;
+import appeng.helpers.AEMultiBlockEntity;
+import appeng.hooks.VisualStateSaving;
+import appeng.hooks.ticking.TickHandler;
+import appeng.items.parts.FacadeItem;
+import appeng.me.InWorldGridNode;
+import appeng.parts.networking.CablePart;
+import appeng.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -48,36 +62,12 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import appeng.api.config.YesNo;
-import appeng.api.implementations.parts.ICablePart;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.parts.CableRenderMode;
-import appeng.api.parts.IFacadeContainer;
-import appeng.api.parts.IFacadePart;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.PartHelper;
-import appeng.api.parts.SelectedPart;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.api.util.DimensionalBlockPos;
-import appeng.client.render.cablebus.CableBusRenderState;
-import appeng.client.render.cablebus.CableCoreType;
-import appeng.client.render.cablebus.FacadeRenderState;
-import appeng.core.AELog;
-import appeng.facade.FacadeContainer;
-import appeng.helpers.AEMultiBlockEntity;
-import appeng.hooks.VisualStateSaving;
-import appeng.hooks.ticking.TickHandler;
-import appeng.items.parts.FacadeItem;
-import appeng.me.InWorldGridNode;
-import appeng.parts.networking.CablePart;
-import appeng.util.InteractionUtil;
-import appeng.util.Platform;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 
 public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer {
 
@@ -146,7 +136,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
             return true;
         }
 
-        if (is.getItem() instanceof IPartItem<?>partItem) {
+        if (is.getItem() instanceof IPartItem<?> partItem) {
             var part = partItem.createPart();
             if (part == null) {
                 return false;
@@ -634,15 +624,26 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
     }
 
     @Override
-    public boolean activate(Player player, InteractionHand hand, Vec3 pos) {
-        final SelectedPart p = this.selectPartLocal(pos);
+    public boolean useItemOn(ItemStack heldItem, Player player, InteractionHand hand, Vec3 localPos) {
+        final SelectedPart p = this.selectPartLocal(localPos);
         if (p != null && p.part != null) {
-            // forge sends activate even when sneaking in some cases (eg emtpy hand)
-            // if sneaking try shift activate first.
-            if (InteractionUtil.isInAlternateUseMode(player) && p.part.onShiftActivate(player, hand, pos)) {
+            return p.part.onUseItemOn(heldItem, player, hand, localPos);
+        } else if (p != null && p.facade != null) {
+            if (p.facade.onUseItemOn(heldItem, player, hand, localPos)) {
+                // facade changed state
+                markForSave();
+                markForUpdate();
                 return true;
             }
-            return p.part.onActivate(player, hand, pos);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean useWithoutItem(Player player, Vec3 localPos) {
+        final SelectedPart p = this.selectPartLocal(localPos);
+        if (p != null && p.part != null) {
+            return p.part.onUseWithoutItem(player, localPos);
         }
         return false;
     }
@@ -708,7 +709,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         return light;
     }
 
-    public void writeToStream(FriendlyByteBuf data) {
+    public void writeToStream(RegistryFriendlyByteBuf data) {
         int sides = 0;
         for (int x = 0; x < Platform.DIRECTIONS_WITH_NULL.length; x++) {
             var p = this.getPart(Platform.DIRECTIONS_WITH_NULL[x]);
@@ -731,7 +732,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         this.getFacadeContainer().writeToStream(data);
     }
 
-    public boolean readFromStream(FriendlyByteBuf data) {
+    public boolean readFromStream(RegistryFriendlyByteBuf data) {
         final byte sides = data.readByte();
 
         boolean updateBlock = false;
@@ -772,14 +773,14 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         return updateBlock;
     }
 
-    private static int getSideIndex(@org.jetbrains.annotations.Nullable Direction side) {
+    private static int getSideIndex(@Nullable Direction side) {
         return side == null ? 6 : side.ordinal();
     }
 
-    public void writeToNBT(CompoundTag data) {
+    public void writeToNBT(CompoundTag data, HolderLookup.Provider registries) {
         data.putInt("hasRedstone", this.hasRedstone.ordinal());
 
-        getFacadeContainer().writeToNBT(data);
+        getFacadeContainer().writeToNBT(data, registries);
 
         var saveVisualState = VisualStateSaving.isEnabled(getBlockEntity().getLevel());
 
@@ -795,7 +796,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
                     partData.put("visual", visualTag);
                 }
 
-                part.writeToNBT(partData);
+                part.writeToNBT(partData, registries);
                 if (partData.contains("id")) {
                     throw new IllegalStateException("Part " + part + " used the reserved 'id' field to store its data");
                 }
@@ -807,7 +808,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         }
     }
 
-    public void readFromNBT(CompoundTag data) {
+    public void readFromNBT(CompoundTag data, HolderLookup.Provider registries) {
         invalidateShapes();
 
         if (data.contains("hasRedstone")) {
@@ -819,7 +820,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
 
             var sideKey = NBT_KEY_SIDES[sideIndex];
             var sideTag = data.get(sideKey);
-            if (sideTag instanceof CompoundTag partData && loadPart(side, partData)) {
+            if (sideTag instanceof CompoundTag partData && loadPart(side, partData, registries)) {
                 continue;
             }
 
@@ -827,10 +828,10 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
             this.removePartFromSide(side);
         }
 
-        this.getFacadeContainer().readFromNBT(data);
+        this.getFacadeContainer().readFromNBT(data, registries);
     }
 
-    private boolean loadPart(Direction side, CompoundTag data) {
+    private boolean loadPart(Direction side, CompoundTag data, HolderLookup.Provider registries) {
         var itemId = ResourceLocation.parse(data.getString("id"));
         var partItem = IPartItem.byId(itemId);
         if (partItem == null) {
@@ -840,11 +841,11 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
 
         var p = this.getPart(side);
         if (p != null && p.getPartItem() == partItem) {
-            p.readFromNBT(data);
+            p.readFromNBT(data, registries);
         } else {
             p = this.replacePart(partItem, side, null, null);
             if (p != null) {
-                p.readFromNBT(data);
+                p.readFromNBT(data, registries);
             } else {
                 AELog.warn("Invalid NBT For CableBus Container: " + itemId
                         + " is not a valid part; it was ignored.");
@@ -972,7 +973,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
                 continue;
             }
 
-            renderState.getPartModelData().put(side, part.getRenderAttachmentData());
+            renderState.getPartModelData().put(side, part.getRenderData());
 
             // This will add the part's bounding boxes to the render state, which is
             // required for facades
@@ -1002,11 +1003,10 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
         final IFacadePart facade = this.storage.getFacade(side);
 
         if (facade != null) {
-            final ItemStack textureItem = facade.getTextureItem();
             final BlockState blockState = facade.getBlockState();
 
             Level level = getBlockEntity().getLevel();
-            if (blockState != null && textureItem != null && level != null) {
+            if (blockState != null && level != null) {
                 return new FacadeRenderState(blockState,
                         !facade.getBlockState().isSolidRender(level, getBlockEntity().getBlockPos()));
             }
@@ -1016,7 +1016,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
     }
 
     /**
-     * See {@link Block#getShape}
+     * See {@link BlockState#getShape}
      */
     public VoxelShape getShape() {
         var currentRenderMode = PartHelper.getCableRenderMode();
@@ -1029,7 +1029,7 @@ public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer
     }
 
     /**
-     * See {@link Block#getCollisionShape}
+     * See {@link BlockState#getCollisionShape}
      */
     public VoxelShape getCollisionShape(CollisionContext context) {
         // This is a hack for annihilation planes

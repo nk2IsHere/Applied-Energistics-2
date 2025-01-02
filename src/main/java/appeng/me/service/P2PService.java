@@ -18,28 +18,20 @@
 
 package appeng.me.service;
 
-import java.util.HashMap;
-import java.util.Random;
-import java.util.stream.Stream;
-
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.CompoundTag;
-
-import appeng.api.networking.GridFlags;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IGridService;
-import appeng.api.networking.IGridServiceProvider;
+import appeng.api.networking.*;
 import appeng.api.networking.events.GridBootingStatusChange;
 import appeng.api.networking.events.GridPowerStatusChange;
 import appeng.core.AELog;
 import appeng.parts.p2p.MEP2PTunnelPart;
 import appeng.parts.p2p.P2PTunnelPart;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Random;
+import java.util.stream.Stream;
 
 public class P2PService implements IGridService, IGridServiceProvider {
     static {
@@ -60,8 +52,8 @@ public class P2PService implements IGridService, IGridServiceProvider {
     }
 
     private final IGrid myGrid;
-    private final HashMap<Short, P2PTunnelPart> inputs = new HashMap<>();
-    private final Multimap<Short, P2PTunnelPart> outputs = LinkedHashMultimap.create();
+    private final HashMap<Short, P2PTunnelPart<?>> inputs = new HashMap<>();
+    private final Multimap<Short, P2PTunnelPart<?>> outputs = LinkedHashMultimap.create();
     private final Random frequencyGenerator;
 
     public P2PService(IGrid g) {
@@ -80,7 +72,7 @@ public class P2PService implements IGridService, IGridServiceProvider {
 
     @Override
     public void removeNode(IGridNode node) {
-        if (node.getOwner() instanceof P2PTunnelPart<?>tunnel) {
+        if (node.getOwner() instanceof P2PTunnelPart<?> tunnel) {
             if (tunnel instanceof MEP2PTunnelPart && !node.hasFlag(GridFlags.REQUIRE_CHANNEL)) {
                 return;
             }
@@ -97,7 +89,7 @@ public class P2PService implements IGridService, IGridServiceProvider {
 
     @Override
     public void addNode(IGridNode node, @Nullable CompoundTag savedData) {
-        if (node.getOwner() instanceof P2PTunnelPart<?>tunnel) {
+        if (node.getOwner() instanceof P2PTunnelPart<?> tunnel) {
             if (tunnel instanceof MEP2PTunnelPart && !node.hasFlag(GridFlags.REQUIRE_CHANNEL)) {
                 return;
             }

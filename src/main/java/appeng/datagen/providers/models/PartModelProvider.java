@@ -1,18 +1,14 @@
 package appeng.datagen.providers.models;
 
-import java.util.function.BiFunction;
-
+import appeng.core.AppEng;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import appeng.core.AppEng;
-
 public class PartModelProvider extends ModelProvider<BlockModelBuilder> {
-    public PartModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, AppEng.MOD_ID, "part", BlockModelBuilder::new, existingFileHelper);
+    public PartModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+        super(packOutput, AppEng.MOD_ID, "part", BlockModelBuilder::new, existingFileHelper);
     }
 
     @Override
@@ -36,12 +32,6 @@ public class PartModelProvider extends ModelProvider<BlockModelBuilder> {
      * set the loader name, since it'll be used there.
      */
     private void addBuiltInModel(String name) {
-        getBuilder(name).customLoader(customLoader(name));
-    }
-
-    private BiFunction<BlockModelBuilder, ExistingFileHelper, CustomLoaderBuilder<BlockModelBuilder>> customLoader(
-            String name) {
-        return (bmb, efh) -> new CustomLoaderBuilder<>(AppEng.makeId(name), bmb, efh) {
-        };
+        getBuilder(name);
     }
 }

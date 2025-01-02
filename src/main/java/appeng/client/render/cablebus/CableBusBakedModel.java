@@ -28,12 +28,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -46,15 +42,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.parts.IPartModel;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.parts.reporting.ReportingModelData;
-
 import java.util.*;
 import java.util.function.Supplier;
-
-import static me.shedaniel.rei.impl.client.gui.widget.CachedEntryListRender.renderType;
 
 @Environment(EnvType.CLIENT)
 public class CableBusBakedModel implements IFabricBakedModel {

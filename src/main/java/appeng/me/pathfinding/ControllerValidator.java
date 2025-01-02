@@ -18,17 +18,16 @@
 
 package appeng.me.pathfinding;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridVisitor;
 import appeng.api.networking.pathing.ControllerState;
 import appeng.blockentity.networking.ControllerBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Validates that the controller shape doesn't exceed the max size, and counts the number of adjacent controllers.

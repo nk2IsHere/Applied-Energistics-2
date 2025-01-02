@@ -18,37 +18,25 @@
 
 package appeng.parts.automation;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.integration.abstraction.IFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.inventories.IDynamicPartBakedModel;
-import appeng.client.render.cablebus.CubeBuilder;
+import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Built-in model for annihilation planes that supports connected textures.
  */
-public class PlaneBakedModel implements BakedModel, IDynamicPartBakedModel {
+public class PlaneBakedModel implements IFabricBakedModel {
 
     private static final PlaneConnections DEFAULT_PERMUTATION = PlaneConnections.of(false, false, false, false);
 
@@ -59,14 +47,10 @@ public class PlaneBakedModel implements BakedModel, IDynamicPartBakedModel {
     PlaneBakedModel(TextureAtlasSprite frontTexture, TextureAtlasSprite sidesTexture, TextureAtlasSprite backTexture) {
         this.frontTexture = frontTexture;
 
-        Renderer renderer = RendererAccess.INSTANCE.getRenderer();
-
         meshes = new HashMap<>(PlaneConnections.PERMUTATIONS.size());
         // Create all possible permutations (16)
         for (PlaneConnections permutation : PlaneConnections.PERMUTATIONS) {
-
-            MeshBuilder meshBuilder = renderer.meshBuilder();
-
+            var meshBuilder = renderer.meshBuilder();
             CubeBuilder builder = new CubeBuilder(meshBuilder.getEmitter());
 
             builder.setTextures(sidesTexture, sidesTexture, frontTexture, backTexture, sidesTexture, sidesTexture);
@@ -86,26 +70,18 @@ public class PlaneBakedModel implements BakedModel, IDynamicPartBakedModel {
     }
 
     @Override
-    public void emitQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
             Supplier<RandomSource> randomSupplier,
-            RenderContext context, Direction partSide, @Nullable Object modelData) {
-        PlaneConnections connections = DEFAULT_PERMUTATION;
+            RenderContext context) {
+        var modelData = blockView.getBlockEntityRenderData(pos);
+        var connections = modelData instanceof PlaneConnections ? (PlaneConnections) modelData : DEFAULT_PERMUTATION;
 
-        if (modelData instanceof PlaneConnections) {
-            connections = (PlaneConnections) modelData;
-        }
-
-        context.meshConsumer().accept(this.meshes.get(connections));
+        meshes.get(connections).outputTo(context.getEmitter());
     }
 
     @Override
     public ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
-    }
-
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
-        return Collections.emptyList();
     }
 
     @Override

@@ -18,16 +18,15 @@
 
 package appeng.me.cluster.implementations;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-
 import appeng.blockentity.spatial.SpatialPylonBlockEntity;
 import appeng.me.cluster.IAECluster;
 import appeng.me.cluster.MBCalculator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class SpatialPylonCluster implements IAECluster {
 

@@ -18,8 +18,10 @@
 
 package appeng.datagen.providers.recipes;
 
-import java.util.concurrent.CompletableFuture;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.datagen.providers.tags.ConventionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -27,24 +29,15 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.concurrent.CompletableFuture;
 
 public class SmeltingRecipes extends AE2RecipeProvider {
 
     // This is from the default recipe serializer for smelting
     private static final int DEFAULT_SMELTING_TIME = 200;
 
-    public SmeltingRecipes(
-        PackOutput packOutput,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
-        super(
-            packOutput,
-            completableFuture
-        );
+    public SmeltingRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override

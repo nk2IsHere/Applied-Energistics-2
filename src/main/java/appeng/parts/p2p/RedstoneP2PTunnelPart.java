@@ -18,10 +18,15 @@
 
 package appeng.parts.p2p;
 
-import java.util.List;
-
+import appeng.api.networking.IGridNodeListener;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.IPartModel;
+import appeng.core.AppEng;
+import appeng.items.parts.PartModels;
+import appeng.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,12 +34,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-import appeng.api.networking.IGridNodeListener;
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
-import appeng.core.AppEng;
-import appeng.items.parts.PartModels;
-import appeng.util.Platform;
+import java.util.List;
 
 public class RedstoneP2PTunnelPart extends P2PTunnelPart<RedstoneP2PTunnelPart> {
 
@@ -102,14 +102,14 @@ public class RedstoneP2PTunnelPart extends P2PTunnelPart<RedstoneP2PTunnelPart> 
     }
 
     @Override
-    public void readFromNBT(CompoundTag tag) {
-        super.readFromNBT(tag);
+    public void readFromNBT(CompoundTag tag, HolderLookup.Provider registries) {
+        super.readFromNBT(tag, registries);
         this.power = tag.getInt("power");
     }
 
     @Override
-    public void writeToNBT(CompoundTag tag) {
-        super.writeToNBT(tag);
+    public void writeToNBT(CompoundTag tag, HolderLookup.Provider registries) {
+        super.writeToNBT(tag, registries);
         tag.putInt("power", this.power);
     }
 
@@ -131,9 +131,9 @@ public class RedstoneP2PTunnelPart extends P2PTunnelPart<RedstoneP2PTunnelPart> 
                     srcSide = Direction.UP;
                 }
 
-                this.power = b.getSignal(state, this.getBlockEntity().getLevel(), target, srcSide);
+                this.power = state.getSignal(this.getBlockEntity().getLevel(), target, srcSide);
                 this.power = Math.max(this.power,
-                        b.getSignal(state, this.getBlockEntity().getLevel(), target, srcSide));
+                        state.getSignal(this.getBlockEntity().getLevel(), target, srcSide));
                 this.sendToOutput(this.power);
             } else {
                 this.sendToOutput(0);

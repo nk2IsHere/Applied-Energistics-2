@@ -18,23 +18,6 @@
 
 package appeng.me.service;
 
-import java.util.HashMap;
-import java.util.LongSummaryStatistics;
-import java.util.Map;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.concurrent.TimeUnit;
-
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.Iterators;
-
-import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.CrashReport;
-import net.minecraft.ReportedException;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridServiceProvider;
 import appeng.api.networking.ticking.IGridTickable;
@@ -42,6 +25,16 @@ import appeng.api.networking.ticking.ITickManager;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.me.GridNode;
 import appeng.me.service.helpers.TickTracker;
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Iterators;
+import net.minecraft.CrashReport;
+import net.minecraft.ReportedException;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class TickManagerService implements ITickManager, IGridServiceProvider {
 
@@ -50,10 +43,10 @@ public class TickManagerService implements ITickManager, IGridServiceProvider {
     private static final int TICK_RATE_SPEED_UP_FACTOR = 2;
     private static final int TICK_RATE_SLOW_DOWN_FACTOR = 1;
 
-    private final Map<IGridNode, TickTracker> alertable = new HashMap<>();
-    private final Map<IGridNode, TickTracker> sleeping = new HashMap<>();
-    private final Map<IGridNode, TickTracker> awake = new HashMap<>();
-    private final Map<Level, PriorityQueue<TickTracker>> upcomingTicks = new HashMap<>();
+    private final Map<IGridNode, TickTracker> alertable = new IdentityHashMap<>();
+    private final Map<IGridNode, TickTracker> sleeping = new IdentityHashMap<>();
+    private final Map<IGridNode, TickTracker> awake = new IdentityHashMap<>();
+    private final Map<Level, PriorityQueue<TickTracker>> upcomingTicks = new IdentityHashMap<>();
 
     private PriorityQueue<TickTracker> currentlyTickingQueue = null;
 
@@ -68,10 +61,6 @@ public class TickManagerService implements ITickManager, IGridServiceProvider {
     @Override
     public void onServerStartTick() {
         this.currentTick++;
-    }
-
-    @Override
-    public void onLevelStartTick(Level level) {
     }
 
     @Override
@@ -172,9 +161,7 @@ public class TickManagerService implements ITickManager, IGridServiceProvider {
 
             var tt = new TickTracker(tr, gridNode, tickable, this.currentTick);
 
-            if (tr.canBeAlerted()) {
-                this.alertable.put(gridNode, tt);
-            }
+            this.alertable.put(gridNode, tt);
 
             if (tr.isSleeping()) {
                 this.sleeping.put(gridNode, tt);

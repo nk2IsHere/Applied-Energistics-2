@@ -18,20 +18,22 @@
 
 package appeng.me;
 
-import java.util.EnumSet;
-import java.util.Set;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos.MutableBlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.util.AEColor;
 import appeng.core.AELog;
+import com.google.gson.stream.JsonWriter;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * A grid node that is accessible from within the level will also look actively for connections to nodes that are
@@ -97,6 +99,27 @@ public class InWorldGridNode extends GridNode {
     @Override
     public String toString() {
         return super.toString() + " @ " + location.getX() + "," + location.getY() + "," + location.getZ();
+    }
+
+    @Override
+    protected void exportProperties(JsonWriter writer, Reference2IntMap<Object> machineIds,
+            Reference2IntMap<IGridNode> nodeIds)
+            throws IOException {
+        super.exportProperties(writer, machineIds, nodeIds);
+
+        writer.name("location");
+        writer.beginArray();
+        writer.value(location.getX());
+        writer.value(location.getY());
+        writer.value(location.getZ());
+        writer.endArray();
+
+        writer.name("exposedSides");
+        var sidesSet = new StringBuilder();
+        for (var side : exposedOnSides) {
+            sidesSet.append(side.name().charAt(0));
+        }
+        writer.value(sidesSet.toString());
     }
 
     private void cleanupConnections() {

@@ -18,10 +18,11 @@
 
 package appeng.datagen.providers.recipes;
 
-import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
-
-import java.util.concurrent.CompletableFuture;
-
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.BlockDefinition;
+import appeng.datagen.providers.tags.ConventionTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -32,11 +33,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.BlockDefinition;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.concurrent.CompletableFuture;
+
+import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
 
 public class DecorationRecipes extends AE2RecipeProvider {
 
@@ -63,14 +62,8 @@ public class DecorationRecipes extends AE2RecipeProvider {
             { AEBlocks.QUARTZ_PILLAR, AEBlocks.QUARTZ_PILLAR_SLAB, AEBlocks.QUARTZ_PILLAR_STAIRS,
                     AEBlocks.QUARTZ_PILLAR_WALL }, };
 
-    public DecorationRecipes(
-        PackOutput packOutput,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
-        super(
-            packOutput,
-            completableFuture
-        );
+    public DecorationRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override

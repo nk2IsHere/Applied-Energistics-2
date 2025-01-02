@@ -166,3 +166,4 @@ accessible method net/minecraft/world/level/levelgen/structure/StructureType reg
 accessible method net/minecraft/world/item/crafting/RecipeManager byType (Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Collection;
 accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)Lnet/minecraft/core/particles/SimpleParticleType;
 accessible field net/minecraft/world/item/ItemStackLinkedSet TYPE_AND_TAG Ljava/util/Set;
+accessible method net/minecraft/world/level/block/Block getSoundType (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/sounds/SoundType;

@@ -18,14 +18,6 @@
 
 package appeng.me.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos.MutableBlockPos;
-import net.minecraft.server.level.ServerLevel;
-
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridServiceProvider;
@@ -35,6 +27,13 @@ import appeng.blockentity.spatial.SpatialIOPortBlockEntity;
 import appeng.blockentity.spatial.SpatialPylonBlockEntity;
 import appeng.core.AEConfig;
 import appeng.me.cluster.implementations.SpatialPylonCluster;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.server.level.ServerLevel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SpatialPylonService implements ISpatialService, IGridServiceProvider {
 
