@@ -149,12 +149,11 @@ class SpatialPylonBakedModel implements IFabricBakedModel {
     }
 
     private SpatialPylonBlockEntity.ClientState getState(BlockAndTintGetter blockRenderView, BlockPos pos) {
-        if (blockRenderView instanceof RenderAttachedBlockView renderAttachedBlockView) {
-            Object attachment = renderAttachedBlockView.getBlockEntityRenderAttachment(pos);
-            if (attachment instanceof SpatialPylonBlockEntity.ClientState state) {
-                return state;
-            }
+        var modelData = blockRenderView.getBlockEntityRenderData(pos);
+        if (modelData instanceof SpatialPylonBlockEntity.ClientState state) {
+            return state;
         }
+
         return SpatialPylonBlockEntity.ClientState.DEFAULT;
     }
 

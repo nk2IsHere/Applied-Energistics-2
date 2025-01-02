@@ -2,10 +2,15 @@ package appeng.core.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.entity.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public interface ClientboundPacket extends CustomAppEngPayload {
+    Logger LOG = LoggerFactory.getLogger(ClientboundPacket.class);
+
     default void handleOnClient(ClientPlayNetworking.Context context) {
         try(var client = context.client()) {
+            LOG.info("Handling packet {} on client", this);
             client.execute(() -> handleOnClient(context.player()));
         }
     }

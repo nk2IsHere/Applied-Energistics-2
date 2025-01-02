@@ -25,6 +25,7 @@ import java.util.Collections;
 import appeng.api.ids.AEComponents;
 import appeng.core.definitions.*;
 import appeng.core.network.ClientboundPacket;
+import appeng.core.network.InitNetwork;
 import appeng.core.network.TargetPoint;
 import appeng.init.*;
 import appeng.init.client.InitParticleTypes;
@@ -127,6 +128,7 @@ public abstract class AppEngBase implements AppEng {
         postRegistrationInitialization();
 
         TickHandler.instance().init();
+        InitNetwork.init();
 
         ServerLifecycleEvents.SERVER_STARTING.register(this::onServerAboutToStart);
         ServerLifecycleEvents.SERVER_STOPPED.register(this::serverStopped);

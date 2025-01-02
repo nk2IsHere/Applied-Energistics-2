@@ -19,7 +19,6 @@
 package appeng.init.client;
 
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -37,6 +36,8 @@ import appeng.items.tools.MemoryCardItem;
 import appeng.items.tools.powered.ColorApplicatorItem;
 import appeng.items.tools.powered.PortableCellItem;
 
+import static appeng.util.ColorUtil.toARGB;
+
 public final class InitItemColors {
     private InitItemColors() {
     }
@@ -45,17 +46,17 @@ public final class InitItemColors {
         // I checked, the ME chest doesn't keep its color in item form
         itemColors.register(new StaticItemColor(AEColor.TRANSPARENT), AEBlocks.ME_CHEST.asItem());
 
-        itemColors.register(MemoryCardItem::getTintColor, AEItems.MEMORY_CARD);
+        itemColors.register(toARGB(MemoryCardItem::getTintColor), AEItems.MEMORY_CARD);
 
-        itemColors.register(InitItemColors::getColorApplicatorColor, AEItems.COLOR_APPLICATOR);
+        itemColors.register(toARGB(InitItemColors::getColorApplicatorColor), AEItems.COLOR_APPLICATOR);
 
-        itemColors.register(PortableCellItem::getColor, AEItems.PORTABLE_ITEM_CELL1K, AEItems.PORTABLE_FLUID_CELL1K,
+        itemColors.register(toARGB(PortableCellItem::getColor), AEItems.PORTABLE_ITEM_CELL1K, AEItems.PORTABLE_FLUID_CELL1K,
                 AEItems.PORTABLE_ITEM_CELL4K, AEItems.PORTABLE_FLUID_CELL4K,
                 AEItems.PORTABLE_ITEM_CELL16K, AEItems.PORTABLE_FLUID_CELL16K,
                 AEItems.PORTABLE_ITEM_CELL64K, AEItems.PORTABLE_FLUID_CELL64K,
                 AEItems.PORTABLE_ITEM_CELL256K, AEItems.PORTABLE_FLUID_CELL256K);
 
-        itemColors.register(BasicStorageCell::getColor, AEItems.ITEM_CELL_1K, AEItems.FLUID_CELL_1K,
+        itemColors.register(toARGB(BasicStorageCell::getColor), AEItems.ITEM_CELL_1K, AEItems.FLUID_CELL_1K,
                 AEItems.ITEM_CELL_4K, AEItems.FLUID_CELL_4K,
                 AEItems.ITEM_CELL_16K, AEItems.FLUID_CELL_16K,
                 AEItems.ITEM_CELL_64K, AEItems.FLUID_CELL_64K,
@@ -96,7 +97,7 @@ public final class InitItemColors {
             renderColor = r << 16 | g << 8 | b | 0xff << 24;
         }
 
-        colors.register((is, tintIndex) -> renderColor, item);
+        colors.register((is, tintIndex) -> toARGB(renderColor), item);
     }
 
     private static int getColorApplicatorColor(ItemStack itemStack, int idx) {
