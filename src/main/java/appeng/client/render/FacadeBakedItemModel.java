@@ -19,22 +19,21 @@
 package appeng.client.render;
 
 import appeng.client.render.cablebus.FacadeBuilder;
+import appeng.items.parts.FacadeItem;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -46,7 +45,7 @@ public class FacadeBakedItemModel extends DelegateBakedModel {
 
     private final ItemStack textureStack;
     private final FacadeBuilder facadeBuilder;
-    private Mesh mesh = null;
+    private final Int2ObjectMap<Mesh> cache = new Int2ObjectArrayMap<>();
 
     protected FacadeBakedItemModel(BakedModel base, ItemStack textureStack, FacadeBuilder facadeBuilder) {
         super(base);
@@ -56,12 +55,36 @@ public class FacadeBakedItemModel extends DelegateBakedModel {
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+
+        Mesh mesh = this.cache.get(Item.getId(this.textureStack.getItem()));
         if (mesh == null) {
             mesh = this.facadeBuilder.buildFacadeItemQuads(this.textureStack, Direction.NORTH);
+            this.cache.put(Item.getId(this.textureStack.getItem()), mesh);
         }
 
         mesh.outputTo(context.getEmitter());
-        getBaseModel().emitBlockQuads(blockView, state, pos, randomSupplier, context);
+    }
+
+    @Override
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        if (!(stack.getItem() instanceof FacadeItem itemFacade)) {
+            return;
+        }
+
+        super.emitItemQuads(stack, randomSupplier, context);
+
+        ItemStack textureItem = itemFacade.getTextureItem(stack);
+        if (!textureItem.isEmpty()) {
+            int itemId = Item.getId(textureItem.getItem());
+            Mesh mesh = this.cache.get(itemId);
+            if (mesh == null) {
+                mesh = this.facadeBuilder.buildFacadeItemQuads(textureItem, Direction.NORTH);
+                this.cache.put(itemId, mesh);
+            }
+
+            mesh.outputTo(context.getEmitter());
+        }
     }
 
     @Override
