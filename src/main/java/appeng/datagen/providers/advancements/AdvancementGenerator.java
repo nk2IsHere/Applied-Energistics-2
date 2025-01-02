@@ -44,6 +44,8 @@ import appeng.core.definitions.AEParts;
 import appeng.core.stats.AdvancementTriggers;
 import appeng.datagen.providers.localization.LocalizationProvider;
 import appeng.datagen.providers.tags.ConventionTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -51,24 +53,28 @@ import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class AdvancementGenerator implements AdvancementSubProvider {
+public class AdvancementGenerator extends FabricAdvancementProvider {
 
     private final LocalizationProvider localization;
 
-    public AdvancementGenerator(LocalizationProvider localization) {
+    public AdvancementGenerator(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registryLookup,
+        LocalizationProvider localization
+    ) {
+        super(output, registryLookup);
         this.localization = localization;
     }
 
     @Override
-    public void generate(HolderLookup.@NotNull Provider registries, @NotNull Consumer<AdvancementHolder> writer) {
-        generateAdvancements(writer);
+    public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+        generateAdvancements(consumer);
     }
 
     private void generateAdvancements(Consumer<AdvancementHolder> consumer) {

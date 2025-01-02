@@ -20,6 +20,7 @@ package appeng.datagen.providers.recipes;
 
 import appeng.core.AppEng;
 import appeng.recipes.entropy.EntropyRecipeBuilder;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -31,8 +32,15 @@ import net.minecraft.world.level.material.Fluids;
 import java.util.concurrent.CompletableFuture;
 
 public class EntropyRecipes extends AE2RecipeProvider {
-    public EntropyRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+
+    public EntropyRecipes(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture
+    ) {
+        super(
+            output,
+            registriesFuture
+        );
     }
 
     @Override

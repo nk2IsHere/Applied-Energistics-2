@@ -12,7 +12,6 @@ public class DatagenEntrypoint implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(FabricDataGenerator generator) {
         var existingData = System.getProperty("appeng.datagen.existingData").split(";");
         var existingDataPaths = Arrays.stream(existingData).map(Paths::get).toList();
-        AE2DataGenerators.onGatherData(generator, new ExistingFileHelper(existingDataPaths, true),
-                generator.createPack());
+        AE2DataGenerators.onGatherData(generator, new ExistingFileHelper(existingDataPaths, true));
     }
 }

@@ -20,20 +20,27 @@ package appeng.datagen.providers.tags;
 
 import appeng.api.ids.AETags;
 import appeng.datagen.providers.IAE2DataProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
 
-public class FluidTagsProvider extends net.minecraft.data.tags.FluidTagsProvider implements IAE2DataProvider {
+public class FluidTagsProvider extends FabricTagProvider.FluidTagProvider implements IAE2DataProvider {
 
-    public FluidTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public FluidTagsProvider(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> completableFuture
+    ) {
+        super(
+            output,
+            completableFuture
+        );
     }
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         // Provide an empty fluid blacklist
-        tag(AETags.ANNIHILATION_PLANE_FLUID_BLACKLIST);
+        getOrCreateTagBuilder(AETags.ANNIHILATION_PLANE_FLUID_BLACKLIST);
     }
 }

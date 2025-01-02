@@ -19,6 +19,8 @@
 package appeng.core.definitions;
 
 import appeng.api.util.AEColor;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,5 +59,4 @@ public final class ColoredItemDefinition<T extends Item> {
 
         return new ItemStack(item, stackSize);
     }
-
 }

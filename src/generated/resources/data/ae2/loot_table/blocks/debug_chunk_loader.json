@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ae2:64k_crafting_storage"
+          "name": "ae2:debug_chunk_loader"
         }
       ],
       "rolls": 1.0

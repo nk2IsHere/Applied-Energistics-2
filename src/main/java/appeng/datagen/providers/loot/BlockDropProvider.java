@@ -24,13 +24,13 @@ import appeng.core.definitions.AEItems;
 import appeng.core.definitions.BlockDefinition;
 import appeng.datagen.providers.tags.ConventionTags;
 import com.google.common.collect.ImmutableMap;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -47,11 +47,19 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class BlockDropProvider extends BlockLootSubProvider {
+public class BlockDropProvider extends FabricBlockLootTableProvider {
     private final Map<Block, Function<Block, LootTable.Builder>> overrides = createOverrides();
+
+    public BlockDropProvider(
+        FabricDataOutput dataOutput,
+        CompletableFuture<HolderLookup.Provider> registryLookup
+    ) {
+        super(dataOutput, registryLookup);
+    }
 
     @NotNull
     private ImmutableMap<Block, Function<Block, LootTable.Builder>> createOverrides() {
@@ -73,9 +81,6 @@ public class BlockDropProvider extends BlockLootSubProvider {
                 .build();
     }
 
-    public BlockDropProvider(HolderLookup.Provider providers) {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), providers);
-    }
 
     protected Iterable<Block> getKnownBlocks() {
         return BuiltInRegistries.BLOCK
@@ -88,6 +93,13 @@ public class BlockDropProvider extends BlockLootSubProvider {
     public void generate() {
         for (var block : getKnownBlocks()) {
             add(block, overrides.getOrDefault(block, this::defaultBuilder).apply(block));
+        }
+    }
+
+    @Override
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
+        for (var block : getKnownBlocks()) {
+            biConsumer.accept(block.getLootTable(), overrides.getOrDefault(block, this::defaultBuilder).apply(block));
         }
     }
 

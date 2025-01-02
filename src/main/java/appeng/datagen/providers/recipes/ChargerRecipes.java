@@ -3,6 +3,7 @@ package appeng.datagen.providers.recipes;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.recipes.handlers.ChargerRecipeBuilder;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -11,8 +12,15 @@ import net.minecraft.world.item.Items;
 import java.util.concurrent.CompletableFuture;
 
 public class ChargerRecipes extends AE2RecipeProvider {
-    public ChargerRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+
+    public ChargerRecipes(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture
+    ) {
+        super(
+            output,
+            registriesFuture
+        );
     }
 
     @Override

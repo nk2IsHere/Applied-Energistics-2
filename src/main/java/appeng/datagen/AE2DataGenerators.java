@@ -18,21 +18,12 @@
 
 package appeng.datagen;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
-
-import appeng.datagen.providers.loot.AE2LootTableProvider;
+import appeng.datagen.providers.loot.BlockDropProvider;
 import appeng.datagen.providers.recipes.*;
 import appeng.datagen.providers.tags.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import appeng.core.definitions.AEDamageTypes;
@@ -46,68 +37,57 @@ import appeng.datagen.providers.models.PartModelProvider;
 import appeng.init.worldgen.InitBiomes;
 import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 public class AE2DataGenerators {
 
     public static void onGatherData(
         FabricDataGenerator generator,
-        ExistingFileHelper existingFileHelper,
-        DataGenerator.PackGenerator pack
+        ExistingFileHelper existingFileHelper
     ) {
-        var registries = generator.getRegistries();
+        var pack = generator.createPack();
         var localization = new LocalizationProvider(generator);
 
-        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
-            createDatapackEntriesBuilder()));
+//        pack.addProvider(output -> new DatapackBuiltinEntriesProvider(output, registries,
+//            createDatapackEntriesBuilder()));
 
         // Loot
-        pack.addProvider(packOutput -> new AE2LootTableProvider(packOutput, registries));
+        pack.addProvider(BlockDropProvider::new);
 
         // Tags
-        var blockTagsProvider = pack
-            .addProvider(packOutput -> new BlockTagsProvider(packOutput, registries));
-        pack.addProvider(
-            packOutput -> new ItemTagsProvider(packOutput, registries, blockTagsProvider.contentsGetter()));
-        pack.addProvider(packOutput -> new FluidTagsProvider(packOutput, registries));
-        pack.addProvider(packOutput -> new BiomeTagsProvider(packOutput, registries));
-        pack.addProvider(packOutput -> new PoiTypeTagsProvider(packOutput, registries));
-        pack.addProvider(packOutput -> new DataComponentTypeTagProvider(packOutput, registries, localization));
+        var blockTagsProvider = pack.addProvider(BlockTagsProvider::new);
+        pack.addProvider((packOutput, registries) -> new ItemTagsProvider(packOutput, registries, blockTagsProvider));
+        pack.addProvider(FluidTagsProvider::new);
+        pack.addProvider(BiomeTagsProvider::new);
+        pack.addProvider(PoiTypeTagsProvider::new);
+        pack.addProvider((packOutput, registries) -> new DataComponentTypeTagProvider(packOutput, registries, localization));
 
         // Models
-        pack.addProvider(packOutput -> new BlockModelProvider(packOutput, existingFileHelper));
-        pack.addProvider(packOutput -> new DecorationModelProvider(packOutput, existingFileHelper));
-        pack.addProvider(packOutput -> new ItemModelProvider(packOutput, existingFileHelper));
-        pack.addProvider(packOutput -> new CableModelProvider(packOutput, existingFileHelper));
-        pack.addProvider(packOutput -> new PartModelProvider(packOutput, existingFileHelper));
+        pack.addProvider((packOutput, registries) -> new BlockModelProvider(packOutput, existingFileHelper));
+        pack.addProvider((packOutput, registries) -> new DecorationModelProvider(packOutput, existingFileHelper));
+        pack.addProvider((packOutput, registries) -> new ItemModelProvider(packOutput, existingFileHelper));
+        pack.addProvider((packOutput, registries) -> new CableModelProvider(packOutput, existingFileHelper));
+        pack.addProvider((packOutput, registries) -> new PartModelProvider(packOutput, existingFileHelper));
 
         // Misc
-        pack.addProvider(packOutput -> new AdvancementProvider(packOutput, registries, List.of(new AdvancementGenerator(localization))));
+        pack.addProvider((packOutput, registries) -> new AdvancementGenerator(packOutput, registries, localization));
 
         // Recipes
-        pack.addProvider(bindRegistries(DecorationRecipes::new, registries));
-        pack.addProvider(bindRegistries(DecorationBlockRecipes::new, registries));
-        pack.addProvider(bindRegistries(MatterCannonAmmoProvider::new, registries));
-        pack.addProvider(bindRegistries(EntropyRecipes::new, registries));
-        pack.addProvider(bindRegistries(InscriberRecipes::new, registries));
-        pack.addProvider(bindRegistries(SmeltingRecipes::new, registries));
-        pack.addProvider(bindRegistries(CraftingRecipes::new, registries));
-        pack.addProvider(bindRegistries(SmithingRecipes::new, registries));
-        pack.addProvider(bindRegistries(TransformRecipes::new, registries));
-        pack.addProvider(bindRegistries(ChargerRecipes::new, registries));
-        pack.addProvider(bindRegistries(QuartzCuttingRecipesProvider::new, registries));
-        pack.addProvider(bindRegistries(UpgradeRecipes::new, registries));
+        pack.addProvider(DecorationRecipes::new);
+        pack.addProvider(DecorationBlockRecipes::new);
+        pack.addProvider(MatterCannonAmmoProvider::new);
+        pack.addProvider(EntropyRecipes::new);
+        pack.addProvider(InscriberRecipes::new);
+        pack.addProvider(SmeltingRecipes::new);
+        pack.addProvider(CraftingRecipes::new);
+        pack.addProvider(SmithingRecipes::new);
+        pack.addProvider(TransformRecipes::new);
+        pack.addProvider(ChargerRecipes::new);
+        pack.addProvider(QuartzCuttingRecipesProvider::new);
+        pack.addProvider(UpgradeRecipes::new);
 
         // Must run last
-        pack.addProvider(packOutput -> localization);
+        pack.addProvider((packOutput, registries) -> localization);
     }
-
-    private static <T extends DataProvider> DataProvider.Factory<T> bindRegistries(
-            BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> factory,
-            CompletableFuture<HolderLookup.Provider> factories) {
-        return packOutput -> factory.apply(packOutput, factories);
-    }
-
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()

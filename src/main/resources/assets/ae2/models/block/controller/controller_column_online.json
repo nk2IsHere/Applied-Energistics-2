@@ -5,7 +5,6 @@
     "lights": "ae2:block/controller_column_lights",
     "particle": "ae2:block/controller"
   },
-  "render_type": "cutout",
   "elements": [
     {
       "faces": {

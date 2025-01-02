@@ -19,13 +19,22 @@
 package appeng.datagen.providers.recipes;
 
 import appeng.datagen.providers.IAE2DataProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 
 import java.util.concurrent.CompletableFuture;
 
-public abstract class AE2RecipeProvider extends net.minecraft.data.recipes.RecipeProvider implements IAE2DataProvider {
-    public AE2RecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+public abstract class AE2RecipeProvider extends FabricRecipeProvider implements IAE2DataProvider {
+
+    public AE2RecipeProvider(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture
+    ) {
+        super(
+            output,
+            registriesFuture
+        );
     }
 }

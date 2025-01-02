@@ -22,6 +22,7 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.datagen.providers.tags.ConventionTags;
 import appeng.recipes.mattercannon.MatterCannonAmmo;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -32,8 +33,15 @@ import net.minecraft.tags.TagKey;
 import java.util.concurrent.CompletableFuture;
 
 public class MatterCannonAmmoProvider extends AE2RecipeProvider {
-    public MatterCannonAmmoProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+
+    public MatterCannonAmmoProvider(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture
+    ) {
+        super(
+            output,
+            registriesFuture
+        );
     }
 
     @Override

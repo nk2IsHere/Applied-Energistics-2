@@ -3,12 +3,12 @@ package appeng.datagen.providers.tags;
 import appeng.api.ids.AEComponents;
 import appeng.datagen.providers.localization.LocalizationProvider;
 import appeng.items.tools.MemoryCardItem;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 
 import java.util.HashSet;
@@ -16,10 +16,10 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class DataComponentTypeTagProvider extends TagsProvider<DataComponentType<?>> {
+public class DataComponentTypeTagProvider extends FabricTagProvider<DataComponentType<?>> {
     private final LocalizationProvider localization;
 
-    public DataComponentTypeTagProvider(PackOutput output,
+    public DataComponentTypeTagProvider(FabricDataOutput output,
             CompletableFuture<HolderLookup.Provider> registries,
             LocalizationProvider localization) {
         super(output, Registries.DATA_COMPONENT_TYPE, registries);

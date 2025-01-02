@@ -21,6 +21,8 @@ package appeng.core.definitions;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

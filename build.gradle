@@ -188,6 +188,12 @@ dependencies {
     compileOnly 'org.apache.commons:commons-configuration2:2.9.0'
 }
 
+fabricApi {
+    configureDataGeneration() {
+        client = true
+    }
+}
+
 archivesBaseName = artifact_basename
 
 allprojects {

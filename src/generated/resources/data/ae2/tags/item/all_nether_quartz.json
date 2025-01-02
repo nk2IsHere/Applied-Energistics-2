@@ -1,5 +1,8 @@
 {
   "values": [
-    "#c:gems/quartz"
+    {
+      "id": "#c:gems/quartz",
+      "required": false
+    }
   ]
 }

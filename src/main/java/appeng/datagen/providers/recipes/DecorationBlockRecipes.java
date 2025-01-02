@@ -21,6 +21,7 @@ package appeng.datagen.providers.recipes;
 import appeng.core.AppEng;
 import appeng.core.definitions.*;
 import appeng.datagen.providers.tags.ConventionTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -32,8 +33,14 @@ import java.util.concurrent.CompletableFuture;
 import static appeng.datagen.providers.recipes.RecipeCriteria.criterionName;
 
 public class DecorationBlockRecipes extends AE2RecipeProvider {
-    public DecorationBlockRecipes(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public DecorationBlockRecipes(
+        FabricDataOutput output,
+        CompletableFuture<HolderLookup.Provider> registriesFuture
+    ) {
+        super(
+            output,
+            registriesFuture
+        );
     }
 
     @Override

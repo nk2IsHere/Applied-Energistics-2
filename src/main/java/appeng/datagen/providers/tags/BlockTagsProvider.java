@@ -22,11 +22,10 @@ import appeng.api.ids.AETags;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.BlockDefinition;
 import appeng.datagen.providers.IAE2DataProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -37,19 +36,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implements IAE2DataProvider {
-    public BlockTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, Registries.BLOCK, registries, block -> block.builtInRegistryHolder().key());
+public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider implements IAE2DataProvider {
+    public BlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+        super(output, registriesFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
         // Black- and whitelist tags
-        tag(AETags.SPATIAL_BLACKLIST)
+        getOrCreateTagBuilder(AETags.SPATIAL_BLACKLIST)
                 .add(Blocks.BEDROCK)
                 .addOptionalTag(ConventionTags.IMMOVABLE_BLOCKS.location());
-        tag(AETags.ANNIHILATION_PLANE_BLOCK_BLACKLIST);
-        tag(AETags.FACADE_BLOCK_WHITELIST)
+        getOrCreateTagBuilder(AETags.ANNIHILATION_PLANE_BLOCK_BLACKLIST);
+        getOrCreateTagBuilder(AETags.FACADE_BLOCK_WHITELIST)
                 .add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block(),
                         Blocks.CHISELED_BOOKSHELF, Blocks.JUKEBOX, Blocks.FURNACE, Blocks.BLAST_FURNACE, Blocks.DROPPER,
                         Blocks.DISPENSER, Blocks.CRAFTER, Blocks.BARREL, Blocks.BEE_NEST, Blocks.BEEHIVE,
@@ -60,7 +59,7 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
                         AEBlocks.CRAFTING_MONITOR.block(), AEBlocks.CRAFTING_UNIT.block(),
                         AEBlocks.CRAFTING_ACCELERATOR.block())
                 .addOptionalTag(ConventionTags.GLASS_BLOCK.location());
-        tag(AETags.GROWTH_ACCELERATABLE)
+        getOrCreateTagBuilder(AETags.GROWTH_ACCELERATABLE)
                 // TODO: Should all be in some conventional tag
                 .add(Blocks.BAMBOO_SAPLING, Blocks.BAMBOO, Blocks.SUGAR_CANE, Blocks.SUGAR_CANE, Blocks.VINE,
                         Blocks.TWISTING_VINES, Blocks.WEEPING_VINES, Blocks.CAVE_VINES, Blocks.SWEET_BERRY_BUSH,
@@ -69,25 +68,25 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
                 .addOptionalTag(ConventionTags.SAPLINGS.location())
                 .addTag(ConventionTags.BUDDING_BLOCKS_BLOCKS);
 
-        tag(ConventionTags.BUDDING_BLOCKS_BLOCKS)
+        getOrCreateTagBuilder(ConventionTags.BUDDING_BLOCKS_BLOCKS)
                 .add(AEBlocks.FLAWLESS_BUDDING_QUARTZ.block())
                 .add(AEBlocks.FLAWED_BUDDING_QUARTZ.block())
                 .add(AEBlocks.CHIPPED_BUDDING_QUARTZ.block())
                 .add(AEBlocks.DAMAGED_BUDDING_QUARTZ.block());
-        tag(ConventionTags.BUDS_BLOCKS)
+        getOrCreateTagBuilder(ConventionTags.BUDS_BLOCKS)
                 .add(AEBlocks.SMALL_QUARTZ_BUD.block())
                 .add(AEBlocks.MEDIUM_QUARTZ_BUD.block())
                 .add(AEBlocks.LARGE_QUARTZ_BUD.block());
-        tag(ConventionTags.CLUSTERS_BLOCKS)
+        getOrCreateTagBuilder(ConventionTags.CLUSTERS_BLOCKS)
                 .add(AEBlocks.QUARTZ_CLUSTER.block());
 
-        tag(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK)
+        getOrCreateTagBuilder(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK)
                 .add(AEBlocks.QUARTZ_BLOCK.block());
-        tag(ConventionalBlockTags.STORAGE_BLOCKS)
+        getOrCreateTagBuilder(ConventionalBlockTags.STORAGE_BLOCKS)
                 .addTag(ConventionTags.CERTUS_QUARTZ_STORAGE_BLOCK_BLOCK);
 
         // Special behavior is associated with this tag, so our walls need to be added to it
-        tag(BlockTags.WALLS).add(
+        getOrCreateTagBuilder(BlockTags.WALLS).add(
                 AEBlocks.SKY_STONE_WALL.block(),
                 AEBlocks.SMOOTH_SKY_STONE_WALL.block(),
                 AEBlocks.SKY_STONE_BRICK_WALL.block(),
@@ -100,11 +99,11 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
                 AEBlocks.CHISELED_QUARTZ_WALL.block(),
                 AEBlocks.QUARTZ_PILLAR_WALL.block());
 
-        tag(ConventionalBlockTags.CHESTS).add(AEBlocks.SKY_STONE_CHEST.block(), AEBlocks.SMOOTH_SKY_STONE_CHEST.block());
-        tag(ConventionTags.GLASS_BLOCK).add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block());
+        getOrCreateTagBuilder(ConventionalBlockTags.CHESTS).add(AEBlocks.SKY_STONE_CHEST.block(), AEBlocks.SMOOTH_SKY_STONE_CHEST.block());
+        getOrCreateTagBuilder(ConventionTags.GLASS_BLOCK).add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block());
 
         // Fixtures should cause walls to have posts
-        tag(BlockTags.WALL_POST_OVERRIDE).add(AEBlocks.QUARTZ_FIXTURE.block(), AEBlocks.LIGHT_DETECTOR.block());
+        getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE).add(AEBlocks.QUARTZ_FIXTURE.block(), AEBlocks.LIGHT_DETECTOR.block());
 
         addEffectiveTools();
     }
@@ -142,7 +141,7 @@ public class BlockTagsProvider extends IntrinsicHolderTagsProvider<Block> implem
 
         for (var block : AEBlocks.getBlocks()) {
             for (var desiredTag : specialTags.getOrDefault(block, defaultTags)) {
-                tag(desiredTag).add(block.block());
+                getOrCreateTagBuilder(desiredTag).add(block.block());
             }
         }
 
