@@ -1,5 +1,6 @@
 package appeng.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,11 +20,10 @@ public class MouseWheelMixin {
     /**
      * Inject right before the slot-cycling that would normally be caused by the scroll-wheel
      */
-    @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onScrollWithoutScreen(long windowId, double x, double y, CallbackInfo ci, double verticalAmount) {
-        if (MouseWheelScrolled.EVENT.invoker().onWheelScrolled(verticalAmount)) {
+    @Inject(method = "onScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"), cancellable = true)
+    public void onScrollWithoutScreen(long windowPointer, double xOffset, double yOffset, CallbackInfo ci) {
+        if (MouseWheelScrolled.EVENT.invoker().onWheelScrolled(xOffset, yOffset)) {
             ci.cancel();
         }
     }
-
 }

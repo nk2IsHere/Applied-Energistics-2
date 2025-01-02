@@ -20,6 +20,7 @@ package appeng.block.misc;
 
 import appeng.block.AEBaseEntityBlock;
 import appeng.blockentity.misc.LightDetectorBlockEntity;
+import appeng.hooks.INeighborChangeSensitive;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -43,7 +44,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.EnumMap;
 import java.util.Map;
 
-public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEntity> {
+public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEntity> implements INeighborChangeSensitive {
 
     // Cache VoxelShapes for each facing
     private static final Map<Direction, VoxelShape> SHAPES;
@@ -165,5 +166,13 @@ public class LightDetectorBlock extends AEBaseEntityBlock<LightDetectorBlockEnti
         }
 
         return state;
+    }
+
+    @Override
+    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+        var tld = this.getBlockEntity(level, pos);
+        if (tld != null) {
+            tld.updateLight();
+        }
     }
 }

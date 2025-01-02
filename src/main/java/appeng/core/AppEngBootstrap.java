@@ -44,7 +44,7 @@ public final class AppEngBootstrap {
             InitBlockEntityMoveStrategies.init();
 
             // This has to be initialized here because Forge's common setup event will not run in datagens.
-            InitStats.init();
+            InitStats.init(BuiltInRegistries.CUSTOM_STAT);
             InitAdvancementTriggers.init(BuiltInRegistries.TRIGGER_TYPES);
         }
     }

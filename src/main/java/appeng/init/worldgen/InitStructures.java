@@ -71,8 +71,11 @@ public final class InitStructures {
         context.register(MeteoriteStructure.STRUCTURE_SET_KEY, structureSet);
     }
 
-    public static void init() {
+    public static void register() {
         STRUCTURE_PIECES.register("ae2mtrt", () -> MeteoriteStructurePiece.TYPE);
         STRUCTURE_TYPES.register("ae2mtrt", () -> MeteoriteStructure.TYPE);
+
+        STRUCTURE_PIECES.register();
+        STRUCTURE_TYPES.register();
     }
 }

@@ -21,11 +21,8 @@ package appeng.init.client;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import appeng.client.gui.implementations.*;
-import appeng.menu.implementations.*;
 import com.google.common.annotations.VisibleForTesting;
 
-import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -35,6 +32,28 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
 import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.implementations.CellWorkbenchScreen;
+import appeng.client.gui.implementations.CondenserScreen;
+import appeng.client.gui.implementations.DriveScreen;
+import appeng.client.gui.implementations.EnergyLevelEmitterScreen;
+import appeng.client.gui.implementations.FormationPlaneScreen;
+import appeng.client.gui.implementations.IOBusScreen;
+import appeng.client.gui.implementations.IOPortScreen;
+import appeng.client.gui.implementations.InscriberScreen;
+import appeng.client.gui.implementations.InterfaceScreen;
+import appeng.client.gui.implementations.MEChestScreen;
+import appeng.client.gui.implementations.MolecularAssemblerScreen;
+import appeng.client.gui.implementations.PatternProviderScreen;
+import appeng.client.gui.implementations.PriorityScreen;
+import appeng.client.gui.implementations.QNBScreen;
+import appeng.client.gui.implementations.QuartzKnifeScreen;
+import appeng.client.gui.implementations.SkyChestScreen;
+import appeng.client.gui.implementations.SpatialAnchorScreen;
+import appeng.client.gui.implementations.SpatialIOPortScreen;
+import appeng.client.gui.implementations.StorageBusScreen;
+import appeng.client.gui.implementations.StorageLevelEmitterScreen;
+import appeng.client.gui.implementations.VibrationChamberScreen;
+import appeng.client.gui.implementations.WirelessAccessPointScreen;
 import appeng.client.gui.me.common.MEStorageScreen;
 import appeng.client.gui.me.crafting.CraftAmountScreen;
 import appeng.client.gui.me.crafting.CraftConfirmScreen;
@@ -49,11 +68,36 @@ import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
 import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.style.StyleManager;
 import appeng.menu.AEBaseMenu;
+import appeng.menu.implementations.CellWorkbenchMenu;
+import appeng.menu.implementations.CondenserMenu;
+import appeng.menu.implementations.DriveMenu;
+import appeng.menu.implementations.EnergyLevelEmitterMenu;
+import appeng.menu.implementations.FormationPlaneMenu;
+import appeng.menu.implementations.IOBusMenu;
+import appeng.menu.implementations.IOPortMenu;
+import appeng.menu.implementations.InscriberMenu;
+import appeng.menu.implementations.InterfaceMenu;
+import appeng.menu.implementations.MEChestMenu;
+import appeng.menu.implementations.MolecularAssemblerMenu;
+import appeng.menu.implementations.PatternAccessTermMenu;
+import appeng.menu.implementations.PatternProviderMenu;
+import appeng.menu.implementations.PriorityMenu;
+import appeng.menu.implementations.QNBMenu;
+import appeng.menu.implementations.QuartzKnifeMenu;
+import appeng.menu.implementations.SetStockAmountMenu;
+import appeng.menu.implementations.SkyChestMenu;
+import appeng.menu.implementations.SpatialAnchorMenu;
+import appeng.menu.implementations.SpatialIOPortMenu;
+import appeng.menu.implementations.StorageBusMenu;
+import appeng.menu.implementations.StorageLevelEmitterMenu;
+import appeng.menu.implementations.VibrationChamberMenu;
+import appeng.menu.implementations.WirelessAccessPointMenu;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.crafting.CraftAmountMenu;
 import appeng.menu.me.crafting.CraftConfirmMenu;
 import appeng.menu.me.crafting.CraftingCPUMenu;
 import appeng.menu.me.crafting.CraftingStatusMenu;
+import appeng.menu.me.items.BasicCellChestMenu;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.me.items.WirelessCraftingTermMenu;
@@ -76,7 +120,7 @@ public final class InitScreens {
         // spotless:off
         register(QNBMenu.TYPE, QNBScreen::new, "/screens/qnb.json");
         register(SkyChestMenu.TYPE, SkyChestScreen::new, "/screens/sky_chest.json");
-        register(MEChestMenu.TYPE, MEChestScreen::new, "/screens/chest.json");
+        register(MEChestMenu.TYPE, MEChestScreen::new, "/screens/me_chest.json");
         register(WirelessAccessPointMenu.TYPE, WirelessAccessPointScreen::new, "/screens/wireless_access_point.json");
         register(NetworkStatusMenu.NETWORK_TOOL_TYPE, NetworkStatusScreen::new, "/screens/network_status.json");
         register(NetworkStatusMenu.CONTROLLER_TYPE, NetworkStatusScreen::new, "/screens/network_status.json");
@@ -108,36 +152,40 @@ public final class InitScreens {
 
         // Terminals
         InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(
-                MEStorageMenu.TYPE,
-                MEStorageScreen::new,
-                "/screens/terminals/terminal.json");
+            MEStorageMenu.TYPE,
+            MEStorageScreen::new,
+            "/screens/terminals/terminal.json");
         InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(
-                MEStorageMenu.PORTABLE_ITEM_CELL_TYPE,
-                MEStorageScreen::new,
-                "/screens/terminals/portable_item_cell.json");
+            BasicCellChestMenu.TYPE,
+            MEStorageScreen::new,
+            "/screens/terminals/terminal.json");
         InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(
-                MEStorageMenu.PORTABLE_FLUID_CELL_TYPE,
-                MEStorageScreen::new,
-                "/screens/terminals/portable_fluid_cell.json");
+            MEStorageMenu.PORTABLE_ITEM_CELL_TYPE,
+            MEStorageScreen::new,
+            "/screens/terminals/portable_item_cell.json");
         InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(
-                MEStorageMenu.WIRELESS_TYPE,
-                MEStorageScreen::new,
-                "/screens/terminals/wireless_terminal.json");
+            MEStorageMenu.PORTABLE_FLUID_CELL_TYPE,
+            MEStorageScreen::new,
+            "/screens/terminals/portable_fluid_cell.json");
+        InitScreens.<MEStorageMenu, MEStorageScreen<MEStorageMenu>>register(
+            MEStorageMenu.WIRELESS_TYPE,
+            MEStorageScreen::new,
+            "/screens/terminals/wireless_terminal.json");
         InitScreens.<CraftingTermMenu, CraftingTermScreen<CraftingTermMenu>>register(
-                CraftingTermMenu.TYPE,
-                CraftingTermScreen::new,
-                "/screens/terminals/crafting_terminal.json");
+            CraftingTermMenu.TYPE,
+            CraftingTermScreen::new,
+            "/screens/terminals/crafting_terminal.json");
         InitScreens.<WirelessCraftingTermMenu, CraftingTermScreen<WirelessCraftingTermMenu>>register(
-                WirelessCraftingTermMenu.TYPE,
-                CraftingTermScreen::new,
-                "/screens/terminals/crafting_terminal.json");
+            WirelessCraftingTermMenu.TYPE,
+            CraftingTermScreen::new,
+            "/screens/terminals/crafting_terminal.json");
         InitScreens.<PatternEncodingTermMenu, PatternEncodingTermScreen<PatternEncodingTermMenu>>register(
-                PatternEncodingTermMenu.TYPE,
-                PatternEncodingTermScreen::new,
-                "/screens/terminals/pattern_encoding_terminal.json");
+            PatternEncodingTermMenu.TYPE,
+            PatternEncodingTermScreen::new,
+            "/screens/terminals/pattern_encoding_terminal.json");
         InitScreens.<PatternAccessTermMenu, PatternAccessTermScreen<PatternAccessTermMenu>>register(
-                PatternAccessTermMenu.TYPE, PatternAccessTermScreen::new,
-                "/screens/terminals/pattern_access_terminal.json");
+            PatternAccessTermMenu.TYPE, PatternAccessTermScreen::new,
+            "/screens/terminals/pattern_access_terminal.json");
         // spotless:on
     }
 
@@ -145,12 +193,11 @@ public final class InitScreens {
      * Registers a screen for a given menu and ensures the given style is applied after opening the screen.
      */
     public static <M extends AEBaseMenu, U extends AEBaseScreen<M>> void register(MenuType<M> type,
-            StyledScreenFactory<M, U> factory,
-            String stylePath) {
+                                                                                  StyledScreenFactory<M, U> factory,
+                                                                                  String stylePath) {
         MENU_STYLES.put(type, stylePath);
-        MenuRegistry.<M, U>registerScreenFactory(type, (menu, playerInv, title) -> {
+        MenuScreens.<M, U>register(type, (menu, playerInv, title) -> {
             var style = StyleManager.loadStyleDoc(stylePath);
-
             return factory.create(menu, playerInv, title, style);
         });
     }

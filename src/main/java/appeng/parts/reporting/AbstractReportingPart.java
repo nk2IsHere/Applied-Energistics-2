@@ -23,7 +23,7 @@ import appeng.api.networking.GridFlags;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
-import appeng.client.render.model.AEModelData;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.parts.AEBasePart;
 import appeng.util.InteractionUtil;
 import net.minecraft.core.BlockPos;
@@ -51,7 +51,7 @@ import net.minecraft.world.phys.Vec3;
  * @version rv3
  * @since rv3
  */
-public abstract class AbstractReportingPart extends AEBasePart implements IMonitorPart {
+public abstract class AbstractReportingPart extends AEBasePart implements IMonitorPart, INeighborChangeSensitive {
 
     private byte spin = 0; // 0-3
     private int opacity = -1;

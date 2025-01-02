@@ -2,6 +2,7 @@ package appeng.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +37,10 @@ public abstract class ItemEntityMixin extends Entity {
     @Shadow
     public abstract ItemStack getItem();
 
+    @Unique
     private int ae2_transformTime = 0;
+
+    @Unique
     private int ae2_delay = 0;
 
     @Inject(at = @At("HEAD"), method = "hurt", cancellable = true)

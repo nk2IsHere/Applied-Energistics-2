@@ -18,6 +18,7 @@
 
 package appeng.mixins.spatial;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,6 +36,7 @@ import appeng.spatial.SpatialStorageSkyProperties;
 @Mixin(DimensionSpecialEffects.class)
 public class SkyPropertiesMixin {
 
+    @Final
     @Shadow
     private static Object2ObjectMap<ResourceLocation, DimensionSpecialEffects> EFFECTS/* BY_IDENTIFIER */;
 

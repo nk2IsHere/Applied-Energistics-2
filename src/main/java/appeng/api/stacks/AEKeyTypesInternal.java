@@ -2,8 +2,6 @@ package appeng.api.stacks;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.core.Registry;
-import net.neoforged.neoforge.registries.callback.BakeCallback;
-import net.neoforged.neoforge.registries.callback.RegistryCallbackHolder;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,13 +30,16 @@ public final class AEKeyTypesInternal {
     public static void setRegistry(Registry<AEKeyType> registry) {
         Preconditions.checkState(AEKeyTypesInternal.registry == null);
         AEKeyTypesInternal.registry = registry;
-        RegistryCallbackHolder.INSTANCE.addCallback(registry, (BakeCallback<AEKeyType>) (ignored -> {
-            var types = new HashSet<AEKeyType>();
-            for (var aeKeyType : registry) {
-                types.add(aeKeyType);
-            }
-            allTypes = Set.copyOf(types);
-        }));
+    }
+
+    public static void bake() {
+        Preconditions.checkState(allTypes == null, "AE2 is already initialized.");
+        registry.freeze();
+        var types = new HashSet<AEKeyType>();
+        for (var aeKeyType : registry) {
+            types.add(aeKeyType);
+        }
+        allTypes = Set.copyOf(types);
     }
 
     public static Set<AEKeyType> getAllTypes() {

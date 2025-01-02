@@ -9,15 +9,15 @@ import net.fabricmc.fabric.api.event.EventFactory;
  */
 public interface MouseWheelScrolled {
     Event<MouseWheelScrolled> EVENT = EventFactory.createArrayBacked(MouseWheelScrolled.class,
-            (listeners) -> (scrollDelta) -> {
+            (listeners) -> (horizontalDelta, verticalDelta) -> {
                 for (MouseWheelScrolled listener : listeners) {
-                    if (listener.onWheelScrolled(scrollDelta)) {
+                    if (listener.onWheelScrolled(horizontalDelta, verticalDelta)) {
                         return true;
                     }
                 }
                 return false;
             });
 
-    boolean onWheelScrolled(double scrollDelta);
+    boolean onWheelScrolled(double horizontalDelta, double verticalDelta);
 
 }

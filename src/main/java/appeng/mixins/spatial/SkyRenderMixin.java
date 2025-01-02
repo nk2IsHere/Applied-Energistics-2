@@ -21,6 +21,7 @@ package appeng.mixins.spatial;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,6 +38,7 @@ import appeng.spatial.SpatialStorageDimensionIds;
 @Mixin(value = LevelRenderer.class)
 public class SkyRenderMixin {
 
+    @Final
     @Shadow
     private Minecraft minecraft;
 

@@ -32,8 +32,8 @@ public class InitVillager {
     public static final VillagerProfession PROFESSION = new VillagerProfession(ID.toString(), e -> e.is(POI_KEY),
             e -> e.is(POI_KEY), ImmutableSet.of(), ImmutableSet.of(), SoundEvents.VILLAGER_WORK_LIBRARIAN);
 
-    public static void init() {
-        Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, ID, PROFESSION);
+    public static void init(Registry<VillagerProfession> registry) {
+        Registry.register(registry, ID, PROFESSION);
 
         buyItems(1, AEItems.CERTUS_QUARTZ_CRYSTAL, 3, 4, 10);
         buyItems(1, AEItems.METEORITE_COMPASS, 2, 1, 5);

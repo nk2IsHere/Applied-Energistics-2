@@ -88,11 +88,17 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.19.3:2023.02.05@zip")
+        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:2024.11.17@zip")
     }
 
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+
+    // Architectury API
+    modImplementation("dev.architectury:architectury-fabric:${project.architectury_api_version}") {
+        exclude group: "net.fabricmc"
+        exclude group: "net.fabricmc.fabric-api"
+    }
 
     // Always depend on the REI API to compile
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {

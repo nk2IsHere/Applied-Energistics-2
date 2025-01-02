@@ -25,6 +25,7 @@ import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
 import appeng.core.AppEng;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
@@ -36,11 +37,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.EnumSet;
 
-public class ToggleBusPart extends AEBasePart {
+public class ToggleBusPart extends AEBasePart implements INeighborChangeSensitive {
 
     @PartModels
     public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/toggle_bus_base");

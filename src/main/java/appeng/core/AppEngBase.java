@@ -22,9 +22,14 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import appeng.api.ids.AEComponents;
 import appeng.core.definitions.*;
 import appeng.core.network.ClientboundPacket;
 import appeng.core.network.TargetPoint;
+import appeng.init.*;
+import appeng.init.client.InitParticleTypes;
+import appeng.init.internal.*;
+import appeng.recipes.AERecipeSerializers;
 import appeng.recipes.AERecipeTypes;
 import com.mojang.brigadier.CommandDispatcher;
 
@@ -39,7 +44,6 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestRegistry;
 import net.minecraft.server.MinecraftServer;
@@ -47,10 +51,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.structure.StructureType;
 
 import appeng.api.IAEAddonEntrypoint;
 import appeng.api.parts.CableRenderMode;
@@ -58,17 +60,7 @@ import appeng.hooks.ToolItemHook;
 import appeng.hooks.WrenchHook;
 import appeng.hooks.ticking.TickHandler;
 import appeng.hotkeys.HotkeyActions;
-import appeng.init.InitApiLookup;
-import appeng.init.InitCauldronInteraction;
-import appeng.init.InitDispenserBehavior;
-import appeng.init.InitMenuTypes;
-import appeng.init.InitVillager;
 import appeng.init.client.InitKeyTypes;
-import appeng.init.client.InitParticleTypes;
-import appeng.init.internal.InitGridLinkables;
-import appeng.init.internal.InitP2PAttunements;
-import appeng.init.internal.InitStorageCells;
-import appeng.init.internal.InitUpgrades;
 import appeng.init.worldgen.InitStructures;
 import appeng.server.AECommand;
 import appeng.server.services.ChunkLoadingService;
@@ -112,23 +104,25 @@ public abstract class AppEngBase implements AppEng {
 
         // Initialize items in order
         AEParts.init();
+        AEBlocks.DR.register();
+        AEItems.DR.register();
+        AEBlockEntities.DR.register();
+        AEComponents.DR.register();
+        AEEntities.DR.register();
+        AERecipeTypes.DR.register();
+        AERecipeSerializers.DR.register();
+        InitStructures.register();
+
+        registerSounds(BuiltInRegistries.SOUND_EVENT);
+        registerCreativeTabs(BuiltInRegistries.CREATIVE_MODE_TAB);
+        InitParticleTypes.init(BuiltInRegistries.PARTICLE_TYPE);
+        InitMenuTypes.init(BuiltInRegistries.MENU);
+        registerDimension();
+        InitVillager.init(BuiltInRegistries.VILLAGER_PROFESSION);
 
         // Now that item instances are available, we can initialize registries that need item instances
         InitGridLinkables.init();
         InitStorageCells.init();
-        InitVillager.init();
-
-        registerCreativeTabs(BuiltInRegistries.CREATIVE_MODE_TAB);
-        registerDimension();
-        AEItems.DR.register();
-        AEBlocks.DR.register();
-        AEEntities.DR.register();
-        registerParticleTypes(BuiltInRegistries.PARTICLE_TYPE);
-        AEBlockEntities.DR.register();
-        registerMenuTypes(BuiltInRegistries.MENU);
-        AERecipeTypes.DR.register();
-        registerStructures();
-        registerSounds(BuiltInRegistries.SOUND_EVENT);
 
         postRegistrationInitialization();
 
@@ -158,20 +152,6 @@ public abstract class AppEngBase implements AppEng {
 
         AEConfig.instance().save();
         InitUpgrades.init();
-    }
-
-    public void registerMenuTypes(Registry<MenuType<?>> registry) {
-        InitMenuTypes.init(registry);
-    }
-
-    public void registerParticleTypes(Registry<ParticleType<?>> registry) {
-        InitParticleTypes.init(registry);
-    }
-
-    public void registerStructures() {
-        InitStructures.init();
-        InitStructures.STRUCTURE_PIECES.register();
-        InitStructures.STRUCTURE_TYPES.register();
     }
 
     public void registerCommands(MinecraftServer server) {

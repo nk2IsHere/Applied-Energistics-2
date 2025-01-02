@@ -20,9 +20,9 @@ import appeng.hooks.ColorApplicatorPickColorHook;
 @Mixin(Minecraft.class)
 public class PickColorMixin {
     @Shadow
-    LocalPlayer player;
+    public LocalPlayer player;
     @Shadow
-    HitResult hitResult;
+    public HitResult hitResult;
 
     @Inject(method = "pickBlock", at = @At("HEAD"), cancellable = true)
     public void pickColor(CallbackInfo ci) {

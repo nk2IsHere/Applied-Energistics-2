@@ -35,6 +35,7 @@ import appeng.api.util.IConfigManagerBuilder;
 import appeng.core.definitions.AEItems;
 import appeng.helpers.IConfigInvHost;
 import appeng.helpers.IPriorityHost;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
@@ -52,12 +53,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FormationPlanePart extends UpgradeablePart implements IStorageProvider, IPriorityHost, IConfigInvHost {
+public class FormationPlanePart extends UpgradeablePart implements IStorageProvider, IPriorityHost, IConfigInvHost, INeighborChangeSensitive {
 
     private static final PlaneModels MODELS = new PlaneModels("part/formation_plane",
             "part/formation_plane_on");

@@ -39,17 +39,22 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.MultiCraftingTracker;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.menu.implementations.IOBusMenu;
 import appeng.parts.PartModel;
 import appeng.util.prioritylist.DefaultPriorityList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +62,7 @@ import org.jetbrains.annotations.Nullable;
  * Generalized base class for export buses that move stacks from network storage to an adjacent block using a non-AE
  * API.
  */
-public class ExportBusPart extends IOBusPart implements ICraftingRequester {
+public class ExportBusPart extends IOBusPart implements ICraftingRequester, INeighborChangeSensitive {
 
     public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/export_bus_base");
 
@@ -270,5 +275,9 @@ public class ExportBusPart extends IOBusPart implements ICraftingRequester {
         } else {
             return MODELS_OFF;
         }
+    }
+
+    @Override
+    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
     }
 }

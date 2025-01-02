@@ -27,6 +27,7 @@ import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.core.settings.TickRates;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -34,11 +35,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class LightP2PTunnelPart extends P2PTunnelPart<LightP2PTunnelPart> implements IGridTickable {
+public class LightP2PTunnelPart extends P2PTunnelPart<LightP2PTunnelPart> implements IGridTickable, INeighborChangeSensitive {
 
     private static final P2PModels MODELS = new P2PModels(AppEng.makeId("part/p2p/p2p_tunnel_light"));
 
@@ -185,5 +188,4 @@ public class LightP2PTunnelPart extends P2PTunnelPart<LightP2PTunnelPart> implem
     public IPartModel getStaticModels() {
         return MODELS.getModel(this.isPowered(), this.isActive());
     }
-
 }

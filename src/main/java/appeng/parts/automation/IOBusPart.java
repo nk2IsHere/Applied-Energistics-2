@@ -39,6 +39,7 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.helpers.IConfigInvHost;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
 import appeng.menu.ISubMenu;
@@ -61,7 +62,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public abstract class IOBusPart extends UpgradeablePart implements IGridTickable, IConfigInvHost, ISubMenuHost {
+public abstract class IOBusPart extends UpgradeablePart implements IGridTickable, IConfigInvHost, ISubMenuHost, INeighborChangeSensitive {
 
     public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/import_bus_base");
     @PartModels

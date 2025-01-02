@@ -46,6 +46,7 @@ import appeng.core.stats.AdvancementTriggers;
 import appeng.helpers.IConfigInvHost;
 import appeng.helpers.IPriorityHost;
 import appeng.helpers.InterfaceLogicHost;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
 import appeng.me.storage.CompositeStorage;
@@ -75,6 +76,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,7 +86,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class StorageBusPart extends UpgradeablePart
-        implements IGridTickable, IStorageProvider, IPriorityHost, IConfigInvHost {
+        implements IGridTickable, IStorageProvider, IPriorityHost, IConfigInvHost, INeighborChangeSensitive {
 
     public static final ResourceLocation MODEL_BASE = AppEng.makeId("part/storage_bus_base");
 

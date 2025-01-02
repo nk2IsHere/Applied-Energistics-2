@@ -37,6 +37,7 @@ import appeng.api.util.AECableType;
 import appeng.core.AEConfig;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.me.helpers.MachineSource;
 import appeng.parts.AEBasePart;
@@ -59,7 +60,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class AnnihilationPlanePart extends AEBasePart implements IGridTickable {
+public class AnnihilationPlanePart extends AEBasePart implements IGridTickable, INeighborChangeSensitive {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnihilationPlanePart.class);
 

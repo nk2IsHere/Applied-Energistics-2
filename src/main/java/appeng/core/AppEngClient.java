@@ -257,8 +257,8 @@ public class AppEngClient extends AppEngBase {
         InitBuiltInModels.init();
     }
 
-    private boolean wheelEvent(double verticalAmount) {
-        if (verticalAmount == 0) {
+    private boolean wheelEvent(double horizontalDelta, double verticalDelta) {
+        if (verticalDelta == 0) {
             return false;
         }
 
@@ -270,7 +270,7 @@ public class AppEngClient extends AppEngBase {
             final boolean offHand = player.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof IMouseWheelItem;
 
             if (mainHand || offHand) {
-                ClientPlayNetworking.send(new MouseWheelPacket(verticalAmount > 0));
+                ClientPlayNetworking.send(new MouseWheelPacket(verticalDelta > 0));
                 return true;
             }
         }

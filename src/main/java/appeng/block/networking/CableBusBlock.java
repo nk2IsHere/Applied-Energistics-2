@@ -26,6 +26,7 @@ import appeng.blockentity.networking.CableBusBlockEntity;
 import appeng.client.render.cablebus.CableBusBakedModel;
 import appeng.client.render.cablebus.CableBusBreakingParticle;
 import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.integration.abstraction.IAEFacade;
 import appeng.parts.ICableBusContainer;
 import appeng.parts.NullCableBusContainer;
@@ -77,7 +78,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implements IAEFacade, SimpleWaterloggedBlock {
+public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implements IAEFacade, SimpleWaterloggedBlock, INeighborChangeSensitive {
 
     private static final ICableBusContainer NULL_CABLE_BUS = new NullCableBusContainer();
 
@@ -448,5 +449,10 @@ public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implem
             }
         }
         return state;
+    }
+
+    @Override
+    public void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor) {
+        this.cb(level, pos).onNeighborChanged(level, pos, neighbor);
     }
 }

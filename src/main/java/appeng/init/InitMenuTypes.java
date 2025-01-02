@@ -60,8 +60,11 @@ import appeng.menu.me.items.PatternEncodingTermMenu;
 import appeng.menu.me.items.WirelessCraftingTermMenu;
 import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.menu.me.networktool.NetworkToolMenu;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class InitMenuTypes {
+    private static final Logger LOG = LoggerFactory.getLogger(InitMenuTypes.class);
     private static final Map<ResourceLocation, MenuType<?>> REGISTRATION_QUEUE = new HashMap<>();
 
     private InitMenuTypes() {
@@ -128,7 +131,7 @@ public final class InitMenuTypes {
 
     public static void queueRegistration(ResourceLocation id, MenuType<?> menuType) {
         if (REGISTRATION_QUEUE.put(id, menuType) != null) {
-            throw new IllegalStateException("Duplicate menu id: " + id);
+            LOG.warn("Duplicate menu type registration for {}", id);
         }
     }
 }

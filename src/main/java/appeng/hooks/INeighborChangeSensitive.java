@@ -1,6 +1,7 @@
 package appeng.hooks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -11,6 +12,5 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface INeighborChangeSensitive {
 
     // This is usually a Forge extension. We replace it using a Mixin.
-    void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor);
-
+    void onNeighborChanged(BlockGetter level, BlockPos pos, BlockPos neighbor);
 }

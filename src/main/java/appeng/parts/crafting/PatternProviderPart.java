@@ -28,6 +28,7 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEParts;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import appeng.hooks.INeighborChangeSensitive;
 import appeng.items.parts.PartModels;
 import appeng.menu.locator.MenuLocators;
 import appeng.parts.AEBasePart;
@@ -42,13 +43,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.List;
 
-public class PatternProviderPart extends AEBasePart implements PatternProviderLogicHost {
+public class PatternProviderPart extends AEBasePart implements PatternProviderLogicHost, INeighborChangeSensitive {
 
     public static final ResourceLocation MODEL_BASE = AppEng.makeId(
             "part/pattern_provider_base");

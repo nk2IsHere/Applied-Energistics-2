@@ -18,7 +18,6 @@
 
 package appeng.block.qnb;
 
-import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
 import appeng.client.render.cablebus.CubeBuilder;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
@@ -26,8 +25,6 @@ import appeng.integration.abstraction.IFabricBakedModel;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -40,9 +37,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;

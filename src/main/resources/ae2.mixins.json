@@ -12,7 +12,6 @@
     "EnchantmentHelperMixin",
     "ItemEntityMixin",
     "OnNeighborUpdateMixin",
-    "RegistryMixin",
     "StructureTemplateMixin",
     "chunkloading.ChunkMapMixin",
     "chunkloading.MinecraftServerMixin",

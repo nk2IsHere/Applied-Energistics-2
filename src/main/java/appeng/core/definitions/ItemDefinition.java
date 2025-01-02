@@ -53,11 +53,11 @@ public class ItemDefinition<T extends Item> implements ItemLike, Supplier<T> {
     }
 
     public ItemStack stack(int stackSize) {
-        return new ItemStack((ItemLike) item, stackSize);
+        return new ItemStack(item.get(), stackSize);
     }
 
     public GenericStack genericStack(long stackSize) {
-        return new GenericStack(AEItemKey.of((ItemLike) item), stackSize);
+        return new GenericStack(AEItemKey.of(item.get()), stackSize);
     }
 
     public Holder<Item> holder() {
