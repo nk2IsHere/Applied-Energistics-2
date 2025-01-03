@@ -10,6 +10,7 @@
 !settings.gradle
 !gradle.properties
 !.travis.yml
+!docs/
 
 # Scripts
 !/scripts

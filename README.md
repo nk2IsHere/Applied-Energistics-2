@@ -2,7 +2,14 @@
 [![Latest Release](https://img.shields.io/github/v/release/AppliedEnergistics/Applied-Energistics-2?style=flat-square&label=Release)](https://github.com/AppliedEnergistics/Applied-Energistics-2/releases)
 [![Latest PreRelease](https://img.shields.io/github/v/release/AppliedEnergistics/Applied-Energistics-2?include_prereleases&style=flat-square&label=Pre)](https://github.com/AppliedEnergistics/Applied-Energistics-2/releases)
 
-# Applied Energistics 2
+# Frankenstein Applied Energistics 2 (Fabric v1.21.1+)
+
+## What
+
+i wanted to play AE2 on my tech modpack too hard :3. it's not official. future versions will be released whenever i have an urge to play minecraft again (prs are welcome).
+its half-broken, expect things breaking left and right. ill be fixing them as i play.
+
+![1.21.1 Fabric](https://raw.githubusercontent.com/nk2IsHere/Franken-AE2/refs/heads/fabric/1.21.1/docs/showcase.png)
 
 ## Table of Contents
 
