@@ -25,10 +25,12 @@ import appeng.menu.MenuOpener;
 import appeng.menu.locator.MenuHostLocator;
 import appeng.menu.locator.MenuLocators;
 import com.google.common.base.Preconditions;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -112,8 +114,10 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
      * Opens a menu that is based around a single block entity. The block entity's position is encoded in the packet
      * buffer.
      */
-    private M fromNetwork(int containerId, Inventory inv, RegistryFriendlyByteBuf data) {
-        var locator = MenuLocators.readFromPacket(data);
+    private M fromNetwork(int containerId, Inventory inv, ByteBuf data) {
+        System.out.println("MenuTypeBuilder.fromNetwork " + containerId + " " + inv + " " + data);
+        var registryBuf = new RegistryFriendlyByteBuf(data, inv.player.registryAccess());
+        var locator = MenuLocators.readFromPacket(registryBuf);
         I host = locator.locate(inv.player, hostInterface);
         if (host == null) {
             var connection = Minecraft.getInstance().getConnection();
@@ -126,7 +130,7 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
         M menu = factory.create(containerId, inv, host);
         menu.setReturnedFromSubScreen(data.readBoolean());
         if (initialDataDeserializer != null) {
-            initialDataDeserializer.deserializeInitialData(host, menu, data);
+            initialDataDeserializer.deserializeInitialData(host, menu, registryBuf);
         }
         return menu;
     }
@@ -145,16 +149,19 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
         }
 
         Component title = menuTitleStrategy.apply(accessInterface);
-
         player.openMenu(new HandlerFactory(locator, title, accessInterface, initialDataSerializer, fromSubMenu));
 
         return true;
     }
 
-    private static final StreamCodec<RegistryFriendlyByteBuf, RegistryFriendlyByteBuf> PACKET_IDENTITY_CODEC = StreamCodec
+    private static final StreamCodec<RegistryFriendlyByteBuf, ByteBuf> PACKET_IDENTITY_CODEC = StreamCodec
         .of(
-            (from, to) -> to.writeBytes(from),
-            (to) -> to
+            (encoded, decoded) -> encoded.writeBytes(decoded),
+            (encoded) -> {
+                var decoded = new FriendlyByteBuf(Unpooled.buffer());
+                decoded.writeBytes(encoded);
+                return decoded;
+            }
         );
 
     private class HandlerFactory implements ExtendedScreenHandlerFactory {
@@ -191,6 +198,7 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
         @Nullable
         @Override
         public AbstractContainerMenu createMenu(int wnd, Inventory inv, Player p) {
+            System.out.println("HandlerFactory.createMenu " + wnd + " " + inv + " " + p);
             M m = factory.create(wnd, inv, accessInterface);
             // Set the original locator on the opened server-side menu for it to more
             // easily remember how to re-open after being closed.
@@ -200,6 +208,7 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
 
         @Override
         public Object getScreenOpeningData(ServerPlayer player) {
+            System.out.println("HandlerFactory.getScreenOpeningData " + player);
             var buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
             MenuLocators.writeToPacket(buf, locator);
             buf.writeBoolean(fromSubMenu);
