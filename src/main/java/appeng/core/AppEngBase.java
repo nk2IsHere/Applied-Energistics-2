@@ -50,7 +50,7 @@ import appeng.api.ids.AEComponents;
 import appeng.api.parts.CableRenderMode;
 import appeng.core.definitions.*;
 import appeng.core.network.ClientboundPacket;
-import appeng.core.network.InitNetwork;
+import appeng.core.network.InitNetworkCommon;
 import appeng.core.network.TargetPoint;
 import appeng.hooks.ToolItemHook;
 import appeng.hooks.WrenchHook;
@@ -128,7 +128,7 @@ public abstract class AppEngBase implements AppEng {
         postRegistrationInitialization();
 
         TickHandler.instance().init();
-        InitNetwork.init();
+        InitNetworkCommon.init();
 
         ServerLifecycleEvents.SERVER_STARTING.register(this::onServerAboutToStart);
         ServerLifecycleEvents.SERVER_STOPPED.register(this::serverStopped);

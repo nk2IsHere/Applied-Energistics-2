@@ -1,19 +1,19 @@
 package appeng.helpers.externalstorage;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import appeng.api.behaviors.GenericInternalInventory;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.stacks.GenericStack;
+import appeng.util.IVariantConversion;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import appeng.api.behaviors.GenericInternalInventory;
-import appeng.api.stacks.AEKeyType;
-import appeng.api.stacks.GenericStack;
-import appeng.util.IVariantConversion;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Adapts a {@link GenericStackInv} as {@link net.fabricmc.fabric.api.transfer.v1.storage.Storage} of the appropriate
@@ -123,7 +123,7 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Sto
 
             var currentKey = inv.getKey(slotIndex);
             var key = conversion.getKey(resource);
-            if ((currentKey == null && inv.isAllowedIn(slotIndex, key)) || currentKey.equals(key)) {
+            if ((currentKey == null && inv.isAllowedIn(slotIndex, key)) || Objects.equals(currentKey, key)) {
                 long inserted = Math.min(maxAmount, inv.getMaxAmount(key) - getAmount());
 
                 if (inserted > 0) {

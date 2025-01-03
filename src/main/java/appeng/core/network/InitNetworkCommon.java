@@ -1,19 +1,17 @@
 package appeng.core.network;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import appeng.core.network.bidirectional.ConfigValuePacket;
+import appeng.core.network.clientbound.*;
+import appeng.core.network.serverbound.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import appeng.core.network.bidirectional.ConfigValuePacket;
-import appeng.core.network.clientbound.*;
-import appeng.core.network.serverbound.*;
+public class InitNetworkCommon {
 
-public class InitNetwork {
     public static void init() {
-
         // Clientbound
         clientbound(AssemblerAnimationPacket.TYPE, AssemblerAnimationPacket.STREAM_CODEC);
         clientbound(BlockTransitionEffectPacket.TYPE, BlockTransitionEffectPacket.STREAM_CODEC);
@@ -54,15 +52,10 @@ public class InitNetwork {
         bidirectional(ConfigValuePacket.TYPE, ConfigValuePacket.STREAM_CODEC);
     }
 
-    private static <T extends ClientboundPacket> void clientbound(CustomPacketPayload.Type<T> type,
+    private static <T extends CustomAppEngPayload> void clientbound(CustomPacketPayload.Type<T> type,
             StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
-
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
-            var packet = (ClientboundPacket) payload;
-            packet.handleOnClient(context);
-        });
     }
 
     private static <T extends ServerboundPacket> void serverbound(CustomPacketPayload.Type<T> type,
@@ -70,25 +63,21 @@ public class InitNetwork {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
 
-        ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
-            var packet = (ServerboundPacket) payload;
-            packet.handleOnServer(context);
-        });
+        serverBoundRegisterCommunication(type);
     }
 
-    private static <T extends ServerboundPacket & ClientboundPacket> void bidirectional(
+    private static <T extends ServerboundPacket> void bidirectional(
             CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
 
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
-            var packet = (ClientboundPacket) payload;
-            packet.handleOnClient(context);
-        });
+        serverBoundRegisterCommunication(type);
+    }
 
+    private static <T extends ServerboundPacket> void serverBoundRegisterCommunication(CustomPacketPayload.Type<T> type) {
         ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) -> {
             var packet = (ServerboundPacket) payload;
-            packet.handleOnServer(context);
+            packet.handleOnServer(context.server(), context.player());
         });
     }
 }

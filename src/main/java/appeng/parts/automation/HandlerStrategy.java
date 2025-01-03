@@ -58,12 +58,13 @@ public abstract class HandlerStrategy<C, S> {
             if (what instanceof AEItemKey itemKey) {
                 var stack = itemKey.toStack(Ints.saturatedCast(amount));
                 try (var tx = Transaction.openOuter()) {
-                    var remainder = handler.insert(ItemVariant.of(stack.getItem()), stack.getCount(), tx);
                     if (mode == Actionable.MODULATE) {
+                        var remainder = handler.insert(ItemVariant.of(stack.getItem()), stack.getCount(), tx);
                         tx.commit();
+                        return amount - remainder;
                     }
 
-                    return amount - remainder;
+                    return amount;
                 }
             }
 
@@ -96,12 +97,13 @@ public abstract class HandlerStrategy<C, S> {
         public long insert(Storage<FluidVariant> handler, AEKey what, long amount, Actionable mode) {
             if (what instanceof AEFluidKey itemKey && amount > 0) {
                 try (var tx = Transaction.openOuter()) {
-                    var remainder = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
                     if (mode == Actionable.MODULATE) {
+                        var remainder = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
                         tx.commit();
+                        return amount - remainder;
                     }
 
-                    return amount - remainder;
+                    return amount;
                 }
             }
 
