@@ -1,12 +1,13 @@
 package appeng.hooks;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import appeng.api.implementations.blockentities.IColorableBlockEntity;
 import appeng.core.definitions.AEItems;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.serverbound.ColorApplicatorSelectColorPacket;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public final class ColorApplicatorPickColorHook {
     private ColorApplicatorPickColorHook() {

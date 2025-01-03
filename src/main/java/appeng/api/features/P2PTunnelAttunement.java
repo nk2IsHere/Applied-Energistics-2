@@ -23,9 +23,9 @@
 
 package appeng.api.features;
 
-import appeng.core.definitions.AEParts;
-import appeng.items.parts.PartItem;
-import appeng.parts.p2p.P2PTunnelPart;
+import java.util.*;
+import java.util.function.Function;
+
 import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleStackStorage;
@@ -38,8 +38,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.*;
-import java.util.function.Function;
+import appeng.core.definitions.AEParts;
+import appeng.items.parts.PartItem;
+import appeng.parts.p2p.P2PTunnelPart;
 
 /**
  * A Registry for how p2p Tunnels are attuned
@@ -181,7 +182,7 @@ public final class P2PTunnelAttunement {
         return item;
     }
 
-    record ApiAttunement<T> (
+    record ApiAttunement<T>(
             ItemApiLookup<?, T> api,
             Function<ItemStack, T> contextProvider,
             Item tunnelType,

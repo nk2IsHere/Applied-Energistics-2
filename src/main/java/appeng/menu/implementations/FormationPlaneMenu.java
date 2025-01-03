@@ -18,6 +18,9 @@
 
 package appeng.menu.implementations;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.stacks.AEKey;
@@ -26,8 +29,6 @@ import appeng.client.gui.implementations.FormationPlaneScreen;
 import appeng.core.definitions.AEItems;
 import appeng.menu.guisync.GuiSync;
 import appeng.parts.automation.FormationPlanePart;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see FormationPlaneScreen

@@ -1,7 +1,8 @@
 package appeng.integration.modules.igtooltip;
 
-import appeng.core.AppEng;
 import net.minecraft.resources.ResourceLocation;
+
+import appeng.core.AppEng;
 
 public final class TooltipIds {
     private TooltipIds() {

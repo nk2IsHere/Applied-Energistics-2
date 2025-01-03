@@ -18,8 +18,12 @@
 
 package appeng.integration.modules.rei;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -29,11 +33,9 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
 
 class InscriberRecipeCategory implements DisplayCategory<InscriberRecipeDisplay> {
 

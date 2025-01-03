@@ -18,14 +18,15 @@
 
 package appeng.spatial;
 
+import java.util.Locale;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.ChunkPos;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Locale;
 
 /**
  * A plot inside the storage cell level that is assigned to a specific storage cell.

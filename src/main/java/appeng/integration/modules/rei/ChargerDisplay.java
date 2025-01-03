@@ -1,16 +1,18 @@
 package appeng.integration.modules.rei;
 
-import appeng.core.AppEng;
-import appeng.recipes.handlers.ChargerRecipe;
+import java.util.List;
+import java.util.Optional;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.List;
-import java.util.Optional;
+import appeng.core.AppEng;
+import appeng.recipes.handlers.ChargerRecipe;
 
 public record ChargerDisplay(RecipeHolder<ChargerRecipe> holder) implements Display {
     public static CategoryIdentifier<ChargerDisplay> ID = CategoryIdentifier.of(AppEng.makeId("charger"));

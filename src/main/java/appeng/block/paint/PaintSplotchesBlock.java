@@ -18,10 +18,6 @@
 
 package appeng.block.paint;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.PaintSplotchesBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,6 +34,11 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.PaintSplotchesBlockEntity;
 
 public class PaintSplotchesBlock extends AEBaseEntityBlock<PaintSplotchesBlockEntity> {
 

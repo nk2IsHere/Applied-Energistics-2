@@ -1,12 +1,13 @@
 package appeng.blockentity.crafting;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.KeyCounter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.Level;
+
+import appeng.api.crafting.IPatternDetails;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.KeyCounter;
 
 /**
  * Implement this on pattern details that support being assembled in the {@link MolecularAssemblerBlockEntity}.

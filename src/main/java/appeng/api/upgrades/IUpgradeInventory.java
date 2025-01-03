@@ -23,10 +23,11 @@
 
 package appeng.api.upgrades;
 
-import appeng.api.inventories.InternalInventory;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.ItemLike;
+
+import appeng.api.inventories.InternalInventory;
 
 /**
  * This specialized inventory can be used to insert and extract upgrade cards into AE2 machines. Only upgrades supported

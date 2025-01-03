@@ -23,10 +23,13 @@
 
 package appeng.api.client;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.AEKeyType;
+import java.util.*;
+
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -34,9 +37,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.AEKeyType;
 
 /**
  * Registry for {@link AEKeyRenderHandler}. Also contains convenience functions to render a stack without having to

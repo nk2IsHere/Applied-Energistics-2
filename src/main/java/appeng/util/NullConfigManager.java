@@ -1,13 +1,14 @@
 package appeng.util;
 
-import appeng.api.config.Setting;
-import appeng.api.util.IConfigManager;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+
+import appeng.api.config.Setting;
+import appeng.api.util.IConfigManager;
 
 public final class NullConfigManager implements IConfigManager {
     public static final NullConfigManager INSTANCE = new NullConfigManager();

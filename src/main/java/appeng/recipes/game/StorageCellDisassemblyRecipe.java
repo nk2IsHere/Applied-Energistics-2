@@ -1,8 +1,10 @@
 package appeng.recipes.game;
 
-import appeng.recipes.AERecipeTypes;
+import java.util.List;
+
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
+import appeng.recipes.AERecipeTypes;
 
 /**
  * Used to handle disassembly of the (Portable) Storage Cells.

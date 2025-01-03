@@ -18,16 +18,18 @@
 
 package appeng.integration.modules.rei;
 
-import appeng.client.gui.AEBaseScreen;
-import appeng.integration.modules.itemlists.DropTargets;
+import java.util.stream.Stream;
+
+import net.minecraft.client.gui.screens.Screen;
+
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStack;
 import me.shedaniel.rei.api.client.gui.drag.DraggableStackVisitor;
 import me.shedaniel.rei.api.client.gui.drag.DraggedAcceptorResult;
 import me.shedaniel.rei.api.client.gui.drag.DraggingContext;
-import net.minecraft.client.gui.screens.Screen;
 
-import java.util.stream.Stream;
+import appeng.client.gui.AEBaseScreen;
+import appeng.integration.modules.itemlists.DropTargets;
 
 /**
  * JEI allows ingredients to be dragged from a JEI panel onto compatible slots to set filters and the like without

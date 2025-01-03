@@ -18,15 +18,17 @@
 
 package appeng.client.gui;
 
-import appeng.client.Point;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.Rect2i;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Consumer;
+import appeng.client.Point;
 
 public interface ICompositeWidget {
 

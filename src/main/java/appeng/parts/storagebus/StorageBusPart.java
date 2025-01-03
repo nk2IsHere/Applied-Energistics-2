@@ -18,6 +18,25 @@
 
 package appeng.parts.storagebus;
 
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.Vec3;
+
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.config.*;
 import appeng.api.features.IPlayerRegistry;
@@ -65,25 +84,6 @@ import appeng.util.ConfigInventory;
 import appeng.util.Platform;
 import appeng.util.SettingsFrom;
 import appeng.util.prioritylist.IPartitionList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 public class StorageBusPart extends UpgradeablePart
         implements IGridTickable, IStorageProvider, IPriorityHost, IConfigInvHost, INeighborChangeSensitive {

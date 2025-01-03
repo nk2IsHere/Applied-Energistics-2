@@ -1,8 +1,7 @@
 package appeng.server.testworld;
 
-import appeng.core.definitions.AEBlockEntities;
-import appeng.core.definitions.AEBlocks;
-import appeng.server.testplots.SpawnExtraGridTestTools;
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -10,7 +9,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
-import java.util.List;
+import appeng.core.definitions.AEBlockEntities;
+import appeng.core.definitions.AEBlocks;
+import appeng.server.testplots.SpawnExtraGridTestTools;
 
 /**
  * Spawns a sky stone chest at the given position and once the grid at another position is initialized, posts

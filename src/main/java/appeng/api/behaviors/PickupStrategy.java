@@ -1,18 +1,20 @@
 package appeng.api.behaviors;
 
-import appeng.api.networking.energy.IEnergySource;
-import appeng.api.stacks.AEKeyType;
-import appeng.parts.automation.StackWorldBehaviors;
+import java.util.UUID;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import appeng.api.networking.energy.IEnergySource;
+import appeng.api.stacks.AEKeyType;
+import appeng.parts.automation.StackWorldBehaviors;
 
 /**
  * Pickup strategies are used to pick up various types of game objects from within the world and convert them into a

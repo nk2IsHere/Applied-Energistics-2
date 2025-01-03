@@ -1,7 +1,8 @@
 package appeng.api.behaviors;
 
-import appeng.api.stacks.AEKey;
 import net.minecraft.network.chat.Component;
+
+import appeng.api.stacks.AEKey;
 
 /**
  * Describes the action of emptying an item into the storage network.

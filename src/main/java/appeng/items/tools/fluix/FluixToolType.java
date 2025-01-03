@@ -1,14 +1,15 @@
 package appeng.items.tools.fluix;
 
-import appeng.core.AppEng;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.function.Supplier;
+
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 
-import java.util.function.Supplier;
+import appeng.core.AppEng;
+import appeng.datagen.providers.tags.ConventionTags;
 
 public enum FluixToolType {
     FLUIX("fluix", () -> Ingredient.of(ConventionTags.FLUIX_CRYSTAL)),

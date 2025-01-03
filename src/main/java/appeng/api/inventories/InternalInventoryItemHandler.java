@@ -23,9 +23,13 @@
 
 package appeng.api.inventories;
 
-import appeng.api.stacks.GenericStack;
-import appeng.core.definitions.AEItems;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -33,13 +37,11 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import appeng.core.definitions.AEItems;
 
 class InternalInventoryItemHandler extends SnapshotParticipant<InternalInventoryItemHandler.Snapshot>
-    implements Storage<ItemVariant> {
+        implements Storage<ItemVariant> {
 
     private final InternalInventory inventory;
 

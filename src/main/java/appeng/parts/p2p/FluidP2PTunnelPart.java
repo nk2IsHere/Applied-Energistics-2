@@ -18,18 +18,19 @@
 
 package appeng.parts.p2p;
 
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
-import appeng.api.stacks.AEKeyType;
-import appeng.core.AppEng;
-import appeng.items.parts.PartModels;
+import java.util.List;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import java.util.List;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.IPartModel;
+import appeng.api.stacks.AEKeyType;
+import appeng.core.AppEng;
+import appeng.items.parts.PartModels;
 
 public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPart, Storage<FluidVariant>> {
 
@@ -121,8 +122,7 @@ public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPa
     private class OutputFluidHandler implements SingleSlotStorage<FluidVariant> {
 
         @Override
-        public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction
-        ) {
+        public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
             return 0;
         }
 

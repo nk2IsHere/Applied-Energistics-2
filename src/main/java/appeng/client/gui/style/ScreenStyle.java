@@ -18,19 +18,21 @@
 
 package appeng.client.gui.style;
 
-import com.google.gson.*;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import org.jetbrains.annotations.Nullable;
-
 import java.lang.reflect.Type;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import com.google.gson.*;
+import com.mojang.serialization.JsonOps;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 /**
  * A screen style document defines various visual aspects of AE2 screens.

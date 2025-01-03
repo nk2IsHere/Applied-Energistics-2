@@ -1,13 +1,15 @@
 package appeng.integration.modules.rei;
 
-import appeng.api.integrations.rei.IngredientConverter;
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.GenericStack;
+import org.jetbrains.annotations.Nullable;
+
 import dev.architectury.fluid.FluidStack;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.integrations.rei.IngredientConverter;
+import appeng.api.stacks.AEFluidKey;
+import appeng.api.stacks.GenericStack;
 
 public class FluidIngredientConverter implements IngredientConverter<FluidStack> {
     @Override

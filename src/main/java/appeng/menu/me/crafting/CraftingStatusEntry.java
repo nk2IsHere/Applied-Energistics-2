@@ -18,14 +18,16 @@
 
 package appeng.menu.me.crafting;
 
-import appeng.api.stacks.AEKey;
+import java.util.Comparator;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
-import java.util.List;
+import appeng.api.stacks.AEKey;
 
 /**
  * Describes an entry in a crafting job, which describes how many items of one type are yet to be crafted, or currently

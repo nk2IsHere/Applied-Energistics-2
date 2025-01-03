@@ -23,10 +23,10 @@
 
 package appeng.api.movable;
 
+import java.util.*;
+
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import java.util.*;
 
 /**
  *

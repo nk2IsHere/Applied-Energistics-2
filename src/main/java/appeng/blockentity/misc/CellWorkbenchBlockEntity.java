@@ -18,6 +18,17 @@
 
 package appeng.blockentity.misc;
 
+import java.util.List;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
 import appeng.api.config.CopyMode;
 import appeng.api.config.Settings;
 import appeng.api.inventories.ISegmentedInventory;
@@ -35,16 +46,6 @@ import appeng.util.ConfigInventory;
 import appeng.util.ConfigManager;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.List;
 
 public class CellWorkbenchBlockEntity extends AEBaseBlockEntity
         implements IConfigurableObject, IUpgradeableObject, InternalInventoryHost, IConfigInvHost {

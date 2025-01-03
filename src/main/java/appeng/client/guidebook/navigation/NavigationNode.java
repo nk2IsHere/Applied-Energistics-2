@@ -1,10 +1,11 @@
 package appeng.client.guidebook.navigation;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public record NavigationNode(
         @Nullable ResourceLocation pageId,

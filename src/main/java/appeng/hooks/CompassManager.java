@@ -18,13 +18,16 @@
 
 package appeng.hooks;
 
-import appeng.core.network.serverbound.RequestClosestMeteoritePacket;
-import appeng.server.services.compass.ServerCompassService;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+
+import appeng.core.network.serverbound.RequestClosestMeteoritePacket;
+import appeng.server.services.compass.ServerCompassService;
 
 /**
  * The server-side version of this is called {@link ServerCompassService}.

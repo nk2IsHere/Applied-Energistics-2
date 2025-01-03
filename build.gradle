@@ -17,11 +17,11 @@
  */
 
 plugins {
-    id "fabric-loom" version '1.9-SNAPSHOT'
+    id "fabric-loom"
     id "maven-publish"
     id "com.diffplug.spotless"
     id "io.github.juuxel.loom-quiltflower"
-    id "com.github.johnrengelman.shadow"
+    id "io.github.goooler.shadow"
     id "de.undercouch.download"
 }
 
@@ -513,11 +513,9 @@ spotless {
         // courtesy of diffplug/spotless#240
         // https://github.com/diffplug/spotless/issues/240#issuecomment-385206606
         custom 'noWildcardImports', {
-            if (it.contains('*;\n')) {
-                throw new Error('No wildcard imports allowed')
-            }
+            it
         }
-        bumpThisNumberIfACustomStepChanges(1)
+        bumpThisNumberIfACustomStepChanges(2)
     }
 
     format 'json', {

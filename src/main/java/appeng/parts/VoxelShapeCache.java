@@ -18,15 +18,16 @@
 
 package appeng.parts;
 
+import java.util.List;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import java.util.List;
 
 /**
  * While creation of a {@link VoxelShape} with {@link Shapes#create(AABB)} is fast enough, combining voxel shapes with

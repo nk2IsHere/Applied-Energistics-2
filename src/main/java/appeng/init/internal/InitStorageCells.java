@@ -18,15 +18,16 @@
 
 package appeng.init.internal;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import net.minecraft.resources.ResourceLocation;
+
 import appeng.api.client.StorageCellModels;
 import appeng.api.storage.StorageCells;
 import appeng.core.definitions.AEItems;
 import appeng.me.cells.BasicCellHandler;
 import appeng.me.cells.CreativeCellHandler;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 public final class InitStorageCells {
 

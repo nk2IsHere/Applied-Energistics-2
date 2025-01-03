@@ -18,14 +18,15 @@
 
 package appeng.items.parts;
 
+import java.util.function.Function;
+
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.PartHelper;
 import appeng.items.AEBaseItem;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.context.UseOnContext;
-
-import java.util.function.Function;
 
 public class PartItem<T extends IPart> extends AEBaseItem implements IPartItem<T> {
 

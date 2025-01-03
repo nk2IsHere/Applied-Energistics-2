@@ -18,13 +18,15 @@
 
 package appeng.hooks;
 
-import appeng.core.AppEng;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+
+import appeng.core.AppEng;
 
 /**
  * Implementation details of allowing quads to be defined as "unlit" in JSON models by specifying an "unlit" boolean

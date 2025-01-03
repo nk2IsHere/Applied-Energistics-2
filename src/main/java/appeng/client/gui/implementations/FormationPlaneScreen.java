@@ -18,6 +18,9 @@
 
 package appeng.client.gui.implementations;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -25,8 +28,6 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.FormationPlaneMenu;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 public class FormationPlaneScreen extends UpgradeableScreen<FormationPlaneMenu> {
 

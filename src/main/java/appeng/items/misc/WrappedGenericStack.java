@@ -18,13 +18,10 @@
 
 package appeng.items.misc;
 
-import appeng.api.behaviors.ContainerItemStrategies;
-import appeng.api.config.Actionable;
-import appeng.api.ids.AEComponents;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.core.definitions.AEItems;
-import appeng.items.AEBaseItem;
+import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -32,9 +29,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import appeng.api.behaviors.ContainerItemStrategies;
+import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.core.definitions.AEItems;
+import appeng.items.AEBaseItem;
 
 /**
  * Wraps a {@link GenericStack} in an {@link ItemStack}. Even stacks that actually represent vanilla {@link Item items}

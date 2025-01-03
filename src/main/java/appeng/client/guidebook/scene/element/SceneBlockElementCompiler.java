@@ -1,12 +1,12 @@
 package appeng.client.guidebook.scene.element;
 
+import java.util.Set;
+
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.compiler.tags.MdxAttrs;
 import appeng.client.guidebook.document.LytErrorSink;
 import appeng.client.guidebook.scene.GuidebookScene;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
-
-import java.util.Set;
 
 public class SceneBlockElementCompiler implements SceneElementTagCompiler {
     @Override

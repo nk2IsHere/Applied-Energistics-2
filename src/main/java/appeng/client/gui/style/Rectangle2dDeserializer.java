@@ -18,11 +18,12 @@
 
 package appeng.client.gui.style;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.*;
+
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.util.GsonHelper;
-
-import java.lang.reflect.Type;
 
 /**
  * Deserializes a {@link Rect2i} either from an Array <code>[x,y,width,height]</code> or a JSON object with the

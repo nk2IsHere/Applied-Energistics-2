@@ -18,12 +18,13 @@
 
 package appeng.client.render.crafting;
 
-import appeng.block.crafting.AbstractCraftingUnitBlock;
-import appeng.blockentity.crafting.CraftingCubeModelData;
-import appeng.client.render.cablebus.CubeBuilder;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.block.crafting.AbstractCraftingUnitBlock;
+import appeng.blockentity.crafting.CraftingCubeModelData;
+import appeng.client.render.cablebus.CubeBuilder;
 
 /**
  * Crafting cube baked model that adds a full-bright light texture on top of a normal base texture onto the inner cube.

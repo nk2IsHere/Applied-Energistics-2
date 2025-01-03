@@ -18,6 +18,14 @@
 
 package appeng.helpers.patternprovider;
 
+import java.util.EnumSet;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.api.implementations.blockentities.PatternContainerGroup;
@@ -31,12 +39,6 @@ import appeng.menu.ISubMenu;
 import appeng.menu.MenuOpener;
 import appeng.menu.implementations.PatternProviderMenu;
 import appeng.menu.locator.MenuHostLocator;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumSet;
 
 /**
  * Interface to be implemented by blocks or parts wanting to host a pattern provider.

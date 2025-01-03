@@ -1,5 +1,14 @@
 package appeng.client.gui.implementations;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Mth;
+
 import appeng.api.client.AEKeyRendering;
 import appeng.api.config.LockCraftingMode;
 import appeng.api.stacks.AmountFormat;
@@ -9,13 +18,6 @@ import appeng.client.gui.Icon;
 import appeng.client.gui.Tooltip;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.InGameTooltip;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.Mth;
-import org.jetbrains.annotations.Nullable;
 
 public class PatternProviderLockReason implements ICompositeWidget {
     protected boolean visible = false;

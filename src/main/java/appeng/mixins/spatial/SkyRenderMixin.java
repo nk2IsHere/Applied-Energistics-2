@@ -18,8 +18,6 @@
 
 package appeng.mixins.spatial;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,7 +42,8 @@ public class SkyRenderMixin {
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
-    public void renderSky(Matrix4f poseStack, Matrix4f matrix, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
+    public void renderSky(Matrix4f poseStack, Matrix4f matrix, float f, Camera camera, boolean bl, Runnable runnable,
+            CallbackInfo ci) {
         if (minecraft.level.dimension() == SpatialStorageDimensionIds.WORLD_ID) {
             SpatialSkyRender.getInstance().render(poseStack, matrix);
             ci.cancel();

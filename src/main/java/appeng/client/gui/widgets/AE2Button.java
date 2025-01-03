@@ -1,7 +1,7 @@
 package appeng.client.gui.widgets;
 
-import appeng.core.AppEng;
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -11,6 +11,8 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+
+import appeng.core.AppEng;
 
 public class AE2Button extends Button {
     protected static final WidgetSprites SPRITES = new WidgetSprites(

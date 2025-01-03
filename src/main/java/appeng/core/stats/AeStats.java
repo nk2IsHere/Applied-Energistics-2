@@ -18,9 +18,10 @@
 
 package appeng.core.stats;
 
-import appeng.core.AppEng;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+
+import appeng.core.AppEng;
 
 public enum AeStats {
 

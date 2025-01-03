@@ -18,18 +18,21 @@
 
 package appeng.client.render.model;
 
-import appeng.decorative.solid.GlassState;
-import appeng.decorative.solid.QuartzGlassBlock;
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
+
 import com.google.common.base.Strings;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+
+import org.joml.Vector3f;
+
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -42,18 +45,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.IntStream;
+import appeng.decorative.solid.GlassState;
+import appeng.decorative.solid.QuartzGlassBlock;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 class GlassBakedModel implements IFabricBakedModel {
 
@@ -194,7 +189,8 @@ class GlassBakedModel implements IFabricBakedModel {
         return bitmask;
     }
 
-    private void emitQuad(QuadEmitter emitter, Direction side, List<Vector3f> corners, TextureAtlasSprite sprite, float uOffset, float vOffset) {
+    private void emitQuad(QuadEmitter emitter, Direction side, List<Vector3f> corners, TextureAtlasSprite sprite,
+            float uOffset, float vOffset) {
         this.emitQuad(emitter, side, corners.get(0), corners.get(1), corners.get(2), corners.get(3), sprite, uOffset,
                 vOffset);
     }

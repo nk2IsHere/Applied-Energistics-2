@@ -18,9 +18,10 @@
 
 package appeng.menu.slot;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.util.inv.AppEngInternalInventory;
 import com.google.common.collect.Lists;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
@@ -29,7 +30,9 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.inventories.InternalInventory;
+import appeng.util.inv.AppEngInternalInventory;
 
 public class AppEngCraftingSlot extends AppEngSlot implements RecipeCraftingHolder {
 

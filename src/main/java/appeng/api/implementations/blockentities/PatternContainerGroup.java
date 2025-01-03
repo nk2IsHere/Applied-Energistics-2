@@ -1,8 +1,10 @@
 package appeng.api.implementations.blockentities;
 
-import appeng.api.parts.IPartHost;
-import appeng.api.stacks.AEItemKey;
-import appeng.core.localization.GuiText;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
@@ -14,10 +16,10 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.api.parts.IPartHost;
+import appeng.api.stacks.AEItemKey;
+import appeng.core.localization.GuiText;
 
 /**
  * Provides both a key for grouping pattern providers, and displaying the group in the pattern access terminal.
@@ -83,7 +85,7 @@ public record PatternContainerGroup(
         // Heuristic: If it doesn't allow item or fluid transfers, ignore it
         // var adaptor = InternalInventory.wrapExternal(target, side);
         // if (adaptor == null || !adaptor.mayAllowInsertion()) {
-        //   return null;
+        // return null;
         // }
         var itemStorage = ItemStorage.SIDED.find(target.getLevel(), pos, side);
         if (itemStorage == null) {

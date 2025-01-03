@@ -1,12 +1,14 @@
 package appeng.items.storage;
 
-import appeng.spatial.SpatialStoragePlot;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+
+import appeng.spatial.SpatialStoragePlot;
 
 /**
  * @param id   The {@linkplain SpatialStoragePlot#getId() plot id}.

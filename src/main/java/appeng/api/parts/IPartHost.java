@@ -23,8 +23,8 @@
 
 package appeng.api.parts;
 
-import appeng.api.util.AEColor;
-import appeng.api.util.DimensionalBlockPos;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalBlockPos;
 
 /**
  * Implemented on AE's block entities.

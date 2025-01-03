@@ -1,9 +1,10 @@
 package appeng.api.crafting;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This stragegy is used when a player views the tooltip of an encoded pattern that failed to decode properly. It should

@@ -1,11 +1,12 @@
 package appeng.client.guidebook.scene.level;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.FullChunkStatus;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import org.jetbrains.annotations.Nullable;
 
 class GuidebookChunk extends LevelChunk {
     public GuidebookChunk(GuidebookLevel level, ChunkPos pos) {

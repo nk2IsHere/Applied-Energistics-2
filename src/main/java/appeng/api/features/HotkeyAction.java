@@ -1,8 +1,9 @@
 package appeng.api.features;
 
+import net.minecraft.world.entity.player.Player;
+
 import appeng.core.network.serverbound.HotkeyPacket;
 import appeng.hotkeys.HotkeyActions;
-import net.minecraft.world.entity.player.Player;
 
 /**
  * Hotkey actions are server-side actions, that are triggered by customizable hotkeys on the client.

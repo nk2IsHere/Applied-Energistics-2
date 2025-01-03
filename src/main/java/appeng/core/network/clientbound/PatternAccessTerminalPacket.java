@@ -1,12 +1,6 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.api.implementations.blockentities.PatternContainerGroup;
-import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -15,6 +9,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+
+import appeng.api.implementations.blockentities.PatternContainerGroup;
+import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
 
 /**
  * Sends the content for a single {@link appeng.helpers.patternprovider.PatternContainer} shown in the pattern access

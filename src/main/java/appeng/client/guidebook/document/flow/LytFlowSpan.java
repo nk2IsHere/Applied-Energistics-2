@@ -1,10 +1,10 @@
 package appeng.client.guidebook.document.flow;
 
-import appeng.client.guidebook.document.block.LytVisitor;
-import appeng.client.guidebook.style.Styleable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import appeng.client.guidebook.document.block.LytVisitor;
+import appeng.client.guidebook.style.Styleable;
 
 /**
  * Attaches properties to a span of {@link LytFlowContent}, such as links or formatting.

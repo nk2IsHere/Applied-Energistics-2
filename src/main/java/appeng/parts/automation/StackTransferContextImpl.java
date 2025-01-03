@@ -1,5 +1,8 @@
 package appeng.parts.automation;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import appeng.api.behaviors.StackTransferContext;
 import appeng.api.config.Actionable;
 import appeng.api.networking.energy.IEnergySource;
@@ -9,9 +12,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.prioritylist.IPartitionList;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Context for stack transfer operations, regardless of whether they occur in or out of the network.

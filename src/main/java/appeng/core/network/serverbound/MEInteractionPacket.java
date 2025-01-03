@@ -1,13 +1,14 @@
 
 package appeng.core.network.serverbound;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+
 import appeng.core.network.CustomAppEngPayload;
 import appeng.core.network.ServerboundPacket;
 import appeng.helpers.InventoryAction;
 import appeng.menu.me.common.IMEInteractionHandler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Packet sent by clients to interact with an ME inventory such as an item terminal.

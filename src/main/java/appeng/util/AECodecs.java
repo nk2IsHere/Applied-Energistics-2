@@ -1,15 +1,18 @@
 package appeng.util;
 
-import appeng.api.ids.AEComponents;
-import appeng.core.definitions.AEItems;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import appeng.api.ids.AEComponents;
+import appeng.core.definitions.AEItems;
 
 public final class AECodecs {
     private static final Logger LOG = LoggerFactory.getLogger(AECodecs.class);

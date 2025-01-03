@@ -1,15 +1,17 @@
 package appeng.integration.modules.itemlists;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.primitives.Ints;
+
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.GenericStack;
 import appeng.client.gui.AEBaseScreen;
 import appeng.menu.slot.FakeSlot;
-import com.google.common.primitives.Ints;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class DropTargets {
     private DropTargets() {

@@ -1,9 +1,9 @@
 package appeng.items.contents;
 
-import net.minecraft.world.item.ItemStack;
-
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import net.minecraft.world.item.ItemStack;
 
 /**
  * A supplier that can cache its resulting value as long as the itemstack returned by an original supplier is the same.

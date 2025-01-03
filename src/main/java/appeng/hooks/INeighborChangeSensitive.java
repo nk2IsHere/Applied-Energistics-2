@@ -2,8 +2,6 @@ package appeng.hooks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Replicates a Forge hook which allows non-comparator blocks to react to changes in adjacent blocks that would

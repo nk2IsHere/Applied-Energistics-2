@@ -18,15 +18,16 @@
 
 package appeng.block.misc;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.InterfaceBlockEntity;
-import appeng.menu.locator.MenuLocators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.InterfaceBlockEntity;
+import appeng.menu.locator.MenuLocators;
 
 public class InterfaceBlock extends AEBaseEntityBlock<InterfaceBlockEntity> {
     public InterfaceBlock() {

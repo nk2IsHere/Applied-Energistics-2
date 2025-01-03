@@ -1,11 +1,11 @@
 package appeng.crafting.pattern;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
 
 /**
  * Helpers that apply to both processing and crafting patterns.

@@ -18,11 +18,12 @@
 
 package appeng.hooks;
 
-import appeng.core.definitions.AEBlocks;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.core.definitions.AEBlocks;
 
 /**
  * This hook is intended to essentially make sky stone blocks found in meteorites minable with iron tools while

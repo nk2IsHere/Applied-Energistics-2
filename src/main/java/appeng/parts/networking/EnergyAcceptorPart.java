@@ -18,6 +18,8 @@
 
 package appeng.parts.networking;
 
+import team.reborn.energy.api.EnergyStorage;
+
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -32,7 +34,6 @@ import appeng.helpers.ForgeEnergyAdapter;
 import appeng.items.parts.PartModels;
 import appeng.parts.AEBasePart;
 import appeng.parts.PartModel;
-import team.reborn.energy.api.EnergyStorage;
 
 public class EnergyAcceptorPart extends AEBasePart implements IExternalPowerSink {
 

@@ -23,10 +23,12 @@
 
 package appeng.api.implementations.menuobjects;
 
-import appeng.menu.locator.ItemMenuHostLocator;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.menu.locator.ItemMenuHostLocator;
 
 /**
  * Implemented on Item objects, to return objects used to manage, and interact with the contents.

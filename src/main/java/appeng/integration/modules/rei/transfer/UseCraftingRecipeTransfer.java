@@ -1,9 +1,16 @@
 package appeng.integration.modules.rei.transfer;
 
-import appeng.core.localization.ItemModText;
-import appeng.integration.modules.itemlists.CraftingHelper;
-import appeng.integration.modules.itemlists.TransferHelper;
-import appeng.menu.me.items.CraftingTermMenu;
+import static appeng.integration.modules.itemlists.TransferHelper.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
+
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
@@ -11,16 +18,11 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRenderer;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import static appeng.integration.modules.itemlists.TransferHelper.*;
+import appeng.core.localization.ItemModText;
+import appeng.integration.modules.itemlists.CraftingHelper;
+import appeng.integration.modules.itemlists.TransferHelper;
+import appeng.menu.me.items.CraftingTermMenu;
 
 /**
  * Recipe transfer implementation with the intended purpose of actually crafting an item. Most of the work is done

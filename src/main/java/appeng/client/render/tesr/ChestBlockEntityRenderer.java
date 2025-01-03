@@ -18,14 +18,14 @@
 
 package appeng.client.render.tesr;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.storage.MEChestBlockEntity;
-import appeng.client.render.BakedModelUnwrapper;
-import appeng.client.render.DelegateBakedModel;
-import appeng.client.render.model.DriveBakedModel;
-import appeng.core.definitions.AEBlocks;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -39,10 +39,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.storage.MEChestBlockEntity;
+import appeng.client.render.BakedModelUnwrapper;
+import appeng.client.render.DelegateBakedModel;
+import appeng.client.render.model.DriveBakedModel;
+import appeng.core.definitions.AEBlocks;
 
 /**
  * The block entity renderer for ME chests takes care of rendering the right model for the inserted cell, as well as the

@@ -18,14 +18,15 @@
 
 package appeng.recipes.game;
 
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.core.definitions.ItemDefinition;
-import appeng.items.parts.FacadeItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
+import appeng.core.definitions.ItemDefinition;
+import appeng.items.parts.FacadeItem;
 
 public final class FacadeRecipe extends CustomRecipe {
     public static RecipeSerializer<FacadeRecipe> SERIALIZER = new SimpleCraftingRecipeSerializer<>(

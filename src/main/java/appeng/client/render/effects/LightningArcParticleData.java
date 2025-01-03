@@ -20,13 +20,16 @@ package appeng.client.render.effects;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import org.joml.Vector3f;
+
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
-import org.joml.Vector3f;
 
 /**
  * Contains the target point of the lightning arc (the source point is inferred from the particle starting position).

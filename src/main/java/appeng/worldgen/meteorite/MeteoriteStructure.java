@@ -49,15 +49,15 @@ public class MeteoriteStructure extends Structure {
 
     public static final ResourceLocation ID = AppEng.makeId("meteorite");
     public static final ResourceKey<StructureSet> STRUCTURE_SET_KEY = ResourceKey
-        .create(Registries.STRUCTURE_SET, ID);
+            .create(Registries.STRUCTURE_SET, ID);
 
     public static final MapCodec<MeteoriteStructure> CODEC = simpleCodec(MeteoriteStructure::new);
 
     public static final ResourceKey<Structure> KEY = ResourceKey
-        .create(Registries.STRUCTURE, ID);
+            .create(Registries.STRUCTURE, ID);
 
     public static final TagKey<Biome> BIOME_TAG_KEY = TagKey.create(Registries.BIOME,
-        AppEng.makeId("has_meteorites"));
+            AppEng.makeId("has_meteorites"));
 
     public static StructureType<MeteoriteStructure> TYPE = () -> MeteoriteStructure.CODEC;
 
@@ -95,12 +95,12 @@ public class MeteoriteStructure extends Structure {
         final int yOffset = (int) Math.ceil(meteoriteRadius) + 1;
 
         var t2 = generator.getBiomeSource().getBiomesWithin(centerX, generator.getSeaLevel(), centerZ, 0,
-            context.randomState().sampler());
+                context.randomState().sampler());
         var spawnBiome = t2.stream().findFirst().orElseThrow();
 
         final boolean isOcean = spawnBiome.is(ConventionTags.METEORITE_OCEAN);
         final Heightmap.Types heightmapType = isOcean ? Heightmap.Types.OCEAN_FLOOR_WG
-            : Heightmap.Types.WORLD_SURFACE_WG;
+                : Heightmap.Types.WORLD_SURFACE_WG;
 
         // Accumulate stats about the surrounding heightmap
         StatsAccumulator stats = new StatsAccumulator();
@@ -108,7 +108,7 @@ public class MeteoriteStructure extends Structure {
         for (int x = -scanRadius; x <= scanRadius; x++) {
             for (int z = -scanRadius; z <= scanRadius; z++) {
                 int h = generator.getBaseHeight(centerX + x, centerZ + z, heightmapType, heightAccessor,
-                    context.randomState());
+                        context.randomState());
                 stats.add(h);
             }
         }
@@ -134,7 +134,7 @@ public class MeteoriteStructure extends Structure {
         var fallout = FalloutMode.fromBiome(spawnBiome);
 
         piecesBuilder.addPiece(
-            new MeteoriteStructurePiece(actualPos, meteoriteRadius, craterType, fallout, pureCrater, craterLake));
+                new MeteoriteStructurePiece(actualPos, meteoriteRadius, craterType, fallout, pureCrater, craterLake));
     }
 
     /**
@@ -164,7 +164,7 @@ public class MeteoriteStructure extends Structure {
 
                 if (maxY > h + distanceFrom * 0.0175 && maxY < h + distanceFrom * 0.02) {
                     int heigth = generator.getBaseHeight(blockPos.getX(), blockPos.getZ(), Heightmap.Types.OCEAN_FLOOR,
-                        heightAccessor, context.randomState());
+                            heightAccessor, context.randomState());
                     if (heigth < seaLevel) {
                         return true;
                     }

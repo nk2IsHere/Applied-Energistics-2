@@ -23,17 +23,20 @@
 
 package appeng.api.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.storage.cells.IBasicCellItem;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
 import appeng.api.storage.cells.StorageCell;
-import com.google.common.base.Preconditions;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Storage Cell Registry, used for specially implemented cells, if you just want to make a item act like a cell, or new

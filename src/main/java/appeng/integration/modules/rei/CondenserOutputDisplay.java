@@ -1,20 +1,22 @@
 package appeng.integration.modules.rei;
 
-import appeng.api.config.CondenserOutput;
-import appeng.api.implementations.items.IStorageComponent;
-import appeng.blockentity.misc.CondenserBlockEntity;
-import appeng.core.definitions.AEItems;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import net.minecraft.world.item.ItemStack;
+
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import appeng.api.config.CondenserOutput;
+import appeng.api.implementations.items.IStorageComponent;
+import appeng.blockentity.misc.CondenserBlockEntity;
+import appeng.core.definitions.AEItems;
 
 public class CondenserOutputDisplay implements Display {
 

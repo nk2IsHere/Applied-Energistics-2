@@ -18,6 +18,9 @@
 
 package appeng.client.gui.me.crafting;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.NumberEntryType;
 import appeng.client.gui.implementations.AESubScreen;
@@ -25,8 +28,6 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.NumberEntryWidget;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.SetStockAmountMenu;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 /**
  * Allows precisely setting the amount to stock for an interface slot.

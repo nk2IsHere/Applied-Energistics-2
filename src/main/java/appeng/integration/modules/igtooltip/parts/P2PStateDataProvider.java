@@ -1,5 +1,11 @@
 package appeng.integration.modules.igtooltip.parts;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
@@ -8,11 +14,6 @@ import appeng.core.localization.InGameTooltip;
 import appeng.parts.p2p.MEP2PTunnelPart;
 import appeng.parts.p2p.P2PTunnelPart;
 import appeng.util.Platform;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 
 /**
  * Provides information about a P2P tunnel to WAILA.

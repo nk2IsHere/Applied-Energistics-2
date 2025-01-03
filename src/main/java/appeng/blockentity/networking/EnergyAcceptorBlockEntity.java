@@ -18,14 +18,15 @@
 
 package appeng.blockentity.networking;
 
-import appeng.api.config.Actionable;
-import appeng.api.inventories.InternalInventory;
-import appeng.api.util.AECableType;
-import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.api.config.Actionable;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.util.AECableType;
+import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 
 public class EnergyAcceptorBlockEntity extends AENetworkedPoweredBlockEntity {
 

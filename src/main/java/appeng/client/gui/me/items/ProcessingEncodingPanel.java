@@ -1,5 +1,9 @@
 package appeng.client.gui.me.items;
 
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+
 import appeng.api.config.ActionItems;
 import appeng.client.Point;
 import appeng.client.gui.Icon;
@@ -9,9 +13,6 @@ import appeng.client.gui.widgets.ActionButton;
 import appeng.client.gui.widgets.Scrollbar;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
 
 public class ProcessingEncodingPanel extends EncodingModePanel {
     private static final Blitter BG = Blitter.texture("guis/pattern_modes.png").src(0, 70, 124, 66);

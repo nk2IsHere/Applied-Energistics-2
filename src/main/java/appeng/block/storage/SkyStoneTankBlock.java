@@ -1,9 +1,7 @@
 package appeng.block.storage;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.storage.SkyStoneTankBlockEntity;
-import appeng.core.localization.GuiText;
-import appeng.core.localization.Tooltips;
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -17,7 +15,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.List;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.storage.SkyStoneTankBlockEntity;
+import appeng.core.localization.GuiText;
+import appeng.core.localization.Tooltips;
 
 public class SkyStoneTankBlock extends AEBaseEntityBlock<SkyStoneTankBlockEntity> {
 

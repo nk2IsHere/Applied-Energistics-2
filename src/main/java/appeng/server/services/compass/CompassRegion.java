@@ -18,17 +18,18 @@
 
 package appeng.server.services.compass;
 
-import appeng.core.AELog;
-import appeng.core.worlddata.AESavedData;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import appeng.core.AELog;
+import appeng.core.worlddata.AESavedData;
 
 /**
  * A compass region stores information about the occurrence of skystone blocks in a region of 1024x1024 chunks.

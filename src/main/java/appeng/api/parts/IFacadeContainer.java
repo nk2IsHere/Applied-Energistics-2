@@ -23,11 +23,12 @@
 
 package appeng.api.parts;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Used Internally.

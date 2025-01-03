@@ -18,9 +18,10 @@
 
 package appeng.util.inv;
 
-import appeng.api.inventories.InternalInventory;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+
+import appeng.api.inventories.InternalInventory;
 
 /**
  * Exposes the main player inventory and hotbar as an {@link InternalInventory}.

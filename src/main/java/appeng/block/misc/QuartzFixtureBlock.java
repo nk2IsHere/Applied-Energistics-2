@@ -18,11 +18,11 @@
 
 package appeng.block.misc;
 
-import appeng.api.orientation.RelativeSide;
-import appeng.block.AEBaseBlock;
-import appeng.client.render.effects.ParticleTypes;
-import appeng.core.AEConfig;
-import appeng.core.AppEngClient;
+import java.util.EnumMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -47,10 +47,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.Map;
+import appeng.api.orientation.RelativeSide;
+import appeng.block.AEBaseBlock;
+import appeng.client.render.effects.ParticleTypes;
+import appeng.core.AEConfig;
+import appeng.core.AppEngClient;
 
 public class QuartzFixtureBlock extends AEBaseBlock implements SimpleWaterloggedBlock {
 

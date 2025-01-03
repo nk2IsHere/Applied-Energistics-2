@@ -1,5 +1,8 @@
 package appeng.server.testworld;
 
+import java.util.List;
+import java.util.function.Consumer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -7,9 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 public record PlaceItemFrameAction(BlockPos pos, Direction facing,
         Consumer<ItemFrame> customizer) implements BuildAction {

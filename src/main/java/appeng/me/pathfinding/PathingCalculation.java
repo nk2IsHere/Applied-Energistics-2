@@ -18,6 +18,13 @@
 
 package appeng.me.pathfinding;
 
+import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridMultiblock;
@@ -25,11 +32,6 @@ import appeng.api.networking.IGridNode;
 import appeng.blockentity.networking.ControllerBlockEntity;
 import appeng.me.GridConnection;
 import appeng.me.GridNode;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Calculation to assign channels starting from the controllers. The full computation is split in two steps, each linear

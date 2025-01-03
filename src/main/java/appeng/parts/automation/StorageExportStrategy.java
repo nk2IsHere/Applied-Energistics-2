@@ -1,10 +1,8 @@
 package appeng.parts.automation;
 
-import appeng.api.behaviors.StackExportStrategy;
-import appeng.api.behaviors.StackTransferContext;
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEKey;
-import appeng.api.storage.StorageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -12,8 +10,12 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import appeng.api.behaviors.StackExportStrategy;
+import appeng.api.behaviors.StackTransferContext;
+import appeng.api.config.Actionable;
+import appeng.api.stacks.AEKey;
+import appeng.api.storage.StorageHelper;
 
 public class StorageExportStrategy<T, S> implements StackExportStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(StorageExportStrategy.class);
@@ -22,11 +24,11 @@ public class StorageExportStrategy<T, S> implements StackExportStrategy {
     private final Direction fromSide;
 
     public StorageExportStrategy(
-        BlockApiLookup<T, Direction> apiLookup,
-        HandlerStrategy<T, S> handlerStrategy,
-        ServerLevel level,
-        BlockPos fromPos,
-        Direction fromSide) {
+            BlockApiLookup<T, Direction> apiLookup,
+            HandlerStrategy<T, S> handlerStrategy,
+            ServerLevel level,
+            BlockPos fromPos,
+            Direction fromSide) {
         this.handlerStrategy = handlerStrategy;
         this.apiCache = BlockApiCache.create(apiLookup, level, fromPos);
         this.fromSide = fromSide;

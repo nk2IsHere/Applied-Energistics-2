@@ -1,6 +1,8 @@
 package appeng.server.testplots;
 
-import appeng.server.testworld.PlotBuilder;
+import java.util.Locale;
+import java.util.function.BiFunction;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -11,8 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
 
-import java.util.Locale;
-import java.util.function.BiFunction;
+import appeng.server.testworld.PlotBuilder;
 
 /**
  * Test plot that sets up a working area for working on Guidebook structures.

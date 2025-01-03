@@ -18,6 +18,16 @@
 
 package appeng.client.gui.me.networktool;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.api.client.AEKeyRendering;
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.style.PaletteColor;
@@ -29,15 +39,6 @@ import appeng.menu.me.networktool.MachineGroup;
 import appeng.menu.me.networktool.NetworkStatus;
 import appeng.menu.me.networktool.NetworkStatusMenu;
 import appeng.util.Platform;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NetworkStatusScreen extends AEBaseScreen<NetworkStatusMenu> {
 

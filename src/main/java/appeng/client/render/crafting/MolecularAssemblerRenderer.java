@@ -18,12 +18,9 @@
 
 package appeng.client.render.crafting;
 
-import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
-import appeng.client.render.effects.ParticleTypes;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -39,6 +36,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+
+import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
+import appeng.client.render.effects.ParticleTypes;
+import appeng.core.AppEng;
+import appeng.core.AppEngClient;
+
 /**
  * Renders the item currently being crafted by the molecular assembler, as well as the light strip when it's powered.
  */

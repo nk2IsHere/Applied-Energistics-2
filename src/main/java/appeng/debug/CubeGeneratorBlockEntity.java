@@ -18,10 +18,6 @@
 
 package appeng.debug;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.ServerTickingBlockEntity;
-import appeng.core.AppEng;
-import appeng.util.InteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -32,6 +28,11 @@ import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.AppEng;
+import appeng.util.InteractionUtil;
 
 public class CubeGeneratorBlockEntity extends AEBaseBlockEntity implements ServerTickingBlockEntity {
 

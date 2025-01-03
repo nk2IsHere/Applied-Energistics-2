@@ -1,18 +1,20 @@
 package appeng.parts.automation;
 
-import appeng.api.behaviors.*;
-import appeng.api.stacks.AEKeyType;
-import appeng.api.storage.AEKeyFilter;
-import appeng.util.CowMap;
+import java.util.*;
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Predicate;
+import appeng.api.behaviors.*;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.storage.AEKeyFilter;
+import appeng.util.CowMap;
 
 public final class StackWorldBehaviors {
     private static final CowMap<AEKeyType, StackImportStrategy.Factory> importStrategies = CowMap.identityHashMap();

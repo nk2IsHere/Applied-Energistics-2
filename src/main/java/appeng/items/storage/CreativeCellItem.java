@@ -18,6 +18,19 @@
 
 package appeng.items.storage;
 
+import java.util.List;
+import java.util.Optional;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+
 import appeng.api.client.AEKeyRendering;
 import appeng.api.config.FuzzyMode;
 import appeng.api.stacks.AEFluidKey;
@@ -31,18 +44,6 @@ import appeng.items.AEBaseItem;
 import appeng.items.contents.CellConfig;
 import appeng.me.cells.CreativeCellHandler;
 import appeng.util.ConfigInventory;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-
-import java.util.List;
-import java.util.Optional;
 
 public class CreativeCellItem extends AEBaseItem implements ICellWorkbenchItem {
     public CreativeCellItem(Properties props) {

@@ -1,5 +1,10 @@
 package appeng.datagen.providers.models;
 
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
+
 import appeng.api.ids.AEItemIds;
 import appeng.api.util.AEColor;
 import appeng.client.render.model.MemoryCardModel;
@@ -8,10 +13,6 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.core.definitions.ItemDefinition;
 import appeng.datagen.providers.IAE2DataProvider;
-import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModelProvider extends net.minecraftforge.client.model.generators.ItemModelProvider
         implements IAE2DataProvider {

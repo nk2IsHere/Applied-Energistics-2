@@ -48,7 +48,7 @@ import appeng.worldgen.meteorite.fallout.FalloutSnow;
 
 public final class MeteoritePlacer {
     public static void place(LevelAccessor level, PlacedMeteoriteSettings settings, BoundingBox boundingBox,
-                             RandomSource random) {
+            RandomSource random) {
         var placer = new MeteoritePlacer(level, settings, boundingBox, random);
         placer.place();
     }
@@ -74,7 +74,7 @@ public final class MeteoritePlacer {
     private final BoundingBox boundingBox;
 
     private MeteoritePlacer(LevelAccessor level, PlacedMeteoriteSettings settings, BoundingBox boundingBox,
-                            RandomSource random) {
+            RandomSource random) {
         this.boundingBox = boundingBox;
         this.level = level;
         this.random = random;
@@ -94,9 +94,9 @@ public final class MeteoritePlacer {
 
         this.quartzBlocks = getQuartzBudList();
         this.quartzBuds = Stream.of(
-            AEBlocks.SMALL_QUARTZ_BUD,
-            AEBlocks.MEDIUM_QUARTZ_BUD,
-            AEBlocks.LARGE_QUARTZ_BUD).map(def -> def.block().defaultBlockState()).toList();
+                AEBlocks.SMALL_QUARTZ_BUD,
+                AEBlocks.MEDIUM_QUARTZ_BUD,
+                AEBlocks.LARGE_QUARTZ_BUD).map(def -> def.block().defaultBlockState()).toList();
         this.skyStone = AEBlocks.SKY_STONE_BLOCK.block().defaultBlockState();
 
         this.type = getFallout(level, boundingBox.getCenter(), settings.getFallout());
@@ -107,11 +107,11 @@ public final class MeteoritePlacer {
             return Stream.of(AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
         }
         return Stream.of(
-            AEBlocks.QUARTZ_BLOCK,
-            AEBlocks.DAMAGED_BUDDING_QUARTZ,
-            AEBlocks.CHIPPED_BUDDING_QUARTZ,
-            AEBlocks.FLAWED_BUDDING_QUARTZ,
-            AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
+                AEBlocks.QUARTZ_BLOCK,
+                AEBlocks.DAMAGED_BUDDING_QUARTZ,
+                AEBlocks.CHIPPED_BUDDING_QUARTZ,
+                AEBlocks.FLAWED_BUDDING_QUARTZ,
+                AEBlocks.FLAWLESS_BUDDING_QUARTZ).map(def -> def.block().defaultBlockState()).toList();
     }
 
     public void place() {
@@ -203,7 +203,7 @@ public final class MeteoritePlacer {
         }
 
         for (var e : level.getEntitiesOfClass(ItemEntity.class,
-            new AABB(minX(x - 30), y - 5, minZ(z - 30), maxX(x + 30), y + 30, maxZ(z + 30)))) {
+                new AABB(minX(x - 30), y - 5, minZ(z - 30), maxX(x + 30), y + 30, maxZ(z + 30)))) {
             e.discard();
         }
     }
@@ -310,7 +310,7 @@ public final class MeteoritePlacer {
                             if (!xf.canBeReplaced()) {
                                 final double extraRange = random.nextDouble() * 0.6;
                                 final double height = this.crater * (extraRange + 0.2)
-                                    - Math.abs(dist - this.crater * 1.7);
+                                        - Math.abs(dist - this.crater * 1.7);
 
                                 if (!xf.isAir() && height > 0 && random.nextDouble() > 0.6) {
                                     randomShit++;
@@ -390,8 +390,8 @@ public final class MeteoritePlacer {
     private boolean placeEnclosingBlock(ChunkAccess currentChunk, MutableBlockPos enclosingBlockPos) {
         BlockState currentState = currentChunk.getBlockState(enclosingBlockPos);
         if (currentState.getBlock() == Blocks.AIR ||
-            (currentState.getFluidState().isEmpty() &&
-                (currentState.canBeReplaced() || currentState.is(BlockTags.REPLACEABLE)))) {
+                (currentState.getFluidState().isEmpty() &&
+                        (currentState.canBeReplaced() || currentState.is(BlockTags.REPLACEABLE)))) {
 
             if (craterType == CraterType.LAVA && level.getRandom().nextFloat() < 0.075f) {
                 this.putter.put(level, enclosingBlockPos, Blocks.MAGMA_BLOCK.defaultBlockState());

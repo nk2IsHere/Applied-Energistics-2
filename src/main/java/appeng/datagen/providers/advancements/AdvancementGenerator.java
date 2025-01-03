@@ -36,14 +36,9 @@ package appeng.datagen.providers.advancements;
  * along with Applied Energistics 2.  If not, see <http://www.gnu.org/licenses/lgpl>.
  */
 
-import appeng.api.util.AEColor;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.core.stats.AdvancementTriggers;
-import appeng.datagen.providers.localization.LocalizationProvider;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
@@ -56,18 +51,23 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
+import appeng.api.util.AEColor;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
+import appeng.core.stats.AdvancementTriggers;
+import appeng.datagen.providers.localization.LocalizationProvider;
+import appeng.datagen.providers.tags.ConventionTags;
 
 public class AdvancementGenerator extends FabricAdvancementProvider {
 
     private final LocalizationProvider localization;
 
     public AdvancementGenerator(
-        FabricDataOutput output,
-        CompletableFuture<HolderLookup.Provider> registryLookup,
-        LocalizationProvider localization
-    ) {
+            FabricDataOutput output,
+            CompletableFuture<HolderLookup.Provider> registryLookup,
+            LocalizationProvider localization) {
         super(output, registryLookup);
         this.localization = localization;
     }

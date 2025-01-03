@@ -18,12 +18,17 @@
 
 package appeng.client.gui.style;
 
-import appeng.core.AppEng;
+import java.util.Objects;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
+import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -35,10 +40,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import org.joml.Matrix4f;
-import org.lwjgl.opengl.GL11;
 
-import java.util.Objects;
+import appeng.core.AppEng;
 
 /**
  * Utility class for drawing rectangular textures in the UI.

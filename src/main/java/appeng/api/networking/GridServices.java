@@ -23,13 +23,14 @@
 
 package appeng.api.networking;
 
-import appeng.me.helpers.GridServiceContainer;
-import net.minecraft.world.level.Level;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import net.minecraft.world.level.Level;
+
+import appeng.me.helpers.GridServiceContainer;
 
 /**
  * A registry of grid services to extend grid functionality.

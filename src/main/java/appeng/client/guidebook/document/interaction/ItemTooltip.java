@@ -1,13 +1,14 @@
 package appeng.client.guidebook.document.interaction;
 
-import appeng.siteexport.ResourceExporter;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
+import appeng.siteexport.ResourceExporter;
 
 public class ItemTooltip implements GuideTooltip {
     private final ItemStack stack;

@@ -18,8 +18,9 @@
 
 package appeng.menu.locator;
 
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Describes how a menu the player has opened was originally located. This can be one of four ways, see the {@code Type}

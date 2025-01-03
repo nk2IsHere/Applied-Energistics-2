@@ -18,15 +18,15 @@
 
 package appeng.menu.implementations;
 
-import appeng.core.AppEng;
-import appeng.init.InitMenuTypes;
-import appeng.menu.AEBaseMenu;
-import appeng.menu.MenuOpener;
-import appeng.menu.locator.MenuHostLocator;
-import appeng.menu.locator.MenuLocators;
+import java.util.function.Function;
+
 import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.Minecraft;
@@ -42,9 +42,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
+import appeng.core.AppEng;
+import appeng.init.InitMenuTypes;
+import appeng.menu.AEBaseMenu;
+import appeng.menu.MenuOpener;
+import appeng.menu.locator.MenuHostLocator;
+import appeng.menu.locator.MenuLocators;
 
 /**
  * Builder that allows creation of menu types which can be opened from multiple types of hosts.
@@ -155,14 +159,13 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
     }
 
     private static final StreamCodec<RegistryFriendlyByteBuf, ByteBuf> PACKET_IDENTITY_CODEC = StreamCodec
-        .of(
-            (encoded, decoded) -> encoded.writeBytes(decoded),
-            (encoded) -> {
-                var decoded = new FriendlyByteBuf(Unpooled.buffer());
-                decoded.writeBytes(encoded);
-                return decoded;
-            }
-        );
+            .of(
+                    (encoded, decoded) -> encoded.writeBytes(decoded),
+                    (encoded) -> {
+                        var decoded = new FriendlyByteBuf(Unpooled.buffer());
+                        decoded.writeBytes(encoded);
+                        return decoded;
+                    });
 
     private class HandlerFactory implements ExtendedScreenHandlerFactory {
 

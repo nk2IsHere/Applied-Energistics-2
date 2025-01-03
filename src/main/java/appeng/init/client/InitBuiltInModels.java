@@ -72,21 +72,21 @@ public final class InitBuiltInModels {
             addPlaneModel(pluginContext, "part/formation_plane_on", "part/formation_plane_on");
 
             addBuiltInModel(pluginContext, "block/crafting/1k_storage_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_1K)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_1K)));
             addBuiltInModel(pluginContext, "block/crafting/4k_storage_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_4K)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_4K)));
             addBuiltInModel(pluginContext, "block/crafting/16k_storage_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_16K)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_16K)));
             addBuiltInModel(pluginContext, "block/crafting/64k_storage_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_64K)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_64K)));
             addBuiltInModel(pluginContext, "block/crafting/256k_storage_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_256K)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.STORAGE_256K)));
             addBuiltInModel(pluginContext, "block/crafting/accelerator_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.ACCELERATOR)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.ACCELERATOR)));
             addBuiltInModel(pluginContext, "block/crafting/monitor_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.MONITOR)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.MONITOR)));
             addBuiltInModel(pluginContext, "block/crafting/unit_formed",
-                () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.UNIT)));
+                    () -> new CraftingCubeModel(new CraftingUnitModelProvider(CraftingUnitType.UNIT)));
         });
     }
 
@@ -97,7 +97,8 @@ public final class InitBuiltInModels {
         addBuiltInModel(context, planeName, () -> new PlaneModel(frontTextureId, sidesTextureId, backTextureId));
     }
 
-    private static <T extends UnbakedModel> void addBuiltInModel(ModelLoadingPlugin.Context context, String id, Supplier<T> modelFactory) {
+    private static <T extends UnbakedModel> void addBuiltInModel(ModelLoadingPlugin.Context context, String id,
+            Supplier<T> modelFactory) {
         context.resolveModel()
                 .register(new SimpleModelLoader<>(AppEng.makeId(id), modelFactory));
     }

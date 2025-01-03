@@ -217,13 +217,13 @@ public final class AEConfig {
 
     public double wireless_getMaxRange(int boosters) {
         return COMMON.wirelessBaseRange.get()
-            + COMMON.wirelessBoosterRangeMultiplier.get() * Math.pow(boosters, COMMON.wirelessBoosterExp.get());
+                + COMMON.wirelessBoosterRangeMultiplier.get() * Math.pow(boosters, COMMON.wirelessBoosterExp.get());
     }
 
     public double wireless_getPowerDrain(int boosters) {
         return COMMON.wirelessBaseCost.get()
-            + COMMON.wirelessCostMultiplier.get()
-            * Math.pow(boosters, 1 + boosters / COMMON.wirelessHighWirelessCount.get());
+                + COMMON.wirelessCostMultiplier.get()
+                        * Math.pow(boosters, 1 + boosters / COMMON.wirelessHighWirelessCount.get());
     }
 
     public boolean isSearchModNameInTooltips() {
@@ -296,7 +296,7 @@ public final class AEConfig {
 
     public void nextEnergyUnit(boolean backwards) {
         var selected = EnumCycler.rotateEnum(getSelectedEnergyUnit(), backwards,
-            Settings.POWER_UNITS.getValues());
+                Settings.POWER_UNITS.getValues());
         CLIENT.selectedPowerUnit.set(selected);
     }
 
@@ -548,13 +548,14 @@ public final class AEConfig {
 
         public ClientConfig(ConfigSection root) {
             var client = root.subsection("client");
-            this.disableColoredCableRecipesInRecipeViewer = client.addBoolean("disableColoredCableRecipesInRecipeViewer", true);
+            this.disableColoredCableRecipesInRecipeViewer = client
+                    .addBoolean("disableColoredCableRecipesInRecipeViewer", true);
             this.enableFacadeRecipesInRecipeViewer = client.addBoolean("enableFacadeRecipesInRecipeViewer", true,
                     "Show facades in JEI ingredient list");
             this.enableFacadesInRecipeViewer = client.addBoolean("enableFacadesInRecipeViewer", true,
                     "Show facade recipes in JEI for supported blocks");
             this.exposeNetworkInventoryToEmi = client.addBoolean("exposeNetworkInventoryToEmi", false,
-                "Expose the full network inventory to EMI, which might cause performance problems.");
+                    "Expose the full network inventory to EMI, which might cause performance problems.");
             this.enableEffects = client.addBoolean("enableEffects", true);
             this.useLargeFonts = client.addBoolean("useTerminalUseLargeFont", false);
             this.useColoredCraftingStatus = client.addBoolean("useColoredCraftingStatus", true);
@@ -666,6 +667,7 @@ public final class AEConfig {
 
         public final Map<TickRates, IntegerOption> tickRateMin = new HashMap<>();
         public final Map<TickRates, IntegerOption> tickRateMax = new HashMap<>();
+
         public CommonConfig(ConfigSection root) {
 
             ConfigSection general = root.subsection("general");
@@ -689,7 +691,7 @@ public final class AEConfig {
             growthAcceleratorSpeed = crafting.addInt("growthAccelerator", 10, 1, 100,
                     "Number of ticks between two crystal growth accelerator ticks");
             annihilationPlaneSkyDustGeneration = crafting.addBoolean("annihilationPlaneSkyDustGeneration", true,
-                "If enabled, an annihilation placed face up at the maximum world height will generate sky stone passively.");
+                    "If enabled, an annihilation placed face up at the maximum world height will generate sky stone passively.");
 
             ConfigSection spatialio = root.subsection("spatialio");
             this.spatialPowerMultiplier = spatialio.addDouble("spatialPowerMultiplier", 1250.0);
@@ -736,9 +738,9 @@ public final class AEConfig {
             crystalResonanceGeneratorRate = PowerRatios.addDouble("CrystalResonanceGeneratorRate", 20, 0, 1000000,
                     "How much energy a crystal resonance generator generates per tick.");
             p2pTunnelEnergyTax = PowerRatios.addDouble("p2pTunnelEnergyTax", 0.025, 0.0, 1.0,
-                "The cost to transport energy through an energy P2P tunnel expressed as a factor of the transported energy.");
+                    "The cost to transport energy through an energy P2P tunnel expressed as a factor of the transported energy.");
             p2pTunnelTransportTax = PowerRatios.addDouble("p2pTunnelTransportTax", 0.025, 0.0, 1.0,
-                "The cost to transport items/fluids/etc. through P2P tunnels, expressed in AE energy per equivalent I/O bus operation for the transported object type (i.e. items=per 1 item, fluids=per 125mb).");
+                    "The cost to transport items/fluids/etc. through P2P tunnels, expressed in AE energy per equivalent I/O bus operation for the transported object type (i.e. items=per 1 item, fluids=per 125mb).");
 
             ConfigSection Condenser = root.subsection("Condenser");
             condenserMatterBallsPower = Condenser.addInt("MatterBalls", 256);

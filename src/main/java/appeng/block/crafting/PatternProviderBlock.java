@@ -18,11 +18,6 @@
 
 package appeng.block.crafting;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.crafting.PatternProviderBlockEntity;
-import appeng.menu.locator.MenuLocators;
-import appeng.util.InteractionUtil;
-import appeng.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -36,6 +31,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.crafting.PatternProviderBlockEntity;
+import appeng.menu.locator.MenuLocators;
+import appeng.util.InteractionUtil;
+import appeng.util.Platform;
 
 public class PatternProviderBlock extends AEBaseEntityBlock<PatternProviderBlockEntity> {
 

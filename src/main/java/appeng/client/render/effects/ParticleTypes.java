@@ -19,6 +19,7 @@
 package appeng.client.render.effects;
 
 import com.mojang.serialization.MapCodec;
+
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;

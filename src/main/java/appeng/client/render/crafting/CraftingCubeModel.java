@@ -18,12 +18,13 @@
 
 package appeng.client.render.crafting;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.function.Function;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.Function;
+import appeng.client.render.BasicUnbakedModel;
 
 /**
  * The built-in model for the connected texture crafting cube.

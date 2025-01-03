@@ -1,17 +1,17 @@
 package appeng.server.subcommands;
 
-import appeng.core.AELog;
-import appeng.core.definitions.AEItems;
-import appeng.core.localization.PlayerMessages;
-import appeng.items.tools.powered.ColorApplicatorItem;
-import appeng.server.ISubCommand;
-import appeng.server.testplots.KitOutPlayerEvent;
-import appeng.server.testplots.TestPlots;
-import appeng.server.testworld.TestWorldGenerator;
+import static net.minecraft.commands.Commands.literal;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
 import com.google.common.base.Stopwatch;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -22,12 +22,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.levelgen.FlatLevelSource;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static net.minecraft.commands.Commands.literal;
+import appeng.core.AELog;
+import appeng.core.definitions.AEItems;
+import appeng.core.localization.PlayerMessages;
+import appeng.items.tools.powered.ColorApplicatorItem;
+import appeng.server.ISubCommand;
+import appeng.server.testplots.KitOutPlayerEvent;
+import appeng.server.testplots.TestPlots;
+import appeng.server.testworld.TestWorldGenerator;
 
 /**
  * This command will verify the user is in creative mode, the world is a flat world with void preset, and then start

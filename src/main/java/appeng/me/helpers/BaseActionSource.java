@@ -18,11 +18,12 @@
 
 package appeng.me.helpers;
 
-import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.IActionSource;
+import java.util.Optional;
+
 import net.minecraft.world.entity.player.Player;
 
-import java.util.Optional;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.IActionSource;
 
 public class BaseActionSource implements IActionSource {
     @Override

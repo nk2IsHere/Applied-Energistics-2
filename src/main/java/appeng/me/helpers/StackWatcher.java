@@ -1,11 +1,11 @@
 package appeng.me.helpers;
 
-import appeng.api.networking.IStackWatcher;
-import appeng.api.stacks.AEKey;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import appeng.api.networking.IStackWatcher;
+import appeng.api.stacks.AEKey;
 
 /**
  * Maintain my interests, and a global watch list, they should always be fully synchronized.

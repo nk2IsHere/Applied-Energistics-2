@@ -18,6 +18,9 @@
 
 package appeng.client.gui.implementations;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.api.config.InscriberInputCapacity;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -27,8 +30,6 @@ import appeng.client.gui.widgets.ProgressBar.Direction;
 import appeng.client.gui.widgets.ServerSettingToggleButton;
 import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.menu.implementations.InscriberMenu;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 public class InscriberScreen extends UpgradeableScreen<InscriberMenu> {
 

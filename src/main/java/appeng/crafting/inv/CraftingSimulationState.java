@@ -18,6 +18,14 @@
 
 package appeng.crafting.inv;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.collect.Iterables;
+
+import org.jetbrains.annotations.Nullable;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.crafting.IPatternDetails;
@@ -26,12 +34,6 @@ import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.crafting.CraftingCalculation;
 import appeng.crafting.CraftingPlan;
-import com.google.common.collect.Iterables;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class CraftingSimulationState implements ICraftingSimulationState {
     /**

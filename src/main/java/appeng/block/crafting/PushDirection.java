@@ -1,12 +1,14 @@
 package appeng.block.crafting;
 
 import com.mojang.serialization.Codec;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Extends {@link Direction} with an 'all' key.

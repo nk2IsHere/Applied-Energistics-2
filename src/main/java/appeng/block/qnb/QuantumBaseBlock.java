@@ -18,8 +18,8 @@
 
 package appeng.block.qnb;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,7 +38,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
 
 public abstract class QuantumBaseBlock extends AEBaseEntityBlock<QuantumBridgeBlockEntity>
         implements SimpleWaterloggedBlock {

@@ -18,14 +18,6 @@
 
 package appeng.items.parts;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.ids.AETags;
-import appeng.api.implementations.items.IFacadeItem;
-import appeng.api.parts.IFacadePart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.PartHelper;
-import appeng.facade.FacadePart;
-import appeng.items.AEBaseItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -42,6 +34,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.api.ids.AEComponents;
+import appeng.api.ids.AETags;
+import appeng.api.implementations.items.IFacadeItem;
+import appeng.api.parts.IFacadePart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.PartHelper;
+import appeng.facade.FacadePart;
+import appeng.items.AEBaseItem;
 
 public class FacadeItem extends AEBaseItem implements IFacadeItem {
 

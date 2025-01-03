@@ -18,12 +18,12 @@
 
 package appeng.api.parts;
 
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Allows registration of part models that can then be used in {@link IPart#getStaticModels()}.

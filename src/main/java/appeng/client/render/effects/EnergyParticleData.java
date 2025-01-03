@@ -21,6 +21,7 @@ package appeng.client.render.effects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -28,8 +29,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-public record
-EnergyParticleData(boolean forItem, Direction direction) implements ParticleOptions {
+public record EnergyParticleData(boolean forItem, Direction direction) implements ParticleOptions {
     public static final MapCodec<EnergyParticleData> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
             Codec.BOOL.fieldOf("forItem").forGetter(EnergyParticleData::forItem),
             Direction.CODEC.fieldOf("direction").forGetter(EnergyParticleData::direction))

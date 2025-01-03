@@ -18,30 +18,28 @@
 
 package appeng.datagen.providers.recipes;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEItems;
-import appeng.datagen.providers.tags.ConventionTags;
-import appeng.recipes.mattercannon.MatterCannonAmmo;
+import java.util.concurrent.CompletableFuture;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 
-import java.util.concurrent.CompletableFuture;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEItems;
+import appeng.datagen.providers.tags.ConventionTags;
+import appeng.recipes.mattercannon.MatterCannonAmmo;
 
 public class MatterCannonAmmoProvider extends AE2RecipeProvider {
 
     public MatterCannonAmmoProvider(
-        FabricDataOutput output,
-        CompletableFuture<HolderLookup.Provider> registriesFuture
-    ) {
+            FabricDataOutput output,
+            CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(
-            output,
-            registriesFuture
-        );
+                output,
+                registriesFuture);
     }
 
     @Override

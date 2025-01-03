@@ -1,29 +1,27 @@
 package appeng.datagen.providers.recipes;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.*;
-import appeng.recipes.game.*;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+
+import appeng.core.AppEng;
+import appeng.core.definitions.*;
+import appeng.recipes.game.*;
+
 public class UpgradeRecipes extends AE2RecipeProvider {
 
     public UpgradeRecipes(
-        FabricDataOutput output,
-        CompletableFuture<HolderLookup.Provider> registriesFuture
-    ) {
+            FabricDataOutput output,
+            CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(
-            output,
-            registriesFuture
-        );
+                output,
+                registriesFuture);
     }
 
     // Defaults will always be Cell Component for upgrade/disassembly. Additional options are for modpack developers.

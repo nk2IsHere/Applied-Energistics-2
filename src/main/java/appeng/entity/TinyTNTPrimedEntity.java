@@ -18,12 +18,10 @@
 
 package appeng.entity;
 
-import appeng.core.AEConfig;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEEntities;
-import appeng.core.network.clientbound.MockExplosionPacket;
-import appeng.integration.abstraction.IFabricCustomEntity;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,9 +41,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import appeng.core.AEConfig;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEEntities;
+import appeng.core.network.clientbound.MockExplosionPacket;
+import appeng.integration.abstraction.IFabricCustomEntity;
 
 public final class TinyTNTPrimedEntity extends PrimedTnt implements IFabricCustomEntity {
 

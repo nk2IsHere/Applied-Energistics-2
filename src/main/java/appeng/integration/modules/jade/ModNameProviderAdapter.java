@@ -1,8 +1,10 @@
 package appeng.integration.modules.jade;
 
-import appeng.api.integrations.igtooltip.providers.ModNameProvider;
+import java.util.List;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -12,7 +14,7 @@ import snownee.jade.api.config.IWailaConfig;
 import snownee.jade.api.ui.IElement;
 import snownee.jade.api.ui.IElementHelper;
 
-import java.util.List;
+import appeng.api.integrations.igtooltip.providers.ModNameProvider;
 
 class ModNameProviderAdapter<T> extends BaseProvider implements IBlockComponentProvider {
     private final ModNameProvider<? super T> provider;
@@ -40,9 +42,10 @@ class ModNameProviderAdapter<T> extends BaseProvider implements IBlockComponentP
                         IElement el = line.get(j);
                         if (JadeIds.CORE_MOD_NAME.equals(el.getTag())) {
                             line.set(j, IElementHelper
-                                .get().text(
-                                    Component.literal(modName)
-                                        .withStyle(IWailaConfig.get().getFormatting().getItemModNameStyle())));
+                                    .get().text(
+                                            Component.literal(modName)
+                                                    .withStyle(
+                                                            IWailaConfig.get().getFormatting().getItemModNameStyle())));
                         }
                     }
                 }

@@ -18,9 +18,11 @@
 
 package appeng.api.stacks;
 
-import appeng.core.AppEng;
-import appeng.core.localization.GuiText;
+import java.util.Objects;
+import java.util.stream.Stream;
+
 import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +30,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 
-import java.util.Objects;
-import java.util.stream.Stream;
+import appeng.core.AppEng;
+import appeng.core.localization.GuiText;
 
 final class AEFluidKeys extends AEKeyType {
     private static final ResourceLocation ID = AppEng.makeId("f");

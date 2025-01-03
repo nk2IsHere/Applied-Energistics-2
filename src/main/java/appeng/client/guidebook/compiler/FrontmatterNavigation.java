@@ -1,9 +1,10 @@
 package appeng.client.guidebook.compiler;
 
-import net.minecraft.resources.ResourceLocation;
+import java.util.Map;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Inserts a page into the navigation tree. Null parent means top-level category.

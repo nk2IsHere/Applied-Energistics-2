@@ -1,15 +1,16 @@
 package appeng.server.subcommands;
 
-import appeng.api.networking.GridHelper;
-import appeng.core.network.clientbound.ExportedGridContent;
-import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import appeng.hooks.ticking.TickHandler;
-import appeng.me.Grid;
-import appeng.me.service.StatisticsService;
-import appeng.parts.AEBasePart;
-import appeng.parts.p2p.MEP2PTunnelPart;
-import appeng.server.ISubCommand;
-import appeng.util.Platform;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.brigadier.LiteralMessage;
@@ -18,6 +19,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+
+import org.apache.commons.io.output.CloseShieldOutputStream;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -31,21 +38,17 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.apache.commons.io.output.CloseShieldOutputStream;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import appeng.api.networking.GridHelper;
+import appeng.core.network.clientbound.ExportedGridContent;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
+import appeng.hooks.ticking.TickHandler;
+import appeng.me.Grid;
+import appeng.me.service.StatisticsService;
+import appeng.parts.AEBasePart;
+import appeng.parts.p2p.MEP2PTunnelPart;
+import appeng.server.ISubCommand;
+import appeng.util.Platform;
 
 public class GridsCommand implements ISubCommand {
     private static final Logger LOG = LoggerFactory.getLogger(GridsCommand.class);

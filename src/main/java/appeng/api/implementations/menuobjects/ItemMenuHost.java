@@ -18,6 +18,12 @@
 
 package appeng.api.implementations.menuobjects;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.energy.IEnergySource;
@@ -25,10 +31,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.menu.locator.ItemMenuHostLocator;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Base interface for an adapter that connects an item stack in a player inventory with a menu that is opened by it.

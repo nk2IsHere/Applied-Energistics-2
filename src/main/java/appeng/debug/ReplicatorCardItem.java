@@ -18,13 +18,6 @@
 
 package appeng.debug;
 
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.spatial.ISpatialService;
-import appeng.core.AEConfig;
-import appeng.items.AEBaseItem;
-import appeng.util.InteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -46,6 +39,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.spatial.ISpatialService;
+import appeng.core.AEConfig;
+import appeng.items.AEBaseItem;
+import appeng.util.InteractionUtil;
 
 public class ReplicatorCardItem extends AEBaseItem {
 

@@ -18,9 +18,10 @@
 
 package appeng.util.inv;
 
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.BaseInternalInventory;
 import appeng.api.inventories.InternalInventory;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * Exposes several internal inventories as one larger internal inventory.

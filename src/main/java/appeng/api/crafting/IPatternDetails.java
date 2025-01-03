@@ -23,17 +23,19 @@
 
 package appeng.api.crafting;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
+
 import appeng.api.implementations.blockentities.ICraftingMachine;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * Information about a pattern for use by the autocrafting system.

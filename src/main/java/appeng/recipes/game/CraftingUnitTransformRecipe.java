@@ -1,8 +1,8 @@
 package appeng.recipes.game;
 
-import appeng.recipes.AERecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -13,6 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+
+import appeng.recipes.AERecipeTypes;
 
 /**
  * Used to handle upgrading and removal of upgrades for crafting units (in-world).

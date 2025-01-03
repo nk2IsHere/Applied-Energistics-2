@@ -18,12 +18,13 @@
 
 package appeng.blockentity.misc;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.CommonTickingBlockEntity;
-import appeng.util.Platform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.CommonTickingBlockEntity;
+import appeng.util.Platform;
 
 public class LightDetectorBlockEntity extends AEBaseBlockEntity implements CommonTickingBlockEntity {
 

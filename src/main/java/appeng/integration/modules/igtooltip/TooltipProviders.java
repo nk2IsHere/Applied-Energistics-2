@@ -1,5 +1,11 @@
 package appeng.integration.modules.igtooltip;
 
+import java.util.Locale;
+import java.util.ServiceLoader;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import appeng.api.integrations.igtooltip.*;
 import appeng.api.parts.IPart;
 import appeng.block.AEBaseEntityBlock;
@@ -23,11 +29,6 @@ import appeng.parts.automation.AnnihilationPlanePart;
 import appeng.parts.networking.IUsedChannelProvider;
 import appeng.parts.p2p.P2PTunnelPart;
 import appeng.parts.reporting.AbstractMonitorPart;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Locale;
-import java.util.ServiceLoader;
 
 public final class TooltipProviders implements TooltipProvider {
 
@@ -63,19 +64,19 @@ public final class TooltipProviders implements TooltipProvider {
         for (var clazz : baseClasses.getBaseClasses()) {
             LOG.debug("Registering default-data for BE {} and sub-classes", clazz);
             registration.addBlockEntityData(AppEng.makeId("grid_node"), clazz.blockEntity(),
-                new GridNodeStateDataProvider());
+                    new GridNodeStateDataProvider());
             registration.addBlockEntityData(AppEng.makeId("power_storage"), clazz.blockEntity(),
-                new PowerStorageDataProvider());
+                    new PowerStorageDataProvider());
             registration.addBlockEntityData(AppEng.makeId("debug"), clazz.blockEntity(),
-                DebugProvider::provideBlockEntityData);
+                    DebugProvider::provideBlockEntityData);
         }
 
         for (var clazz : baseClasses.getPartHostClasses()) {
             LOG.debug("Registering part host provider for {} and sub-classes", clazz);
             registration.addBlockEntityData(
-                AppEng.makeId("base_" + clazz.blockEntity().getSimpleName().toLowerCase(Locale.ROOT)),
-                clazz.blockEntity(),
-                PartHostTooltips::provideServerData);
+                    AppEng.makeId("base_" + clazz.blockEntity().getSimpleName().toLowerCase(Locale.ROOT)),
+                    clazz.blockEntity(),
+                    PartHostTooltips::provideServerData);
         }
     }
 
@@ -135,9 +136,9 @@ public final class TooltipProviders implements TooltipProvider {
     @Override
     public void registerCommon(CommonRegistration registration) {
         registration.addBlockEntityData(
-            AppEng.makeId("pattern_provider"),
-            PatternProviderBlockEntity.class,
-            new PatternProviderDataProvider());
+                AppEng.makeId("pattern_provider"),
+                PatternProviderBlockEntity.class,
+                new PatternProviderDataProvider());
     }
 
     @Override

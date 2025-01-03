@@ -18,14 +18,16 @@
 
 package appeng.server.services.compass;
 
-import appeng.core.localization.PlayerMessages;
-import appeng.server.ISubCommand;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.ChunkPos;
+
+import appeng.core.localization.PlayerMessages;
+import appeng.server.ISubCommand;
 
 public class TestCompassCommand implements ISubCommand {
     @Override

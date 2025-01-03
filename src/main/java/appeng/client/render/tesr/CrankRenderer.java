@@ -18,10 +18,10 @@
 
 package appeng.client.render.tesr;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.misc.CrankBlockEntity;
-import appeng.core.AppEng;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import org.joml.Quaternionf;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -33,7 +33,10 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import org.joml.Quaternionf;
+
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.misc.CrankBlockEntity;
+import appeng.core.AppEng;
 
 @Environment(EnvType.CLIENT)
 public class CrankRenderer implements BlockEntityRenderer<CrankBlockEntity> {

@@ -1,7 +1,8 @@
 package appeng.util;
 
-import appeng.integration.abstraction.ItemListMod;
 import com.google.common.base.Strings;
+
+import appeng.integration.abstraction.ItemListMod;
 
 public final class ExternalSearch {
     private ExternalSearch() {

@@ -1,13 +1,16 @@
 package appeng.client.guidebook.hotkey;
 
-import appeng.client.guidebook.GuidebookText;
-import appeng.client.guidebook.PageAnchor;
-import appeng.client.guidebook.indices.ItemIndex;
-import appeng.client.guidebook.screen.GuideScreen;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
+import java.util.List;
+import java.util.Objects;
+
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.platform.InputConstants;
+
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -22,13 +25,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Objects;
+import appeng.client.guidebook.GuidebookText;
+import appeng.client.guidebook.PageAnchor;
+import appeng.client.guidebook.indices.ItemIndex;
+import appeng.client.guidebook.screen.GuideScreen;
+import appeng.core.AppEng;
+import appeng.core.AppEngClient;
 
 /**
  * Adds a "Hold X to show guide" tooltip
@@ -63,7 +66,8 @@ public final class OpenGuideHotkey {
         ClientTickEvents.START_CLIENT_TICK.register(client -> newTick = true);
     }
 
-    private static void handleTooltip(ItemStack itemStack, Item.TooltipContext context, TooltipFlag tooltipFlag, List<Component> lines) {
+    private static void handleTooltip(ItemStack itemStack, Item.TooltipContext context, TooltipFlag tooltipFlag,
+            List<Component> lines) {
         // Player didn't bind the key
         if (!isKeyBound()) {
             holding = false;

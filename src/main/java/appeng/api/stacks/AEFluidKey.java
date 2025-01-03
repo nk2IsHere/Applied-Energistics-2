@@ -1,13 +1,15 @@
 package appeng.api.stacks;
 
-import appeng.api.storage.AEKeyFilter;
-import appeng.core.AELog;
+import java.util.List;
+
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.architectury.fluid.FluidStack;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -24,9 +26,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import dev.architectury.fluid.FluidStack;
+
+import appeng.api.storage.AEKeyFilter;
+import appeng.core.AELog;
 
 public final class AEFluidKey extends AEKey {
     public static final MapCodec<AEFluidKey> MAP_CODEC = RecordCodecBuilder.mapCodec(
@@ -39,7 +43,8 @@ public final class AEFluidKey extends AEKey {
                     DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
                             .forGetter(key -> key.stack.getPatch()))
                     .apply(instance, (fluidHolder,
-                            dataComponentPatch) -> new AEFluidKey(FluidStack.create(fluidHolder, 1, dataComponentPatch))));
+                            dataComponentPatch) -> new AEFluidKey(
+                                    FluidStack.create(fluidHolder, 1, dataComponentPatch))));
     public static final Codec<AEFluidKey> CODEC = MAP_CODEC.codec();
 
     public static final int AMOUNT_BUCKET = 1000;

@@ -18,6 +18,23 @@
 
 package appeng.client.gui.me.common;
 
+import java.time.Instant;
+import java.util.*;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.crafting.Ingredient;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
+
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
@@ -30,19 +47,6 @@ import appeng.core.AELog;
 import appeng.menu.me.common.GridInventoryEntry;
 import appeng.menu.me.common.IClientRepo;
 import appeng.util.prioritylist.IPartitionList;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
-import it.unimi.dsi.fastutil.longs.LongSet;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Nullable;
-
-import java.time.Instant;
-import java.util.*;
 
 /**
  * For showing the network content of a storage channel, this class will maintain a client-side copy of the current

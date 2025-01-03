@@ -18,14 +18,17 @@
 
 package appeng.client.gui.me.common;
 
-import appeng.core.AEConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+
+import org.joml.Matrix4f;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
-import org.joml.Matrix4f;
+
+import appeng.core.AEConfig;
 
 /**
  * @author AlgorithmX2

@@ -18,9 +18,11 @@
 
 package appeng.client.gui.style;
 
-import appeng.client.Point;
-import net.minecraft.client.renderer.Rect2i;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.renderer.Rect2i;
+
+import appeng.client.Point;
 
 /**
  * Describes positioning for a slot.

@@ -1,19 +1,23 @@
 package appeng.parts.automation;
 
+import com.google.common.primitives.Ints;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.world.item.ItemStack;
+
+import dev.architectury.fluid.FluidStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.stacks.AEFluidKey;
 import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.me.storage.ExternalStorageFacade;
-import com.google.common.primitives.Ints;
-import dev.architectury.fluid.FluidStack;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class HandlerStrategy<C, S> {
     private final AEKeyType keyType;
@@ -37,7 +41,8 @@ public abstract class HandlerStrategy<C, S> {
 
     public abstract long insert(C handler, AEKey what, long amount, Actionable mode);
 
-    public static final HandlerStrategy<Storage<ItemVariant>, ItemStack> ITEMS = new HandlerStrategy<>(AEKeyType.items()) {
+    public static final HandlerStrategy<Storage<ItemVariant>, ItemStack> ITEMS = new HandlerStrategy<>(
+            AEKeyType.items()) {
         @Override
         public boolean isSupported(AEKey what) {
             return AEItemKey.is(what);
@@ -75,7 +80,8 @@ public abstract class HandlerStrategy<C, S> {
         }
     };
 
-    public static final HandlerStrategy<Storage<FluidVariant>, FluidStack> FLUIDS = new HandlerStrategy<>(AEKeyType.fluids()) {
+    public static final HandlerStrategy<Storage<FluidVariant>, FluidStack> FLUIDS = new HandlerStrategy<>(
+            AEKeyType.fluids()) {
         @Override
         public boolean isSupported(AEKey what) {
             return AEFluidKey.is(what);

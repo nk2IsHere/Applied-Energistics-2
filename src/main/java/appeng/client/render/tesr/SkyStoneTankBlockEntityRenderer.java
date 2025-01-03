@@ -18,9 +18,9 @@
 
 package appeng.client.render.tesr;
 
-import appeng.blockentity.storage.SkyStoneTankBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -39,6 +39,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import appeng.blockentity.storage.SkyStoneTankBlockEntity;
 
 public final class SkyStoneTankBlockEntityRenderer implements BlockEntityRenderer<SkyStoneTankBlockEntity> {
 

@@ -18,12 +18,14 @@
 
 package appeng.parts;
 
-import appeng.api.parts.IPartCollisionHelper;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.AABB;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+
+import appeng.api.parts.IPartCollisionHelper;
 
 public class BusCollisionHelper implements IPartCollisionHelper {
 

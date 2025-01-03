@@ -18,12 +18,15 @@
 
 package appeng.datagen.providers.loot;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.BlockDefinition;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 import com.google.common.collect.ImmutableMap;
+
+import org.jetbrains.annotations.NotNull;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.core.Holder;
@@ -44,20 +47,19 @@ import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.BlockDefinition;
+import appeng.datagen.providers.tags.ConventionTags;
 
 public class BlockDropProvider extends FabricBlockLootTableProvider {
     private final Map<Block, Function<Block, LootTable.Builder>> overrides = createOverrides();
 
     public BlockDropProvider(
-        FabricDataOutput dataOutput,
-        CompletableFuture<HolderLookup.Provider> registryLookup
-    ) {
+            FabricDataOutput dataOutput,
+            CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(dataOutput, registryLookup);
     }
 
@@ -80,7 +82,6 @@ public class BlockDropProvider extends FabricBlockLootTableProvider {
                 .put(AEBlocks.QUARTZ_CLUSTER.block(), this::quartzCluster)
                 .build();
     }
-
 
     protected Iterable<Block> getKnownBlocks() {
         return BuiltInRegistries.BLOCK

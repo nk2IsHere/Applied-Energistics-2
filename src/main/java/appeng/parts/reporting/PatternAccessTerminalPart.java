@@ -18,6 +18,12 @@
 
 package appeng.parts.reporting;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
+
 import appeng.api.config.Settings;
 import appeng.api.config.ShowPatternProviders;
 import appeng.api.parts.IPartItem;
@@ -31,11 +37,6 @@ import appeng.menu.MenuOpener;
 import appeng.menu.implementations.PatternAccessTermMenu;
 import appeng.menu.locator.MenuLocators;
 import appeng.parts.PartModel;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 
 public class PatternAccessTerminalPart extends AbstractDisplayPart implements IPatternAccessTermMenuHost {
 

@@ -1,15 +1,16 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
+
+import appeng.client.gui.me.patternaccess.PatternAccessTermScreen;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
 
 /**
  * Clears all data from the pattern access terminal before a full reset.

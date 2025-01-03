@@ -1,5 +1,17 @@
 package appeng.client.guidebook.scene;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.client.guidebook.color.SymbolicColor;
@@ -8,16 +20,6 @@ import appeng.client.guidebook.scene.annotation.SceneAnnotation;
 import appeng.client.guidebook.scene.level.GuidebookLevel;
 import appeng.core.localization.GuiText;
 import appeng.parts.BusCollisionHelper;
-import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class PartAnnotationStrategy implements ImplicitAnnotationStrategy {
     @Override

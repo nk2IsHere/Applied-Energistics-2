@@ -18,10 +18,15 @@
 
 package appeng.client.render.model;
 
-import appeng.api.client.StorageCellModels;
-import appeng.client.render.BasicUnbakedModel;
-import appeng.init.internal.InitStorageCells;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 import com.google.common.collect.ImmutableSet;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -30,12 +35,10 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.function.Function;
+import appeng.api.client.StorageCellModels;
+import appeng.client.render.BasicUnbakedModel;
+import appeng.init.internal.InitStorageCells;
 
 public class DriveModel implements BasicUnbakedModel {
 

@@ -18,6 +18,13 @@
 
 package appeng.parts.automation;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.behaviors.StackImportStrategy;
 import appeng.api.networking.IGrid;
 import appeng.api.parts.IPartCollisionHelper;
@@ -28,11 +35,6 @@ import appeng.api.util.KeyTypeSelectionHost;
 import appeng.core.definitions.AEItems;
 import appeng.core.settings.TickRates;
 import appeng.menu.implementations.IOBusMenu;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.inventory.MenuType;
-import org.jetbrains.annotations.Nullable;
 
 public class ImportBusPart extends IOBusPart implements KeyTypeSelectionHost {
     @Nullable

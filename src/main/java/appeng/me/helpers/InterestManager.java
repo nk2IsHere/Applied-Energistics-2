@@ -18,12 +18,13 @@
 
 package appeng.me.helpers;
 
-import appeng.api.stacks.AEKey;
+import java.util.Collection;
+import java.util.Set;
+
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import java.util.Collection;
-import java.util.Set;
+import appeng.api.stacks.AEKey;
 
 public class InterestManager<T> {
 

@@ -18,12 +18,13 @@
 
 package appeng.spatial;
 
+import org.jetbrains.annotations.NotNull;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.client.renderer.DimensionSpecialEffects.SkyType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Defines properties for how the sky in the spatial storage level is rendered.

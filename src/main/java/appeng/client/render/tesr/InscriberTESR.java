@@ -18,14 +18,12 @@
 
 package appeng.client.render.tesr;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.blockentity.misc.InscriberBlockEntity;
-import appeng.core.AppEng;
-import appeng.recipes.handlers.InscriberProcessType;
-import appeng.recipes.handlers.InscriberRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.joml.Quaternionf;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -41,7 +39,12 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.joml.Quaternionf;
+
+import appeng.api.orientation.BlockOrientation;
+import appeng.blockentity.misc.InscriberBlockEntity;
+import appeng.core.AppEng;
+import appeng.recipes.handlers.InscriberProcessType;
+import appeng.recipes.handlers.InscriberRecipe;
 
 /**
  * Renders the dynamic parts of an inscriber (the presses, the animation and the item being smashed)

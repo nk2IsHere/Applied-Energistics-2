@@ -1,14 +1,18 @@
 package appeng.integration.modules.rei;
 
-import appeng.api.integrations.rei.IngredientConverter;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.GenericStack;
 import com.google.common.primitives.Ints;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.ItemStack;
+
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.EntryType;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.integrations.rei.IngredientConverter;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.GenericStack;
 
 public class ItemIngredientConverter implements IngredientConverter<ItemStack> {
     @Override

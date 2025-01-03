@@ -1,5 +1,18 @@
 package appeng.server.testplots;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.material.Fluids;
+
 import appeng.api.config.*;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.inventories.InternalInventory;
@@ -20,18 +33,6 @@ import appeng.parts.misc.InterfacePart;
 import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.PlotTestHelper;
 import appeng.util.SettingsFrom;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.material.Fluids;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 @TestPlotClass
 public final class MemoryCardTestPlots {

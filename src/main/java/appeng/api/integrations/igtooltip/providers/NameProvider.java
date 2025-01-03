@@ -1,9 +1,11 @@
 package appeng.api.integrations.igtooltip.providers;
 
-import appeng.api.integrations.igtooltip.TooltipContext;
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.Component;
+
+import appeng.api.integrations.igtooltip.TooltipContext;
 
 /**
  * Provides the name shown in the in-game tooltip.

@@ -1,10 +1,11 @@
 package appeng.client.guidebook.compiler;
 
-import appeng.client.guidebook.PageAnchor;
+import java.net.URI;
+
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
-import java.net.URI;
+import appeng.client.guidebook.PageAnchor;
 
 public final class LinkParser {
     private LinkParser() {

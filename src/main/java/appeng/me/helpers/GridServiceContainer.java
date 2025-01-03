@@ -1,8 +1,8 @@
 package appeng.me.helpers;
 
-import appeng.api.networking.IGridServiceProvider;
-
 import java.util.Map;
+
+import appeng.api.networking.IGridServiceProvider;
 
 public record GridServiceContainer(
         Map<Class<?>, IGridServiceProvider> services,

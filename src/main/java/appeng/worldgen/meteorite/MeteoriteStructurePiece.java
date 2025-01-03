@@ -39,7 +39,7 @@ public class MeteoriteStructurePiece extends StructurePiece {
     private final PlacedMeteoriteSettings settings;
 
     protected MeteoriteStructurePiece(BlockPos center, float coreRadius, CraterType craterType, FalloutMode fallout,
-                                      boolean pureCrater, boolean craterLake) {
+            boolean pureCrater, boolean craterLake) {
         super(TYPE, 0, createBoundingBox(center));
         this.settings = new PlacedMeteoriteSettings(center, coreRadius, craterType, fallout, pureCrater, craterLake);
     }
@@ -52,8 +52,8 @@ public class MeteoriteStructurePiece extends StructurePiece {
         ChunkPos chunkPos = new ChunkPos(origin);
 
         return new BoundingBox(chunkPos.getMinBlockX() - range, origin.getY(),
-            chunkPos.getMinBlockZ() - range, chunkPos.getMaxBlockX() + range, origin.getY(),
-            chunkPos.getMaxBlockZ() + range);
+                chunkPos.getMinBlockZ() - range, chunkPos.getMaxBlockX() + range, origin.getY(),
+                chunkPos.getMaxBlockZ() + range);
     }
 
     public MeteoriteStructurePiece(CompoundTag tag) {
@@ -89,7 +89,7 @@ public class MeteoriteStructurePiece extends StructurePiece {
 
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator,
-                            RandomSource rand, BoundingBox bounds, ChunkPos chunkPos, BlockPos blockPos) {
+            RandomSource rand, BoundingBox bounds, ChunkPos chunkPos, BlockPos blockPos) {
         MeteoritePlacer.place(level, settings, bounds, rand);
 
         ServerCompassService.updateArea(level.getLevel(), level.getChunk(chunkPos.x, chunkPos.z));

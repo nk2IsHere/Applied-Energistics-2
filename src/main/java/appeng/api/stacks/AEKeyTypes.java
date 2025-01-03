@@ -23,10 +23,10 @@
 
 package appeng.api.stacks;
 
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.Objects;
 import java.util.Set;
+
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * AE2's registry of all known {@link AEKeyType key types}.

@@ -18,14 +18,15 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.parts.IPartModel;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
+import java.util.*;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.AABB;
 
-import java.util.*;
+import appeng.api.parts.IPartModel;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
 
 /**
  * This class captures the entire rendering state needed for a cable bus and transports it to the rendering thread for

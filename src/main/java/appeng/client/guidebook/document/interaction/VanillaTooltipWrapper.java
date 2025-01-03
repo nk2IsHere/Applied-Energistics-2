@@ -1,12 +1,13 @@
 package appeng.client.guidebook.document.interaction;
 
-import appeng.siteexport.ResourceExporter;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTextTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 
-import java.util.List;
+import appeng.siteexport.ResourceExporter;
 
 public class VanillaTooltipWrapper implements GuideTooltip {
     private final Tooltip tooltip;

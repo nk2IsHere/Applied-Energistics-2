@@ -18,14 +18,15 @@
 
 package appeng.me.energy;
 
-import appeng.api.networking.energy.IEnergyWatcher;
-import appeng.api.networking.energy.IEnergyWatcherNode;
-import appeng.me.service.EnergyService;
-import com.google.common.base.Preconditions;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import com.google.common.base.Preconditions;
+
+import appeng.api.networking.energy.IEnergyWatcher;
+import appeng.api.networking.energy.IEnergyWatcherNode;
+import appeng.me.service.EnergyService;
 
 /**
  * Maintain my interests, and a global watch list, they should always be fully synchronized.

@@ -18,14 +18,16 @@
 
 package appeng.items.contents;
 
+import java.util.List;
+import java.util.Set;
+
+import com.google.common.base.Preconditions;
+
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.ids.AEComponents;
 import appeng.api.stacks.AEKeyType;
 import appeng.util.ConfigInventory;
-import com.google.common.base.Preconditions;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
-import java.util.Set;
 
 public final class CellConfig {
     private CellConfig() {

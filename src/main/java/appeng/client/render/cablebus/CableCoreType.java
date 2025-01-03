@@ -18,16 +18,18 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.core.AppEng;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
-
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
+
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.core.AppEng;
 
 /**
  * AE can render the core of a cable (the core that connections are made to, in case the cable is not a straight line)

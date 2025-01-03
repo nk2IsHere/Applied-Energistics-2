@@ -18,12 +18,8 @@
 
 package appeng.block.networking;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.ids.AEComponents;
-import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.block.AEBaseBlockItem;
-import appeng.core.localization.Tooltips;
+import java.util.List;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -31,7 +27,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
+import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.block.AEBaseBlockItem;
+import appeng.core.localization.Tooltips;
 
 public class EnergyCellBlockItem extends AEBaseBlockItem implements IAEItemPowerStorage {
 

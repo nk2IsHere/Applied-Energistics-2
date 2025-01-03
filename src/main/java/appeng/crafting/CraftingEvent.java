@@ -18,12 +18,13 @@
 
 package appeng.crafting;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.util.Platform;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import appeng.api.crafting.IPatternDetails;
+import appeng.util.Platform;
 
 public class CraftingEvent {
 

@@ -18,10 +18,16 @@
 
 package appeng.integration.modules.rei;
 
-import appeng.api.config.CondenserOutput;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.google.common.base.Splitter;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -32,13 +38,10 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import appeng.api.config.CondenserOutput;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
 
 class CondenserCategory implements DisplayCategory<CondenserOutputDisplay> {
 

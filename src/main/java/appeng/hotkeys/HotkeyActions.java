@@ -1,18 +1,19 @@
 package appeng.hotkeys;
 
-import appeng.api.features.HotkeyAction;
-import appeng.core.AppEng;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.ItemDefinition;
-import appeng.items.tools.powered.AbstractPortableCell;
-import net.minecraft.world.level.ItemLike;
+import static appeng.api.features.HotkeyAction.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static appeng.api.features.HotkeyAction.*;
+import net.minecraft.world.level.ItemLike;
+
+import appeng.api.features.HotkeyAction;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.ItemDefinition;
+import appeng.items.tools.powered.AbstractPortableCell;
 
 /**
  * Registry of {@link HotkeyAction}

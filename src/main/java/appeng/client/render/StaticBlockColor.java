@@ -18,12 +18,14 @@
 
 package appeng.client.render;
 
-import appeng.api.util.AEColor;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.util.AEColor;
 
 /**
  * Returns the shades of a single AE color for tint indices 0, 1, and 2.

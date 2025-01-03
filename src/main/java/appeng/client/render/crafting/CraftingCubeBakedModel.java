@@ -18,10 +18,9 @@
 
 package appeng.client.render.crafting;
 
-import appeng.blockentity.crafting.CraftingCubeModelData;
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.integration.abstraction.IFabricBakedModel;
-import appeng.util.Platform;
+import java.util.EnumSet;
+import java.util.function.Supplier;
+
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -33,8 +32,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.EnumSet;
-import java.util.function.Supplier;
+import appeng.blockentity.crafting.CraftingCubeModelData;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.util.Platform;
 
 /**
  * The base model for baked models used by components of the crafting cube multi-block in it's formed state. Primarily
@@ -60,7 +61,7 @@ abstract class CraftingCubeBakedModel implements IFabricBakedModel {
             Supplier<RandomSource> RandomSourceSupplier, RenderContext context) {
         var modelData = getModelData(blockView, pos);
         var connections = modelData != null ? modelData.getConnections()
-            : EnumSet.noneOf(Direction.class);
+                : EnumSet.noneOf(Direction.class);
 
         CubeBuilder builder = new CubeBuilder(context.getEmitter());
 

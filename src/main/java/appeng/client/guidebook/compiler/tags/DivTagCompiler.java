@@ -1,11 +1,11 @@
 package appeng.client.guidebook.compiler.tags;
 
+import java.util.Set;
+
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.compiler.TagCompiler;
 import appeng.client.guidebook.document.block.LytBlockContainer;
 import appeng.libs.mdast.mdx.model.MdxJsxFlowElement;
-
-import java.util.Set;
 
 public class DivTagCompiler implements TagCompiler {
     @Override

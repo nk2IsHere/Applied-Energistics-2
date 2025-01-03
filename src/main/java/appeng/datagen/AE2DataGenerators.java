@@ -18,37 +18,37 @@
 
 package appeng.datagen;
 
-import appeng.datagen.providers.loot.BlockDropProvider;
-import appeng.datagen.providers.recipes.*;
-import appeng.datagen.providers.tags.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 import appeng.core.definitions.AEDamageTypes;
 import appeng.datagen.providers.advancements.AdvancementGenerator;
 import appeng.datagen.providers.localization.LocalizationProvider;
+import appeng.datagen.providers.loot.BlockDropProvider;
 import appeng.datagen.providers.models.BlockModelProvider;
 import appeng.datagen.providers.models.CableModelProvider;
 import appeng.datagen.providers.models.DecorationModelProvider;
 import appeng.datagen.providers.models.ItemModelProvider;
 import appeng.datagen.providers.models.PartModelProvider;
+import appeng.datagen.providers.recipes.*;
+import appeng.datagen.providers.tags.*;
 import appeng.init.worldgen.InitBiomes;
 import appeng.init.worldgen.InitDimensionTypes;
 import appeng.init.worldgen.InitStructures;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 
 public class AE2DataGenerators {
 
     public static void onGatherData(
-        FabricDataGenerator generator,
-        ExistingFileHelper existingFileHelper
-    ) {
+            FabricDataGenerator generator,
+            ExistingFileHelper existingFileHelper) {
         var pack = generator.createPack();
         var localization = new LocalizationProvider(generator);
 
-        pack.addProvider((packOutput, registries) -> new DatapackBuiltinEntriesProvider(packOutput, registries, createDatapackEntriesBuilder()));
+        pack.addProvider((packOutput, registries) -> new DatapackBuiltinEntriesProvider(packOutput, registries,
+                createDatapackEntriesBuilder()));
 
         // Loot
         pack.addProvider(BlockDropProvider::new);
@@ -59,7 +59,8 @@ public class AE2DataGenerators {
         pack.addProvider(FluidTagsProvider::new);
         pack.addProvider(BiomeTagsProvider::new);
         pack.addProvider(PoiTypeTagsProvider::new);
-        pack.addProvider((packOutput, registries) -> new DataComponentTypeTagProvider(packOutput, registries, localization));
+        pack.addProvider(
+                (packOutput, registries) -> new DataComponentTypeTagProvider(packOutput, registries, localization));
 
         // Models
         pack.addProvider((packOutput, registries) -> new BlockModelProvider(packOutput, existingFileHelper));
@@ -91,10 +92,10 @@ public class AE2DataGenerators {
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(Registries.DIMENSION_TYPE, InitDimensionTypes::init)
-            .add(Registries.STRUCTURE, InitStructures::initDatagenStructures)
-            .add(Registries.STRUCTURE_SET, InitStructures::initDatagenStructureSets)
-            .add(Registries.BIOME, InitBiomes::init)
-            .add(Registries.DAMAGE_TYPE, AEDamageTypes::init);
+                .add(Registries.DIMENSION_TYPE, InitDimensionTypes::init)
+                .add(Registries.STRUCTURE, InitStructures::initDatagenStructures)
+                .add(Registries.STRUCTURE_SET, InitStructures::initDatagenStructureSets)
+                .add(Registries.BIOME, InitBiomes::init)
+                .add(Registries.DAMAGE_TYPE, AEDamageTypes::init);
     }
 }

@@ -18,6 +18,25 @@
 
 package appeng.core.definitions;
 
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+
+import dev.architectury.registry.registries.DeferredRegister;
+
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.ids.AECreativeTabIds;
 import appeng.api.ids.AEItemIds;
@@ -52,29 +71,13 @@ import appeng.items.tools.fluix.*;
 import appeng.items.tools.powered.*;
 import appeng.items.tools.quartz.*;
 import appeng.menu.me.common.MEStorageMenu;
-import com.google.common.base.Preconditions;
-import dev.architectury.registry.registries.DeferredRegister;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Internal implementation for the API items
  */
 public final class AEItems {
     public static final DeferredRegister<Item> DR = DeferredRegister.create(AppEng.MOD_ID,
-        Registries.ITEM
-    );
+            Registries.ITEM);
 
     // spotless:off
     private static final List<ItemDefinition<?>> ITEMS = new ArrayList<>();
@@ -295,7 +298,8 @@ public final class AEItems {
         Item.Properties p = new Item.Properties();
 
         Preconditions.checkArgument(id.getNamespace().equals(AppEng.MOD_ID), "Can only register for AE2");
-        var definition = new ItemDefinition<>(name, DR.register(id.getPath(), (Supplier<? extends Item>) () -> factory.apply(p)));
+        var definition = new ItemDefinition<>(name,
+                DR.register(id.getPath(), (Supplier<? extends Item>) () -> factory.apply(p)));
 
         if (Objects.equals(group, AECreativeTabIds.MAIN)) {
             MainCreativeTab.add(definition);

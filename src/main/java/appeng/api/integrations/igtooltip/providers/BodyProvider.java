@@ -1,8 +1,9 @@
 package appeng.api.integrations.igtooltip.providers;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
-import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 @ApiStatus.OverrideOnly

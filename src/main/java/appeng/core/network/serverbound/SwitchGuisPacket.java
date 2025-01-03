@@ -1,17 +1,19 @@
 
 package appeng.core.network.serverbound;
 
-import appeng.core.network.CustomAppEngPayload;
-import appeng.core.network.ServerboundPacket;
-import appeng.menu.AEBaseMenu;
-import appeng.menu.ISubMenu;
-import appeng.menu.MenuOpener;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.MenuType;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.core.network.CustomAppEngPayload;
+import appeng.core.network.ServerboundPacket;
+import appeng.menu.AEBaseMenu;
+import appeng.menu.ISubMenu;
+import appeng.menu.MenuOpener;
 
 public record SwitchGuisPacket(
         @Nullable MenuType<? extends ISubMenu> newGui) implements ServerboundPacket {

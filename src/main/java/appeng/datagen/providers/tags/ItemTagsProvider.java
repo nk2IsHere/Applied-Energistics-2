@@ -18,13 +18,12 @@
 
 package appeng.datagen.providers.tags;
 
-import appeng.api.features.P2PTunnelAttunement;
-import appeng.api.ids.AETags;
-import appeng.api.util.AEColor;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.datagen.providers.IAE2DataProvider;
+import static net.minecraft.world.item.Items.*;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
@@ -35,15 +34,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
-import static net.minecraft.world.item.Items.*;
+import appeng.api.features.P2PTunnelAttunement;
+import appeng.api.ids.AETags;
+import appeng.api.util.AEColor;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
+import appeng.datagen.providers.IAE2DataProvider;
 
 public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider implements IAE2DataProvider {
 
-    public ItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, @Nullable BlockTagProvider blockTagProvider) {
+    public ItemTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture,
+            @Nullable BlockTagProvider blockTagProvider) {
         super(output, completableFuture, blockTagProvider);
     }
 

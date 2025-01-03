@@ -21,8 +21,6 @@ package appeng.init.worldgen;
 import java.util.List;
 import java.util.Map;
 
-import appeng.core.AppEng;
-import dev.architectury.registry.registries.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
@@ -34,14 +32,17 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 
+import dev.architectury.registry.registries.DeferredRegister;
+
+import appeng.core.AppEng;
 import appeng.worldgen.meteorite.MeteoriteStructure;
 import appeng.worldgen.meteorite.MeteoriteStructurePiece;
 
 public final class InitStructures {
     public static final DeferredRegister<StructureType<?>> STRUCTURE_TYPES = DeferredRegister
-        .create(AppEng.MOD_ID, Registries.STRUCTURE_TYPE);
+            .create(AppEng.MOD_ID, Registries.STRUCTURE_TYPE);
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES = DeferredRegister
-        .create(AppEng.MOD_ID, Registries.STRUCTURE_PIECE);
+            .create(AppEng.MOD_ID, Registries.STRUCTURE_PIECE);
 
     private InitStructures() {
     }
@@ -50,13 +51,13 @@ public final class InitStructures {
         var biomes = context.lookup(Registries.BIOME);
 
         context.register(
-            MeteoriteStructure.KEY,
-            new MeteoriteStructure(
-                new Structure.StructureSettings(
-                    biomes.getOrThrow(MeteoriteStructure.BIOME_TAG_KEY),
-                    Map.of(),
-                    Decoration.TOP_LAYER_MODIFICATION,
-                    TerrainAdjustment.NONE)));
+                MeteoriteStructure.KEY,
+                new MeteoriteStructure(
+                        new Structure.StructureSettings(
+                                biomes.getOrThrow(MeteoriteStructure.BIOME_TAG_KEY),
+                                Map.of(),
+                                Decoration.TOP_LAYER_MODIFICATION,
+                                TerrainAdjustment.NONE)));
 
     }
 
@@ -65,8 +66,8 @@ public final class InitStructures {
         var meteorite = structures.getOrThrow(MeteoriteStructure.KEY);
 
         var structureSet = new StructureSet(
-            List.of(StructureSet.entry(meteorite)),
-            new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 124895654));
+                List.of(StructureSet.entry(meteorite)),
+                new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 124895654));
 
         context.register(MeteoriteStructure.STRUCTURE_SET_KEY, structureSet);
     }

@@ -1,11 +1,12 @@
 package appeng.api.components;
 
+import java.util.List;
+
 import com.mojang.serialization.Codec;
+
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
 
 public record ExportedUpgrades(List<ItemStack> upgrades) {
     // Defined using xmap since we previously used a List directly.

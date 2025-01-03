@@ -1,6 +1,10 @@
 
 package appeng.core.network.serverbound;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+
 import appeng.api.config.Setting;
 import appeng.api.config.Settings;
 import appeng.api.util.IConfigManager;
@@ -10,9 +14,6 @@ import appeng.core.network.CustomAppEngPayload;
 import appeng.core.network.ServerboundPacket;
 import appeng.menu.AEBaseMenu;
 import appeng.util.EnumCycler;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 
 public record ConfigButtonPacket(Setting<?> option, boolean rotationDirection) implements ServerboundPacket {
 

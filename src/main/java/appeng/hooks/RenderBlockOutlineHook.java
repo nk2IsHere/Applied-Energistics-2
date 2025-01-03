@@ -1,18 +1,18 @@
 package appeng.hooks;
 
-import appeng.api.implementations.items.IFacadeItem;
-import appeng.api.parts.IFacadePart;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartItem;
-import appeng.core.AEConfig;
-import appeng.core.definitions.AEParts;
-import appeng.items.parts.FacadeItem;
-import appeng.parts.BusCollisionHelper;
-import appeng.parts.PartPlacement;
+import static net.minecraft.client.renderer.RenderStateShard.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalDouble;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
+
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Camera;
@@ -31,14 +31,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalDouble;
-
-import static net.minecraft.client.renderer.RenderStateShard.*;
+import appeng.api.implementations.items.IFacadeItem;
+import appeng.api.parts.IFacadePart;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.IPartItem;
+import appeng.core.AEConfig;
+import appeng.core.definitions.AEParts;
+import appeng.items.parts.FacadeItem;
+import appeng.parts.BusCollisionHelper;
+import appeng.parts.PartPlacement;
 
 public class RenderBlockOutlineHook {
     private RenderBlockOutlineHook() {

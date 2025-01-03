@@ -18,12 +18,11 @@
 
 package appeng.client.render.tesr;
 
-import appeng.block.storage.SkyChestBlock;
-import appeng.block.storage.SkyChestBlock.SkyChestType;
-import appeng.blockentity.storage.SkyChestBlockEntity;
-import appeng.core.AppEng;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.joml.Quaternionf;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -41,7 +40,11 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
-import org.joml.Quaternionf;
+
+import appeng.block.storage.SkyChestBlock;
+import appeng.block.storage.SkyChestBlock.SkyChestType;
+import appeng.blockentity.storage.SkyChestBlockEntity;
+import appeng.core.AppEng;
 
 // This is mostly a copy&paste job of the vanilla chest TESR
 @Environment(EnvType.CLIENT)

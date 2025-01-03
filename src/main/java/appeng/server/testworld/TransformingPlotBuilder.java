@@ -1,9 +1,9 @@
 package appeng.server.testworld;
 
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 class TransformingPlotBuilder implements PlotBuilder {
     private final Plot plot;

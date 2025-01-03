@@ -20,11 +20,13 @@ package appeng.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 public class SpatialSkyRender {
 

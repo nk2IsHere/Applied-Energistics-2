@@ -18,14 +18,15 @@
 
 package appeng.recipes.entropy;
 
+import java.util.*;
+
 import com.google.common.base.Preconditions;
+
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-
-import java.util.*;
 
 public class EntropyRecipeBuilder {
     private EntropyMode mode;

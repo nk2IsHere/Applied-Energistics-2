@@ -1,9 +1,11 @@
 package appeng.integration.modules.igtooltip;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.MutableComponent;
+
 import appeng.api.networking.IGridNode;
 import appeng.core.localization.InGameTooltip;
-import net.minecraft.network.chat.MutableComponent;
-import org.jetbrains.annotations.Nullable;
 
 public enum GridNodeState {
     OFFLINE(InGameTooltip.DeviceOffline),

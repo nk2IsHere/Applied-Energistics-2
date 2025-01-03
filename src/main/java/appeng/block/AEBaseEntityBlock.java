@@ -18,16 +18,11 @@
 
 package appeng.block;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.implementations.items.IMemoryCard;
-import appeng.api.implementations.items.MemoryCardMessages;
-import appeng.block.networking.CableBusBlock;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.AEBaseInvBlockEntity;
-import appeng.items.tools.MemoryCardItem;
-import appeng.util.InteractionUtil;
-import appeng.util.Platform;
-import appeng.util.SettingsFrom;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.contents.PlainTextContents;
@@ -49,10 +44,17 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.api.ids.AEComponents;
+import appeng.api.implementations.items.IMemoryCard;
+import appeng.api.implementations.items.MemoryCardMessages;
+import appeng.block.networking.CableBusBlock;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.AEBaseInvBlockEntity;
+import appeng.items.tools.MemoryCardItem;
+import appeng.util.InteractionUtil;
+import appeng.util.Platform;
+import appeng.util.SettingsFrom;
 
 /**
  * Base class for blocks that have a {@link BlockEntity}.

@@ -19,6 +19,9 @@
 package appeng.client.render.effects;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.joml.Vector3f;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -27,7 +30,6 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class CraftingFx extends TextureSheetParticle {

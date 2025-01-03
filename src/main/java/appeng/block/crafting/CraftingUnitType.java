@@ -1,7 +1,8 @@
 package appeng.block.crafting;
 
-import appeng.core.definitions.AEBlocks;
 import net.minecraft.world.item.Item;
+
+import appeng.core.definitions.AEBlocks;
 
 public enum CraftingUnitType implements ICraftingUnitType {
     UNIT(0),

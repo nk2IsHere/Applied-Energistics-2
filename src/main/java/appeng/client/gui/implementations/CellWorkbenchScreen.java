@@ -18,6 +18,14 @@
 
 package appeng.client.gui.implementations;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.ActionItems;
 import appeng.api.config.CopyMode;
 import appeng.api.config.FuzzyMode;
@@ -33,13 +41,6 @@ import appeng.client.gui.widgets.ToggleButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.CellWorkbenchMenu;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CellWorkbenchScreen extends UpgradeableScreen<CellWorkbenchMenu> {
 

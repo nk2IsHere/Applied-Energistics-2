@@ -18,12 +18,14 @@
 
 package appeng.api.implementations.items;
 
-import appeng.api.parts.IFacadePart;
+import org.jetbrains.annotations.ApiStatus;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus;
+
+import appeng.api.parts.IFacadePart;
 
 /**
  * Implemented on AE2 {@link Item facade items}.

@@ -18,17 +18,20 @@
 
 package appeng.mixins.unlitquad;
 
-import appeng.hooks.UnlitQuadHooks;
+import java.util.Map;
+
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Map;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+
+import appeng.hooks.UnlitQuadHooks;
 
 /**
  * The only job of this mixin is to only enable the unlit extensions if the model is whitelisted for it, which is

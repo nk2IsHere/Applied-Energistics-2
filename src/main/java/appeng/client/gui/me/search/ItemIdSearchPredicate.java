@@ -1,11 +1,11 @@
 package appeng.client.gui.me.search;
 
-import appeng.api.stacks.AEKey;
-import appeng.menu.me.common.GridInventoryEntry;
-
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Predicate;
+
+import appeng.api.stacks.AEKey;
+import appeng.menu.me.common.GridInventoryEntry;
 
 final class ItemIdSearchPredicate implements Predicate<GridInventoryEntry> {
     private final String term;

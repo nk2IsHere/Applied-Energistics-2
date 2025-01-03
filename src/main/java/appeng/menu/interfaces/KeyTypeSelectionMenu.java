@@ -1,18 +1,20 @@
 package appeng.menu.interfaces;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.jetbrains.annotations.ApiStatus;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import appeng.api.stacks.AEKeyType;
 import appeng.api.util.KeyTypeSelection;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.serverbound.SelectKeyTypePacket;
 import appeng.menu.guisync.PacketWritable;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.ApiStatus;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Implemented by menus that allow the user to select key types.

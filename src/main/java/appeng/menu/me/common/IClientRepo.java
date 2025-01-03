@@ -18,11 +18,11 @@
 
 package appeng.menu.me.common;
 
-import net.minecraft.world.item.crafting.Ingredient;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * Represents a client-side only repository of {@link GridInventoryEntry} entries that represent the network content

@@ -1,9 +1,9 @@
 package appeng.me.storage;
 
+import java.util.function.Supplier;
+
 import appeng.api.storage.ILinkStatus;
 import appeng.api.storage.MEStorage;
-
-import java.util.function.Supplier;
 
 /**
  * A delegating ME inventory that falls back to an empty inventory if the {@link ILinkStatus link status} indicates that

@@ -18,16 +18,17 @@
 
 package appeng.block.crafting;
 
-import appeng.block.AEBaseBlockItem;
-import appeng.core.definitions.AEBlocks;
-import appeng.recipes.game.CraftingUnitTransformRecipe;
-import appeng.util.InteractionUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+
+import appeng.block.AEBaseBlockItem;
+import appeng.core.definitions.AEBlocks;
+import appeng.recipes.game.CraftingUnitTransformRecipe;
+import appeng.util.InteractionUtil;
 
 /**
  * Item that allows uncrafting CPU parts by disassembling them back into the crafting unit and the extra item.

@@ -18,9 +18,8 @@
 
 package appeng.block.networking;
 
-import appeng.api.util.AEColor;
-import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.parts.CableBusContainer;
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.color.block.BlockColor;
@@ -28,7 +27,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.util.AEColor;
+import appeng.blockentity.networking.CableBusBlockEntity;
+import appeng.parts.CableBusContainer;
 
 /**
  * Exposes the cable bus color as tint indices 0 (dark variant), 1 (medium variant) and 2 (bright variant).

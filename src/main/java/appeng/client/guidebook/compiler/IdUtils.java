@@ -1,9 +1,9 @@
 package appeng.client.guidebook.compiler;
 
+import java.net.URI;
+
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
-
-import java.net.URI;
 
 /**
  * Helper to resolve shorthand and relative IDs found in markdown pages.

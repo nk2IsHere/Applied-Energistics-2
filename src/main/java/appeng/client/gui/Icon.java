@@ -18,9 +18,10 @@
 
 package appeng.client.gui;
 
+import net.minecraft.resources.ResourceLocation;
+
 import appeng.client.gui.style.Blitter;
 import appeng.core.AppEng;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * Edit in {@code assets/ae2/textures/guis/states.png}.

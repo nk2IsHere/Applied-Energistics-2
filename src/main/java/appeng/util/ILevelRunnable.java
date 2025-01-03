@@ -18,10 +18,11 @@
 
 package appeng.util;
 
-import net.minecraft.world.level.Level;
+import java.util.concurrent.Callable;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.Callable;
+import net.minecraft.world.level.Level;
 
 /**
  * An interface similar to {@link Callable}, but allowing to pass the {@link Level} when calling.

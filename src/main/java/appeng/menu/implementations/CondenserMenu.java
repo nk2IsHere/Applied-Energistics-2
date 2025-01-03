@@ -18,6 +18,9 @@
 
 package appeng.menu.implementations;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.config.CondenserOutput;
 import appeng.api.config.Settings;
 import appeng.blockentity.misc.CondenserBlockEntity;
@@ -27,8 +30,6 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.interfaces.IProgressProvider;
 import appeng.menu.slot.OutputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see appeng.client.gui.implementations.CondenserScreen

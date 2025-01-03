@@ -20,10 +20,11 @@ package appeng.client.render;
 
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A quaint model provider that provides a single model with a single given resource identifier.

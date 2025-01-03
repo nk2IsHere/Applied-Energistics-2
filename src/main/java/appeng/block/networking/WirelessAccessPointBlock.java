@@ -18,14 +18,11 @@
 
 package appeng.block.networking;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.api.orientation.RelativeSide;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.WirelessAccessPointMenu;
-import appeng.menu.locator.MenuLocators;
+import java.util.Locale;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -49,10 +46,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.api.orientation.RelativeSide;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.WirelessAccessPointMenu;
+import appeng.menu.locator.MenuLocators;
 
 public class WirelessAccessPointBlock extends AEBaseEntityBlock<WirelessAccessPointBlockEntity>
         implements SimpleWaterloggedBlock {

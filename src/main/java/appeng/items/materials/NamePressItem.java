@@ -18,15 +18,16 @@
 
 package appeng.items.materials;
 
-import appeng.api.ids.AEComponents;
-import appeng.items.AEBaseItem;
+import java.util.List;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-import java.util.List;
+import appeng.api.ids.AEComponents;
+import appeng.items.AEBaseItem;
 
 public class NamePressItem extends AEBaseItem {
     public NamePressItem(Properties properties) {

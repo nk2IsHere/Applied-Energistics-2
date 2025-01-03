@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -39,7 +40,7 @@ import appeng.items.AEBaseItem;
 public final class MainCreativeTab {
 
     private static final Multimap<ResourceKey<CreativeModeTab>, ItemDefinition<?>> externalItemDefs = HashMultimap
-        .create();
+            .create();
     private static final List<ItemDefinition<?>> itemDefs = new ArrayList<>();
 
     public static void init(Registry<CreativeModeTab> registry) {
@@ -66,7 +67,7 @@ public final class MainCreativeTab {
 
             // For block items, the block controls the creative tab
             if (item instanceof AEBaseBlockItem baseItem
-                && baseItem.getBlock() instanceof AEBaseBlock baseBlock) {
+                    && baseItem.getBlock() instanceof AEBaseBlock baseBlock) {
                 baseBlock.addToMainCreativeTab(itemDisplayParameters, output);
             } else if (item instanceof AEBaseItem baseItem) {
                 baseItem.addToMainCreativeTab(itemDisplayParameters, output);

@@ -18,16 +18,18 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.orientation.BlockOrientation;
+import java.util.EnumMap;
+
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.core.Direction;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
-import java.util.EnumMap;
+import appeng.api.orientation.BlockOrientation;
 
 /**
  * Assuming a default-orientation of forward=NORTH and up=UP, this class rotates a given list of quads to the desired

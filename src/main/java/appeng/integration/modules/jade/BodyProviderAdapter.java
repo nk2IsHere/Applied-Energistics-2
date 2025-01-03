@@ -1,13 +1,15 @@
 package appeng.integration.modules.jade;
 
-import appeng.api.integrations.igtooltip.providers.BodyProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.JadeIds;
 import snownee.jade.api.config.IPluginConfig;
+
+import appeng.api.integrations.igtooltip.providers.BodyProvider;
 
 /**
  * Delegation provider for tiles through {@link IBlockComponentProvider}

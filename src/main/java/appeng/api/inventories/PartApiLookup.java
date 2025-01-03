@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import appeng.core.definitions.DeferredBlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
@@ -16,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
+import appeng.core.definitions.DeferredBlockEntityType;
 
 /**
  * Exposes {@linkplain BlockApiLookup Block APIs} for parts. This allows parts to answer to API queries made via
@@ -29,9 +29,9 @@ public final class PartApiLookup {
     // These two are used as identity hash maps - BlockApiLookup has identity semantics.
     // We use ApiProviderMap because it ensures non-null keys and values.
     private static final ApiProviderMap<BlockApiLookup<?, ?>, Function<?, Direction>> mappings = ApiProviderMap
-        .create();
+            .create();
     private static final ApiProviderMap<BlockApiLookup<?, ?>, ApiProviderMap<Class<?>, PartApiProvider<?, ?, ?>>> providers = ApiProviderMap
-        .create();
+            .create();
     private static final Set<BlockApiLookup<?, ?>> cableBusRegisteredLookups = ConcurrentHashMap.newKeySet();
     private static final Set<DeferredBlockEntityType<? extends IPartHost>> hostTypes = ConcurrentHashMap.newKeySet();
 
@@ -45,7 +45,7 @@ public final class PartApiLookup {
      * If multiple mapping functions are registered for a given lookup, it is the first that will be used.
      */
     public static <A, C> void registerCustomContext(BlockApiLookup<A, C> lookup,
-                                                    Function<C, Direction> mappingFunction) {
+            Function<C, Direction> mappingFunction) {
         mappings.putIfAbsent(lookup, mappingFunction);
     }
 
@@ -61,12 +61,12 @@ public final class PartApiLookup {
      */
     @SuppressWarnings("ConstantConditions")
     public static <A, C, P extends IPart> void register(BlockApiLookup<A, C> lookup, PartApiProvider<A, C, P> provider,
-                                                        Class<P> partClass) {
+            Class<P> partClass) {
         Objects.requireNonNull(lookup, "Registered lookup may not be null.");
 
         if (partClass.isInterface()) {
             throw new IllegalArgumentException(
-                "Part lookup cannot be registered for interface:" + partClass.getCanonicalName());
+                    "Part lookup cannot be registered for interface:" + partClass.getCanonicalName());
         }
 
         providers.putIfAbsent(lookup, ApiProviderMap.create());
@@ -74,7 +74,7 @@ public final class PartApiLookup {
 
         if (toProviderMap.putIfAbsent(partClass, provider) != null) {
             throw new IllegalArgumentException(
-                "Duplicate provider registration for part class " + partClass.getCanonicalName());
+                    "Duplicate provider registration for part class " + partClass.getCanonicalName());
         }
 
         if (cableBusRegisteredLookups.add(lookup)) {
@@ -85,7 +85,7 @@ public final class PartApiLookup {
     }
 
     private static <A, C> void registerLookup(BlockEntityType<? extends IPartHost> hostType,
-                                              BlockApiLookup<A, C> lookup) {
+            BlockApiLookup<A, C> lookup) {
 
         lookup.registerForBlockEntities((be, context) -> {
             @Nullable

@@ -23,13 +23,14 @@
 
 package appeng.api.implementations.blockentities;
 
-import appeng.core.AppEng;
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import org.jetbrains.annotations.Nullable;
 
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+
+import appeng.core.AppEng;
 
 /**
  * Crank/Crankable API,
@@ -42,8 +43,8 @@ import net.minecraft.world.level.Level;
 public interface ICrankable {
 
     BlockApiLookup<ICrankable, Direction> SIDED = BlockApiLookup.get(
-        AppEng.makeId("crankable"),
-        ICrankable.class, Direction.class);
+            AppEng.makeId("crankable"),
+            ICrankable.class, Direction.class);
 
     /**
      * Test if the crank can turn, return false if there is no work to be done.

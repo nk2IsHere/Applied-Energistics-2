@@ -18,10 +18,11 @@
 
 package appeng.datagen.providers.models;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
+
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlocks;
 
 public class DecorationModelProvider extends AE2BlockStateProvider {
 

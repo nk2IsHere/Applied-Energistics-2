@@ -18,13 +18,17 @@
 
 package appeng.client.gui.widgets;
 
-import appeng.client.Point;
-import appeng.client.gui.*;
-import appeng.client.gui.style.PaletteColor;
-import appeng.client.gui.style.ScreenStyle;
-import appeng.client.gui.style.WidgetStyle;
-import appeng.core.localization.GuiText;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.ParsePosition;
+import java.util.*;
+import java.util.function.Consumer;
+
 import com.google.common.primitives.Longs;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -34,14 +38,12 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.ParsePosition;
-import java.util.*;
-import java.util.function.Consumer;
+import appeng.client.Point;
+import appeng.client.gui.*;
+import appeng.client.gui.style.PaletteColor;
+import appeng.client.gui.style.ScreenStyle;
+import appeng.client.gui.style.WidgetStyle;
+import appeng.core.localization.GuiText;
 
 /**
  * A utility widget that consists of a text-field to enter a number with attached buttons to increment/decrement the

@@ -1,9 +1,10 @@
 package appeng.integration.modules.rei;
 
-import appeng.blockentity.misc.ChargerBlockEntity;
-import appeng.blockentity.misc.CrankBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.localization.ItemModText;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.network.chat.Component;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -13,10 +14,11 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.network.chat.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.blockentity.misc.ChargerBlockEntity;
+import appeng.blockentity.misc.CrankBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.localization.ItemModText;
 
 public class ChargerCategory implements DisplayCategory<ChargerDisplay> {
     private final Renderer icon;

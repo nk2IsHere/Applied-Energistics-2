@@ -1,5 +1,14 @@
 package appeng.helpers;
 
+import java.util.function.BiConsumer;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
+
 import appeng.api.ids.AEComponents;
 import appeng.api.inventories.ISegmentedInventory;
 import appeng.api.inventories.InternalInventory;
@@ -11,13 +20,6 @@ import appeng.parts.reporting.CraftingTerminalPart;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.SupplierInternalInventory;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 public class WirelessCraftingTerminalMenuHost<T extends WirelessCraftingTerminalItem>
         extends WirelessTerminalMenuHost<T> implements ISegmentedInventory {

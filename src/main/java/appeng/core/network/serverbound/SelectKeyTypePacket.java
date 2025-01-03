@@ -1,12 +1,13 @@
 package appeng.core.network.serverbound;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+
 import appeng.api.stacks.AEKeyType;
 import appeng.core.network.CustomAppEngPayload;
 import appeng.core.network.ServerboundPacket;
 import appeng.menu.interfaces.KeyTypeSelectionMenu;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 
 public record SelectKeyTypePacket(AEKeyType keyType, boolean enabled) implements ServerboundPacket {
     public static final StreamCodec<RegistryFriendlyByteBuf, SelectKeyTypePacket> STREAM_CODEC = StreamCodec.ofMember(

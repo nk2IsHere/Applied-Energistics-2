@@ -1,12 +1,12 @@
 package appeng.integration.modules.igtooltip.parts;
 
+import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
 import appeng.api.integrations.igtooltip.providers.IconProvider;
 import appeng.api.integrations.igtooltip.providers.NameProvider;
 import appeng.api.integrations.igtooltip.providers.ServerDataProvider;
-
-import java.util.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class PartTooltipProviders {
     private static final Comparator<Registration<?>> COMPARATOR = Comparator.comparingInt(Registration::priority);

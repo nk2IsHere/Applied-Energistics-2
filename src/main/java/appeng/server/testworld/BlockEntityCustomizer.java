@@ -14,8 +14,8 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
  * contain such a block entity are skipped.
  */
 public record BlockEntityCustomizer<T extends BlockEntity>(BoundingBox bb,
-                                                           BlockEntityType<T> type,
-                                                           Consumer<T> consumer) implements BlockPlacingBuildAction {
+        BlockEntityType<T> type,
+        Consumer<T> consumer) implements BlockPlacingBuildAction {
     @Override
     public void placeBlock(ServerLevel level, Player player, BlockPos pos, BlockPos minPos, BlockPos maxPos) {
         level.getBlockEntity(pos, type).ifPresent(consumer);

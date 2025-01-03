@@ -1,8 +1,10 @@
 package appeng.api.util;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.stacks.AEKeyType;
-import appeng.api.stacks.AEKeyTypes;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -10,10 +12,9 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
+import appeng.api.ids.AEComponents;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.stacks.AEKeyTypes;
 
 /**
  * Helper class to store the selection of key types.

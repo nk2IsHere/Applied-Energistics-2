@@ -18,21 +18,23 @@
 
 package appeng.menu.slot;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.api.stacks.GenericStack;
-import appeng.client.gui.Icon;
-import appeng.core.AELog;
-import appeng.menu.AEBaseMenu;
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Supplier;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.stacks.GenericStack;
+import appeng.client.gui.Icon;
+import appeng.core.AELog;
+import appeng.menu.AEBaseMenu;
 
 public class AppEngSlot extends Slot {
     private static final Container EMPTY_INVENTORY = new SimpleContainer(0);

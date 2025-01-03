@@ -1,9 +1,11 @@
 package appeng.integration.modules.jade;
 
-import appeng.api.integrations.igtooltip.TooltipBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
 import snownee.jade.api.ITooltip;
+
+import appeng.api.integrations.igtooltip.TooltipBuilder;
 
 class JadeTooltipBuilder implements TooltipBuilder {
     private final ITooltip tooltip;

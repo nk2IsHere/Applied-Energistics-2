@@ -23,12 +23,15 @@
 
 package appeng.api.parts;
 
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IManagedGridNode;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.util.SettingsFrom;
+import java.util.List;
+import java.util.Set;
+
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.CrashReportCategory;
@@ -50,12 +53,12 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Set;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IManagedGridNode;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.util.SettingsFrom;
 
 public interface IPart extends ICustomCableConnection, Clearable {
 

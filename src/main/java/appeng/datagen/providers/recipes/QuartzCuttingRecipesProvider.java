@@ -1,29 +1,27 @@
 package appeng.datagen.providers.recipes;
 
+import java.util.concurrent.CompletableFuture;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.world.item.crafting.Ingredient;
+
 import appeng.api.ids.AETags;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEParts;
 import appeng.datagen.providers.tags.ConventionTags;
 import appeng.recipes.quartzcutting.QuartzCuttingRecipe;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.world.item.crafting.Ingredient;
-
-import java.util.concurrent.CompletableFuture;
 
 public class QuartzCuttingRecipesProvider extends AE2RecipeProvider {
 
     public QuartzCuttingRecipesProvider(
-        FabricDataOutput output,
-        CompletableFuture<HolderLookup.Provider> registriesFuture
-    ) {
+            FabricDataOutput output,
+            CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(
-            output,
-            registriesFuture
-        );
+                output,
+                registriesFuture);
     }
 
     @Override

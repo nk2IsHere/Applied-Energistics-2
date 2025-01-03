@@ -1,6 +1,5 @@
 package appeng.blockentity.storage;
 
-import appeng.blockentity.AEBaseBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -16,6 +15,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import appeng.blockentity.AEBaseBlockEntity;
 
 public class SkyStoneTankBlockEntity extends AEBaseBlockEntity {
 

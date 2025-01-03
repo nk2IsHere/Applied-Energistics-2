@@ -18,18 +18,10 @@
 
 package appeng.block.misc;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.api.orientation.RelativeSide;
-import appeng.api.util.AEAxisAlignedBB;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.ChargerBlockEntity;
-import appeng.blockentity.misc.ChargerRecipes;
-import appeng.client.render.effects.LightningArcParticleData;
-import appeng.core.AEConfig;
-import appeng.core.AppEngClient;
-import appeng.util.Platform;
+import java.util.List;
+
+import org.joml.Vector3f;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -49,9 +41,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.joml.Vector3f;
 
-import java.util.List;
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.api.orientation.RelativeSide;
+import appeng.api.util.AEAxisAlignedBB;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.ChargerBlockEntity;
+import appeng.blockentity.misc.ChargerRecipes;
+import appeng.client.render.effects.LightningArcParticleData;
+import appeng.core.AEConfig;
+import appeng.core.AppEngClient;
+import appeng.util.Platform;
 
 public class ChargerBlock extends AEBaseEntityBlock<ChargerBlockEntity> {
 

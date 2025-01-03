@@ -18,13 +18,14 @@
 
 package appeng.client.gui.implementations;
 
-import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.style.ScreenStyle;
-import appeng.menu.implementations.QuartzKnifeMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
+import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.style.ScreenStyle;
+import appeng.menu.implementations.QuartzKnifeMenu;
 
 public class QuartzKnifeScreen extends AEBaseScreen<QuartzKnifeMenu> {
 

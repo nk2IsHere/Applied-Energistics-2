@@ -1,9 +1,6 @@
 
 package appeng.core.network.serverbound;
 
-import appeng.api.parts.IPartHost;
-import appeng.core.network.CustomAppEngPayload;
-import appeng.core.network.ServerboundPacket;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,6 +8,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.api.parts.IPartHost;
+import appeng.core.network.CustomAppEngPayload;
+import appeng.core.network.ServerboundPacket;
 
 /**
  * Packet sent when a player left-clicks on a part attached to a cable bus. This packet contains the hit position to
@@ -43,7 +44,7 @@ public record PartLeftClickPacket(BlockHitResult hitResult, boolean alternateUse
     public void handleOnServer(ServerPlayer player) {
         // Fire event on the server to give protection mods a chance to cancel the interaction
         if (AttackBlockCallback.EVENT.invoker().interact(player, player.level(), InteractionHand.MAIN_HAND,
-            hitResult.getBlockPos(), hitResult.getDirection()) != InteractionResult.PASS) {
+                hitResult.getBlockPos(), hitResult.getDirection()) != InteractionResult.PASS) {
             return;
         }
 

@@ -18,14 +18,17 @@
 
 package appeng.client.render.tesr;
 
-import appeng.blockentity.misc.ChargerBlockEntity;
-import appeng.client.render.renderable.ItemRenderable;
 import com.mojang.math.Transformation;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.world.item.ItemStack;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joml.Vector3f;
+
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.ItemStack;
+
+import appeng.blockentity.misc.ChargerBlockEntity;
+import appeng.client.render.renderable.ItemRenderable;
 
 /**
  * Renders the item being charged.

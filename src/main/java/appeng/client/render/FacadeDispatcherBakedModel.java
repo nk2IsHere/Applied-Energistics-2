@@ -18,8 +18,9 @@
 
 package appeng.client.render;
 
-import appeng.client.render.cablebus.FacadeBuilder;
-import appeng.items.parts.FacadeItem;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -29,8 +30,8 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.ItemStackMap;
 
-import java.util.Map;
-import java.util.function.Supplier;
+import appeng.client.render.cablebus.FacadeBuilder;
+import appeng.items.parts.FacadeItem;
 
 /**
  * This baked model class is used as a dispatcher to redirect the renderer to the *real* model that should be used based
@@ -46,15 +47,13 @@ public class FacadeDispatcherBakedModel extends DelegateBakedModel {
         this.facadeBuilder = facadeBuilder;
     }
 
-
     @Override
     public void emitBlockQuads(
-        BlockAndTintGetter blockView,
-        BlockState state,
-        BlockPos pos,
-        Supplier<RandomSource> randomSupplier,
-        RenderContext context
-    ) {
+            BlockAndTintGetter blockView,
+            BlockState state,
+            BlockPos pos,
+            Supplier<RandomSource> randomSupplier,
+            RenderContext context) {
         var model = cache.get(ItemStack.EMPTY);
         if (model == null) {
             model = new FacadeBakedItemModel(getBaseModel(), ItemStack.EMPTY, facadeBuilder);
@@ -66,10 +65,9 @@ public class FacadeDispatcherBakedModel extends DelegateBakedModel {
 
     @Override
     public void emitItemQuads(
-        ItemStack stack,
-        Supplier<RandomSource> randomSupplier,
-        RenderContext context
-    ) {
+            ItemStack stack,
+            Supplier<RandomSource> randomSupplier,
+            RenderContext context) {
         if (!(stack.getItem() instanceof FacadeItem itemFacade)) {
             return;
         }

@@ -1,8 +1,10 @@
 package appeng.client.gui.me.common;
 
-import appeng.api.stacks.GenericStack;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.ItemStack;
+
+import appeng.api.stacks.GenericStack;
 
 /**
  * A slot to showcase an item on the client-side.

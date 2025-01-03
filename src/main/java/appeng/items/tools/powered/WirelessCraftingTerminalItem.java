@@ -1,14 +1,16 @@
 package appeng.items.tools.powered;
 
-import appeng.helpers.WirelessCraftingTerminalMenuHost;
-import appeng.menu.locator.ItemMenuHostLocator;
-import appeng.menu.me.items.WirelessCraftingTermMenu;
+import java.util.function.DoubleSupplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.DoubleSupplier;
+import appeng.helpers.WirelessCraftingTerminalMenuHost;
+import appeng.menu.locator.ItemMenuHostLocator;
+import appeng.menu.me.items.WirelessCraftingTermMenu;
 
 public class WirelessCraftingTerminalItem extends WirelessTerminalItem {
     public WirelessCraftingTerminalItem(DoubleSupplier powerCapacity, Properties props) {

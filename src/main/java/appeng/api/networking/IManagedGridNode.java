@@ -23,9 +23,12 @@
 
 package appeng.api.networking;
 
-import appeng.api.networking.pathing.IPathingService;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.util.AEColor;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,11 +36,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import appeng.api.networking.pathing.IPathingService;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.util.AEColor;
 
 /**
  * This interface is intended for the host that created this node. It is used to configure the node's properties.

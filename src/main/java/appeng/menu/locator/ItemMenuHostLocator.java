@@ -1,17 +1,19 @@
 package appeng.menu.locator;
 
-import appeng.api.implementations.menuobjects.IMenuItem;
-import appeng.api.implementations.menuobjects.ItemMenuHost;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.api.implementations.menuobjects.IMenuItem;
+import appeng.api.implementations.menuobjects.ItemMenuHost;
+
 /**
- * A locator for stacks of items that implement {@link IMenuItem}. This allows
- * such items to be stored in various places (player inventory, curio slots) when they host a menu.
+ * A locator for stacks of items that implement {@link IMenuItem}. This allows such items to be stored in various places
+ * (player inventory, curio slots) when they host a menu.
  */
 public interface ItemMenuHostLocator extends MenuHostLocator {
     Logger LOG = LoggerFactory.getLogger(ItemMenuHostLocator.class);

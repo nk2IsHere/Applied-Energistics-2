@@ -1,7 +1,8 @@
 package appeng.client.guidebook.style;
 
-import appeng.client.guidebook.color.ColorValue;
 import net.minecraft.resources.ResourceLocation;
+
+import appeng.client.guidebook.color.ColorValue;
 
 public record ResolvedTextStyle(
         float fontScale,

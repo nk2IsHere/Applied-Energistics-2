@@ -1,5 +1,9 @@
 package appeng.client.guidebook.scene.annotation;
 
+import org.joml.Vector3f;
+
+import net.minecraft.client.Minecraft;
+
 import appeng.client.guidebook.color.ColorValue;
 import appeng.client.guidebook.color.ConstantColor;
 import appeng.client.guidebook.color.MutableColor;
@@ -7,8 +11,6 @@ import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.render.RenderContext;
 import appeng.client.guidebook.scene.GuidebookScene;
 import appeng.core.AppEng;
-import net.minecraft.client.Minecraft;
-import org.joml.Vector3f;
 
 public class DiamondAnnotation extends OverlayAnnotation {
     private final Vector3f pos;

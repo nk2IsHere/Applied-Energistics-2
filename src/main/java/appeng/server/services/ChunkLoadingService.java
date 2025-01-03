@@ -18,12 +18,12 @@
 
 package appeng.server.services;
 
-import appeng.blockentity.spatial.SpatialAnchorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import appeng.blockentity.spatial.SpatialAnchorBlockEntity;
 
 public class ChunkLoadingService {
 

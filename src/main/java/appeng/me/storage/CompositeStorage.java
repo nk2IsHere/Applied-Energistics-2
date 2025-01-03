@@ -1,5 +1,10 @@
 package appeng.me.storage;
 
+import java.util.Map;
+import java.util.Objects;
+
+import net.minecraft.network.chat.Component;
+
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -8,10 +13,6 @@ import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.MEStorage;
 import appeng.core.localization.GuiText;
-import net.minecraft.network.chat.Component;
-
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Combines several ME storages that each handle only a given key-space.

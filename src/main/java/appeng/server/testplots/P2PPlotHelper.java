@@ -1,5 +1,13 @@
 package appeng.server.testplots;
 
+import java.util.Collection;
+import java.util.Objects;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.level.Level;
+
 import appeng.api.networking.IGrid;
 import appeng.api.parts.PartHelper;
 import appeng.blockentity.networking.CableBusBlockEntity;
@@ -9,13 +17,6 @@ import appeng.me.service.P2PService;
 import appeng.parts.p2p.P2PTunnelPart;
 import appeng.server.testworld.PlotBuilder;
 import appeng.util.SettingsFrom;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.world.level.Level;
-
-import java.util.Collection;
-import java.util.Objects;
 
 public final class P2PPlotHelper {
     private P2PPlotHelper() {

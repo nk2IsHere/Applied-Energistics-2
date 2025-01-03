@@ -18,9 +18,7 @@
 
 package appeng.block.spatial;
 
-import appeng.block.AEBaseBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -31,6 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import appeng.block.AEBaseBlock;
 
 /**
  * This block is used to fill empty space in spatial dimensions and delinates the border of a spatial dimensions's

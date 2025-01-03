@@ -1,5 +1,15 @@
 package appeng.client.guidebook.compiler.tags;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.*;
+
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.document.block.LytBlock;
 import appeng.client.guidebook.document.block.LytBlockContainer;
@@ -8,14 +18,6 @@ import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
 import appeng.libs.mdast.model.MdAstNode;
 import appeng.recipes.AERecipeTypes;
 import appeng.util.Platform;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.*;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
 
 /**
  * Shows a Recipe-Book-Like representation of the recipe needed to craft a given item.

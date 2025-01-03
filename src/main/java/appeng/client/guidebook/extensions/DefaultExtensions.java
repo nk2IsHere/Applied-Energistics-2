@@ -1,5 +1,10 @@
 package appeng.client.guidebook.extensions;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import appeng.client.guidebook.compiler.TagCompiler;
 import appeng.client.guidebook.compiler.tags.*;
 import appeng.client.guidebook.scene.BlockImageTagCompiler;
@@ -13,11 +18,6 @@ import appeng.client.guidebook.scene.element.ImportStructureElementCompiler;
 import appeng.client.guidebook.scene.element.IsometricCameraElementCompiler;
 import appeng.client.guidebook.scene.element.SceneBlockElementCompiler;
 import appeng.client.guidebook.scene.element.SceneElementTagCompiler;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
 
 public final class DefaultExtensions {
     private static final List<Registration<?>> EXTENSIONS = List.of(

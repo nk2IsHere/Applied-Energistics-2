@@ -1,11 +1,15 @@
 package appeng.client.guidebook.scene;
 
-import appeng.client.guidebook.document.LytPoint;
-import appeng.client.guidebook.document.LytRect;
-import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
-import appeng.client.guidebook.scene.annotation.OverlayAnnotation;
-import appeng.client.guidebook.scene.annotation.SceneAnnotation;
-import appeng.client.guidebook.scene.level.GuidebookLevel;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.*;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -16,16 +20,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.joml.*;
 
-import java.lang.Math;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import appeng.client.guidebook.document.LytPoint;
+import appeng.client.guidebook.document.LytRect;
+import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
+import appeng.client.guidebook.scene.annotation.OverlayAnnotation;
+import appeng.client.guidebook.scene.annotation.SceneAnnotation;
+import appeng.client.guidebook.scene.level.GuidebookLevel;
 
 public class GuidebookScene {
 

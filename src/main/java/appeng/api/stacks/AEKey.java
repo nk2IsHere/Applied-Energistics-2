@@ -1,10 +1,14 @@
 package appeng.api.stacks;
 
-import appeng.api.config.FuzzyMode;
-import appeng.api.ids.AEComponents;
-import appeng.core.AELog;
-import appeng.core.definitions.AEItems;
+import java.util.List;
+
 import com.mojang.serialization.*;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
@@ -18,12 +22,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import appeng.api.config.FuzzyMode;
+import appeng.api.ids.AEComponents;
+import appeng.core.AELog;
+import appeng.core.definitions.AEItems;
 
 /**
  * Uniquely identifies something that "stacks" within an ME inventory.

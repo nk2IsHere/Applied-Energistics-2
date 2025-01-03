@@ -18,9 +18,10 @@
 
 package appeng.menu.slot;
 
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.InternalInventory;
 import appeng.client.Point;
-import net.minecraft.world.item.ItemStack;
 
 public class OptionalFakeSlot extends FakeSlot implements IOptionalSlot {
 

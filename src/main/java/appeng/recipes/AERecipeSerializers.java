@@ -1,5 +1,10 @@
 package appeng.recipes;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+
+import dev.architectury.registry.registries.DeferredRegister;
+
 import appeng.core.AppEng;
 import appeng.recipes.entropy.EntropyRecipeSerializer;
 import appeng.recipes.game.*;
@@ -8,9 +13,6 @@ import appeng.recipes.handlers.InscriberRecipeSerializer;
 import appeng.recipes.mattercannon.MatterCannonAmmoSerializer;
 import appeng.recipes.quartzcutting.QuartzCuttingRecipeSerializer;
 import appeng.recipes.transform.TransformRecipeSerializer;
-import dev.architectury.registry.registries.DeferredRegister;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public final class AERecipeSerializers {
     private AERecipeSerializers() {

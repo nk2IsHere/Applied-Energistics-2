@@ -14,8 +14,8 @@ import appeng.siteexport.SiteExporter;
 public final class ClientCommands {
 
     public static final List<CommandBuilder> DEBUG_COMMANDS = List.of(
-        ClientCommands::highlightGuiAreas,
-        ClientCommands::exportSiteData);
+            ClientCommands::highlightGuiAreas,
+            ClientCommands::exportSiteData);
 
     private ClientCommands() {
     }

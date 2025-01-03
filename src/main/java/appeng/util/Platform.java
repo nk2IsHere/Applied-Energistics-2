@@ -19,20 +19,16 @@
 
 package appeng.util;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.PowerUnit;
-import appeng.api.config.SortOrder;
-import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.api.util.DimensionalBlockPos;
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.core.AppEng;
-import appeng.hooks.VisualStateSaving;
-import appeng.hooks.ticking.TickHandler;
-import appeng.util.helpers.P2PHelper;
-import com.google.common.annotations.VisibleForTesting;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import com.mojang.authlib.GameProfile;
-import dev.architectury.fluid.FluidStack;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -61,13 +57,20 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import dev.architectury.fluid.FluidStack;
+
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.PowerUnit;
+import appeng.api.config.SortOrder;
+import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.api.util.DimensionalBlockPos;
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.core.AppEng;
+import appeng.hooks.VisualStateSaving;
+import appeng.hooks.ticking.TickHandler;
+import appeng.util.helpers.P2PHelper;
 
 public class Platform {
 

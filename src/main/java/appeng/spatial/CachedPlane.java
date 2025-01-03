@@ -66,7 +66,7 @@ public class CachedPlane {
     private final BlockState matrixBlockState;
 
     public CachedPlane(ServerLevel level, int minX, int minY, int minZ, int maxX,
-                       int maxY, int maxZ) {
+            int maxY, int maxZ) {
 
         Block matrixFrameBlock = AEBlocks.MATRIX_FRAME.block();
         if (matrixFrameBlock != null) {
@@ -102,7 +102,7 @@ public class CachedPlane {
         for (int x = 0; x < this.x_size; x++) {
             for (int z = 0; z < this.z_size; z++) {
                 this.myColumns[x][z] = new Column(level.getChunk(minX + x >> 4, minZ + z >> 4), minX + x & 0xF,
-                    minZ + z & 0xF);
+                        minZ + z & 0xF);
             }
         }
 
@@ -118,7 +118,7 @@ public class CachedPlane {
                 for (var entity : chunkBlockEntities) {
                     var pos = entity.getKey();
                     if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
-                        && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
+                            && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
                         blockEntities.add(entity.getValue());
                     }
                 }
@@ -144,7 +144,7 @@ public class CachedPlane {
 
                     if (savedData != null) {
                         this.blockEntities.add(
-                            new BlockEntityMoveRecord(strategy, blockEntity, savedData, pos, state));
+                                new BlockEntityMoveRecord(strategy, blockEntity, savedData, pos, state));
 
                         // Set the state to AIR now since that prevents it from being resurrected recursively
                         section.setBlockState(sx, sy, sz, Blocks.AIR.defaultBlockState());
@@ -163,7 +163,7 @@ public class CachedPlane {
                 pending.getAll().forEach(entry -> {
                     var pos = entry.pos();
                     if (pos.getX() >= minX && pos.getX() <= maxX && pos.getY() >= minY && pos.getY() <= maxY
-                        && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
+                            && pos.getZ() >= minZ && pos.getZ() <= maxZ) {
                         this.ticks.add(entry);
                     }
                 });
@@ -192,12 +192,12 @@ public class CachedPlane {
                             var dstSection = dstCol.getSection(dst_y);
 
                             var srcState = srcSection.getBlockState(srcCol.x, SectionPos.sectionRelative(src_y),
-                                srcCol.z);
+                                    srcCol.z);
                             if (srcState == CachedPlane.this.matrixBlockState) {
                                 srcState = Blocks.AIR.defaultBlockState();
                             }
                             var dstState = dstSection.getBlockState(dstCol.x, SectionPos.sectionRelative(dst_y),
-                                dstCol.z);
+                                    dstCol.z);
                             if (dstState == CachedPlane.this.matrixBlockState) {
                                 dstState = Blocks.AIR.defaultBlockState();
                             }
@@ -219,14 +219,14 @@ public class CachedPlane {
             for (var moveRecord : this.blockEntities) {
                 var pos = moveRecord.blockEntity().getBlockPos();
                 dst.addBlockEntity(pos.getX() - this.x_offset, pos.getY() - this.y_offset,
-                    pos.getZ() - this.z_offset,
-                    moveRecord);
+                        pos.getZ() - this.z_offset,
+                        moveRecord);
             }
 
             for (var moveRecord : dst.blockEntities) {
                 var pos = moveRecord.blockEntity().getBlockPos();
                 this.addBlockEntity(pos.getX() - dst.x_offset, pos.getY() - dst.y_offset,
-                    pos.getZ() - dst.z_offset, moveRecord);
+                        pos.getZ() - dst.z_offset, moveRecord);
             }
 
             for (var entry : this.ticks) {
@@ -258,7 +258,7 @@ public class CachedPlane {
 
     private void addTick(BlockPos pos, ScheduledTick<Block> tick) {
         this.level.getBlockTicks().schedule(new ScheduledTick<>(
-            tick.type(), pos, tick.triggerTick(), tick.priority(), tick.subTickOrder()));
+                tick.type(), pos, tick.triggerTick(), tick.priority(), tick.subTickOrder()));
     }
 
     private void addBlockEntity(int x, int y, int z, BlockEntityMoveRecord moveRecord) {
@@ -268,8 +268,8 @@ public class CachedPlane {
             var c = this.myColumns[x][z];
             if (!c.doNotSkip(y + this.y_offset)) {
                 AELog.warn(
-                    "Block entity %s was queued to be moved from %s, but it's position then skipped during the move.",
-                    moveRecord.blockEntity(), originalPos);
+                        "Block entity %s was queued to be moved from %s, but it's position then skipped during the move.",
+                        moveRecord.blockEntity(), originalPos);
                 return;
             }
 
@@ -279,17 +279,17 @@ public class CachedPlane {
             var chunk = this.level.getChunk(newPosition);
             var section = chunk.getSection(chunk.getSectionIndex(newPosition.getY()));
             section.setBlockState(
-                newPosition.getX() & (LevelChunkSection.SECTION_WIDTH - 1),
-                newPosition.getY() & (LevelChunkSection.SECTION_HEIGHT - 1),
-                newPosition.getZ() & (LevelChunkSection.SECTION_WIDTH - 1),
-                moveRecord.state);
+                    newPosition.getX() & (LevelChunkSection.SECTION_WIDTH - 1),
+                    newPosition.getY() & (LevelChunkSection.SECTION_HEIGHT - 1),
+                    newPosition.getZ() & (LevelChunkSection.SECTION_WIDTH - 1),
+                    moveRecord.state);
 
             var strategy = moveRecord.strategy();
             boolean success;
             try {
                 success = strategy.completeMove(moveRecord.blockEntity(), moveRecord.state(), moveRecord.savedData(),
-                    this.level,
-                    newPosition);
+                        this.level,
+                        newPosition);
             } catch (Throwable e) {
                 AELog.warn(e);
                 success = false;
@@ -346,7 +346,7 @@ public class CachedPlane {
 
                 var cdp = Platform.getFullChunkPacket(c);
                 level.getChunkSource().chunkMap.getPlayers(c.getPos(), false)
-                    .forEach(spe -> spe.connection.send(cdp));
+                        .forEach(spe -> spe.connection.send(cdp));
             }
         }
 
@@ -402,11 +402,11 @@ public class CachedPlane {
     }
 
     private record BlockEntityMoveRecord(
-        IBlockEntityMoveStrategy strategy,
-        BlockEntity blockEntity,
-        CompoundTag savedData,
-        BlockPos pos,
-        BlockState state) {
+            IBlockEntityMoveStrategy strategy,
+            BlockEntity blockEntity,
+            CompoundTag savedData,
+            BlockPos pos,
+            BlockState state) {
     }
 
 }

@@ -1,9 +1,8 @@
 package appeng.recipes.handlers;
 
-import appeng.core.AppEng;
-import appeng.recipes.AERecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -12,6 +11,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+
+import appeng.core.AppEng;
+import appeng.recipes.AERecipeTypes;
 
 public class ChargerRecipe implements Recipe<RecipeInput> {
     @Deprecated(forRemoval = true, since = "1.21.1")

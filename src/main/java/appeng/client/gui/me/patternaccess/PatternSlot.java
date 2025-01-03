@@ -18,10 +18,11 @@
 
 package appeng.client.gui.me.patternaccess;
 
-import appeng.crafting.pattern.EncodedPatternItem;
-import appeng.menu.slot.AppEngSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import appeng.crafting.pattern.EncodedPatternItem;
+import appeng.menu.slot.AppEngSlot;
 
 /**
  * This slot is used in the {@link PatternAccessTermScreen} to interact with the internal inventory of pattern

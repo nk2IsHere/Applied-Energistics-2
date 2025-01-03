@@ -1,17 +1,19 @@
 
 package appeng.core.network.serverbound;
 
-import appeng.core.network.CustomAppEngPayload;
-import appeng.core.network.ServerboundPacket;
-import appeng.menu.AEBaseMenu;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import appeng.core.network.CustomAppEngPayload;
+import appeng.core.network.ServerboundPacket;
+import appeng.menu.AEBaseMenu;
 
 /**
  * This packet is used for triggering generic menu-specific GUI actions.

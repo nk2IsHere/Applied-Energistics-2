@@ -18,11 +18,6 @@
 
 package appeng.block.crafting;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.MolecularAssemblerMenu;
-import appeng.menu.locator.MenuLocators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +27,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.MolecularAssemblerMenu;
+import appeng.menu.locator.MenuLocators;
 
 public class MolecularAssemblerBlock extends AEBaseEntityBlock<MolecularAssemblerBlockEntity> {
 

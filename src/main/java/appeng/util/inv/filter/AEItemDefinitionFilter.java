@@ -18,9 +18,10 @@
 
 package appeng.util.inv.filter;
 
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.InternalInventory;
 import appeng.core.definitions.ItemDefinition;
-import net.minecraft.world.item.ItemStack;
 
 public class AEItemDefinitionFilter implements IAEItemFilter {
     private final ItemDefinition<?> definition;

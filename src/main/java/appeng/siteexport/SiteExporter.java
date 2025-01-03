@@ -1,31 +1,23 @@
 package appeng.siteexport;
 
-import appeng.api.features.P2PTunnelAttunement;
-import appeng.api.features.P2PTunnelAttunementInternal;
-import appeng.api.util.AEColor;
-import appeng.client.guidebook.Guide;
-import appeng.client.guidebook.GuidePage;
-import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
-import appeng.client.guidebook.indices.CategoryIndex;
-import appeng.client.guidebook.indices.ItemIndex;
-import appeng.client.guidebook.navigation.NavigationNode;
-import appeng.core.AppEngClient;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEParts;
-import appeng.core.definitions.ColoredItemDefinition;
-import appeng.recipes.entropy.EntropyRecipe;
-import appeng.recipes.handlers.ChargerRecipe;
-import appeng.recipes.handlers.InscriberRecipe;
-import appeng.recipes.mattercannon.MatterCannonAmmo;
-import appeng.recipes.transform.TransformRecipe;
-import appeng.siteexport.mdastpostprocess.PageExportPostProcessor;
-import appeng.siteexport.model.P2PTypeInfo;
-import appeng.util.CraftingRecipeUtil;
-import appeng.util.Platform;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.util.*;
+
 import com.google.common.io.MoreFiles;
 import com.google.common.io.RecursiveDeleteOption;
 import com.mojang.blaze3d.platform.NativeImage;
+
+import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -55,19 +47,30 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.Instant;
-import java.util.*;
+import appeng.api.features.P2PTunnelAttunement;
+import appeng.api.features.P2PTunnelAttunementInternal;
+import appeng.api.util.AEColor;
+import appeng.client.guidebook.Guide;
+import appeng.client.guidebook.GuidePage;
+import appeng.client.guidebook.compiler.PageCompiler;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import appeng.client.guidebook.indices.CategoryIndex;
+import appeng.client.guidebook.indices.ItemIndex;
+import appeng.client.guidebook.navigation.NavigationNode;
+import appeng.core.AppEngClient;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEParts;
+import appeng.core.definitions.ColoredItemDefinition;
+import appeng.recipes.entropy.EntropyRecipe;
+import appeng.recipes.handlers.ChargerRecipe;
+import appeng.recipes.handlers.InscriberRecipe;
+import appeng.recipes.mattercannon.MatterCannonAmmo;
+import appeng.recipes.transform.TransformRecipe;
+import appeng.siteexport.mdastpostprocess.PageExportPostProcessor;
+import appeng.siteexport.model.P2PTypeInfo;
+import appeng.util.CraftingRecipeUtil;
+import appeng.util.Platform;
 
 /**
  * Exports a data package for use by the website.

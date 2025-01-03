@@ -18,6 +18,15 @@
 
 package appeng.helpers;
 
+import java.util.function.BiConsumer;
+
+import org.apache.commons.lang3.mutable.MutableObject;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.features.HotkeyAction;
@@ -45,13 +54,6 @@ import appeng.me.helpers.PlayerSource;
 import appeng.me.storage.NullInventory;
 import appeng.menu.ISubMenu;
 import appeng.menu.locator.ItemMenuHostLocator;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import org.apache.commons.lang3.mutable.MutableObject;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 public class WirelessTerminalMenuHost<T extends WirelessTerminalItem> extends ItemMenuHost<T>
         implements IPortableTerminal, IActionHost, KeyTypeSelectionHost {

@@ -1,5 +1,16 @@
 package appeng.client.guidebook.document.interaction;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
+
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.document.block.LytBlock;
 import appeng.client.guidebook.layout.LayoutContext;
@@ -7,15 +18,6 @@ import appeng.client.guidebook.layout.MinecraftFontMetrics;
 import appeng.client.guidebook.render.SimpleRenderContext;
 import appeng.siteexport.ExportableResourceProvider;
 import appeng.siteexport.ResourceExporter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.MultiBufferSource;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-
-import java.util.List;
 
 /**
  * A {@link GuideTooltip} that renders a {@link LytBlock} as the tooltip content.

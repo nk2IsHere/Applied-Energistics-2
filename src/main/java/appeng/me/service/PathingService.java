@@ -18,6 +18,15 @@
 
 package appeng.me.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+
 import appeng.api.features.IPlayerRegistry;
 import appeng.api.networking.*;
 import appeng.api.networking.events.GridBootingStatusChange;
@@ -35,13 +44,6 @@ import appeng.me.pathfinding.AdHocChannelUpdater;
 import appeng.me.pathfinding.ChannelFinalizer;
 import appeng.me.pathfinding.ControllerValidator;
 import appeng.me.pathfinding.PathingCalculation;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class PathingService implements IPathingService, IGridServiceProvider {
     private static final String TAG_CHANNEL_MODE = "cm";

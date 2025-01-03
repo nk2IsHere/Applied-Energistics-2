@@ -18,9 +18,9 @@
 
 package appeng.debug;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.util.inv.AppEngInternalInventory;
-import appeng.util.inv.InternalInventoryHost;
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
@@ -34,8 +34,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.util.inv.AppEngInternalInventory;
+import appeng.util.inv.InternalInventoryHost;
 
 public class ItemGenBlockEntity extends AEBaseBlockEntity implements InternalInventoryHost {
 

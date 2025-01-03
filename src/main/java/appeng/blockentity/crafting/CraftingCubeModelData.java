@@ -18,11 +18,12 @@
 
 package appeng.blockentity.crafting;
 
-import appeng.client.render.model.AEModelData;
-import net.minecraft.core.Direction;
-
 import java.util.EnumSet;
 import java.util.Objects;
+
+import net.minecraft.core.Direction;
+
+import appeng.client.render.model.AEModelData;
 
 public class CraftingCubeModelData extends AEModelData {
 

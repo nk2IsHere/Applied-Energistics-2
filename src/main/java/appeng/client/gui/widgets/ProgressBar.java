@@ -18,18 +18,19 @@
 
 package appeng.client.gui.widgets;
 
-import appeng.client.gui.style.Blitter;
-import appeng.core.localization.GuiText;
-import appeng.menu.interfaces.IProgressProvider;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import appeng.client.gui.style.Blitter;
+import appeng.core.localization.GuiText;
+import appeng.menu.interfaces.IProgressProvider;
 
 public class ProgressBar extends AbstractWidget implements ITooltip {
 

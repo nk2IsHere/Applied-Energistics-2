@@ -1,14 +1,18 @@
 package appeng.client.guidebook.scene;
 
-import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
-import appeng.client.guidebook.scene.annotation.InWorldAnnotationRenderer;
-import appeng.client.guidebook.scene.level.GuidebookLevel;
+import java.util.Collection;
+
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
+
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.Minecraft;
@@ -19,11 +23,10 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
-import java.util.Collection;
+import appeng.client.guidebook.scene.annotation.InWorldAnnotation;
+import appeng.client.guidebook.scene.annotation.InWorldAnnotationRenderer;
+import appeng.client.guidebook.scene.level.GuidebookLevel;
 
 public class GuidebookLevelRenderer {
 

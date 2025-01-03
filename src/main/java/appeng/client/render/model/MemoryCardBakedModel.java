@@ -18,15 +18,12 @@
 
 package appeng.client.render.model;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.implementations.items.IMemoryCard;
-import appeng.api.implementations.items.MemoryCardColors;
-import appeng.api.util.AEColor;
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.core.AELog;
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -38,8 +35,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
+import appeng.api.ids.AEComponents;
+import appeng.api.implementations.items.IMemoryCard;
+import appeng.api.implementations.items.MemoryCardColors;
+import appeng.api.util.AEColor;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.core.AELog;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 class MemoryCardBakedModel implements IFabricBakedModel {
     private final BakedModel baseModel;

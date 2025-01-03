@@ -23,11 +23,13 @@
 
 package appeng.api.inventories;
 
-import appeng.api.config.FuzzyMode;
-import net.minecraft.world.item.ItemStack;
+import java.util.function.Predicate;
+
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
+import net.minecraft.world.item.ItemStack;
+
+import appeng.api.config.FuzzyMode;
 
 /**
  * Models item transfer that lets the target inventory handle where items are placed into or extracted from.

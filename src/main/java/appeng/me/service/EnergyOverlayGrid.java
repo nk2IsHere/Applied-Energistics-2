@@ -1,14 +1,16 @@
 package appeng.me.service;
 
-import appeng.api.networking.energy.IPassiveEnergyGenerator;
-import appeng.core.AELog;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+
+import appeng.api.networking.energy.IPassiveEnergyGenerator;
+import appeng.core.AELog;
 
 /**
  * This class caches all energy services that are part of the overlay energy grid. This overlay grid can span multiple

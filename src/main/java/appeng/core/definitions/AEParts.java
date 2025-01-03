@@ -18,6 +18,15 @@
 
 package appeng.core.definitions;
 
+import static appeng.core.definitions.AEItems.item;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+
 import appeng.api.ids.AEPartIds;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
@@ -38,14 +47,6 @@ import appeng.parts.networking.*;
 import appeng.parts.p2p.*;
 import appeng.parts.reporting.*;
 import appeng.parts.storagebus.StorageBusPart;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
-import static appeng.core.definitions.AEItems.item;
 
 /**
  * Internal implementation for the API parts

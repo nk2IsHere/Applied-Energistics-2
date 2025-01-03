@@ -1,12 +1,13 @@
 
 package appeng.core.network.serverbound;
 
-import appeng.core.network.CustomAppEngPayload;
-import appeng.core.network.ServerboundPacket;
-import appeng.menu.me.crafting.CraftAmountMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+
+import appeng.core.network.CustomAppEngPayload;
+import appeng.core.network.ServerboundPacket;
+import appeng.menu.me.crafting.CraftAmountMenu;
 
 public record ConfirmAutoCraftPacket(int amount,
         boolean craftMissingAmount,

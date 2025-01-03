@@ -18,10 +18,8 @@
 
 package appeng.client.render;
 
-import appeng.client.render.cablebus.FacadeBuilder;
-import appeng.items.parts.FacadeItem;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import java.util.function.Supplier;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -34,7 +32,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.function.Supplier;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+
+import appeng.client.render.cablebus.FacadeBuilder;
+import appeng.items.parts.FacadeItem;
 
 /**
  * This model used the provided FacadeBuilder to "slice" the item quads for the facade provided.
@@ -54,7 +56,8 @@ public class FacadeBakedItemModel extends DelegateBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+            Supplier<RandomSource> randomSupplier, RenderContext context) {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 
         Mesh mesh = this.cache.get(Item.getId(this.textureStack.getItem()));

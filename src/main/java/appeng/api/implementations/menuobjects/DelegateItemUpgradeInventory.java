@@ -1,16 +1,17 @@
 package appeng.api.implementations.menuobjects;
 
-import appeng.api.upgrades.IUpgradeInventory;
-import appeng.api.upgrades.IUpgradeableItem;
-import appeng.api.upgrades.UpgradeInventories;
-import appeng.items.contents.StackDependentSupplier;
-import appeng.util.inv.SupplierInternalInventory;
+import java.util.function.Supplier;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.function.Supplier;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableItem;
+import appeng.api.upgrades.UpgradeInventories;
+import appeng.items.contents.StackDependentSupplier;
+import appeng.util.inv.SupplierInternalInventory;
 
 public final class DelegateItemUpgradeInventory extends SupplierInternalInventory<IUpgradeInventory>
         implements IUpgradeInventory {

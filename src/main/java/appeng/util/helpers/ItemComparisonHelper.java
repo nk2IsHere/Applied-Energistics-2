@@ -18,11 +18,13 @@
 
 package appeng.util.helpers;
 
-import appeng.api.config.FuzzyMode;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.config.FuzzyMode;
 
 /**
  * A helper class for comparing {@link Item}, {@link ItemStack} or NBT

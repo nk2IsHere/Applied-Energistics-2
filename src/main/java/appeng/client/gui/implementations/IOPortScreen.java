@@ -18,6 +18,10 @@
 
 package appeng.client.gui.implementations;
 
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.api.config.FullnessMode;
 import appeng.api.config.OperationMode;
 import appeng.api.config.RedstoneMode;
@@ -28,9 +32,6 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEItems;
 import appeng.menu.implementations.IOPortMenu;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 public class IOPortScreen extends UpgradeableScreen<IOPortMenu> {
 

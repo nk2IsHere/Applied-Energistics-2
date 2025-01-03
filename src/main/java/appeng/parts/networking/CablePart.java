@@ -18,6 +18,26 @@
 
 package appeng.parts.networking;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.function.Predicate;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+
+import io.netty.buffer.Unpooled;
+
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+
 import appeng.api.implementations.parts.ICablePart;
 import appeng.api.networking.*;
 import appeng.api.networking.pathing.ChannelMode;
@@ -30,23 +50,6 @@ import appeng.core.definitions.AEParts;
 import appeng.items.parts.ColoredPartItem;
 import appeng.items.tools.powered.ColorApplicatorItem;
 import appeng.parts.AEBasePart;
-import io.netty.buffer.Unpooled;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.function.Predicate;
 
 public abstract class CablePart extends AEBasePart implements ICablePart {
 

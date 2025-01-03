@@ -1,12 +1,14 @@
 package appeng.hooks;
 
-import appeng.core.AppEng;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
+
+import appeng.core.AppEng;
 
 /**
  * Replicates how Fabric allows custom built-in models to be registered on Forge.

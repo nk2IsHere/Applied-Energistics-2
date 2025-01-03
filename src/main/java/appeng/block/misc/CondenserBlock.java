@@ -18,18 +18,19 @@
 
 package appeng.block.misc;
 
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.CondenserBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.CondenserMenu;
-import appeng.menu.locator.MenuLocators;
-import appeng.util.InteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.CondenserBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.CondenserMenu;
+import appeng.menu.locator.MenuLocators;
+import appeng.util.InteractionUtil;
 
 public class CondenserBlock extends AEBaseEntityBlock<CondenserBlockEntity> {
 

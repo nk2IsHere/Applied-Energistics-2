@@ -1,5 +1,19 @@
 package appeng.parts.automation;
 
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+
 import appeng.api.behaviors.PickupSink;
 import appeng.api.behaviors.PickupStrategy;
 import appeng.api.config.Actionable;
@@ -10,18 +24,6 @@ import appeng.core.AppEng;
 import appeng.core.network.clientbound.BlockTransitionEffectPacket;
 import appeng.util.GenericContainerHelper;
 import appeng.util.Platform;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
 
 public class FluidPickupStrategy implements PickupStrategy {
     private final ServerLevel level;

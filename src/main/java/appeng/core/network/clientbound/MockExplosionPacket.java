@@ -1,8 +1,6 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.particles.ParticleTypes;
@@ -10,6 +8,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
 
 public record MockExplosionPacket(double x, double y, double z) implements ClientboundPacket {
 

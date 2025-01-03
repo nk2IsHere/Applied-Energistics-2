@@ -1,17 +1,20 @@
 package appeng.util;
 
+import java.util.*;
+
+import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+
 import appeng.api.config.Actionable;
 import appeng.api.stacks.*;
 import appeng.api.storage.AEKeySlotFilter;
 import appeng.helpers.externalstorage.GenericStackInv;
 import appeng.me.helpers.BaseActionSource;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Predicate;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 /**
  * Configuration inventories contain a set of {@link AEKey} references that configure how certain aspects of a machine

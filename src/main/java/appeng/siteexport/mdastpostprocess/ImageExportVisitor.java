@@ -1,5 +1,7 @@
 package appeng.siteexport.mdastpostprocess;
 
+import java.nio.file.Path;
+
 import appeng.client.guidebook.compiler.IdUtils;
 import appeng.client.guidebook.compiler.tags.FloatingImageCompiler;
 import appeng.libs.mdast.MdAstVisitor;
@@ -7,8 +9,6 @@ import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
 import appeng.libs.mdast.model.MdAstImage;
 import appeng.libs.mdast.model.MdAstNode;
 import appeng.siteexport.ResourceExporter;
-
-import java.nio.file.Path;
 
 /**
  * Searches for static images and exports them, while rewriting the referenced path with relation to the base URL.

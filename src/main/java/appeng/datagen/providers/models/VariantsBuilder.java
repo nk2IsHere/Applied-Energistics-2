@@ -1,13 +1,15 @@
 package appeng.datagen.providers.models;
 
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.IOrientationStrategy;
 import com.google.gson.JsonObject;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.IGeneratedBlockstate;
+
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.IOrientationStrategy;
 
 class VariantsBuilder implements IGeneratedBlockstate {
     private final Block block;

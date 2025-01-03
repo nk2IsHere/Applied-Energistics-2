@@ -18,9 +18,10 @@
 
 package appeng.client.gui.style;
 
-import appeng.api.stacks.AEFluidKey;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+
+import appeng.api.stacks.AEFluidKey;
 
 /**
  * Creates a {@link Blitter} to draw fluids into the user interface.

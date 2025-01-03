@@ -18,8 +18,10 @@
 
 package appeng.client.render;
 
-import appeng.client.render.cablebus.FacadeBuilder;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -27,9 +29,8 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
+import appeng.client.render.cablebus.FacadeBuilder;
+import appeng.core.AppEng;
 
 /**
  * The model class for facades. Since facades wrap existing models, they don't declare any dependencies here other than

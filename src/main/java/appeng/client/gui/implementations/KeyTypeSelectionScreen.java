@@ -1,5 +1,14 @@
 package appeng.client.gui.implementations;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.ISubMenuHost;
@@ -12,14 +21,6 @@ import appeng.client.gui.widgets.AECheckbox;
 import appeng.client.gui.widgets.TabButton;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.interfaces.KeyTypeSelectionMenu;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class KeyTypeSelectionScreen<C extends AEBaseMenu & KeyTypeSelectionMenu, P extends AEBaseScreen<C>>
         extends AESubScreen<C, P> {

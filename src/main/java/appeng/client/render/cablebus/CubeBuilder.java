@@ -18,15 +18,17 @@
 
 package appeng.client.render.cablebus;
 
+import java.util.EnumMap;
+import java.util.EnumSet;
+
 import com.google.common.base.Preconditions;
+
+import org.joml.Vector4f;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import org.joml.Vector4f;
-
-import java.util.EnumMap;
-import java.util.EnumSet;
 
 /**
  * Builds the quads for a cube.

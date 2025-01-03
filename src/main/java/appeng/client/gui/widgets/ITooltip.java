@@ -18,11 +18,11 @@
 
 package appeng.client.gui.widgets;
 
-import net.minecraft.client.renderer.Rect2i;
-import net.minecraft.network.chat.Component;
-
 import java.util.Collections;
 import java.util.List;
+
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
 
 /**
  * AEBaseGui controlled Tooltip Interface.

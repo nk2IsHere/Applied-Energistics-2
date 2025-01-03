@@ -18,10 +18,11 @@
 
 package appeng.datagen.providers.tags;
 
-import appeng.api.ids.AETags;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.BlockDefinition;
-import appeng.datagen.providers.IAE2DataProvider;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
@@ -31,10 +32,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import appeng.api.ids.AETags;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.BlockDefinition;
+import appeng.datagen.providers.IAE2DataProvider;
 
 public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider implements IAE2DataProvider {
     public BlockTagsProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -99,11 +100,14 @@ public class BlockTagsProvider extends FabricTagProvider.BlockTagProvider implem
                 AEBlocks.CHISELED_QUARTZ_WALL.block(),
                 AEBlocks.QUARTZ_PILLAR_WALL.block());
 
-        getOrCreateTagBuilder(ConventionalBlockTags.CHESTS).add(AEBlocks.SKY_STONE_CHEST.block(), AEBlocks.SMOOTH_SKY_STONE_CHEST.block());
-        getOrCreateTagBuilder(ConventionTags.GLASS_BLOCK).add(AEBlocks.QUARTZ_GLASS.block(), AEBlocks.QUARTZ_VIBRANT_GLASS.block());
+        getOrCreateTagBuilder(ConventionalBlockTags.CHESTS).add(AEBlocks.SKY_STONE_CHEST.block(),
+                AEBlocks.SMOOTH_SKY_STONE_CHEST.block());
+        getOrCreateTagBuilder(ConventionTags.GLASS_BLOCK).add(AEBlocks.QUARTZ_GLASS.block(),
+                AEBlocks.QUARTZ_VIBRANT_GLASS.block());
 
         // Fixtures should cause walls to have posts
-        getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE).add(AEBlocks.QUARTZ_FIXTURE.block(), AEBlocks.LIGHT_DETECTOR.block());
+        getOrCreateTagBuilder(BlockTags.WALL_POST_OVERRIDE).add(AEBlocks.QUARTZ_FIXTURE.block(),
+                AEBlocks.LIGHT_DETECTOR.block());
 
         addEffectiveTools();
     }

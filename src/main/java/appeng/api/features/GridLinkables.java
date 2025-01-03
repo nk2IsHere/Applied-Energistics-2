@@ -23,14 +23,16 @@
 
 package appeng.api.features;
 
-import com.google.common.base.Preconditions;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 
 /**
  * A registry for items that can be linked to a specific network using for example the security station's user

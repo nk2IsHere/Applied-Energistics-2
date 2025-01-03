@@ -14,9 +14,9 @@ import appeng.core.definitions.ItemDefinition;
 import appeng.items.parts.PartItem;
 
 public record PartCustomizer<T extends IPart>(BoundingBox bb,
-                                              Direction side,
-                                              ItemDefinition<? extends PartItem<T>> part,
-                                              Consumer<T> partCustomizer) implements BlockPlacingBuildAction {
+        Direction side,
+        ItemDefinition<? extends PartItem<T>> part,
+        Consumer<T> partCustomizer) implements BlockPlacingBuildAction {
     @Override
     public void placeBlock(ServerLevel level, Player player, BlockPos pos, BlockPos minPos, BlockPos maxPos) {
         var placedPart = PartHelper.getPart(part.get(), level, pos, side);

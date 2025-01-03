@@ -1,19 +1,20 @@
 package appeng.api.behaviors;
 
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEFluidKey;
-import appeng.api.stacks.GenericStack;
-import appeng.util.GenericContainerHelper;
-import appeng.util.fluid.FluidSoundHelper;
-import com.google.common.primitives.Ints;
+import org.jetbrains.annotations.Nullable;
+
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+
+import appeng.api.config.Actionable;
+import appeng.api.stacks.AEFluidKey;
+import appeng.api.stacks.GenericStack;
+import appeng.util.GenericContainerHelper;
+import appeng.util.fluid.FluidSoundHelper;
 
 class FluidContainerItemStrategy
         implements ContainerItemStrategy<AEFluidKey, FluidContainerItemStrategy.Context> {
@@ -34,7 +35,8 @@ class FluidContainerItemStrategy
     @Override
     public @Nullable Context findPlayerSlotContext(Player player, int slot) {
         var playerInv = PlayerInventoryStorage.of(player.getInventory());
-        var fluidCapability = ContainerItemContext.ofPlayerSlot(player, playerInv.getSlot(slot)).find(FluidStorage.ITEM);
+        var fluidCapability = ContainerItemContext.ofPlayerSlot(player, playerInv.getSlot(slot))
+                .find(FluidStorage.ITEM);
         if (fluidCapability != null) {
             return new PlayerInvContext(player, slot);
         }

@@ -1,9 +1,11 @@
 package appeng.integration.modules.rei;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEParts;
-import appeng.core.localization.ItemModText;
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
+import net.minecraft.network.chat.Component;
+
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -12,9 +14,10 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.network.chat.Component;
 
-import java.util.List;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEParts;
+import appeng.core.localization.ItemModText;
 
 public class AttunementCategory implements DisplayCategory<AttunementDisplay> {
 

@@ -1,12 +1,13 @@
 package appeng.menu.me.items;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.storage.ITerminalHost;
 import appeng.api.util.KeyTypeSelectionHost;
 import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.menu.implementations.MenuTypeBuilder;
 import appeng.menu.me.common.MEStorageMenu;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 public class BasicCellChestMenu extends MEStorageMenu {
     public static final MenuType<MEStorageMenu> TYPE = MenuTypeBuilder

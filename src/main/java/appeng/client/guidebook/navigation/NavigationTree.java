@@ -1,17 +1,20 @@
 package appeng.client.guidebook.navigation;
 
-import appeng.client.guidebook.compiler.ParsedGuidePage;
+import java.util.*;
+
 import com.mojang.serialization.JavaOps;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+
+import appeng.client.guidebook.compiler.ParsedGuidePage;
 
 public class NavigationTree {
 

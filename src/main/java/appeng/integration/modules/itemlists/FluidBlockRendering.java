@@ -3,6 +3,10 @@ package appeng.integration.modules.itemlists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.Tesselator;
+
+import org.joml.Matrix4fStack;
+import org.joml.Quaternionf;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.FogRenderer;
@@ -20,8 +24,6 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import org.joml.Matrix4fStack;
-import org.joml.Quaternionf;
 
 public final class FluidBlockRendering {
     private FluidBlockRendering() {

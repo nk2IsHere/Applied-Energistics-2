@@ -18,18 +18,15 @@
 
 package appeng.hooks.ticking;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.crafting.CraftingCalculation;
-import appeng.me.Grid;
-import appeng.me.GridNode;
-import appeng.util.ILevelRunnable;
-import appeng.util.Platform;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -43,9 +40,14 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.crafting.CraftingCalculation;
+import appeng.me.Grid;
+import appeng.me.GridNode;
+import appeng.util.ILevelRunnable;
+import appeng.util.Platform;
 
 public class TickHandler {
 

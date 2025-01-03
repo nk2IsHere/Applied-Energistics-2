@@ -1,9 +1,10 @@
 package appeng.api.networking.crafting;
 
+import org.jetbrains.annotations.Nullable;
+
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The source of a crafting simulation request. This allows the crafting simulation to keep track of the current grid

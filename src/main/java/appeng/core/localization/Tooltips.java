@@ -1,5 +1,22 @@
 package appeng.core.localization;
 
+import java.text.DecimalFormat;
+import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import com.mojang.blaze3d.platform.InputConstants;
+
+import org.jetbrains.annotations.NotNull;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.behaviors.EmptyingAction;
 import appeng.api.config.PowerUnit;
 import appeng.api.stacks.AEItemKey;
@@ -7,20 +24,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AmountFormat;
 import appeng.api.stacks.GenericStack;
 import appeng.core.AEConfig;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.text.DecimalFormat;
-import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Static utilities for constructing tooltips in various places.

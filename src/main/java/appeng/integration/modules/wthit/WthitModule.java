@@ -1,18 +1,21 @@
 package appeng.integration.modules.wthit;
 
-import appeng.api.integrations.igtooltip.ClientRegistration;
-import appeng.api.integrations.igtooltip.CommonRegistration;
-import appeng.api.integrations.igtooltip.TooltipContext;
-import appeng.api.integrations.igtooltip.providers.*;
-import appeng.integration.modules.igtooltip.TooltipProviders;
-import mcp.mobius.waila.api.*;
-import mcp.mobius.waila.api.component.ItemComponent;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
+
+import mcp.mobius.waila.api.*;
+import mcp.mobius.waila.api.component.ItemComponent;
+
+import appeng.api.integrations.igtooltip.ClientRegistration;
+import appeng.api.integrations.igtooltip.CommonRegistration;
+import appeng.api.integrations.igtooltip.TooltipContext;
+import appeng.api.integrations.igtooltip.providers.*;
+import appeng.integration.modules.igtooltip.TooltipProviders;
 
 public class WthitModule implements IWailaPlugin {
     public void register(IRegistrar registrar) {

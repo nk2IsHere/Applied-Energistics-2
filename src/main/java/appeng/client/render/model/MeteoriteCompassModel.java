@@ -18,18 +18,21 @@
 
 package appeng.client.render.model;
 
-import appeng.client.render.BasicUnbakedModel;
+import java.util.Collection;
+import java.util.function.Function;
+
 import com.google.common.collect.ImmutableSet;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.function.Function;
+import appeng.client.render.BasicUnbakedModel;
 
 /**
  * The parent model for the compass baked model. Declares the dependencies for the base and pointer submodels mostly.

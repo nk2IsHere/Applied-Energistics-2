@@ -18,6 +18,31 @@
 
 package appeng.me;
 
+import java.io.IOException;
+import java.util.*;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ClassToInstanceMap;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.MutableClassToInstanceMap;
+import com.google.gson.stream.JsonWriter;
+
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.minecraft.CrashReportCategory;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
 import appeng.api.features.IPlayerRegistry;
 import appeng.api.networking.*;
 import appeng.api.networking.events.GridPowerIdleChange;
@@ -30,27 +55,6 @@ import appeng.core.AELog;
 import appeng.me.pathfinding.IPathItem;
 import appeng.util.IDebugExportable;
 import appeng.util.JsonStreamUtil;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.MutableClassToInstanceMap;
-import com.google.gson.stream.JsonWriter;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import net.minecraft.CrashReportCategory;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.*;
 
 public class GridNode implements IGridNode, IPathItem, IDebugExportable {
     private static final Logger LOG = LoggerFactory.getLogger(GridNode.class);

@@ -18,15 +18,17 @@
 
 package appeng.parts.p2p;
 
+import java.util.List;
+
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
+import team.reborn.energy.api.EnergyStorage;
+
 import appeng.api.config.PowerUnit;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import team.reborn.energy.api.EnergyStorage;
-
-import java.util.List;
 
 public class FEP2PTunnelPart extends CapabilityP2PTunnelPart<FEP2PTunnelPart, EnergyStorage> {
     private static final P2PModels MODELS = new P2PModels(AppEng.makeId("part/p2p/p2p_tunnel_fe"));
@@ -52,8 +54,7 @@ public class FEP2PTunnelPart extends CapabilityP2PTunnelPart<FEP2PTunnelPart, En
     private class InputEnergyStorage implements EnergyStorage {
 
         @Override
-        public long insert(long maxReceive, TransactionContext transactionContext
-        ) {
+        public long insert(long maxReceive, TransactionContext transactionContext) {
             var total = 0L;
 
             final var outputTunnels = FEP2PTunnelPart.this.getOutputs().size();

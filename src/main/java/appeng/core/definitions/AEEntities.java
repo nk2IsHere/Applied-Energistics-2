@@ -18,10 +18,10 @@
 
 package appeng.core.definitions;
 
-import appeng.core.AppEng;
-import appeng.entity.TinyTNTPrimedEntity;
-import dev.architectury.registry.registries.DeferredRegister;
-import dev.architectury.registry.registries.RegistrySupplier;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
@@ -30,13 +30,16 @@ import net.minecraft.world.entity.EntityType.Builder;
 import net.minecraft.world.entity.EntityType.EntityFactory;
 import net.minecraft.world.entity.MobCategory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import dev.architectury.registry.registries.DeferredRegister;
+import dev.architectury.registry.registries.RegistrySupplier;
+
+import appeng.core.AppEng;
+import appeng.entity.TinyTNTPrimedEntity;
 
 public final class AEEntities {
 
-    public static final DeferredRegister<EntityType<?>> DR = DeferredRegister.create(AppEng.MOD_ID, Registries.ENTITY_TYPE);
+    public static final DeferredRegister<EntityType<?>> DR = DeferredRegister.create(AppEng.MOD_ID,
+            Registries.ENTITY_TYPE);
 
     public static final Map<String, String> ENTITY_ENGLISH_NAMES = new HashMap<>();
 

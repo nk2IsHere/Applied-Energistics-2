@@ -18,8 +18,9 @@
 
 package appeng.client.gui;
 
-import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.Component;
 
 /**
  * Properties of {@link appeng.client.gui.style.Text} can be overridden by their ID. This class stores those overrides.

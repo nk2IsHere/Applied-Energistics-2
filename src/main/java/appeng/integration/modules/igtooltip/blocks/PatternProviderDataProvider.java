@@ -1,5 +1,10 @@
 package appeng.integration.modules.igtooltip.blocks;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+
 import appeng.api.client.AEKeyRendering;
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
@@ -9,10 +14,6 @@ import appeng.api.stacks.AmountFormat;
 import appeng.api.stacks.GenericStack;
 import appeng.core.localization.InGameTooltip;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 
 /**
  * Shows information about the current crafting lock.

@@ -1,12 +1,12 @@
 package appeng.me.storage;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.api.stacks.KeyCounter;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.api.stacks.KeyCounter;
 
 class ExternalInventoryCache {
     private GenericStack[] cached = new GenericStack[0];

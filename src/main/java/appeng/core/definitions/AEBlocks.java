@@ -18,6 +18,30 @@
 
 package appeng.core.definitions;
 
+import static appeng.block.AEBaseBlock.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
+
+import com.google.common.base.Preconditions;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate;
+import net.minecraft.world.level.material.MapColor;
+
+import dev.architectury.registry.registries.DeferredRegister;
+
 import appeng.api.ids.AEBlockIds;
 import appeng.block.AEBaseBlock;
 import appeng.block.AEBaseBlockItem;
@@ -37,34 +61,13 @@ import appeng.core.MainCreativeTab;
 import appeng.debug.*;
 import appeng.decorative.AEDecorativeBlock;
 import appeng.decorative.solid.*;
-import com.google.common.base.Preconditions;
-import com.mojang.serialization.MapCodec;
-import dev.architectury.registry.registries.DeferredRegister;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockBehaviour.StateArgumentPredicate;
-import net.minecraft.world.level.material.MapColor;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
-
-import static appeng.block.AEBaseBlock.*;
 
 /**
  * Internal implementation for the API blocks
  */
 public final class AEBlocks {
     public static final DeferredRegister<Block> DR = DeferredRegister.create(AppEng.MOD_ID,
-        Registries.BLOCK);
+            Registries.BLOCK);
 
     private static final List<BlockDefinition<?>> BLOCKS = new ArrayList<>();
     private static final Properties QUARTZ_CLUSTER_PROPERTIES = defaultProps(MapColor.COLOR_CYAN,

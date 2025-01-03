@@ -18,18 +18,20 @@
 
 package appeng.client.gui.widgets;
 
-import appeng.client.Point;
-import appeng.client.gui.ICompositeWidget;
-import appeng.client.gui.style.Blitter;
-import appeng.core.AppEng;
+import java.time.Duration;
+
 import com.mojang.blaze3d.platform.InputConstants;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-import java.time.Duration;
+import appeng.client.Point;
+import appeng.client.gui.ICompositeWidget;
+import appeng.client.gui.style.Blitter;
+import appeng.core.AppEng;
 
 /**
  * Implements a vertical scrollbar using Vanilla's scrollbar handle texture from the creative tab.

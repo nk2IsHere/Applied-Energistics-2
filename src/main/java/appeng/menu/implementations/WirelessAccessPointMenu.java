@@ -18,6 +18,11 @@
 
 package appeng.menu.implementations;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.features.GridLinkables;
 import appeng.blockentity.networking.WirelessAccessPointBlockEntity;
 import appeng.client.gui.implementations.WirelessAccessPointScreen;
@@ -31,10 +36,6 @@ import appeng.menu.slot.OutputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * @see WirelessAccessPointScreen

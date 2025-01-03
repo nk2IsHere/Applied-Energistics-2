@@ -1,19 +1,19 @@
 package appeng.parts.automation;
 
-import appeng.core.localization.GuiText;
-import appeng.core.localization.Tooltips;
-import appeng.items.parts.PartItem;
+import java.util.List;
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-import java.util.List;
+import appeng.core.localization.GuiText;
+import appeng.core.localization.Tooltips;
+import appeng.items.parts.PartItem;
 
 /**
  * Special part item for {@link AnnihilationPlanePart} to handle enchants and extended tooltips.

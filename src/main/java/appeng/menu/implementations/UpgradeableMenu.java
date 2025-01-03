@@ -18,6 +18,12 @@
 
 package appeng.menu.implementations;
 
+import org.jetbrains.annotations.ApiStatus;
+
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.ItemLike;
+
 import appeng.api.config.*;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
@@ -32,10 +38,6 @@ import appeng.menu.guisync.GuiSync;
 import appeng.menu.slot.FakeSlot;
 import appeng.menu.slot.IOptionalSlotHost;
 import appeng.menu.slot.OptionalFakeSlot;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.ApiStatus;
 
 public abstract class UpgradeableMenu<T extends IUpgradeableObject> extends AEBaseMenu implements IOptionalSlotHost {
 

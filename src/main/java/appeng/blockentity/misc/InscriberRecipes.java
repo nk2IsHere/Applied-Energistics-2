@@ -18,18 +18,20 @@
 
 package appeng.blockentity.misc;
 
-import appeng.api.ids.AEComponents;
-import appeng.core.definitions.AEItems;
-import appeng.recipes.AERecipeTypes;
-import appeng.recipes.handlers.InscriberProcessType;
-import appeng.recipes.handlers.InscriberRecipe;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.ids.AEComponents;
+import appeng.core.definitions.AEItems;
+import appeng.recipes.AERecipeTypes;
+import appeng.recipes.handlers.InscriberProcessType;
+import appeng.recipes.handlers.InscriberRecipe;
 
 /**
  * This class indexes all inscriber recipes to find valid inputs for the top and bottom optional slots. This speeds up

@@ -18,16 +18,18 @@
 
 package appeng.menu.me.crafting;
 
-import appeng.api.networking.IGrid;
-import appeng.api.networking.crafting.ICraftingCPU;
-import appeng.api.networking.crafting.ICraftingService;
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.network.chat.Component;
+
+import appeng.api.networking.IGrid;
+import appeng.api.networking.crafting.ICraftingCPU;
+import appeng.api.networking.crafting.ICraftingService;
 
 /**
  * Utility class for dialogs that can cycle through crafting CPUs

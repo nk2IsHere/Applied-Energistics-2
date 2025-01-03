@@ -1,9 +1,9 @@
 package appeng.api.upgrades;
 
-import appeng.core.localization.GuiText;
-import appeng.core.localization.Tooltips;
-import appeng.items.materials.EnergyCardItem;
-import appeng.items.materials.UpgradeCardItem;
+import java.util.*;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -11,9 +11,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import appeng.core.localization.GuiText;
+import appeng.core.localization.Tooltips;
+import appeng.items.materials.EnergyCardItem;
+import appeng.items.materials.UpgradeCardItem;
 
 /**
  * Manages available upgrades for AE machines, parts and items.

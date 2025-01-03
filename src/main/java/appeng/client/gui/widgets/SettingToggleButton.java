@@ -18,22 +18,24 @@
 
 package appeng.client.gui.widgets;
 
-import appeng.api.config.*;
-import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.Icon;
-import appeng.core.definitions.AEParts;
-import appeng.core.localization.ButtonToolTips;
-import appeng.util.EnumCycler;
+import java.util.*;
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Predicate;
+import appeng.api.config.*;
+import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.Icon;
+import appeng.core.definitions.AEParts;
+import appeng.core.localization.ButtonToolTips;
+import appeng.util.EnumCycler;
 
 public class SettingToggleButton<T extends Enum<T>> extends IconButton {
     private static Map<EnumPair<?>, ButtonAppearance> appearances;

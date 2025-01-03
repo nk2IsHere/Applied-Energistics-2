@@ -18,17 +18,20 @@
 
 package appeng.integration.modules.rei;
 
-import appeng.recipes.handlers.InscriberRecipe;
+import java.util.List;
+import java.util.Optional;
+
 import com.google.common.collect.ImmutableList;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.List;
-import java.util.Optional;
+import appeng.recipes.handlers.InscriberRecipe;
 
 class InscriberRecipeDisplay implements Display {
     private final RecipeHolder<InscriberRecipe> holder;

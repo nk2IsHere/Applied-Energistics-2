@@ -1,16 +1,19 @@
 package appeng.integration.modules.rei;
 
-import appeng.api.client.AEKeyRendering;
-import appeng.api.stacks.AEFluidKey;
-import appeng.integration.modules.itemlists.FluidBlockRendering;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.gui.GuiGraphics;
+
 import dev.architectury.fluid.FluidStack;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
 import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import net.minecraft.client.gui.GuiGraphics;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.client.AEKeyRendering;
+import appeng.api.stacks.AEFluidKey;
+import appeng.integration.modules.itemlists.FluidBlockRendering;
 
 public class FluidBlockRenderer implements EntryRenderer<FluidStack> {
     @Override

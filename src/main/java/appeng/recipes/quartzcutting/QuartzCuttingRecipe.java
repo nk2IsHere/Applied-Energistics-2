@@ -1,23 +1,24 @@
 package appeng.recipes.quartzcutting;
 
-import appeng.core.AppEng;
-import appeng.core.AppEngBase;
-import appeng.datagen.providers.tags.ConventionTags;
+import java.util.ArrayList;
+
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
-import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import java.util.ArrayList;
+import appeng.core.AppEng;
+import appeng.datagen.providers.tags.ConventionTags;
 
 public class QuartzCuttingRecipe implements CraftingRecipe {
     static final int MAX_HEIGHT = 3;
@@ -130,10 +131,10 @@ public class QuartzCuttingRecipe implements CraftingRecipe {
 //                if (CommonHooks.getCraftingPlayer() instanceof ServerPlayer serverPlayer) {
 //                    result.hurtAndBreak(1, serverPlayer.serverLevel(), serverPlayer, ignored -> broken.setTrue());
 //                } else {
-                    var currentServer = AppEng.instance().getCurrentServer();
-                    if (currentServer != null) {
-                        result.hurtAndBreak(1, currentServer.overworld(), null, ignored -> broken.setTrue());
-                    }
+                var currentServer = AppEng.instance().getCurrentServer();
+                if (currentServer != null) {
+                    result.hurtAndBreak(1, currentServer.overworld(), null, ignored -> broken.setTrue());
+                }
 //                }
                 remainingItems.set(i, broken.getValue() ? ItemStack.EMPTY : result);
             } else if (!item.getRecipeRemainder().isEmpty()) {

@@ -23,10 +23,11 @@
 
 package appeng.api.implementations.items;
 
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.networking.energy.IAEPowerStorage;
-import net.minecraft.world.item.ItemStack;
 
 /**
  * Basically the same as {@link IAEPowerStorage}, but for items.

@@ -18,17 +18,18 @@
 
 package appeng.debug;
 
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.IManagedGridNode;
-import appeng.blockentity.grid.AENetworkedBlockEntity;
-import appeng.me.helpers.BlockEntityNodeListener;
+import java.util.EnumSet;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.EnumSet;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IManagedGridNode;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
+import appeng.me.helpers.BlockEntityNodeListener;
 
 public class PhantomNodeBlockEntity extends AENetworkedBlockEntity {
 

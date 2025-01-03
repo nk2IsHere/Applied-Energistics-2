@@ -20,7 +20,6 @@ package appeng.core;
 
 import java.util.Collection;
 
-import appeng.core.network.TargetPoint;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +34,7 @@ import appeng.api.parts.CableRenderMode;
 import appeng.client.EffectType;
 import appeng.client.guidebook.PageAnchor;
 import appeng.core.network.ClientboundPacket;
+import appeng.core.network.TargetPoint;
 
 public interface AppEng {
 
@@ -62,12 +62,12 @@ public interface AppEng {
     Collection<ServerPlayer> getPlayers();
 
     void sendToAllNearExcept(Player p, double x, double y, double z, double dist, Level level,
-                             ClientboundPacket packet);
+            ClientboundPacket packet);
 
     void sendToAllAround(ClientboundPacket message, TargetPoint point);
 
     void spawnEffect(EffectType effect, Level level, double posX, double posY,
-                     double posZ, Object o);
+            double posZ, Object o);
 
     /**
      * Sets the player that is currently interacting with a cable or part attached to a cable. This will return that

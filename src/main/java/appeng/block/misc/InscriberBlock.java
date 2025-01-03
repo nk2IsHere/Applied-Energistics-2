@@ -18,13 +18,8 @@
 
 package appeng.block.misc;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.InscriberBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.InscriberMenu;
-import appeng.menu.locator.MenuLocators;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -42,7 +37,14 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.InscriberBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.InscriberMenu;
+import appeng.menu.locator.MenuLocators;
 
 public class InscriberBlock extends AEBaseEntityBlock<InscriberBlockEntity> implements SimpleWaterloggedBlock {
 

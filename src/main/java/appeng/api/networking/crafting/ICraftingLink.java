@@ -23,9 +23,9 @@
 
 package appeng.api.networking.crafting;
 
-import net.minecraft.nbt.CompoundTag;
-
 import java.util.UUID;
+
+import net.minecraft.nbt.CompoundTag;
 
 public interface ICraftingLink {
 

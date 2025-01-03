@@ -18,8 +18,15 @@
 
 package appeng.client.render.model;
 
-import appeng.client.render.DelegateBakedModel;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import com.mojang.math.Transformation;
+
+import org.joml.Vector3f;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -36,12 +43,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Vector3f;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import appeng.client.render.DelegateBakedModel;
 
 public class DriveBakedModel extends DelegateBakedModel {
     private final Map<Item, BakedModel> cellModels;

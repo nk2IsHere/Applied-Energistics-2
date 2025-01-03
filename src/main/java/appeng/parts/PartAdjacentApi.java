@@ -1,12 +1,14 @@
 package appeng.parts;
 
-import appeng.api.parts.IPartHost;
-import appeng.util.Platform;
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.parts.IPartHost;
+import appeng.util.Platform;
 
 /**
  * Utility class to cache an API that is adjacent to a part.

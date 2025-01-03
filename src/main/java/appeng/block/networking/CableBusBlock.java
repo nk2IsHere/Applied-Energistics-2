@@ -18,18 +18,11 @@
 
 package appeng.block.networking;
 
-import appeng.api.parts.IFacadeContainer;
-import appeng.api.parts.IFacadePart;
-import appeng.api.util.AEColor;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.networking.CableBusBlockEntity;
-import appeng.client.render.cablebus.CableBusBakedModel;
-import appeng.client.render.cablebus.CableBusBreakingParticle;
-import appeng.client.render.cablebus.CableBusRenderState;
-import appeng.hooks.INeighborChangeSensitive;
-import appeng.integration.abstraction.IAEFacade;
-import appeng.parts.ICableBusContainer;
-import appeng.parts.NullCableBusContainer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.Util;
@@ -73,12 +66,22 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import appeng.api.parts.IFacadeContainer;
+import appeng.api.parts.IFacadePart;
+import appeng.api.util.AEColor;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.networking.CableBusBlockEntity;
+import appeng.client.render.cablebus.CableBusBakedModel;
+import appeng.client.render.cablebus.CableBusBreakingParticle;
+import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.hooks.INeighborChangeSensitive;
+import appeng.integration.abstraction.IAEFacade;
+import appeng.parts.ICableBusContainer;
+import appeng.parts.NullCableBusContainer;
 
-public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity> implements IAEFacade, SimpleWaterloggedBlock, INeighborChangeSensitive {
+public class CableBusBlock extends AEBaseEntityBlock<CableBusBlockEntity>
+        implements IAEFacade, SimpleWaterloggedBlock, INeighborChangeSensitive {
 
     private static final ICableBusContainer NULL_CABLE_BUS = new NullCableBusContainer();
 

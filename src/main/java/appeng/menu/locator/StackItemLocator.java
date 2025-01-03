@@ -1,9 +1,10 @@
 package appeng.menu.locator;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Provides a static ItemStack, used for accessing a menu host without actually opening the menu.

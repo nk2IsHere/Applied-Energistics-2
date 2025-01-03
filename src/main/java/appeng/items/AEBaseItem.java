@@ -18,13 +18,15 @@
 
 package appeng.items;
 
-import appeng.hooks.AEToolItem;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.hooks.AEToolItem;
 
 public abstract class AEBaseItem extends Item implements AEToolItem {
 

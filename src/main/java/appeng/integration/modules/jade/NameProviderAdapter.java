@@ -1,13 +1,15 @@
 package appeng.integration.modules.jade;
 
-import appeng.api.integrations.igtooltip.providers.NameProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
+
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.JadeIds;
 import snownee.jade.api.config.IPluginConfig;
+
+import appeng.api.integrations.igtooltip.providers.NameProvider;
 
 class NameProviderAdapter<T> extends BaseProvider implements IBlockComponentProvider {
     private final NameProvider<? super T> provider;

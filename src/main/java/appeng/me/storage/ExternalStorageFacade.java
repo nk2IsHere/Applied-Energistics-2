@@ -1,13 +1,11 @@
 package appeng.me.storage;
 
-import appeng.api.config.Actionable;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.*;
-import appeng.api.storage.MEStorage;
-import appeng.core.AELog;
-import appeng.core.localization.GuiText;
+import java.util.Set;
+
 import com.google.common.primitives.Ints;
-import dev.architectury.fluid.FluidStack;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
@@ -16,9 +14,15 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
+import dev.architectury.fluid.FluidStack;
+
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.IActionSource;
+import appeng.api.stacks.*;
+import appeng.api.storage.MEStorage;
+import appeng.core.AELog;
+import appeng.core.localization.GuiText;
 
 /**
  * Adapts external platform storage to behave like an {@link MEStorage}.
@@ -107,8 +111,9 @@ public abstract class ExternalStorageFacade implements MEStorage {
         }
 
         private StorageView<ItemVariant> getSlotStorageView(int slot) {
-            return handler instanceof SlottedStorage<ItemVariant> slotted ? slotted.getSlot(slot) : handler.iterator()
-                .next();
+            return handler instanceof SlottedStorage<ItemVariant> slotted ? slotted.getSlot(slot)
+                    : handler.iterator()
+                            .next();
         }
 
         @Nullable
@@ -141,11 +146,12 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
             // This uses a brute force approach and tries to jam it in every slot the inventory exposes.
             for (int i = 0; i < slotCount && !remaining.isEmpty(); i++) {
-                try(var tx = Transaction.openOuter()) {
-                    var insertedCount = (int) getSlotStorage(i).insert(ItemVariant.of(remaining), remaining.getCount(), tx);
+                try (var tx = Transaction.openOuter()) {
+                    var insertedCount = (int) getSlotStorage(i).insert(ItemVariant.of(remaining), remaining.getCount(),
+                            tx);
                     remaining.shrink(insertedCount);
 
-                    if(!simulate) {
+                    if (!simulate) {
                         tx.commit();
                     }
                 }
@@ -188,9 +194,10 @@ public abstract class ExternalStorageFacade implements MEStorage {
                 // size > maxSize, even if we request more. So even if it returns a valid stack, it might have more
                 // stuff.
                 do {
-                    try(var tx = Transaction.openOuter()) {
+                    try (var tx = Transaction.openOuter()) {
                         var slot = getSlotStorageView(i);
-                        var extractedCount = (int) getSlotStorage(i).extract(slot.getResource(), remainingCurrentSlot, tx);
+                        var extractedCount = (int) getSlotStorage(i).extract(slot.getResource(), remainingCurrentSlot,
+                                tx);
                         extracted = slot.getResource().toStack(extractedCount);
                         if (!simulate) {
                             tx.commit();
@@ -276,7 +283,8 @@ public abstract class ExternalStorageFacade implements MEStorage {
                     try (var tx = Transaction.openOuter()) {
                         var extracted = getSlotStorage(i).extract(getSlotStorageView(i).getResource(), 1, tx);
                         if (extracted == 0L) {
-                            var extractedAll = getSlotStorage(i).extract(getSlotStorageView(i).getResource(), stack.getCount(), tx);
+                            var extractedAll = getSlotStorage(i).extract(getSlotStorageView(i).getResource(),
+                                    stack.getCount(), tx);
                             if (extractedAll == 0L) {
                                 continue;
                             }
@@ -306,8 +314,9 @@ public abstract class ExternalStorageFacade implements MEStorage {
         }
 
         private StorageView<FluidVariant> getSlotStorageView(int slot) {
-            return handler instanceof SlottedStorage<FluidVariant> slotted ? slotted.getSlot(slot) : handler.iterator()
-                .next();
+            return handler instanceof SlottedStorage<FluidVariant> slotted ? slotted.getSlot(slot)
+                    : handler.iterator()
+                            .next();
         }
 
         @Nullable
@@ -393,7 +402,8 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
                 if (extractableOnly) {
                     try (var tx = Transaction.openOuter()) {
-                        var extracted = getSlotStorage(i).extract(FluidVariant.of(stack.getFluid()), stack.getAmount(), tx);
+                        var extracted = getSlotStorage(i).extract(FluidVariant.of(stack.getFluid()), stack.getAmount(),
+                                tx);
                         if (extracted == 0L) {
                             continue;
                         }

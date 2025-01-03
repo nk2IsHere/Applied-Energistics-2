@@ -23,11 +23,11 @@
 
 package appeng.api.inventories;
 
-import appeng.api.config.FuzzyMode;
-import appeng.util.helpers.ItemComparisonHelper;
+import java.util.Iterator;
+import java.util.function.Predicate;
+
 import com.google.common.base.Preconditions;
 
-import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,11 +38,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.Iterator;
-import java.util.function.Predicate;
+import appeng.api.config.FuzzyMode;
+import appeng.util.helpers.ItemComparisonHelper;
 
 public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
 

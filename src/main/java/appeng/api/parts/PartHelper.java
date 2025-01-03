@@ -23,10 +23,10 @@
 
 package appeng.api.parts;
 
-import appeng.core.AppEng;
-import appeng.core.definitions.AEBlockEntities;
-import appeng.core.definitions.AEBlocks;
-import appeng.parts.PartPlacement;
+import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -35,9 +35,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import appeng.core.AppEng;
+import appeng.core.definitions.AEBlockEntities;
+import appeng.core.definitions.AEBlocks;
+import appeng.parts.PartPlacement;
 
 public final class PartHelper {
     private PartHelper() {

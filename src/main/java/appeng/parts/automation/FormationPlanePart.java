@@ -18,6 +18,22 @@
 
 package appeng.parts.automation;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.Vec3;
+
 import appeng.api.behaviors.PlacementStrategy;
 import appeng.api.config.*;
 import appeng.api.networking.IGridNodeListener;
@@ -43,24 +59,9 @@ import appeng.menu.implementations.FormationPlaneMenu;
 import appeng.menu.locator.MenuLocators;
 import appeng.util.ConfigInventory;
 import appeng.util.prioritylist.IPartitionList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class FormationPlanePart extends UpgradeablePart implements IStorageProvider, IPriorityHost, IConfigInvHost, INeighborChangeSensitive {
+public class FormationPlanePart extends UpgradeablePart
+        implements IStorageProvider, IPriorityHost, IConfigInvHost, INeighborChangeSensitive {
 
     private static final PlaneModels MODELS = new PlaneModels("part/formation_plane",
             "part/formation_plane_on");

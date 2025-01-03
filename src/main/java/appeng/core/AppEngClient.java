@@ -20,10 +20,8 @@ package appeng.core;
 
 import java.util.Objects;
 
-import appeng.core.network.serverbound.MouseWheelPacket;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +33,7 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -78,6 +77,7 @@ import appeng.client.render.effects.EnergyParticleData;
 import appeng.client.render.effects.ParticleTypes;
 import appeng.client.render.overlay.OverlayManager;
 import appeng.core.definitions.AEBlocks;
+import appeng.core.network.serverbound.MouseWheelPacket;
 import appeng.helpers.IMouseWheelItem;
 import appeng.hooks.BlockAttackHook;
 import appeng.hooks.ICustomPickBlock;

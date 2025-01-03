@@ -31,9 +31,8 @@ public class ChunkLoaderBlock extends AEBaseEntityBlock<ChunkLoaderBlockEntity> 
 
     @Override
     public void addToMainCreativeTab(
-        CreativeModeTab.ItemDisplayParameters parameters,
-        CreativeModeTab.Output output
-    ) {
+            CreativeModeTab.ItemDisplayParameters parameters,
+            CreativeModeTab.Output output) {
         if (AEConfig.instance().isDebugToolsEnabled()) {
             output.accept(this);
         }

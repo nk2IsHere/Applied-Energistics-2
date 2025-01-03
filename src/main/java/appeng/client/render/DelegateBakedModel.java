@@ -18,7 +18,11 @@
 
 package appeng.client.render;
 
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -31,10 +35,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Supplier;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 public abstract class DelegateBakedModel implements IFabricBakedModel {
     private final BakedModel baseModel;
@@ -50,32 +52,28 @@ public abstract class DelegateBakedModel implements IFabricBakedModel {
 
     @Override
     public void emitBlockQuads(
-        BlockAndTintGetter blockView,
-        BlockState state,
-        BlockPos pos,
-        Supplier<RandomSource> randomSupplier,
-        RenderContext context
-    ) {
+            BlockAndTintGetter blockView,
+            BlockState state,
+            BlockPos pos,
+            Supplier<RandomSource> randomSupplier,
+            RenderContext context) {
         baseModel.emitBlockQuads(
-            blockView,
-            state,
-            pos,
-            randomSupplier,
-            context
-        );
+                blockView,
+                state,
+                pos,
+                randomSupplier,
+                context);
     }
 
     @Override
     public void emitItemQuads(
-        ItemStack stack,
-        Supplier<RandomSource> randomSupplier,
-        RenderContext context
-    ) {
+            ItemStack stack,
+            Supplier<RandomSource> randomSupplier,
+            RenderContext context) {
         baseModel.emitItemQuads(
-            stack,
-            randomSupplier,
-            context
-        );
+                stack,
+                randomSupplier,
+                context);
     }
 
     @Override

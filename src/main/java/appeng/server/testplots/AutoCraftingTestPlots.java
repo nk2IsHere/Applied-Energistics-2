@@ -1,5 +1,16 @@
 package appeng.server.testplots;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
@@ -20,16 +31,6 @@ import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.SpawnExtraGridTestToolsChest;
 import appeng.server.testworld.TestCraftingJob;
 import appeng.util.inv.AppEngInternalInventory;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluids;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @TestPlotClass
 public final class AutoCraftingTestPlots {

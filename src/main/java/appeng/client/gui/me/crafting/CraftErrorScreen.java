@@ -1,5 +1,10 @@
 package appeng.client.gui.me.crafting;
 
+import java.util.ArrayList;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 import appeng.api.networking.crafting.CraftingSubmitErrorCode;
 import appeng.api.networking.crafting.UnsuitableCpus;
 import appeng.api.stacks.GenericStack;
@@ -8,10 +13,6 @@ import appeng.client.gui.me.common.ClientDisplaySlot;
 import appeng.core.localization.GuiText;
 import appeng.menu.SlotSemantics;
 import appeng.menu.me.crafting.CraftConfirmMenu;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-
-import java.util.ArrayList;
 
 /**
  * Shows detailed error information about a failed attempt at submitting a crafting job.

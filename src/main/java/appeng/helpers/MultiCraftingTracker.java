@@ -18,16 +18,18 @@
 
 package appeng.helpers;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import com.google.common.collect.ImmutableSet;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+
 import appeng.api.networking.crafting.*;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class MultiCraftingTracker {
 

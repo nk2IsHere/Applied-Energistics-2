@@ -18,6 +18,12 @@
 
 package appeng.items.contents;
 
+import com.google.common.primitives.Ints;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.entity.player.Player;
+
 import appeng.api.config.Actionable;
 import appeng.api.implementations.menuobjects.ItemMenuHost;
 import appeng.api.inventories.InternalInventory;
@@ -27,9 +33,6 @@ import appeng.api.stacks.AEKey;
 import appeng.items.tools.NetworkToolItem;
 import appeng.menu.locator.ItemMenuHostLocator;
 import appeng.util.inv.SupplierInternalInventory;
-import com.google.common.primitives.Ints;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class NetworkToolMenuHost<T extends NetworkToolItem> extends ItemMenuHost<T> {
     @Nullable

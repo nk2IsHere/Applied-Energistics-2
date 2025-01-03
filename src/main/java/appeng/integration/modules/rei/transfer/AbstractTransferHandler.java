@@ -1,15 +1,18 @@
 package appeng.integration.modules.rei.transfer;
 
-import appeng.integration.modules.itemlists.EncodingHelper;
-import appeng.menu.AEBaseMenu;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandler;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.integration.modules.itemlists.EncodingHelper;
+import appeng.menu.AEBaseMenu;
 
 public abstract class AbstractTransferHandler<T extends AEBaseMenu> implements TransferHandler {
     protected static final int CRAFTING_GRID_WIDTH = 3;

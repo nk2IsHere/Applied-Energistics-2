@@ -1,18 +1,20 @@
 
 package appeng.core.network.serverbound;
 
-import appeng.core.network.CustomAppEngPayload;
-import appeng.core.network.ServerboundPacket;
-import appeng.core.network.clientbound.CompassResponsePacket;
-import appeng.server.services.compass.ServerCompassService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import appeng.core.network.CustomAppEngPayload;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.clientbound.CompassResponsePacket;
+import appeng.server.services.compass.ServerCompassService;
 
 public record RequestClosestMeteoritePacket(ChunkPos pos) implements ServerboundPacket {
     private static final Logger LOG = LoggerFactory.getLogger(RequestClosestMeteoritePacket.class);

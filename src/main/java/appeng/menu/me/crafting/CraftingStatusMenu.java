@@ -18,6 +18,18 @@
 
 package appeng.menu.me.crafting;
 
+import java.util.*;
+
+import com.google.common.collect.ImmutableSet;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.config.CpuSelectionMode;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingCPU;
@@ -27,15 +39,6 @@ import appeng.menu.ISubMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.guisync.PacketWritable;
 import appeng.menu.implementations.MenuTypeBuilder;
-import com.google.common.collect.ImmutableSet;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 /**
  * @see appeng.client.gui.me.crafting.CraftingStatusScreen

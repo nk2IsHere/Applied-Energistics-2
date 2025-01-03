@@ -1,10 +1,6 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.client.gui.me.crafting.CraftingCPUScreen;
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
-import appeng.menu.me.crafting.CraftingStatus;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -12,6 +8,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
+
+import appeng.client.gui.me.crafting.CraftingCPUScreen;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
+import appeng.menu.me.crafting.CraftingStatus;
 
 public record CraftingStatusPacket(CraftingStatus status) implements ClientboundPacket {
     public static final StreamCodec<RegistryFriendlyByteBuf, CraftingStatusPacket> STREAM_CODEC = StreamCodec.ofMember(

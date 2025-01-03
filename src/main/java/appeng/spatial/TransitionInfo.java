@@ -18,12 +18,12 @@
 
 package appeng.spatial;
 
+import java.time.Instant;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
-
-import java.time.Instant;
 
 /**
  * Defines the source level and area of a transition into the spatial storage plot.

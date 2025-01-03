@@ -1,5 +1,16 @@
 package appeng.integration.modules.itemlists;
 
+import java.util.Comparator;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import appeng.api.stacks.AEItemKey;
 import appeng.core.AELog;
 import appeng.core.network.ServerboundPacket;
@@ -8,15 +19,6 @@ import appeng.menu.me.common.GridInventoryEntry;
 import appeng.menu.me.common.MEStorageMenu;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.util.CraftingRecipeUtil;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Comparator;
-import java.util.Map;
 
 public final class CraftingHelper {
     private static final Comparator<GridInventoryEntry> ENTRY_COMPARATOR = Comparator

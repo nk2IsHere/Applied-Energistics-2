@@ -18,26 +18,13 @@
 
 package appeng.parts;
 
-import appeng.api.config.YesNo;
-import appeng.api.implementations.parts.ICablePart;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.parts.*;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.api.util.DimensionalBlockPos;
-import appeng.client.render.cablebus.CableBusRenderState;
-import appeng.client.render.cablebus.CableCoreType;
-import appeng.client.render.cablebus.FacadeRenderState;
-import appeng.core.AELog;
-import appeng.facade.FacadeContainer;
-import appeng.helpers.AEMultiBlockEntity;
-import appeng.hooks.VisualStateSaving;
-import appeng.hooks.ticking.TickHandler;
-import appeng.items.parts.FacadeItem;
-import appeng.me.InWorldGridNode;
-import appeng.parts.networking.CablePart;
-import appeng.util.Platform;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -62,12 +49,27 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
+import appeng.api.config.YesNo;
+import appeng.api.implementations.parts.ICablePart;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.parts.*;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalBlockPos;
+import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.client.render.cablebus.CableCoreType;
+import appeng.client.render.cablebus.FacadeRenderState;
+import appeng.core.AELog;
+import appeng.facade.FacadeContainer;
+import appeng.helpers.AEMultiBlockEntity;
+import appeng.hooks.VisualStateSaving;
+import appeng.hooks.ticking.TickHandler;
+import appeng.items.parts.FacadeItem;
+import appeng.me.InWorldGridNode;
+import appeng.parts.networking.CablePart;
+import appeng.util.Platform;
 
 public class CableBusContainer implements AEMultiBlockEntity, ICableBusContainer {
 

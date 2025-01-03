@@ -18,20 +18,20 @@
 
 package appeng.core.definitions;
 
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.util.helpers.ItemComparisonHelper;
-import dev.architectury.registry.registries.RegistrySupplier;
+import java.util.function.Supplier;
+
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
-import java.util.function.Supplier;
+import dev.architectury.registry.registries.RegistrySupplier;
+
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.util.helpers.ItemComparisonHelper;
 
 public class ItemDefinition<T extends Item> implements ItemLike, Supplier<T> {
     private final String englishName;

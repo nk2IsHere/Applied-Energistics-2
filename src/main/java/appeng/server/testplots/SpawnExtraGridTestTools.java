@@ -1,12 +1,13 @@
 package appeng.server.testplots;
 
-import appeng.api.inventories.InternalInventory;
-import appeng.api.networking.IGrid;
+import java.util.function.Consumer;
+
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.function.Consumer;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.IGrid;
 
 /**
  * Triggered to spawn additional testing tools into a container placed next to a spawned AE2 grid.
@@ -15,12 +16,12 @@ import java.util.function.Consumer;
 public class SpawnExtraGridTestTools {
 
     public static final Event<Consumer<SpawnExtraGridTestTools>> EVENT = EventFactory.createArrayBacked(
-        Consumer.class,
-        (events) -> (data) -> {
-            for (var event : events) {
-                event.accept(data);
-            }
-        });
+            Consumer.class,
+            (events) -> (data) -> {
+                for (var event : events) {
+                    event.accept(data);
+                }
+            });
 
     private final ResourceLocation plotId;
     private final InternalInventory inventory;

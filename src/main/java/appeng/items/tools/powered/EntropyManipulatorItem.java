@@ -18,16 +18,13 @@
 
 package appeng.items.tools.powered;
 
-import appeng.api.config.Actionable;
-import appeng.api.util.DimensionalBlockPos;
-import appeng.block.misc.TinyTNTBlock;
-import appeng.core.AEConfig;
-import appeng.hooks.IBlockTool;
-import appeng.items.tools.powered.powersink.AEBasePoweredItem;
-import appeng.recipes.entropy.EntropyMode;
-import appeng.recipes.entropy.EntropyRecipe;
-import appeng.util.InteractionUtil;
-import appeng.util.Platform;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -56,12 +53,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import appeng.api.config.Actionable;
+import appeng.api.util.DimensionalBlockPos;
+import appeng.block.misc.TinyTNTBlock;
+import appeng.core.AEConfig;
+import appeng.hooks.IBlockTool;
+import appeng.items.tools.powered.powersink.AEBasePoweredItem;
+import appeng.recipes.entropy.EntropyMode;
+import appeng.recipes.entropy.EntropyRecipe;
+import appeng.util.InteractionUtil;
+import appeng.util.Platform;
 
 public class EntropyManipulatorItem extends AEBasePoweredItem implements IBlockTool {
 

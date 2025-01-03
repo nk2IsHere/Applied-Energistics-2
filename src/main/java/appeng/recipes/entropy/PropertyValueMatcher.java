@@ -1,17 +1,18 @@
 package appeng.recipes.entropy;
 
+import java.util.List;
+import java.util.Map;
+
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
-
-import java.util.List;
-import java.util.Map;
 
 public sealed interface PropertyValueMatcher
         permits PropertyValueMatcher.SingleValue, PropertyValueMatcher.MultiValue, PropertyValueMatcher.Range {

@@ -18,10 +18,11 @@
 
 package appeng.client.gui.widgets;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+
 import appeng.api.config.Setting;
 import appeng.core.network.ServerboundPacket;
 import appeng.core.network.serverbound.ConfigButtonPacket;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 /**
  * Convenience button that automatically sends settings changes to the server.

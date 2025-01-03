@@ -18,15 +18,16 @@
 
 package appeng.parts.misc;
 
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import appeng.api.networking.IGridNode;
 import appeng.api.parts.*;
 import appeng.api.util.AECableType;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
 import appeng.parts.PartModel;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CableAnchorPart implements IPart {
 

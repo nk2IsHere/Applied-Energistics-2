@@ -18,13 +18,6 @@
 
 package appeng.block.qnb;
 
-import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
-import appeng.client.EffectType;
-import appeng.core.AppEng;
-import appeng.core.AppEngClient;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.QNBMenu;
-import appeng.menu.locator.MenuLocators;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -39,6 +32,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import appeng.blockentity.qnb.QuantumBridgeBlockEntity;
+import appeng.client.EffectType;
+import appeng.core.AppEng;
+import appeng.core.AppEngClient;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.QNBMenu;
+import appeng.menu.locator.MenuLocators;
 
 public class QuantumLinkChamberBlock extends QuantumBaseBlock {
 

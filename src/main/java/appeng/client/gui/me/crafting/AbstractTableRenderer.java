@@ -18,19 +18,20 @@
 
 package appeng.client.gui.me.crafting;
 
-import appeng.api.client.AEKeyRendering;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.client.gui.AEBaseScreen;
-import appeng.client.gui.StackWithBounds;
-import appeng.client.gui.style.PaletteColor;
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
+import appeng.api.client.AEKeyRendering;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.client.gui.AEBaseScreen;
+import appeng.client.gui.StackWithBounds;
+import appeng.client.gui.style.PaletteColor;
 
 /**
  * Renders a 3x5 table where each cell displays an item and some text next to it.

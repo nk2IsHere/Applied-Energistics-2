@@ -18,6 +18,10 @@
 
 package appeng.items.storage;
 
+import java.util.Collection;
+
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.ids.AEComponents;
 import appeng.api.stacks.AEItemKey;
@@ -34,9 +38,6 @@ import appeng.util.prioritylist.FuzzyPriorityList;
 import appeng.util.prioritylist.IPartitionList;
 import appeng.util.prioritylist.MergedPriorityList;
 import appeng.util.prioritylist.PrecisePriorityList;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.Collection;
 
 public class ViewCellItem extends AEBaseItem implements ICellWorkbenchItem {
     public ViewCellItem(Properties properties) {

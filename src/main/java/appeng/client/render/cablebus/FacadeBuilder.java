@@ -18,11 +18,14 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.parts.PartHelper;
-import appeng.api.util.AEAxisAlignedBB;
-import appeng.block.networking.CableBusBlock;
-import appeng.parts.misc.CableAnchorPart;
-import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.*;
+import static appeng.integration.abstraction.IFabricBakedModel.renderer;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -42,13 +45,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.function.Supplier;
-
-import static appeng.integration.abstraction.IFabricBakedModel.renderer;
+import appeng.api.parts.PartHelper;
+import appeng.api.util.AEAxisAlignedBB;
+import appeng.block.networking.CableBusBlock;
+import appeng.parts.misc.CableAnchorPart;
+import appeng.thirdparty.codechicken.lib.model.pipeline.transformers.*;
 
 /**
  * The FacadeBuilder builds for facades..

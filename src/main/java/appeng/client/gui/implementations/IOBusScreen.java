@@ -18,6 +18,9 @@
 
 package appeng.client.gui.implementations;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.api.config.*;
 import appeng.api.util.KeyTypeSelectionHost;
 import appeng.client.gui.style.ScreenStyle;
@@ -27,8 +30,6 @@ import appeng.client.gui.widgets.SettingToggleButton;
 import appeng.core.definitions.AEItems;
 import appeng.core.localization.GuiText;
 import appeng.menu.implementations.IOBusMenu;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 public class IOBusScreen extends UpgradeableScreen<IOBusMenu> {
 

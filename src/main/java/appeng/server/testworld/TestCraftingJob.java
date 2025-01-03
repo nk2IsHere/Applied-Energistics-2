@@ -1,5 +1,15 @@
 package appeng.server.testworld;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestAssertException;
+
 import appeng.api.networking.crafting.CalculationStrategy;
 import appeng.api.networking.crafting.ICraftingPlan;
 import appeng.api.networking.crafting.ICraftingSimulationRequester;
@@ -7,14 +17,6 @@ import appeng.api.stacks.AEKey;
 import appeng.core.AELog;
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.MachineSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestAssertException;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 public class TestCraftingJob {
     private final PlotTestHelper helper;

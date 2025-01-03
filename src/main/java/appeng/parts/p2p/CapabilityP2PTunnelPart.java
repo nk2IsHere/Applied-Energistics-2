@@ -18,15 +18,16 @@
 
 package appeng.parts.p2p;
 
-import appeng.api.parts.IPartItem;
-import appeng.hooks.ticking.TickHandler;
-import appeng.parts.PartAdjacentApi;
+import java.util.Objects;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 
-import java.util.Objects;
+import appeng.api.parts.IPartItem;
+import appeng.hooks.ticking.TickHandler;
+import appeng.parts.PartAdjacentApi;
 
 /**
  * Base class for simple capability-based p2p tunnels. Don't forget to set the 3 handlers in the constructor of the

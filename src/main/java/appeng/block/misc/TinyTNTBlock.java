@@ -18,10 +18,7 @@
 
 package appeng.block.misc;
 
-import appeng.block.AEBaseBlock;
-import appeng.entity.TinyTNTPrimedEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -45,7 +42,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.block.AEBaseBlock;
+import appeng.entity.TinyTNTPrimedEntity;
 
 public class TinyTNTBlock extends AEBaseBlock {
 

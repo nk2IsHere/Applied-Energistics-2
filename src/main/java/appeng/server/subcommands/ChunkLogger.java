@@ -18,10 +18,8 @@
 
 package appeng.server.subcommands;
 
-import appeng.core.AEConfig;
-import appeng.core.AELog;
-import appeng.server.ISubCommand;
 import com.mojang.brigadier.context.CommandContext;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -30,6 +28,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
+
+import appeng.core.AEConfig;
+import appeng.core.AELog;
+import appeng.server.ISubCommand;
 
 public class ChunkLogger implements ISubCommand {
 

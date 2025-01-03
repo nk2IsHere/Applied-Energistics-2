@@ -18,8 +18,9 @@
 
 package appeng.util.inv.filter;
 
-import appeng.api.inventories.InternalInventory;
 import net.minecraft.world.item.ItemStack;
+
+import appeng.api.inventories.InternalInventory;
 
 public class AEItemFilters {
     public static final IAEItemFilter INSERT_ONLY = new InsertOnlyFilter();

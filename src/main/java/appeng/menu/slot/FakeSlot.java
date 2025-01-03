@@ -18,6 +18,10 @@
 
 package appeng.menu.slot;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
+
 import appeng.api.config.Actionable;
 import appeng.api.inventories.InternalInventory;
 import appeng.core.network.ServerboundPacket;
@@ -25,9 +29,6 @@ import appeng.core.network.serverbound.InventoryActionPacket;
 import appeng.helpers.InventoryAction;
 import appeng.util.ConfigInventory;
 import appeng.util.ConfigMenuInventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public class FakeSlot extends AppEngSlot {
     public FakeSlot(InternalInventory inv, int invSlot) {

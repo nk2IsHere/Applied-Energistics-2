@@ -18,8 +18,10 @@
 
 package appeng.entity;
 
-import appeng.core.definitions.AEBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
+
+import org.joml.Quaternionf;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,7 +32,8 @@ import net.minecraft.client.renderer.entity.TntMinecartRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import org.joml.Quaternionf;
+
+import appeng.core.definitions.AEBlocks;
 
 @Environment(EnvType.CLIENT)
 public class TinyTNTPrimedRenderer extends EntityRenderer<TinyTNTPrimedEntity> {

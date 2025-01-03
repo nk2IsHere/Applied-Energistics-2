@@ -18,11 +18,8 @@
 
 package appeng.core.definitions;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import dev.architectury.registry.registries.RegistrySupplier;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
+import java.util.Objects;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -30,7 +27,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Objects;
+import dev.architectury.registry.registries.RegistrySupplier;
+
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
 
 public class BlockDefinition<T extends Block> implements ItemLike {
     private final String englishName;

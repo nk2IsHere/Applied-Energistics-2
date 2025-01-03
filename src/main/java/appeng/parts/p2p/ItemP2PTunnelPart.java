@@ -18,18 +18,19 @@
 
 package appeng.parts.p2p;
 
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.IPartModel;
-import appeng.api.stacks.AEKeyType;
-import appeng.core.AppEng;
-import appeng.items.parts.PartModels;
+import java.util.List;
+
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-import java.util.List;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.IPartModel;
+import appeng.api.stacks.AEKeyType;
+import appeng.core.AppEng;
+import appeng.items.parts.PartModels;
 
 public class ItemP2PTunnelPart extends CapabilityP2PTunnelPart<ItemP2PTunnelPart, Storage<ItemVariant>> {
 

@@ -34,7 +34,6 @@ public enum Actionable {
      */
     SIMULATE;
 
-
     public static Actionable ofSimulate(boolean simulate) {
         return simulate ? SIMULATE : MODULATE;
     }

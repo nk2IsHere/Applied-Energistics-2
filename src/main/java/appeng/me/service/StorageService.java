@@ -18,6 +18,27 @@
 
 package appeng.me.service;
 
+import java.io.IOException;
+import java.util.*;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
+import com.google.common.math.StatsAccumulator;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridServiceProvider;
 import appeng.api.networking.storage.IStorageService;
@@ -31,23 +52,6 @@ import appeng.me.helpers.InterestManager;
 import appeng.me.helpers.StackWatcher;
 import appeng.me.storage.NetworkStorage;
 import appeng.util.JsonStreamUtil;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
-import com.google.common.math.StatsAccumulator;
-import com.google.gson.Gson;
-import com.google.gson.stream.JsonWriter;
-import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.JsonOps;
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
-import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.util.*;
 
 public class StorageService implements IStorageService, IGridServiceProvider {
     private static final Gson GSON = new Gson();

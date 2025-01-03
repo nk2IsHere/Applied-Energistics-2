@@ -1,8 +1,10 @@
 package appeng.datagen.providers.tags;
 
-import appeng.api.ids.AEComponents;
-import appeng.datagen.providers.localization.LocalizationProvider;
-import appeng.items.tools.MemoryCardItem;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -11,10 +13,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import appeng.api.ids.AEComponents;
+import appeng.datagen.providers.localization.LocalizationProvider;
+import appeng.items.tools.MemoryCardItem;
 
 public class DataComponentTypeTagProvider extends FabricTagProvider<DataComponentType<?>> {
     private final LocalizationProvider localization;
@@ -48,7 +49,8 @@ public class DataComponentTypeTagProvider extends FabricTagProvider<DataComponen
         addExportedComponentCategory("Upgrades", AEComponents.EXPORTED_UPGRADES);
 
         tag(ConventionTags.EXPORTED_SETTINGS).add(
-                BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(AEComponents.EXPORTED_SETTINGS_SOURCE).unwrapKey().get());
+                BuiltInRegistries.DATA_COMPONENT_TYPE.wrapAsHolder(AEComponents.EXPORTED_SETTINGS_SOURCE).unwrapKey()
+                        .get());
     }
 
     private void addExportedComponentCategory(String englishCategoryName, DataComponentType<?>... types) {

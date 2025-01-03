@@ -1,15 +1,12 @@
 package appeng.parts.automation;
 
-import appeng.api.behaviors.PickupSink;
-import appeng.api.behaviors.PickupStrategy;
-import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
-import appeng.api.networking.energy.IEnergySource;
-import appeng.api.stacks.AEItemKey;
-import appeng.core.AppEng;
-import appeng.core.network.clientbound.BlockTransitionEffectPacket;
-import appeng.core.network.clientbound.ItemTransitionEffectPacket;
-import appeng.util.Platform;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -29,12 +26,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import appeng.api.behaviors.PickupSink;
+import appeng.api.behaviors.PickupStrategy;
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
+import appeng.api.networking.energy.IEnergySource;
+import appeng.api.stacks.AEItemKey;
+import appeng.core.AppEng;
+import appeng.core.network.clientbound.BlockTransitionEffectPacket;
+import appeng.core.network.clientbound.ItemTransitionEffectPacket;
+import appeng.util.Platform;
 
 public class ItemPickupStrategy implements PickupStrategy {
 

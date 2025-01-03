@@ -1,5 +1,12 @@
 package appeng.client.guidebook.compiler.tags;
 
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.minecraft.ResourceLocationException;
+
 import appeng.client.guidebook.compiler.IdUtils;
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.document.block.LytImage;
@@ -8,11 +15,6 @@ import appeng.client.guidebook.document.flow.LytFlowInlineBlock;
 import appeng.client.guidebook.document.flow.LytFlowParent;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
 import appeng.libs.mdast.model.MdAstNode;
-import net.minecraft.ResourceLocationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Set;
 
 public class FloatingImageCompiler extends FlowTagCompiler {
     public static final String TAG_NAME = "FloatingImage";

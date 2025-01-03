@@ -1,5 +1,13 @@
 package appeng.client.gui.widgets;
 
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+
 import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.ISubMenuHost;
 import appeng.client.gui.AEBaseScreen;
@@ -7,13 +15,6 @@ import appeng.client.gui.Icon;
 import appeng.client.gui.implementations.KeyTypeSelectionScreen;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.interfaces.KeyTypeSelectionMenu;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class KeyTypeSelectionButton extends IconButton {
     public static <C extends AEBaseMenu & KeyTypeSelectionMenu, P extends AEBaseScreen<C>> KeyTypeSelectionButton create(

@@ -1,6 +1,10 @@
 package appeng.menu.locator;
 
-import appeng.parts.AEBasePart;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -9,10 +13,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import appeng.parts.AEBasePart;
 
 /**
  * {@link MenuHostLocator} is used to find the host of a menu on both the server and client-side in a predictable manner

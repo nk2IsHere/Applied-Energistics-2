@@ -18,23 +18,14 @@
 
 package appeng.blockentity.networking;
 
-import appeng.api.networking.IGridNode;
-import appeng.api.parts.IFacadeContainer;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartItem;
-import appeng.api.parts.SelectedPart;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.api.util.DimensionalBlockPos;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.client.render.cablebus.CableBusRenderState;
-import appeng.core.AppEng;
-import appeng.helpers.AEMultiBlockEntity;
-import appeng.parts.CableBusContainer;
-import appeng.util.IDebugExportable;
-import appeng.util.Platform;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gson.stream.JsonWriter;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -52,11 +43,24 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
+import appeng.api.networking.IGridNode;
+import appeng.api.parts.IFacadeContainer;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartItem;
+import appeng.api.parts.SelectedPart;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.api.util.DimensionalBlockPos;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.client.render.cablebus.CableBusRenderState;
+import appeng.core.AppEng;
+import appeng.helpers.AEMultiBlockEntity;
+import appeng.parts.CableBusContainer;
+import appeng.util.IDebugExportable;
+import appeng.util.Platform;
 
 public class CableBusBlockEntity extends AEBaseBlockEntity implements AEMultiBlockEntity {
 

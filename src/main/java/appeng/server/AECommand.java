@@ -42,12 +42,12 @@ public final class AECommand {
 
     private void add(LiteralArgumentBuilder<CommandSourceStack> builder, Commands subCommand) {
         var subCommandBuilder = literal(subCommand.literal())
-            .requires(src -> {
-                if (subCommand.test && !AEConfig.instance().isDebugToolsEnabled()) {
-                    return false;
-                }
-                return src.hasPermission(subCommand.level);
-            });
+                .requires(src -> {
+                    if (subCommand.test && !AEConfig.instance().isDebugToolsEnabled()) {
+                        return false;
+                    }
+                    return src.hasPermission(subCommand.level);
+                });
         subCommand.command.addArguments(subCommandBuilder);
         subCommandBuilder.executes(ctx -> {
             subCommand.command.call(AppEng.instance().getCurrentServer(), ctx, ctx.getSource());

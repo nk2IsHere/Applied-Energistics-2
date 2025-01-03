@@ -18,20 +18,23 @@
 
 package appeng.me.service;
 
+import java.util.HashMap;
+import java.util.Random;
+import java.util.stream.Stream;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.nbt.CompoundTag;
+
 import appeng.api.networking.*;
 import appeng.api.networking.events.GridBootingStatusChange;
 import appeng.api.networking.events.GridPowerStatusChange;
 import appeng.core.AELog;
 import appeng.parts.p2p.MEP2PTunnelPart;
 import appeng.parts.p2p.P2PTunnelPart;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Random;
-import java.util.stream.Stream;
 
 public class P2PService implements IGridService, IGridServiceProvider {
     static {

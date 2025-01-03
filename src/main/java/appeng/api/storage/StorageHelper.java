@@ -23,6 +23,12 @@
 
 package appeng.api.storage;
 
+import java.util.Objects;
+
+import com.google.common.primitives.Ints;
+
+import net.minecraft.nbt.CompoundTag;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.crafting.ICraftingLink;
@@ -33,10 +39,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.core.stats.AeStats;
 import appeng.crafting.CraftingLink;
-import com.google.common.primitives.Ints;
-import net.minecraft.nbt.CompoundTag;
-
-import java.util.Objects;
 
 public final class StorageHelper {
     private StorageHelper() {

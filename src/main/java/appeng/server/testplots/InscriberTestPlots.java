@@ -1,16 +1,17 @@
 package appeng.server.testplots;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.stacks.AEItemKey;
-import appeng.blockentity.misc.InscriberBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+
+import appeng.api.ids.AEComponents;
+import appeng.api.stacks.AEItemKey;
+import appeng.blockentity.misc.InscriberBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
 
 @TestPlotClass
 public final class InscriberTestPlots {

@@ -18,8 +18,9 @@
 
 package appeng.parts.automation;
 
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.*;
+import java.util.function.Supplier;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -30,8 +31,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
-import java.util.function.Supplier;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 /**
  * Built-in model for annihilation planes that supports connected textures.

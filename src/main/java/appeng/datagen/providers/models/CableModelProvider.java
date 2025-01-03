@@ -1,16 +1,16 @@
 package appeng.datagen.providers.models;
 
+import static appeng.core.AppEng.makeId;
+
+import java.util.Locale;
+
+import net.minecraft.data.PackOutput;
+import net.minecraftforge.common.data.ExistingFileHelper;
+
 import appeng.api.util.AEColor;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEParts;
 import appeng.core.definitions.ColoredItemDefinition;
-import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.ExistingFileHelper;
-
-
-import java.util.Locale;
-
-import static appeng.core.AppEng.makeId;
 
 public class CableModelProvider extends AE2BlockStateProvider {
     public CableModelProvider(PackOutput packOutput, ExistingFileHelper existingFileHelper) {

@@ -18,6 +18,14 @@
 
 package appeng.me.cells;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.ICellHandler;
 import appeng.api.storage.cells.ISaveProvider;
@@ -26,13 +34,6 @@ import appeng.core.AEConfig;
 import appeng.items.contents.CellConfig;
 import appeng.items.storage.CreativeCellItem;
 import appeng.items.storage.StorageCellTooltipComponent;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Cell handler for creative storage cells (both fluid and item), which do not allow item insertion.

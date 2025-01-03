@@ -23,15 +23,17 @@
 
 package appeng.api.implementations.blockentities;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.api.stacks.KeyCounter;
-import appeng.core.AppEng;
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.crafting.IPatternDetails;
+import appeng.api.stacks.KeyCounter;
+import appeng.core.AppEng;
 
 /**
  * Provides crafting services to adjacent pattern providers for automatic crafting. Can be provided via capability on
@@ -40,8 +42,8 @@ import org.jetbrains.annotations.Nullable;
 public interface ICraftingMachine {
 
     BlockApiLookup<ICraftingMachine, Direction> SIDED = BlockApiLookup.get(
-        AppEng.makeId("crafing_machine"),
-        ICraftingMachine.class, Direction.class);
+            AppEng.makeId("crafing_machine"),
+            ICraftingMachine.class, Direction.class);
 
     @Nullable
     static ICraftingMachine of(@Nullable BlockEntity blockEntity, Direction side) {

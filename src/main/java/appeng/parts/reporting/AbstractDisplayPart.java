@@ -18,10 +18,11 @@
 
 package appeng.parts.reporting;
 
+import net.minecraft.resources.ResourceLocation;
+
 import appeng.api.parts.IPartItem;
 import appeng.core.AppEng;
 import appeng.items.parts.PartModels;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * A more sophisticated part overlapping all 3 textures.

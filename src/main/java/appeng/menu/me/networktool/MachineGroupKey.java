@@ -1,7 +1,8 @@
 package appeng.menu.me.networktool;
 
-import appeng.api.stacks.AEItemKey;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+
+import appeng.api.stacks.AEItemKey;
 
 /**
  * The information by which machines are grouped together.

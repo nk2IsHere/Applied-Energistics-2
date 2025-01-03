@@ -18,12 +18,13 @@
 
 package appeng.blockentity.inventory;
 
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.BaseInternalInventory;
 import appeng.api.storage.cells.StorageCell;
 import appeng.util.inv.AppEngInternalInventory;
 import appeng.util.inv.InternalInventoryHost;
 import appeng.util.inv.filter.IAEItemFilter;
-import net.minecraft.world.item.ItemStack;
 
 public class AppEngCellInventory extends BaseInternalInventory {
     private final AppEngInternalInventory inv;

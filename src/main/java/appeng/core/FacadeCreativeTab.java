@@ -57,7 +57,7 @@ public final class FacadeCreativeTab {
     }
 
     private static void buildDisplayItems(CreativeModeTab.ItemDisplayParameters displayParameters,
-                                          CreativeModeTab.Output output) {
+            CreativeModeTab.Output output) {
         // We need to create our own set since vanilla doesn't allow duplicates, but we cannot guarantee
         // uniqueness
         var facades = ItemStackLinkedSet.createTypeAndComponentsSet();

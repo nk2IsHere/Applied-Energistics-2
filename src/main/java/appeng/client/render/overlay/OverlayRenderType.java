@@ -18,12 +18,13 @@
 
 package appeng.client.render.overlay;
 
+import java.util.OptionalDouble;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-
-import java.util.OptionalDouble;
 
 /**
  * This is based on the area render of https://github.com/TeamPneumatic/pnc-repressurized/

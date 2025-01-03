@@ -23,16 +23,17 @@
 
 package appeng.api.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.mojang.serialization.Codec;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * List of all colors supported by AE, their names, and various colors for display.

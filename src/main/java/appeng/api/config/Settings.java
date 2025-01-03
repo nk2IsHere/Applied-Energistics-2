@@ -23,11 +23,11 @@
 
 package appeng.api.config;
 
-import com.google.common.base.Preconditions;
-
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.common.base.Preconditions;
 
 public final class Settings {
     private static final Map<String, Setting<?>> SETTINGS = new HashMap<>();

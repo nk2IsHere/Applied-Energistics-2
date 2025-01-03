@@ -1,10 +1,6 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.client.render.effects.EnergyParticleData;
-import appeng.core.AppEngClient;
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -12,6 +8,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
+
+import appeng.client.render.effects.EnergyParticleData;
+import appeng.core.AppEngClient;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
 
 /**
  * Plays a transition particle effect into the supplied direction. Used primarily by annihilation planes.

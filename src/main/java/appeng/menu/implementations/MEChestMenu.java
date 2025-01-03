@@ -18,13 +18,14 @@
 
 package appeng.menu.implementations;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.client.gui.implementations.MEChestScreen;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.SlotSemantics;
 import appeng.menu.slot.RestrictedInputSlot;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 /**
  * @see MEChestScreen

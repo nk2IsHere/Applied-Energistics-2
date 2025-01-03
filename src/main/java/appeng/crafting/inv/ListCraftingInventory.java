@@ -18,15 +18,17 @@
 
 package appeng.crafting.inv;
 
+import java.util.Map;
+
+import com.google.common.collect.Iterables;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.ListTag;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.FuzzyMode;
 import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
-import com.google.common.collect.Iterables;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.ListTag;
-
-import java.util.Map;
 
 public class ListCraftingInventory implements ICraftingInventory {
     public final KeyCounter list = new KeyCounter();

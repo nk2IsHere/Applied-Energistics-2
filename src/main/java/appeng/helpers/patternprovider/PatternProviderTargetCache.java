@@ -1,5 +1,16 @@
 package appeng.helpers.patternprovider;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+
 import appeng.api.behaviors.ExternalStorageStrategy;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
@@ -8,15 +19,6 @@ import appeng.api.stacks.AEKeyType;
 import appeng.api.storage.MEStorage;
 import appeng.me.storage.CompositeStorage;
 import appeng.parts.automation.StackWorldBehaviors;
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
 
 class PatternProviderTargetCache {
     private final BlockApiCache<MEStorage, Direction> cache;

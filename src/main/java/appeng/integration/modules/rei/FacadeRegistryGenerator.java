@@ -18,25 +18,27 @@
 
 package appeng.integration.modules.rei;
 
-import appeng.core.AppEng;
-import appeng.core.FacadeCreativeTab;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.items.parts.FacadeItem;
-import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import me.shedaniel.rei.plugin.common.displays.crafting.DefaultShapedDisplay;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
+import me.shedaniel.rei.plugin.common.displays.crafting.DefaultShapedDisplay;
+
+import appeng.core.AppEng;
+import appeng.core.FacadeCreativeTab;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
+import appeng.items.parts.FacadeItem;
 
 /**
  * This plugin will dynamically add facade recipes for any item that can be turned into a facade.

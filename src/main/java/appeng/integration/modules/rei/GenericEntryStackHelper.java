@@ -1,16 +1,18 @@
 package appeng.integration.modules.rei;
 
-import appeng.api.integrations.rei.IngredientConverter;
-import appeng.api.integrations.rei.IngredientConverters;
-import appeng.api.stacks.GenericStack;
-import me.shedaniel.rei.api.common.display.Display;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
+
+import me.shedaniel.rei.api.common.display.Display;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.EntryStack;
+
+import appeng.api.integrations.rei.IngredientConverter;
+import appeng.api.integrations.rei.IngredientConverters;
+import appeng.api.stacks.GenericStack;
 
 public final class GenericEntryStackHelper {
     private GenericEntryStackHelper() {

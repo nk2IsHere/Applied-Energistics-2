@@ -18,20 +18,23 @@
 
 package appeng.server.services.compass;
 
-import appeng.blockentity.misc.MysteriousCubeBlockEntity;
-import appeng.core.definitions.AEBlocks;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import appeng.blockentity.misc.MysteriousCubeBlockEntity;
+import appeng.core.definitions.AEBlocks;
 
 public final class ServerCompassService {
 

@@ -1,10 +1,12 @@
 package appeng.integration.modules.rei;
 
-import appeng.integration.abstraction.ItemListModAdapter;
+import java.util.Objects;
+
 import com.google.common.base.Strings;
+
 import me.shedaniel.rei.api.client.REIRuntime;
 
-import java.util.Objects;
+import appeng.integration.abstraction.ItemListModAdapter;
 
 class ReiItemListModAdapter implements ItemListModAdapter {
 

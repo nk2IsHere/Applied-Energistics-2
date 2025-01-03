@@ -18,6 +18,15 @@
 
 package appeng.parts.reporting;
 
+import java.util.List;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.InternalInventory;
 import appeng.api.parts.IPartItem;
 import appeng.api.parts.IPartModel;
@@ -26,14 +35,6 @@ import appeng.items.parts.PartModels;
 import appeng.menu.me.items.CraftingTermMenu;
 import appeng.parts.PartModel;
 import appeng.util.inv.AppEngInternalInventory;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.List;
 
 public class CraftingTerminalPart extends AbstractTerminalPart {
 

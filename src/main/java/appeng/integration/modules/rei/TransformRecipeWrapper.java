@@ -1,16 +1,18 @@
 package appeng.integration.modules.rei;
 
-import appeng.recipes.transform.TransformCircumstance;
-import appeng.recipes.transform.TransformRecipe;
+import java.util.List;
+import java.util.Optional;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.List;
-import java.util.Optional;
+import appeng.recipes.transform.TransformCircumstance;
+import appeng.recipes.transform.TransformRecipe;
 
 public class TransformRecipeWrapper implements Display {
 

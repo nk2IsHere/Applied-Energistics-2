@@ -18,14 +18,16 @@
 
 package appeng.helpers;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+
+import team.reborn.energy.api.EnergyStorage;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnit;
 import appeng.blockentity.powersink.IExternalPowerSink;
 import appeng.me.energy.StoredEnergyAmount;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * Adapts an {@link IExternalPowerSink} to TR Energy's {@link EnergyStorage} by buffering energy packets. Not ideal, but

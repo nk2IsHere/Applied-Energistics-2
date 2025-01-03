@@ -1,5 +1,15 @@
 package appeng.items.tools.powered;
 
+import java.util.function.DoubleSupplier;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.menuobjects.IMenuItem;
@@ -8,14 +18,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.AEKeyType;
 import appeng.items.tools.powered.powersink.AEBasePoweredItem;
 import appeng.menu.locator.MenuLocators;
-import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickAction;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.DoubleSupplier;
 
 public abstract class PoweredContainerItem extends AEBasePoweredItem implements IMenuItem {
     public PoweredContainerItem(DoubleSupplier powerCapacity, Properties props) {

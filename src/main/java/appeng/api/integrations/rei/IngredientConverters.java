@@ -1,8 +1,8 @@
 package appeng.api.integrations.rei;
 
-import com.google.common.collect.ImmutableList;
-
 import java.util.List;
+
+import com.google.common.collect.ImmutableList;
 
 /**
  * Register your {@link IngredientConverter} instances for JEI here.

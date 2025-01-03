@@ -1,13 +1,15 @@
 package appeng.core.definitions;
 
-import dev.architectury.registry.registries.RegistrySupplier;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
+import dev.architectury.registry.registries.RegistrySupplier;
 
 public final class DeferredBlockEntityType<T extends BlockEntity> implements Supplier<BlockEntityType<T>> {
     private final Class<T> blockEntityClass;
@@ -15,7 +17,7 @@ public final class DeferredBlockEntityType<T extends BlockEntity> implements Sup
     private final RegistrySupplier<BlockEntityType<T>> holder;
 
     public DeferredBlockEntityType(Class<T> blockEntityClass,
-        RegistrySupplier<BlockEntityType<T>> holder) {
+            RegistrySupplier<BlockEntityType<T>> holder) {
         this.blockEntityClass = blockEntityClass;
         this.holder = holder;
     }

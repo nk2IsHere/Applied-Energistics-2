@@ -18,9 +18,8 @@
 
 package appeng.debug;
 
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.blockentity.ServerTickingBlockEntity;
 import com.google.common.math.IntMath;
+
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -32,8 +31,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
 import team.reborn.energy.api.EnergyStorage;
 
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
 
 public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements ServerTickingBlockEntity, EnergyStorage {
     /**
@@ -88,17 +90,15 @@ public class EnergyGeneratorBlockEntity extends AEBaseBlockEntity implements Ser
 
     @Override
     public long insert(
-        long l,
-        TransactionContext transactionContext
-    ) {
+            long l,
+            TransactionContext transactionContext) {
         return 0;
     }
 
     @Override
     public long extract(
-        long maxExtract,
-        TransactionContext transactionContext
-    ) {
+            long maxExtract,
+            TransactionContext transactionContext) {
         return maxExtract;
     }
 

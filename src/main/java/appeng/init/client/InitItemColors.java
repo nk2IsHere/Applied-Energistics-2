@@ -18,6 +18,8 @@
 
 package appeng.init.client;
 
+import static appeng.util.ColorUtil.toARGB;
+
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +38,6 @@ import appeng.items.tools.MemoryCardItem;
 import appeng.items.tools.powered.ColorApplicatorItem;
 import appeng.items.tools.powered.PortableCellItem;
 
-import static appeng.util.ColorUtil.toARGB;
-
 public final class InitItemColors {
     private InitItemColors() {
     }
@@ -50,7 +50,8 @@ public final class InitItemColors {
 
         itemColors.register(toARGB(InitItemColors::getColorApplicatorColor), AEItems.COLOR_APPLICATOR);
 
-        itemColors.register(toARGB(PortableCellItem::getColor), AEItems.PORTABLE_ITEM_CELL1K, AEItems.PORTABLE_FLUID_CELL1K,
+        itemColors.register(toARGB(PortableCellItem::getColor), AEItems.PORTABLE_ITEM_CELL1K,
+                AEItems.PORTABLE_FLUID_CELL1K,
                 AEItems.PORTABLE_ITEM_CELL4K, AEItems.PORTABLE_FLUID_CELL4K,
                 AEItems.PORTABLE_ITEM_CELL16K, AEItems.PORTABLE_FLUID_CELL16K,
                 AEItems.PORTABLE_ITEM_CELL64K, AEItems.PORTABLE_FLUID_CELL64K,

@@ -1,9 +1,5 @@
 package appeng.parts.automation;
 
-import appeng.api.behaviors.StackImportStrategy;
-import appeng.api.behaviors.StackTransferContext;
-import appeng.api.config.Actionable;
-import appeng.core.AELog;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -11,6 +7,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+
+import appeng.api.behaviors.StackImportStrategy;
+import appeng.api.behaviors.StackTransferContext;
+import appeng.api.config.Actionable;
+import appeng.core.AELog;
 
 /**
  * Strategy for efficiently importing stacks from external storage into an internal
@@ -22,11 +23,11 @@ public class StorageImportStrategy<T, S> implements StackImportStrategy {
     private final Direction fromSide;
 
     public StorageImportStrategy(
-        BlockApiLookup<T, Direction> capability,
-        HandlerStrategy<T, S> conversion,
-        ServerLevel level,
-        BlockPos fromPos,
-        Direction fromSide) {
+            BlockApiLookup<T, Direction> capability,
+            HandlerStrategy<T, S> conversion,
+            ServerLevel level,
+            BlockPos fromPos,
+            Direction fromSide) {
         this.cache = BlockApiCache.create(capability, level, fromPos);
         this.conversion = conversion;
         this.fromSide = fromSide;

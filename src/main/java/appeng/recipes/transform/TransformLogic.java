@@ -1,8 +1,10 @@
 package appeng.recipes.transform;
 
+import java.util.*;
+import java.util.function.Predicate;
+
 import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -14,8 +16,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 
-import java.util.*;
-import java.util.function.Predicate;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 
 @SuppressWarnings("removal")
 public final class TransformLogic {

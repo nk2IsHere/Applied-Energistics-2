@@ -1,11 +1,12 @@
 package appeng.client.gui.me.search;
 
-import appeng.api.stacks.AEKeyType;
-import appeng.menu.me.common.GridInventoryEntry;
-import net.minecraft.tags.TagKey;
-
 import java.util.*;
 import java.util.function.Predicate;
+
+import net.minecraft.tags.TagKey;
+
+import appeng.api.stacks.AEKeyType;
+import appeng.menu.me.common.GridInventoryEntry;
 
 final class TagSearchPredicate implements Predicate<GridInventoryEntry> {
     private final String term;

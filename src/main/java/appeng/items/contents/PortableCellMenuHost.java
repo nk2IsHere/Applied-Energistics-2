@@ -18,6 +18,15 @@
 
 package appeng.items.contents;
 
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
+import com.google.common.base.Preconditions;
+
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.*;
 import appeng.api.features.HotkeyAction;
 import appeng.api.implementations.menuobjects.IPortableTerminal;
@@ -32,13 +41,6 @@ import appeng.items.tools.powered.AbstractPortableCell;
 import appeng.me.helpers.PlayerSource;
 import appeng.menu.ISubMenu;
 import appeng.menu.locator.ItemMenuHostLocator;
-import com.google.common.base.Preconditions;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 /**
  * Hosts the terminal interface for a {@link AbstractPortableCell}.

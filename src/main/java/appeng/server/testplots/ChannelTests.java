@@ -1,17 +1,18 @@
 package appeng.server.testplots;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+import net.minecraft.core.BlockPos;
+
 import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IGridConnectionVisitor;
 import appeng.api.networking.IGridNode;
 import appeng.core.definitions.AEBlocks;
 import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.PlotTestHelper;
-import net.minecraft.core.BlockPos;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 @TestPlotClass
 public class ChannelTests {

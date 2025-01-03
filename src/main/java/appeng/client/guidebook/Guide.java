@@ -1,18 +1,17 @@
 package appeng.client.guidebook;
 
-import appeng.client.guidebook.compiler.PageCompiler;
-import appeng.client.guidebook.compiler.ParsedGuidePage;
-import appeng.client.guidebook.extensions.DefaultExtensions;
-import appeng.client.guidebook.extensions.Extension;
-import appeng.client.guidebook.extensions.ExtensionCollection;
-import appeng.client.guidebook.extensions.ExtensionPoint;
-import appeng.client.guidebook.indices.CategoryIndex;
-import appeng.client.guidebook.indices.ItemIndex;
-import appeng.client.guidebook.indices.PageIndex;
-import appeng.client.guidebook.navigation.NavigationTree;
-import appeng.client.guidebook.screen.GlobalInMemoryHistory;
-import appeng.client.guidebook.screen.GuideScreen;
-import appeng.util.Platform;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -35,17 +34,20 @@ import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.validation.DirectoryValidator;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import appeng.client.guidebook.compiler.PageCompiler;
+import appeng.client.guidebook.compiler.ParsedGuidePage;
+import appeng.client.guidebook.extensions.DefaultExtensions;
+import appeng.client.guidebook.extensions.Extension;
+import appeng.client.guidebook.extensions.ExtensionCollection;
+import appeng.client.guidebook.extensions.ExtensionPoint;
+import appeng.client.guidebook.indices.CategoryIndex;
+import appeng.client.guidebook.indices.ItemIndex;
+import appeng.client.guidebook.indices.PageIndex;
+import appeng.client.guidebook.navigation.NavigationTree;
+import appeng.client.guidebook.screen.GlobalInMemoryHistory;
+import appeng.client.guidebook.screen.GuideScreen;
+import appeng.util.Platform;
 
 /**
  * Encapsulates a Guide, which consists of a collection of Markdown pages and associated content, loaded from a
@@ -623,7 +625,8 @@ public final class Guide implements PageCollection {
 
     private void registerReloadListener() {
         ResourceManagerHelper
-            .get(PackType.CLIENT_RESOURCES)
-            .registerReloadListener(new ReloadListener(ResourceLocation.fromNamespaceAndPath(defaultNamespace, folder)));
+                .get(PackType.CLIENT_RESOURCES)
+                .registerReloadListener(
+                        new ReloadListener(ResourceLocation.fromNamespaceAndPath(defaultNamespace, folder)));
     }
 }

@@ -23,18 +23,20 @@
 
 package appeng.api.storage;
 
-import appeng.api.config.Actionable;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.KeyCounter;
-import appeng.core.AppEng;
+import java.util.Objects;
+
 import com.google.common.base.Preconditions;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Objects;
+import appeng.api.config.Actionable;
+import appeng.api.networking.security.IActionSource;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.KeyCounter;
+import appeng.core.AppEng;
 
 /**
  * AE's Equivalent to IInventory, used to reading contents, and manipulating contents of ME Inventories.
@@ -52,8 +54,8 @@ import java.util.Objects;
  */
 public interface MEStorage {
     BlockApiLookup<MEStorage, Direction> SIDED = BlockApiLookup.get(
-        AppEng.makeId("me_storage"),
-        MEStorage.class, Direction.class);
+            AppEng.makeId("me_storage"),
+            MEStorage.class, Direction.class);
 
     /**
      * Returns whether this inventory is the preferred storage location for the given stack when being compared to other

@@ -18,7 +18,6 @@
 
 package appeng.init.client;
 
-import appeng.core.definitions.DeferredBlockEntityType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -36,6 +35,7 @@ import appeng.client.render.tesr.InscriberTESR;
 import appeng.client.render.tesr.SkyChestTESR;
 import appeng.client.render.tesr.SkyStoneTankBlockEntityRenderer;
 import appeng.core.definitions.AEBlockEntities;
+import appeng.core.definitions.DeferredBlockEntityType;
 
 @Environment(EnvType.CLIENT)
 public final class InitBlockEntityRenderers {
@@ -59,9 +59,8 @@ public final class InitBlockEntityRenderers {
     }
 
     private static <T extends BlockEntity> void register(
-        DeferredBlockEntityType<T> type,
-        BlockEntityRendererProvider<T> factory
-    ) {
+            DeferredBlockEntityType<T> type,
+            BlockEntityRendererProvider<T> factory) {
         BlockEntityRenderers.register(type.get(), factory);
     }
 

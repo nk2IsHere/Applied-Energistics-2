@@ -23,19 +23,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import appeng.integration.abstraction.IFabricBakedModel;
 import com.google.common.collect.ImmutableMap;
 
 import org.jetbrains.annotations.Nullable;
 
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -45,6 +41,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.blockentity.spatial.SpatialPylonBlockEntity;
 import appeng.client.render.cablebus.CubeBuilder;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 /**
  * The baked model that will be used for rendering the spatial pylon.

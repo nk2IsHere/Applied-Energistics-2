@@ -18,14 +18,11 @@
 
 package appeng.block.storage;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.storage.SkyChestBlockEntity;
-import appeng.core.definitions.AEBlockEntities;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.SkyChestMenu;
-import appeng.menu.locator.MenuLocators;
+import java.util.EnumMap;
+import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -50,10 +47,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.Map;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.storage.SkyChestBlockEntity;
+import appeng.core.definitions.AEBlockEntities;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.SkyChestMenu;
+import appeng.menu.locator.MenuLocators;
 
 public class SkyChestBlock extends AEBaseEntityBlock<SkyChestBlockEntity> implements SimpleWaterloggedBlock {
 

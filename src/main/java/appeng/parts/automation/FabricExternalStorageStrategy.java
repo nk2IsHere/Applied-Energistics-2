@@ -19,10 +19,10 @@ public class FabricExternalStorageStrategy<T, S> implements ExternalStorageStrat
     private final Direction fromSide;
 
     public FabricExternalStorageStrategy(BlockApiLookup<T, Direction> apiLookup,
-             HandlerStrategy<T, S> conversion,
-             ServerLevel level,
-             BlockPos fromPos,
-             Direction fromSide) {
+            HandlerStrategy<T, S> conversion,
+            ServerLevel level,
+            BlockPos fromPos,
+            Direction fromSide) {
         this.apiCache = BlockApiCache.create(apiLookup, level, fromPos);
         this.conversion = conversion;
         this.fromSide = fromSide;

@@ -18,17 +18,18 @@
 
 package appeng.menu.implementations;
 
+import java.util.HashMap;
+
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.LevelAccessor;
+
 import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.blockentity.spatial.SpatialAnchorBlockEntity;
 import appeng.me.service.StatisticsService;
 import appeng.menu.AEBaseMenu;
 import appeng.menu.guisync.GuiSync;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.LevelAccessor;
-
-import java.util.HashMap;
 
 /**
  * @see appeng.client.gui.implementations.SpatialAnchorScreen

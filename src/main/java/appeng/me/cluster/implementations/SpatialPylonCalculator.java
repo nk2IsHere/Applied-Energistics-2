@@ -18,12 +18,13 @@
 
 package appeng.me.cluster.implementations;
 
-import appeng.blockentity.spatial.SpatialPylonBlockEntity;
-import appeng.me.cluster.IAEMultiBlock;
-import appeng.me.cluster.MBCalculator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import appeng.blockentity.spatial.SpatialPylonBlockEntity;
+import appeng.me.cluster.IAEMultiBlock;
+import appeng.me.cluster.MBCalculator;
 
 public class SpatialPylonCalculator extends MBCalculator<SpatialPylonBlockEntity, SpatialPylonCluster> {
 

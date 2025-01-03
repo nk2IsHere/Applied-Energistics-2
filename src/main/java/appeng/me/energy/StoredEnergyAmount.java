@@ -1,7 +1,8 @@
 package appeng.me.energy;
 
-import appeng.api.networking.events.GridPowerStorageStateChanged;
 import net.minecraft.util.Mth;
+
+import appeng.api.networking.events.GridPowerStorageStateChanged;
 
 /**
  * Wraps a stored energy amount with callbacks when it passes a low / high threshold.

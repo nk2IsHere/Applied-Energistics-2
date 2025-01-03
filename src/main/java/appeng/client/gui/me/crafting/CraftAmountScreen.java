@@ -18,6 +18,10 @@
 
 package appeng.client.gui.me.crafting;
 
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+
 import appeng.client.gui.AEBaseScreen;
 import appeng.client.gui.NumberEntryType;
 import appeng.client.gui.implementations.AESubScreen;
@@ -25,9 +29,6 @@ import appeng.client.gui.style.ScreenStyle;
 import appeng.client.gui.widgets.NumberEntryWidget;
 import appeng.core.localization.GuiText;
 import appeng.menu.me.crafting.CraftAmountMenu;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Inventory;
 
 /**
  * When requesting to auto-craft, this dialog allows the player to enter the desired number of items to craft.

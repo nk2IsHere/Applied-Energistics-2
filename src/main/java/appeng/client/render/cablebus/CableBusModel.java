@@ -18,20 +18,22 @@
 
 package appeng.client.render.cablebus;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.function.Function;
+
+import com.google.common.collect.ImmutableMap;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.resources.ResourceLocation;
+
 import appeng.api.parts.PartModelsInternal;
 import appeng.api.util.AEColor;
 import appeng.client.render.BasicUnbakedModel;
 import appeng.core.AELog;
 import appeng.core.AppEng;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.function.Function;
 
 /**
  * The built-in model for the cable bus block.

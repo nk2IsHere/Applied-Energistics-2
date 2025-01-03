@@ -18,12 +18,6 @@
 
 package appeng.block.storage;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.api.storage.cells.CellState;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.storage.MEChestBlockEntity;
-import appeng.core.localization.PlayerMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +27,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.api.storage.cells.CellState;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.storage.MEChestBlockEntity;
+import appeng.core.localization.PlayerMessages;
 
 public class MEChestBlock extends AEBaseEntityBlock<MEChestBlockEntity> {
 

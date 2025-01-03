@@ -18,6 +18,21 @@
 
 package appeng.me.service;
 
+import java.util.*;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Sets;
+
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+
+import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
+
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -33,17 +48,6 @@ import appeng.me.energy.EnergyThreshold;
 import appeng.me.energy.EnergyWatcher;
 import appeng.me.energy.GridEnergyStorage;
 import appeng.me.energy.IEnergyOverlayGridConnection;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Sets;
-import it.unimi.dsi.fastutil.objects.ObjectRBTreeSet;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
-
-import java.util.*;
 
 public class EnergyService implements IEnergyService, IGridServiceProvider {
     private static final String TAG_STORED_ENERGY = "e";

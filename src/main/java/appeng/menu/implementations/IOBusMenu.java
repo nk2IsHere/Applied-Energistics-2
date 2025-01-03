@@ -18,6 +18,9 @@
 
 package appeng.menu.implementations;
 
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+
 import appeng.api.util.KeyTypeSelection;
 import appeng.api.util.KeyTypeSelectionHost;
 import appeng.client.gui.implementations.IOBusScreen;
@@ -27,8 +30,6 @@ import appeng.menu.interfaces.KeyTypeSelectionMenu;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import appeng.parts.automation.ImportBusPart;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
 
 /**
  * Used for {@link ImportBusPart}, {@link ExportBusPart}.

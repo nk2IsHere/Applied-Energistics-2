@@ -18,13 +18,6 @@
 
 package appeng.block.spatial;
 
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.spatial.SpatialAnchorBlockEntity;
-import appeng.menu.MenuOpener;
-import appeng.menu.implementations.SpatialAnchorMenu;
-import appeng.menu.locator.MenuLocators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -34,6 +27,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.spatial.SpatialAnchorBlockEntity;
+import appeng.menu.MenuOpener;
+import appeng.menu.implementations.SpatialAnchorMenu;
+import appeng.menu.locator.MenuLocators;
 
 /**
  * The block for our chunk loader

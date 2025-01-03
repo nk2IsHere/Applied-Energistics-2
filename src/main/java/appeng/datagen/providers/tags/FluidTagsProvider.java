@@ -18,24 +18,23 @@
 
 package appeng.datagen.providers.tags;
 
-import appeng.api.ids.AETags;
-import appeng.datagen.providers.IAE2DataProvider;
+import java.util.concurrent.CompletableFuture;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 
-import java.util.concurrent.CompletableFuture;
+import appeng.api.ids.AETags;
+import appeng.datagen.providers.IAE2DataProvider;
 
 public class FluidTagsProvider extends FabricTagProvider.FluidTagProvider implements IAE2DataProvider {
 
     public FluidTagsProvider(
-        FabricDataOutput output,
-        CompletableFuture<HolderLookup.Provider> completableFuture
-    ) {
+            FabricDataOutput output,
+            CompletableFuture<HolderLookup.Provider> completableFuture) {
         super(
-            output,
-            completableFuture
-        );
+                output,
+                completableFuture);
     }
 
     @Override

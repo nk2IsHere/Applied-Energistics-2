@@ -23,11 +23,13 @@
 
 package appeng.api.ids;
 
-import appeng.api.util.AEColor;
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
+
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Map;
+import appeng.api.util.AEColor;
 
 /**
  * Contains {@link net.minecraft.world.item.Item} ids for various items defined by Ae2.

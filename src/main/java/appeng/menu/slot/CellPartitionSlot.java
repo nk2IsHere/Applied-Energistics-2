@@ -1,15 +1,17 @@
 package appeng.menu.slot;
 
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.inventories.InternalInventory;
 import appeng.api.storage.StorageCells;
 import appeng.client.Point;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class CellPartitionSlot extends FakeSlot implements IOptionalSlot {
 

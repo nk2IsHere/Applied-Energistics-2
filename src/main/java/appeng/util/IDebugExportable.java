@@ -1,11 +1,14 @@
 package appeng.util;
 
-import appeng.api.networking.IGridNode;
+import java.io.IOException;
+
 import com.google.gson.stream.JsonWriter;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
 import net.minecraft.core.HolderLookup;
 
-import java.io.IOException;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
+import appeng.api.networking.IGridNode;
 
 /**
  * Interface for objects that allow themselves to be exported to a debug export.

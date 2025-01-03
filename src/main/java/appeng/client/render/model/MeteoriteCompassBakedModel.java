@@ -18,8 +18,13 @@
 
 package appeng.client.render.model;
 
-import appeng.hooks.CompassManager;
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.List;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -36,12 +41,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
-import java.util.List;
-import java.util.function.Supplier;
+import appeng.hooks.CompassManager;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 /**
  * This baked model combines the quads of a compass base and the quads of a compass pointer, which will be rotated
@@ -138,10 +140,12 @@ public class MeteoriteCompassBakedModel implements IFabricBakedModel {
          */
         return new ItemOverrides() {
             @Override
-            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
+            public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level,
+                    @Nullable LivingEntity entity, int seed) {
                 if (level != null && entity instanceof LocalPlayer player) {
                     float offRads = (float) (player.getYRot() / 180.0f * (float) Math.PI + Math.PI);
-                    MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(player.blockPosition(), true, offRads);
+                    MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(player.blockPosition(), true,
+                            offRads);
                 } else {
                     MeteoriteCompassBakedModel.this.fallbackRotation = getAnimatedRotation(null, false, 0);
                 }

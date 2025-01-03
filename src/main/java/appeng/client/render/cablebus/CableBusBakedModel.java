@@ -18,14 +18,13 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.parts.IPartModel;
-import appeng.api.util.AECableType;
-import appeng.api.util.AEColor;
-import appeng.integration.abstraction.IFabricBakedModel;
-import appeng.parts.reporting.ReportingModelData;
+import java.util.*;
+import java.util.function.Supplier;
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -42,8 +41,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
-import java.util.function.Supplier;
+import appeng.api.parts.IPartModel;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEColor;
+import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.parts.reporting.ReportingModelData;
 
 @Environment(EnvType.CLIENT)
 public class CableBusBakedModel implements IFabricBakedModel {
@@ -105,7 +107,7 @@ public class CableBusBakedModel implements IFabricBakedModel {
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
-                               Supplier<RandomSource> randomSupplier, RenderContext context) {
+            Supplier<RandomSource> randomSupplier, RenderContext context) {
 
         CableBusRenderState renderState = getRenderState(blockView, pos);
 
@@ -128,14 +130,14 @@ public class CableBusBakedModel implements IFabricBakedModel {
 
             Object partModelData = renderState.getPartModelData().get(facing);
 
-                for (var model : partModel.getModels()) {
-                    BakedModel bakedModel = this.partModels.get(model);
+            for (var model : partModel.getModels()) {
+                BakedModel bakedModel = this.partModels.get(model);
 
-                    if (bakedModel == null) {
-                        throw new IllegalStateException("Trying to use an unregistered part model: " + model);
-                    }
+                if (bakedModel == null) {
+                    throw new IllegalStateException("Trying to use an unregistered part model: " + model);
+                }
 
-                    var spin = getPartSpin(partModelData);
+                var spin = getPartSpin(partModelData);
 
                 context.pushTransform(QuadRotator.get(facing, spin));
                 bakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
@@ -267,15 +269,15 @@ public class CableBusBakedModel implements IFabricBakedModel {
                     break;
                 case COVERED:
                     this.cableBuilder.addCoveredConnection(facing, cableColor, connectionType, cableBusAdjacent,
-                        emitter);
+                            emitter);
                     break;
                 case SMART:
                     this.cableBuilder.addSmartConnection(facing, cableColor, connectionType, cableBusAdjacent, channels,
-                        emitter);
+                            emitter);
                     break;
                 case DENSE_COVERED:
                     this.cableBuilder.addDenseCoveredConnection(facing, cableColor, connectionType, cableBusAdjacent,
-                        emitter);
+                            emitter);
                     break;
                 case DENSE_SMART:
                     this.cableBuilder.addDenseSmartConnection(facing, cableColor, connectionType, cableBusAdjacent,

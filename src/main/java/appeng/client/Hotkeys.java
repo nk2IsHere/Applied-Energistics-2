@@ -1,12 +1,14 @@
 package appeng.client;
 
-import appeng.hotkeys.HotkeyActions;
-import net.minecraft.client.KeyMapping;
+import java.util.HashMap;
+import java.util.function.Consumer;
+
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
+import net.minecraft.client.KeyMapping;
+
+import appeng.hotkeys.HotkeyActions;
 
 /**
  * client side component of {@link HotkeyActions}

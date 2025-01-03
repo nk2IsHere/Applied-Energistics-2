@@ -1,11 +1,9 @@
 package appeng.parts.automation;
 
-import appeng.api.behaviors.PlacementStrategy;
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.AEKey;
-import appeng.core.AEConfig;
-import appeng.util.Platform;
+import java.util.UUID;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -22,9 +20,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
+import appeng.api.behaviors.PlacementStrategy;
+import appeng.api.config.Actionable;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.AEKey;
+import appeng.core.AEConfig;
+import appeng.util.Platform;
 
 public class ItemPlacementStrategy implements PlacementStrategy {
     private static final RandomSource RANDOM_OFFSET = RandomSource.create();

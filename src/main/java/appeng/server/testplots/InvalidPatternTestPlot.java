@@ -1,14 +1,15 @@
 package appeng.server.testplots;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.ids.AEComponents;
 import appeng.blockentity.storage.SkyChestBlockEntity;
 import appeng.core.definitions.AEBlocks;
 import appeng.crafting.pattern.EncodedCraftingPattern;
 import appeng.server.testworld.PlotBuilder;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Blocks;
 
 @TestPlotClass
 public class InvalidPatternTestPlot {

@@ -18,14 +18,16 @@
 
 package appeng.client.render.overlay;
 
+import java.util.Set;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import org.joml.Matrix4f;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.ChunkPos;
-import org.joml.Matrix4f;
-
-import java.util.Set;
 
 /**
  * This is based on the area render of https://github.com/TeamPneumatic/pnc-repressurized/

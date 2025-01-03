@@ -18,6 +18,15 @@
 
 package appeng.blockentity.misc;
 
+import java.util.EnumSet;
+import java.util.Set;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
 import appeng.api.config.Actionable;
 import appeng.api.ids.AETags;
 import appeng.api.implementations.IPowerChannelState;
@@ -34,14 +43,6 @@ import appeng.api.util.AECableType;
 import appeng.block.misc.GrowthAcceleratorBlock;
 import appeng.blockentity.grid.AENetworkedPoweredBlockEntity;
 import appeng.core.AEConfig;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-
-import java.util.EnumSet;
-import java.util.Set;
 
 public class GrowthAcceleratorBlockEntity extends AENetworkedPoweredBlockEntity implements IPowerChannelState {
 

@@ -1,9 +1,11 @@
 package appeng.client.gui;
 
-import appeng.api.stacks.GenericStack;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.stacks.GenericStack;
 
 /**
  * A stack that is rendered including its absolute on-screen bounds.

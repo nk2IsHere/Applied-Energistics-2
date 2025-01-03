@@ -18,27 +18,23 @@
 
 package appeng.blockentity;
 
-import appeng.api.ids.AEComponents;
-import appeng.api.inventories.ISegmentedInventory;
-import appeng.api.inventories.InternalInventory;
-import appeng.api.networking.GridHelper;
-import appeng.api.networking.IGridNode;
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.RelativeSide;
-import appeng.block.AEBaseEntityBlock;
-import appeng.client.render.model.AEModelData;
-import appeng.core.AELog;
-import appeng.hooks.VisualStateSaving;
-import appeng.hooks.ticking.TickHandler;
-import appeng.items.tools.MemoryCardItem;
-import appeng.util.IDebugExportable;
-import appeng.util.JsonStreamUtil;
-import appeng.util.SettingsFrom;
-import appeng.util.helpers.ItemComparisonHelper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.JsonOps;
+
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
@@ -63,17 +59,26 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
+import appeng.api.ids.AEComponents;
+import appeng.api.inventories.ISegmentedInventory;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.RelativeSide;
+import appeng.block.AEBaseEntityBlock;
+import appeng.client.render.model.AEModelData;
+import appeng.core.AELog;
+import appeng.hooks.VisualStateSaving;
+import appeng.hooks.ticking.TickHandler;
+import appeng.items.tools.MemoryCardItem;
+import appeng.util.IDebugExportable;
+import appeng.util.JsonStreamUtil;
+import appeng.util.SettingsFrom;
+import appeng.util.helpers.ItemComparisonHelper;
 
 public class AEBaseBlockEntity extends BlockEntity
         implements Nameable, ISegmentedInventory, Clearable, IDebugExportable {

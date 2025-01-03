@@ -38,22 +38,22 @@ public class GameTestPlotAdapter {
             }
 
             result.add(new TestFunction(
-                "ae2",
-                "ae2." + plot.getId().getPath(),
-                plot.getId().toString(),
-                Rotation.NONE,
-                test.maxTicks,
-                test.setupTicks,
-                true,
-                false,
-                1,
-                1,
-                test.skyAccess,
-                gameTestHelper -> {
-                    test.getTestFunction().accept(new PlotTestHelper(
-                        getPlotTranslation(plot.getBounds()),
-                        gameTestHelper.testInfo));
-                }));
+                    "ae2",
+                    "ae2." + plot.getId().getPath(),
+                    plot.getId().toString(),
+                    Rotation.NONE,
+                    test.maxTicks,
+                    test.setupTicks,
+                    true,
+                    false,
+                    1,
+                    1,
+                    test.skyAccess,
+                    gameTestHelper -> {
+                        test.getTestFunction().accept(new PlotTestHelper(
+                                getPlotTranslation(plot.getBounds()),
+                                gameTestHelper.testInfo));
+                    }));
         }
 
         return result;
@@ -110,20 +110,20 @@ public class GameTestPlotAdapter {
 
         var bounds = plot.getBounds();
         var origin = pos
-            .offset(structureBlock.getStructurePos())
-            .offset(getPlotTranslation(bounds));
+                .offset(structureBlock.getStructurePos())
+                .offset(getPlotTranslation(bounds));
         plot.build(
-            level,
-            Platform.getFakePlayer(level, null),
-            origin);
+                level,
+                Platform.getFakePlayer(level, null),
+                origin);
 
         return structureBlock;
     }
 
     private static BlockPos getPlotTranslation(BoundingBox bounds) {
         return new BlockPos(
-            bounds.minX() < 0 ? -bounds.minX() : 0,
-            bounds.minY() < 0 ? -bounds.minY() : 0,
-            bounds.minZ() < 0 ? -bounds.minZ() : 0);
+                bounds.minX() < 0 ? -bounds.minX() : 0,
+                bounds.minY() < 0 ? -bounds.minY() : 0,
+                bounds.minZ() < 0 ? -bounds.minZ() : 0);
     }
 }

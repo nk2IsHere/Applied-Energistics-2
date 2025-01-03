@@ -18,20 +18,23 @@
 
 package appeng.menu.me.networktool;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.energy.IPassiveEnergyGenerator;
 import appeng.blockentity.misc.VibrationChamberBlockEntity;
 import appeng.client.gui.me.networktool.NetworkStatusScreen;
-import com.google.common.collect.ImmutableList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Contains statistics about an ME network and the machines that form it.

@@ -33,7 +33,7 @@ public final class PlacedMeteoriteSettings {
     private final boolean craterLake;
 
     public PlacedMeteoriteSettings(BlockPos pos, float meteoriteRadius, CraterType craterType, FalloutMode fallout,
-                                   boolean pureCrater, boolean craterLake) {
+            boolean pureCrater, boolean craterLake) {
         this.pos = pos;
         this.craterType = craterType;
         this.meteoriteRadius = meteoriteRadius;
@@ -95,7 +95,7 @@ public final class PlacedMeteoriteSettings {
     @Override
     public String toString() {
         return "PlacedMeteoriteSettings [pos=" + pos + ", meteoriteRadius=" + meteoriteRadius + ", craterType="
-            + craterType + ", fallout=" + fallout + ", pureCrater=" + pureCrater + ", craterLake=" + craterLake
-            + "]";
+                + craterType + ", fallout=" + fallout + ", pureCrater=" + pureCrater + ", craterLake=" + craterLake
+                + "]";
     }
 }

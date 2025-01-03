@@ -1,14 +1,16 @@
 package appeng.api.crafting;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.core.localization.GuiText;
-import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.network.chat.Component;
+
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.core.localization.GuiText;
 
 /**
  * Properties shown in the tooltip of an encoded pattern. Used for both valid and invalid encoded patterns. For invalid

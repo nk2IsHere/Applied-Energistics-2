@@ -22,14 +22,12 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.item.Item;
 import org.joml.Matrix4f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -37,6 +35,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -101,10 +100,10 @@ public class InitStackRenderHandlers {
         @Override
         public List<Component> getTooltip(AEItemKey stack) {
             return stack.getReadOnlyStack().getTooltipLines(
-                Item.TooltipContext.of(Minecraft.getInstance().level),
-                Minecraft.getInstance().player,
-                Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED
-                    : TooltipFlag.NORMAL);
+                    Item.TooltipContext.of(Minecraft.getInstance().level),
+                    Minecraft.getInstance().player,
+                    Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED
+                            : TooltipFlag.NORMAL);
         }
     }
 
@@ -145,29 +144,29 @@ public class InitStackRenderHandlers {
 
             var transform = poseStack.last().pose();
             buffer.addVertex(transform, x0, y1, 0)
-                .setColor(color)
-                .setUv(sprite.getU0(), sprite.getV1())
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(combinedLight)
-                .setNormal(0, 0, 1);
+                    .setColor(color)
+                    .setUv(sprite.getU0(), sprite.getV1())
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(combinedLight)
+                    .setNormal(0, 0, 1);
             buffer.addVertex(transform, x1, y1, 0)
-                .setColor(color)
-                .setUv(sprite.getU1(), sprite.getV1())
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(combinedLight)
-                .setNormal(0, 0, 1);
+                    .setColor(color)
+                    .setUv(sprite.getU1(), sprite.getV1())
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(combinedLight)
+                    .setNormal(0, 0, 1);
             buffer.addVertex(transform, x1, y0, 0)
-                .setColor(color)
-                .setUv(sprite.getU1(), sprite.getV0())
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(combinedLight)
-                .setNormal(0, 0, 1);
+                    .setColor(color)
+                    .setUv(sprite.getU1(), sprite.getV0())
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(combinedLight)
+                    .setNormal(0, 0, 1);
             buffer.addVertex(transform, x0, y0, 0)
-                .setColor(color)
-                .setUv(sprite.getU0(), sprite.getV0())
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(combinedLight)
-                .setNormal(0, 0, 1);
+                    .setColor(color)
+                    .setUv(sprite.getU0(), sprite.getV0())
+                    .setOverlay(OverlayTexture.NO_OVERLAY)
+                    .setLight(combinedLight)
+                    .setNormal(0, 0, 1);
             poseStack.popPose();
         }
 

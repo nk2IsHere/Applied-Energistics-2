@@ -1,14 +1,15 @@
 package appeng.core.network;
 
-import appeng.core.network.bidirectional.ConfigValuePacket;
-import appeng.core.network.clientbound.*;
-import appeng.core.network.serverbound.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+import appeng.core.network.bidirectional.ConfigValuePacket;
+import appeng.core.network.clientbound.*;
+import appeng.core.network.serverbound.*;
 
 public class InitNetwork {
     public static void init() {
@@ -53,7 +54,8 @@ public class InitNetwork {
         bidirectional(ConfigValuePacket.TYPE, ConfigValuePacket.STREAM_CODEC);
     }
 
-    private static <T extends ClientboundPacket> void clientbound(CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
+    private static <T extends ClientboundPacket> void clientbound(CustomPacketPayload.Type<T> type,
+            StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
 
@@ -63,7 +65,8 @@ public class InitNetwork {
         });
     }
 
-    private static <T extends ServerboundPacket> void serverbound(CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
+    private static <T extends ServerboundPacket> void serverbound(CustomPacketPayload.Type<T> type,
+            StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
 
@@ -73,7 +76,8 @@ public class InitNetwork {
         });
     }
 
-    private static <T extends ServerboundPacket & ClientboundPacket> void bidirectional(CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
+    private static <T extends ServerboundPacket & ClientboundPacket> void bidirectional(
+            CustomPacketPayload.Type<T> type, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         PayloadTypeRegistry.playC2S().register(type, codec);
         PayloadTypeRegistry.playS2C().register(type, codec);
 

@@ -1,17 +1,5 @@
 package appeng.server.testplots;
 
-import appeng.api.config.Actionable;
-import appeng.api.stacks.AEItemKey;
-import appeng.api.stacks.GenericStack;
-import appeng.api.stacks.KeyCounter;
-import appeng.blockentity.misc.InterfaceBlockEntity;
-import appeng.core.definitions.AEBlocks;
-import appeng.core.definitions.AEItems;
-import appeng.core.definitions.AEParts;
-import appeng.me.helpers.BaseActionSource;
-import appeng.parts.misc.InterfacePart;
-import appeng.server.testworld.PlotBuilder;
-import net.fabricmc.fabric.api.lookup.v1.item.ItemApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -27,6 +15,18 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.material.Fluids;
+
+import appeng.api.config.Actionable;
+import appeng.api.stacks.AEItemKey;
+import appeng.api.stacks.GenericStack;
+import appeng.api.stacks.KeyCounter;
+import appeng.blockentity.misc.InterfaceBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
+import appeng.core.definitions.AEParts;
+import appeng.me.helpers.BaseActionSource;
+import appeng.parts.misc.InterfacePart;
+import appeng.server.testworld.PlotBuilder;
 
 @TestPlotClass
 public class InterfaceTestPlots {
@@ -45,60 +45,68 @@ public class InterfaceTestPlots {
         builder.test(helper -> {
             helper.startSequence()
                     .thenExecute(() -> {
-                        var itemCap = ItemStorage.SIDED.find(helper.getLevel(), o, Direction.UP) instanceof SlottedStorage storage
-                                ? (SlottedStorage<ItemVariant>) storage
-                                : null;
+                        var itemCap = ItemStorage.SIDED.find(helper.getLevel(), o,
+                                Direction.UP) instanceof SlottedStorage storage
+                                        ? (SlottedStorage<ItemVariant>) storage
+                                        : null;
 
                         helper.check(itemCap != null, "item cap should not be null");
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
                             helper.check(slot0.insert(ItemVariant.of(ItemStack.EMPTY), 0, transaction) == 0,
                                     "empty stack should not be insertable in slot 0");
                             transaction.abort();
                         }
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
-                            helper.check(slot0.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 0, transaction) == 0,
+                            helper.check(
+                                    slot0.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 0, transaction) == 0,
                                     "stick should not be insertable in slot 0");
                             transaction.abort();
                         }
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot1 = itemCap.getSlot(1);
-                            helper.check(slot1.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 1, transaction) == 1,
+                            helper.check(
+                                    slot1.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 1, transaction) == 1,
                                     "stick should be insertable in slot 1");
                             transaction.commit();
                         }
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
-                            helper.check(slot0.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1, transaction) == 0,
+                            helper.check(
+                                    slot0.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1,
+                                            transaction) == 0,
                                     "bricks should not be insertable in slot 0");
                             transaction.abort();
                         }
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot1 = itemCap.getSlot(1);
-                            helper.check(slot1.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1, transaction) == 1,
+                            helper.check(
+                                    slot1.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1,
+                                            transaction) == 1,
                                     "bricks should be insertable in slot 1");
                             transaction.commit();
                         }
 
-                        var fluidCap = FluidStorage.SIDED.find(helper.getLevel(), o, Direction.UP) instanceof SlottedStorage storage
-                                ? (SlottedStorage<FluidVariant>) storage
-                                : null;
+                        var fluidCap = FluidStorage.SIDED.find(helper.getLevel(), o,
+                                Direction.UP) instanceof SlottedStorage storage
+                                        ? (SlottedStorage<FluidVariant>) storage
+                                        : null;
 
                         helper.check(fluidCap != null, "fluid cap should not be null");
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot0 = fluidCap.getSlot(0);
                             helper.check(slot0.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 0,
                                     "water should not be insertable in slot 0");
                             transaction.abort();
                         }
 
-                        try(var transaction = Transaction.openOuter()) {
+                        try (var transaction = Transaction.openOuter()) {
                             var slot1 = fluidCap.getSlot(1);
                             helper.check(slot1.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 1,
                                     "water should be insertable in slot 1");

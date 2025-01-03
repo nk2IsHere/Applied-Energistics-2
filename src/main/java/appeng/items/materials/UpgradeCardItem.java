@@ -18,15 +18,8 @@
 
 package appeng.items.materials;
 
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.SelectedPart;
-import appeng.api.upgrades.IUpgradeInventory;
-import appeng.api.upgrades.IUpgradeableObject;
-import appeng.api.upgrades.Upgrades;
-import appeng.core.localization.ButtonToolTips;
-import appeng.core.localization.PlayerMessages;
-import appeng.items.AEBaseItem;
-import appeng.util.InteractionUtil;
+import java.util.List;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -38,7 +31,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.List;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.SelectedPart;
+import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableObject;
+import appeng.api.upgrades.Upgrades;
+import appeng.core.localization.ButtonToolTips;
+import appeng.core.localization.PlayerMessages;
+import appeng.items.AEBaseItem;
+import appeng.util.InteractionUtil;
 
 public class UpgradeCardItem extends AEBaseItem {
 

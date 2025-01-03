@@ -1,9 +1,8 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
-import appeng.hooks.CompassManager;
+import java.util.Optional;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -14,7 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 
-import java.util.Optional;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
+import appeng.hooks.CompassManager;
 
 public record CompassResponsePacket(ChunkPos requestedPos,
         Optional<BlockPos> closestMeteorite) implements ClientboundPacket {

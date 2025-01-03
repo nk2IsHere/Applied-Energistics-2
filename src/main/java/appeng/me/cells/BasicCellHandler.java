@@ -18,6 +18,12 @@
 
 package appeng.me.cells;
 
+import java.util.*;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
+
 import appeng.api.config.IncludeExclude;
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.cells.ICellHandler;
@@ -26,11 +32,6 @@ import appeng.core.AEConfig;
 import appeng.core.localization.GuiText;
 import appeng.core.localization.Tooltips;
 import appeng.items.storage.StorageCellTooltipComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.*;
 
 /**
  * Cell handler that manages all normal storage cells (items, fluids).

@@ -18,8 +18,12 @@
 
 package appeng.client.render.model;
 
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
+
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -27,11 +31,9 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
 
 /**
  * Model wrapper for the memory card item model, which combines a base card layer with a "visual hash" of the part/tile.

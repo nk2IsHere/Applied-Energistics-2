@@ -18,12 +18,9 @@
 
 package appeng.blockentity.networking;
 
-import appeng.api.networking.energy.IPassiveEnergyGenerator;
-import appeng.api.orientation.BlockOrientation;
-import appeng.api.orientation.RelativeSide;
-import appeng.api.util.AECableType;
-import appeng.blockentity.grid.AENetworkedBlockEntity;
-import appeng.core.AEConfig;
+import java.util.EnumSet;
+import java.util.Set;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,8 +28,12 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.EnumSet;
-import java.util.Set;
+import appeng.api.networking.energy.IPassiveEnergyGenerator;
+import appeng.api.orientation.BlockOrientation;
+import appeng.api.orientation.RelativeSide;
+import appeng.api.util.AECableType;
+import appeng.blockentity.grid.AENetworkedBlockEntity;
+import appeng.core.AEConfig;
 
 public class CrystalResonanceGeneratorBlockEntity extends AENetworkedBlockEntity {
     // This needs to be synchronized to allow visual indication / Jade tooltips

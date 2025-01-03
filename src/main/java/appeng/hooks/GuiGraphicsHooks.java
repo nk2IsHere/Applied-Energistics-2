@@ -17,18 +17,20 @@
  */
 package appeng.hooks;
 
-import appeng.api.client.AEKeyRendering;
-import appeng.api.stacks.AmountFormat;
-import appeng.api.stacks.GenericStack;
-import appeng.client.gui.me.common.StackSizeRenderer;
-import appeng.crafting.pattern.EncodedPatternItem;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.client.AEKeyRendering;
+import appeng.api.stacks.AmountFormat;
+import appeng.api.stacks.GenericStack;
+import appeng.client.gui.me.common.StackSizeRenderer;
+import appeng.crafting.pattern.EncodedPatternItem;
 
 public final class GuiGraphicsHooks {
     // Prevents recursion in the hook below

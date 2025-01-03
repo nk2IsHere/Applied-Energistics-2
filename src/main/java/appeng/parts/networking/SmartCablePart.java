@@ -18,14 +18,16 @@
 
 package appeng.parts.networking;
 
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
+
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.util.AECableType;
 import appeng.items.parts.ColoredPartItem;
-import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 public class SmartCablePart extends CablePart implements IUsedChannelProvider {
     public SmartCablePart(ColoredPartItem<?> partItem) {

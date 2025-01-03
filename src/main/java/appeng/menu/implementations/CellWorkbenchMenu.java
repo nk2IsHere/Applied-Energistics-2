@@ -18,6 +18,21 @@
 
 package appeng.menu.implementations;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+
+import com.google.common.collect.Iterators;
+
+import org.jetbrains.annotations.NotNull;
+
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+
+import it.unimi.dsi.fastutil.shorts.ShortSet;
+
 import appeng.api.config.CopyMode;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.Settings;
@@ -37,17 +52,6 @@ import appeng.menu.slot.OptionalRestrictedInputSlot;
 import appeng.menu.slot.RestrictedInputSlot;
 import appeng.util.EnumCycler;
 import appeng.util.inv.SupplierInternalInventory;
-import com.google.common.collect.Iterators;
-import it.unimi.dsi.fastutil.shorts.ShortSet;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * @see appeng.client.gui.implementations.CellWorkbenchScreen

@@ -18,11 +18,12 @@
 
 package appeng.block.paint;
 
-import appeng.client.render.cablebus.CubeBuilder;
-import appeng.core.AppEng;
-import appeng.helpers.Splotch;
-import appeng.integration.abstraction.IFabricBakedModel;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import com.google.common.collect.ImmutableList;
+
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -35,9 +36,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import appeng.client.render.cablebus.CubeBuilder;
+import appeng.core.AppEng;
+import appeng.helpers.Splotch;
+import appeng.integration.abstraction.IFabricBakedModel;
 
 /**
  * Renders paint blocks, which render multiple "splotches" that have been applied to the sides of adjacent blocks using
@@ -61,7 +63,7 @@ class PaintSplotchesBakedModel implements IFabricBakedModel {
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
-                               Supplier<RandomSource> randomSupplier, RenderContext context) {
+            Supplier<RandomSource> randomSupplier, RenderContext context) {
 
         var modelData = blockView.getBlockEntityRenderData(pos);
         var splotchesState = modelData instanceof PaintSplotches paintSplotches ? paintSplotches : null;

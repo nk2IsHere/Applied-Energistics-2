@@ -18,6 +18,24 @@
 
 package appeng.me.service;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.gson.stream.JsonWriter;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridService;
@@ -25,21 +43,6 @@ import appeng.api.networking.IGridServiceProvider;
 import appeng.api.networking.events.statistics.GridChunkEvent;
 import appeng.me.InWorldGridNode;
 import appeng.util.JsonStreamUtil;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.Multiset;
-import com.google.gson.stream.JsonWriter;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import org.jetbrains.annotations.Nullable;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * A grid providing precomupted statistics about a network.

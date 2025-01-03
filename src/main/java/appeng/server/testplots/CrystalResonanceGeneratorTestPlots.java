@@ -1,5 +1,11 @@
 package appeng.server.testplots;
 
+import java.util.function.Consumer;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
 import appeng.blockentity.networking.CrystalResonanceGeneratorBlockEntity;
 import appeng.blockentity.networking.EnergyCellBlockEntity;
 import appeng.core.AEConfig;
@@ -7,11 +13,6 @@ import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEParts;
 import appeng.server.testworld.PlotBuilder;
 import appeng.server.testworld.PlotTestHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-
-import java.util.function.Consumer;
 
 @TestPlotClass
 public class CrystalResonanceGeneratorTestPlots {

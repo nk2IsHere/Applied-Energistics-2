@@ -18,12 +18,8 @@
 
 package appeng.block.misc;
 
-import appeng.api.implementations.blockentities.ICrankable;
-import appeng.api.orientation.IOrientationStrategy;
-import appeng.api.orientation.OrientationStrategies;
-import appeng.api.orientation.RelativeSide;
-import appeng.block.AEBaseEntityBlock;
-import appeng.blockentity.misc.CrankBlockEntity;
+import java.util.Arrays;
+
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,7 +36,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Arrays;
+import appeng.api.implementations.blockentities.ICrankable;
+import appeng.api.orientation.IOrientationStrategy;
+import appeng.api.orientation.OrientationStrategies;
+import appeng.api.orientation.RelativeSide;
+import appeng.block.AEBaseEntityBlock;
+import appeng.blockentity.misc.CrankBlockEntity;
 
 public class CrankBlock extends AEBaseEntityBlock<CrankBlockEntity> {
 

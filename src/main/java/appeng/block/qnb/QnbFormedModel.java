@@ -18,15 +18,17 @@
 
 package appeng.block.qnb;
 
-import appeng.client.render.BasicUnbakedModel;
-import appeng.core.AppEng;
+import java.util.Collection;
+import java.util.function.Function;
+
 import com.google.common.collect.ImmutableSet;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Collection;
-import java.util.function.Function;
+import appeng.client.render.BasicUnbakedModel;
+import appeng.core.AppEng;
 
 public class QnbFormedModel implements BasicUnbakedModel {
 

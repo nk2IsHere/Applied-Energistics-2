@@ -23,10 +23,11 @@
 
 package appeng.api.implementations.blockentities;
 
+import org.jetbrains.annotations.Nullable;
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.util.DimensionalBlockPos;
-import org.jetbrains.annotations.Nullable;
 
 public interface IWirelessAccessPoint extends IActionHost {
 

@@ -1,5 +1,11 @@
 package appeng.me.service.helpers;
 
+import java.util.*;
+
+import com.google.common.collect.Iterators;
+
+import org.jetbrains.annotations.Nullable;
+
 import appeng.api.config.FuzzyMode;
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.networking.IGridNode;
@@ -8,10 +14,6 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.storage.AEKeyFilter;
 import appeng.hooks.ticking.TickHandler;
-import com.google.common.collect.Iterators;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 
 /**
  * Keeps track of the crafting patterns in the network, and related information.

@@ -18,12 +18,14 @@
 
 package appeng.items.tools.powered.powersink;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.world.item.ItemStack;
+
+import team.reborn.energy.api.EnergyStorage;
+
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnit;
 import appeng.api.implementations.items.IAEItemPowerStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.minecraft.world.item.ItemStack;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * The capability provider to expose chargable items to other mods.

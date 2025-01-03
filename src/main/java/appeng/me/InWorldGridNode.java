@@ -18,22 +18,25 @@
 
 package appeng.me;
 
+import java.io.IOException;
+import java.util.EnumSet;
+import java.util.Set;
+
+import com.google.gson.stream.JsonWriter;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.IGridNodeListener;
 import appeng.api.util.AEColor;
 import appeng.core.AELog;
-import com.google.gson.stream.JsonWriter;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos.MutableBlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-
-import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Set;
 
 /**
  * A grid node that is accessible from within the level will also look actively for connections to nodes that are

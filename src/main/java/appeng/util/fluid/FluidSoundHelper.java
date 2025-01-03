@@ -18,14 +18,16 @@
 
 package appeng.util.fluid;
 
-import appeng.api.stacks.AEFluidKey;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.stacks.AEFluidKey;
 
 /**
  * Helps with playing fill/empty sounds for fluids to players.

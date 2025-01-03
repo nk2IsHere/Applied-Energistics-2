@@ -18,13 +18,13 @@
 
 package appeng.blockentity.misc;
 
-import appeng.api.util.AEColor;
-import appeng.block.paint.PaintSplotches;
-import appeng.block.paint.PaintSplotchesBlock;
-import appeng.blockentity.AEBaseBlockEntity;
-import appeng.helpers.Splotch;
-import appeng.items.misc.PaintBallItem;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import io.netty.buffer.Unpooled;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -36,10 +36,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import appeng.api.util.AEColor;
+import appeng.block.paint.PaintSplotches;
+import appeng.block.paint.PaintSplotchesBlock;
+import appeng.blockentity.AEBaseBlockEntity;
+import appeng.helpers.Splotch;
+import appeng.items.misc.PaintBallItem;
 
 public class PaintSplotchesBlockEntity extends AEBaseBlockEntity {
 

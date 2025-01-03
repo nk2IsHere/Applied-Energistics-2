@@ -18,10 +18,10 @@
 
 package appeng.items.parts;
 
+import java.util.function.Function;
+
 import appeng.api.parts.IPart;
 import appeng.api.util.AEColor;
-
-import java.util.function.Function;
 
 public class ColoredPartItem<T extends IPart> extends PartItem<T> {
 

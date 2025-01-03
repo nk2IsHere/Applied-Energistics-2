@@ -64,9 +64,9 @@ public class SpatialStorageChunkGenerator extends ChunkGenerator {
      * internally.
      */
     public static final MapCodec<SpatialStorageChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-        .group(
-            RegistryOps.retrieveGetter(Registries.BIOME))
-        .apply(instance, instance.stable(SpatialStorageChunkGenerator::new)));
+            .group(
+                    RegistryOps.retrieveGetter(Registries.BIOME))
+            .apply(instance, instance.stable(SpatialStorageChunkGenerator::new)));
 
     private final NoiseColumn columnSample;
 
@@ -104,7 +104,7 @@ public class SpatialStorageChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState,
-                             ChunkAccess chunk) {
+            ChunkAccess chunk) {
         this.fillChunk(chunk);
         chunk.setUnsaved(false);
     }
@@ -132,13 +132,13 @@ public class SpatialStorageChunkGenerator extends ChunkGenerator {
 
     @Override
     public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState randomState,
-                                                        StructureManager structureManager, ChunkAccess chunk) {
+            StructureManager structureManager, ChunkAccess chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
     public int getBaseHeight(int i, int j, Types types, LevelHeightAccessor levelHeightAccessor,
-                             RandomState randomState) {
+            RandomState randomState) {
         return MIN_Y;
     }
 
@@ -153,7 +153,7 @@ public class SpatialStorageChunkGenerator extends ChunkGenerator {
 
     @Override
     public void applyCarvers(WorldGenRegion worldGenRegion, long l, RandomState randomState, BiomeManager biomeManager,
-                             StructureManager structureManager, ChunkAccess chunkAccess, Carving carving) {
+            StructureManager structureManager, ChunkAccess chunkAccess, Carving carving) {
     }
 
     @Override

@@ -1,10 +1,10 @@
 
 package appeng.core.network.clientbound;
 
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
-import appeng.menu.AEBaseMenu;
+import java.util.function.Consumer;
+
 import io.netty.buffer.Unpooled;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.RegistryAccess;
@@ -13,7 +13,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import java.util.function.Consumer;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
+import appeng.menu.AEBaseMenu;
 
 /**
  * This packet is used to synchronize menu-fields from server to client.

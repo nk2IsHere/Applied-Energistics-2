@@ -18,14 +18,16 @@
 
 package appeng.menu.me.crafting;
 
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.ImmutableList;
+
+import net.minecraft.network.RegistryFriendlyByteBuf;
+
 import appeng.crafting.execution.CraftingCpuLogic;
 import appeng.crafting.execution.ElapsedTimeTracker;
 import appeng.menu.me.common.IncrementalUpdateHelper;
-import com.google.common.collect.ImmutableList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Describes a currently running crafting job. A crafting status can either be a full update which replaces any
@@ -137,8 +139,10 @@ public class CraftingStatus {
         }
 
         long elapsedTime = logic.getElapsedTimeTracker().getElapsedTime();
-        @SuppressWarnings("removal")long remainingItems = logic.getElapsedTimeTracker().getRemainingItemCount();
-        @SuppressWarnings("removal") long startItems = logic.getElapsedTimeTracker().getStartItemCount();
+        @SuppressWarnings("removal")
+        long remainingItems = logic.getElapsedTimeTracker().getRemainingItemCount();
+        @SuppressWarnings("removal")
+        long startItems = logic.getElapsedTimeTracker().getStartItemCount();
 
         return new CraftingStatus(
                 full,

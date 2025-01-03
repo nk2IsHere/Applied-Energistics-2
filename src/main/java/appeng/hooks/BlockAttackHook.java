@@ -1,9 +1,5 @@
 package appeng.hooks;
 
-import appeng.api.parts.IPartHost;
-import appeng.core.network.ServerboundPacket;
-import appeng.core.network.serverbound.PartLeftClickPacket;
-import appeng.util.InteractionUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
@@ -17,6 +13,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import appeng.api.parts.IPartHost;
+import appeng.core.network.ServerboundPacket;
+import appeng.core.network.serverbound.PartLeftClickPacket;
+import appeng.util.InteractionUtil;
 
 /**
  * Handles the client->server interaction when a player left-clicks on an {@link appeng.api.parts.IPart} attached to a
@@ -36,7 +37,7 @@ public final class BlockAttackHook {
      * We intercept when the player attacks a cable bus and send an interaction handling packet instead.
      */
     public static InteractionResult onBlockAttackedOnClient(Player player, Level level, InteractionHand interactionHand,
-                                                            BlockPos blockPos, Direction direction) {
+            BlockPos blockPos, Direction direction) {
 
         // Do not process this event on the server since we're handling the server-side ourselves
         if (!level.isClientSide()) {

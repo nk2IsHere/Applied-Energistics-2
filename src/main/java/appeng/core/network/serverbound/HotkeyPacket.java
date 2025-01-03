@@ -1,15 +1,16 @@
 package appeng.core.network.serverbound;
 
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+
 import appeng.client.Hotkey;
 import appeng.core.AELog;
 import appeng.core.localization.PlayerMessages;
 import appeng.core.network.CustomAppEngPayload;
 import appeng.core.network.ServerboundPacket;
 import appeng.hotkeys.HotkeyActions;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.server.level.ServerPlayer;
 
 public record HotkeyPacket(String hotkey) implements ServerboundPacket {
     public static final StreamCodec<RegistryFriendlyByteBuf, HotkeyPacket> STREAM_CODEC = StreamCodec.ofMember(

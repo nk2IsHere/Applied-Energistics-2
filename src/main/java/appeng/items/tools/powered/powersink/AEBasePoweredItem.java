@@ -18,12 +18,9 @@
 
 package appeng.items.tools.powered.powersink;
 
-import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
-import appeng.api.ids.AEComponents;
-import appeng.api.implementations.items.IAEItemPowerStorage;
-import appeng.core.localization.Tooltips;
-import appeng.items.AEBaseItem;
+import java.util.List;
+import java.util.function.DoubleSupplier;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
@@ -34,8 +31,12 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-import java.util.List;
-import java.util.function.DoubleSupplier;
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.ids.AEComponents;
+import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.core.localization.Tooltips;
+import appeng.items.AEBaseItem;
 
 public abstract class AEBasePoweredItem extends AEBaseItem implements IAEItemPowerStorage {
     // Any energy capacity below this threshold will be clamped to zero
@@ -71,7 +72,8 @@ public abstract class AEBasePoweredItem extends AEBaseItem implements IAEItemPow
     }
 
     @Override
-    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
+    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack,
+            ItemStack newStack) {
         return !ItemStack.isSameItem(oldStack, newStack);
     }
 

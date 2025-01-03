@@ -18,10 +18,12 @@
 
 package appeng.blockentity.crafting;
 
-import appeng.api.util.AEColor;
-import net.minecraft.core.Direction;
 import java.util.EnumSet;
 import java.util.Objects;
+
+import net.minecraft.core.Direction;
+
+import appeng.api.util.AEColor;
 
 public class CraftingMonitorModelData extends CraftingCubeModelData {
 

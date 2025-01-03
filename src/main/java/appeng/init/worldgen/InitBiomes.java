@@ -37,13 +37,13 @@ public final class InitBiomes {
         var configuredCarvers = context.lookup(Registries.CONFIGURED_CARVER);
 
         Biome biome = new Biome.BiomeBuilder()
-            .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, configuredCarvers).build())
-            .hasPrecipitation(false)
-            // Copied from the vanilla void biome
-            .temperature(0.5F).downfall(0.5F)
-            .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).waterFogColor(329011).fogColor(0)
-                .skyColor(0x111111).build())
-            .mobSpawnSettings(new MobSpawnSettings.Builder().creatureGenerationProbability(0).build()).build();
+                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, configuredCarvers).build())
+                .hasPrecipitation(false)
+                // Copied from the vanilla void biome
+                .temperature(0.5F).downfall(0.5F)
+                .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).waterFogColor(329011).fogColor(0)
+                        .skyColor(0x111111).build())
+                .mobSpawnSettings(new MobSpawnSettings.Builder().creatureGenerationProbability(0).build()).build();
 
         context.register(SpatialStorageDimensionIds.BIOME_KEY, biome);
     }

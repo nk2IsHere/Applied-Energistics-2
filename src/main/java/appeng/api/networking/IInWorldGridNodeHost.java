@@ -23,12 +23,14 @@
 
 package appeng.api.networking;
 
-import appeng.api.util.AECableType;
-import appeng.core.AppEng;
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.util.AECableType;
+import appeng.core.AppEng;
 
 /**
  * Implement to create a networked {@link BlockEntity}. Must be implemented for a block entity to be available for
@@ -39,8 +41,8 @@ import org.jetbrains.annotations.Nullable;
 public interface IInWorldGridNodeHost {
 
     BlockApiLookup<IInWorldGridNodeHost, Void> LOOKUP = BlockApiLookup.get(
-        AppEng.makeId("iinworldgridnodehost"),
-        IInWorldGridNodeHost.class, Void.class);
+            AppEng.makeId("iinworldgridnodehost"),
+            IInWorldGridNodeHost.class, Void.class);
 
     /**
      * get the grid node for a particular side of a block, you can return null, by returning a valid node later and

@@ -18,11 +18,12 @@
 
 package appeng.client.render.cablebus;
 
-import appeng.api.util.AEColor;
-import appeng.integration.abstraction.IFabricBakedModel;
-import appeng.util.Platform;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -34,8 +35,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
+import appeng.api.util.AEColor;
+import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.util.Platform;
 
 public class P2PTunnelFrequencyBakedModel implements IFabricBakedModel {
 
@@ -50,7 +52,8 @@ public class P2PTunnelFrequencyBakedModel implements IFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+            Supplier<RandomSource> randomSupplier, RenderContext context) {
         var modelData = blockView.getBlockEntityRenderData(pos);
         if (!(modelData instanceof Long frequency)) {
             return;

@@ -1,13 +1,13 @@
 package appeng.integration.modules.rei.transfer;
 
-import appeng.api.stacks.AEKey;
-import appeng.api.stacks.GenericStack;
-import appeng.core.localization.ItemModText;
-import appeng.integration.modules.itemlists.EncodingHelper;
-import appeng.integration.modules.itemlists.TransferHelper;
-import appeng.integration.modules.rei.GenericEntryStackHelper;
-import appeng.menu.me.common.GridInventoryEntry;
-import appeng.menu.me.items.PatternEncodingTermMenu;
+import static appeng.integration.modules.itemlists.TransferHelper.BLUE_SLOT_HIGHLIGHT_COLOR;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
@@ -18,13 +18,15 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static appeng.integration.modules.itemlists.TransferHelper.BLUE_SLOT_HIGHLIGHT_COLOR;
+import appeng.api.stacks.AEKey;
+import appeng.api.stacks.GenericStack;
+import appeng.core.localization.ItemModText;
+import appeng.integration.modules.itemlists.EncodingHelper;
+import appeng.integration.modules.itemlists.TransferHelper;
+import appeng.integration.modules.rei.GenericEntryStackHelper;
+import appeng.menu.me.common.GridInventoryEntry;
+import appeng.menu.me.items.PatternEncodingTermMenu;
 
 /**
  * Handles encoding patterns in the {@link PatternEncodingTermMenu} by clicking the + button on recipes shown in REI (or

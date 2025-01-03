@@ -1,10 +1,12 @@
 package appeng.api.integrations.igtooltip;
 
-import appeng.api.parts.IPartHost;
-import appeng.me.helpers.IGridConnectedBlockEntity;
+import org.jetbrains.annotations.ApiStatus;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.ApiStatus;
+
+import appeng.api.parts.IPartHost;
+import appeng.me.helpers.IGridConnectedBlockEntity;
 
 /**
  * Allows add-ons to notify AE2 of their {@link BlockEntity} classes that do derive from AE2 block entity classes. AE2

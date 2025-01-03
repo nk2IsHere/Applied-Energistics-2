@@ -18,12 +18,13 @@
 
 package appeng.facade;
 
-import appeng.api.implementations.items.IFacadeItem;
-import appeng.api.parts.IFacadeContainer;
-import appeng.api.parts.IFacadePart;
-import appeng.api.parts.IPartHost;
-import appeng.parts.CableBusStorage;
+import java.util.Arrays;
+import java.util.function.Consumer;
+
+import org.apache.commons.lang3.StringUtils;
+
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -34,10 +35,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
+import appeng.api.implementations.items.IFacadeItem;
+import appeng.api.parts.IFacadeContainer;
+import appeng.api.parts.IFacadePart;
+import appeng.api.parts.IPartHost;
+import appeng.parts.CableBusStorage;
 
 public class FacadeContainer implements IFacadeContainer {
     private static final StreamCodec<ByteBuf, BlockState> BLOCK_STATE_STREAM_CODEC = ByteBufCodecs

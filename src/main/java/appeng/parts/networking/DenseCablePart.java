@@ -18,15 +18,17 @@
 
 package appeng.parts.networking;
 
+import java.util.function.Predicate;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
+
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.parts.BusSupport;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.items.parts.ColoredPartItem;
-import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 public abstract class DenseCablePart extends CablePart {
     public DenseCablePart(ColoredPartItem<?> partItem) {

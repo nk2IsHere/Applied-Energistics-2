@@ -1,5 +1,10 @@
 package appeng.integration.modules.igtooltip.parts;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
+
 import appeng.api.integrations.igtooltip.TooltipBuilder;
 import appeng.api.integrations.igtooltip.TooltipContext;
 import appeng.api.integrations.igtooltip.providers.BodyProvider;
@@ -8,10 +13,6 @@ import appeng.api.networking.pathing.ControllerState;
 import appeng.core.localization.InGameTooltip;
 import appeng.me.service.PathingService;
 import appeng.parts.networking.IUsedChannelProvider;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.player.Player;
 
 /**
  * Shows the used and maximum channel count for a part that implements {@link IUsedChannelProvider}.

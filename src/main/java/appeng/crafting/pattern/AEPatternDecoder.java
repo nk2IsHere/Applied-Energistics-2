@@ -18,12 +18,14 @@
 
 package appeng.crafting.pattern;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.IPatternDetailsDecoder;
 import appeng.api.stacks.AEItemKey;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public class AEPatternDecoder implements IPatternDetailsDecoder {
     public static final AEPatternDecoder INSTANCE = new AEPatternDecoder();

@@ -1,10 +1,12 @@
 package appeng.client.gui;
 
-import appeng.client.guidebook.document.LytRect;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.Mth;
+
+import appeng.client.guidebook.document.LytRect;
 
 /**
  * Rendering helper for rendering a rectangle with a dashed outline.

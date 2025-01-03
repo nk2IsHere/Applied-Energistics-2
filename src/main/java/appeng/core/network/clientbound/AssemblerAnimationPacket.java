@@ -1,10 +1,5 @@
 package appeng.core.network.clientbound;
 
-import appeng.api.stacks.AEKey;
-import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
-import appeng.client.render.crafting.AssemblerAnimationStatus;
-import appeng.core.network.ClientboundPacket;
-import appeng.core.network.CustomAppEngPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -12,6 +7,12 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import appeng.api.stacks.AEKey;
+import appeng.blockentity.crafting.MolecularAssemblerBlockEntity;
+import appeng.client.render.crafting.AssemblerAnimationStatus;
+import appeng.core.network.ClientboundPacket;
+import appeng.core.network.CustomAppEngPayload;
 
 public record AssemblerAnimationPacket(BlockPos pos, byte rate, AEKey what) implements ClientboundPacket {
 

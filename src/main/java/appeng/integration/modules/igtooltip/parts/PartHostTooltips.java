@@ -1,11 +1,7 @@
 package appeng.integration.modules.igtooltip.parts;
 
-import appeng.api.integrations.igtooltip.TooltipBuilder;
-import appeng.api.integrations.igtooltip.TooltipContext;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
-import appeng.api.parts.SelectedPart;
-import appeng.util.Platform;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -15,7 +11,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
+
+import appeng.api.integrations.igtooltip.TooltipBuilder;
+import appeng.api.integrations.igtooltip.TooltipContext;
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.api.parts.SelectedPart;
+import appeng.util.Platform;
 
 public final class PartHostTooltips {
 

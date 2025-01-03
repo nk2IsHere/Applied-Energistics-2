@@ -1,10 +1,12 @@
 package appeng.integration.modules.jade;
 
-import appeng.api.integrations.igtooltip.providers.ServerDataProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IServerDataProvider;
+
+import appeng.api.integrations.igtooltip.providers.ServerDataProvider;
 
 class ServerDataProviderAdapter<T> implements IServerDataProvider<BlockAccessor> {
     private final ResourceLocation id;

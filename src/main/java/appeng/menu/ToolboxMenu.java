@@ -1,9 +1,10 @@
 package appeng.menu;
 
+import net.minecraft.network.chat.Component;
+
 import appeng.items.contents.NetworkToolMenuHost;
 import appeng.items.tools.NetworkToolItem;
 import appeng.menu.slot.RestrictedInputSlot;
-import net.minecraft.network.chat.Component;
 
 /**
  * Helper class for dealing with an equipped toolbox.

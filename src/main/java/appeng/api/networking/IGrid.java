@@ -23,6 +23,11 @@
 
 package appeng.api.networking;
 
+import java.io.IOException;
+import java.util.Set;
+
+import com.google.gson.stream.JsonWriter;
+
 import appeng.api.networking.crafting.ICraftingService;
 import appeng.api.networking.energy.IEnergyService;
 import appeng.api.networking.events.GridEvent;
@@ -30,10 +35,6 @@ import appeng.api.networking.pathing.IPathingService;
 import appeng.api.networking.spatial.ISpatialService;
 import appeng.api.networking.storage.IStorageService;
 import appeng.api.networking.ticking.ITickManager;
-import com.google.gson.stream.JsonWriter;
-
-import java.io.IOException;
-import java.util.Set;
 
 /**
  * Gives you access to Grid based information.

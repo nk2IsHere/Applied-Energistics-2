@@ -1,5 +1,8 @@
 package appeng.client.guidebook.compiler.tags;
 
+import java.net.URI;
+import java.util.Set;
+
 import appeng.client.guidebook.PageAnchor;
 import appeng.client.guidebook.compiler.LinkParser;
 import appeng.client.guidebook.compiler.PageCompiler;
@@ -8,9 +11,6 @@ import appeng.client.guidebook.document.flow.LytFlowLink;
 import appeng.client.guidebook.document.flow.LytFlowParent;
 import appeng.client.guidebook.document.interaction.TextTooltip;
 import appeng.libs.mdast.mdx.model.MdxJsxElementFields;
-
-import java.net.URI;
-import java.util.Set;
 
 public class ATagCompiler extends FlowTagCompiler {
     @Override

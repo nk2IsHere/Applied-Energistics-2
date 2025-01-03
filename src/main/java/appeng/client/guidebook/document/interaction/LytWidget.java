@@ -1,15 +1,16 @@
 package appeng.client.guidebook.document.interaction;
 
+import java.util.Optional;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.MultiBufferSource;
+
 import appeng.client.guidebook.document.LytRect;
 import appeng.client.guidebook.document.block.LytBlock;
 import appeng.client.guidebook.layout.LayoutContext;
 import appeng.client.guidebook.render.RenderContext;
 import appeng.client.guidebook.screen.GuideScreen;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.MultiBufferSource;
-
-import java.util.Optional;
 
 /**
  * Wraps an {@link AbstractWidget} for use within the guidebook layout tree.

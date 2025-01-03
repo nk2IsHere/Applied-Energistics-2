@@ -1,5 +1,19 @@
 package appeng.datagen.providers.localization;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.CompletableFuture;
+
+import com.google.common.base.Preconditions;
+import com.google.gson.JsonObject;
+
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.DataProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
 import appeng.api.config.PowerUnit;
 import appeng.client.guidebook.GuidebookText;
 import appeng.core.definitions.AEBlocks;
@@ -8,18 +22,6 @@ import appeng.core.definitions.AEItems;
 import appeng.core.localization.*;
 import appeng.datagen.providers.IAE2DataProvider;
 import appeng.integration.modules.igtooltip.TooltipIds;
-import com.google.common.base.Preconditions;
-import com.google.gson.JsonObject;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.CompletableFuture;
 
 public class LocalizationProvider implements IAE2DataProvider {
     private final Map<String, String> localizations = new HashMap<>();
