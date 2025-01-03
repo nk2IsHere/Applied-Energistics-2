@@ -4,6 +4,8 @@
 
 # Frankenstein Applied Energistics 2 (Fabric v1.21.1+)
 
+based on v19.1.2-beta for v1.21.1 NeoForge
+
 ## What
 
 i wanted to play AE2 on my tech modpack too hard :3. it's not official. future versions will be released whenever i have an urge to play minecraft again (prs are welcome).
