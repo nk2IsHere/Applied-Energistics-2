@@ -55,6 +55,7 @@ public abstract class HandlerStrategy<C, S> {
 
         @Override
         public long insert(Storage<ItemVariant> handler, AEKey what, long amount, Actionable mode) {
+            System.out.println("HandlerStrategy.insert (items) " + what + " " + amount + " " + mode);
             if (what instanceof AEItemKey itemKey) {
                 var stack = itemKey.toStack(Ints.saturatedCast(amount));
                 try (var tx = Transaction.openOuter()) {
@@ -63,12 +64,12 @@ public abstract class HandlerStrategy<C, S> {
                         return amount; // Can't insert blank items
                     }
 
-                    var remainder = handler.insert(variant, stack.getCount(), tx);
+                    var inserted = handler.insert(variant, stack.getCount(), tx);
                     if(mode == Actionable.MODULATE) {
                         tx.commit();
                     }
 
-                    return amount - remainder;
+                    return inserted;
                 }
             }
 
@@ -106,12 +107,12 @@ public abstract class HandlerStrategy<C, S> {
                         return amount; // Can't insert blank fluids
                     }
 
-                    var remainder = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
+                    var inserted = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
                     if (mode == Actionable.MODULATE) {
                         tx.commit();
                     }
 
-                    return amount - remainder;
+                    return inserted;
                 }
             }
 
