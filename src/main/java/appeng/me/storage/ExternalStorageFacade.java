@@ -335,6 +335,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         protected int insertExternal(AEKey what, int amount, Actionable mode) {
+            System.out.println("FluidHandlerFacade.insertExternal " + what + " " + amount + " " + mode);
             if (!(what instanceof AEFluidKey fluidKey)) {
                 return 0;
             }

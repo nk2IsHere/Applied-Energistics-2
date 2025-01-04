@@ -32,6 +32,9 @@ import dev.architectury.fluid.FluidStack;
 import appeng.api.storage.AEKeyFilter;
 import appeng.core.AELog;
 
+import static net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants.BLOCK;
+import static net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants.BUCKET;
+
 public final class AEFluidKey extends AEKey {
     public static final MapCodec<AEFluidKey> MAP_CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
@@ -47,8 +50,8 @@ public final class AEFluidKey extends AEKey {
                                     FluidStack.create(fluidHolder, 1, dataComponentPatch))));
     public static final Codec<AEFluidKey> CODEC = MAP_CODEC.codec();
 
-    public static final int AMOUNT_BUCKET = 1000;
-    public static final int AMOUNT_BLOCK = 1000;
+    public static final int AMOUNT_BUCKET = (int) BUCKET; // что они употребляют в этой фабрике мц? можно мне тоже?
+    public static final int AMOUNT_BLOCK = (int) BLOCK;
 
     private final FluidStack stack;
     private final int hashCode;

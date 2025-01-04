@@ -1,11 +1,13 @@
 package appeng.api.behaviors;
 
-import org.jetbrains.annotations.Nullable;
+import com.google.common.primitives.Ints;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +19,7 @@ import appeng.util.GenericContainerHelper;
 import appeng.util.fluid.FluidSoundHelper;
 
 class FluidContainerItemStrategy
-        implements ContainerItemStrategy<AEFluidKey, FluidContainerItemStrategy.Context> {
+    implements ContainerItemStrategy<AEFluidKey, FluidContainerItemStrategy.Context> {
     @Override
     public @Nullable GenericStack getContainedStack(ItemStack stack) {
         return GenericContainerHelper.getContainedFluidStack(stack);
@@ -54,7 +56,9 @@ class FluidContainerItemStrategy
                 return 0;
             }
 
+            System.out.println("fluidCapability: " + fluidCapability + " amt: " + fluidCapability.iterator().next().getAmount());
             var extracted = fluidCapability.extract(what.toVariant(), amount, tx);
+            System.out.println("extracted: " + extracted);
             if (mode == Actionable.MODULATE) {
                 tx.commit();
             }

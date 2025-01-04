@@ -119,7 +119,6 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
      * buffer.
      */
     private M fromNetwork(int containerId, Inventory inv, ByteBuf data) {
-        System.out.println("MenuTypeBuilder.fromNetwork " + containerId + " " + inv + " " + data);
         var registryBuf = new RegistryFriendlyByteBuf(data, inv.player.registryAccess());
         var locator = MenuLocators.readFromPacket(registryBuf);
         I host = locator.locate(inv.player, hostInterface);
@@ -201,7 +200,6 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
         @Nullable
         @Override
         public AbstractContainerMenu createMenu(int wnd, Inventory inv, Player p) {
-            System.out.println("HandlerFactory.createMenu " + wnd + " " + inv + " " + p);
             M m = factory.create(wnd, inv, accessInterface);
             // Set the original locator on the opened server-side menu for it to more
             // easily remember how to re-open after being closed.
@@ -211,7 +209,6 @@ public final class MenuTypeBuilder<M extends AEBaseMenu, I> {
 
         @Override
         public Object getScreenOpeningData(ServerPlayer player) {
-            System.out.println("HandlerFactory.getScreenOpeningData " + player);
             var buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), player.registryAccess());
             MenuLocators.writeToPacket(buf, locator);
             buf.writeBoolean(fromSubMenu);
