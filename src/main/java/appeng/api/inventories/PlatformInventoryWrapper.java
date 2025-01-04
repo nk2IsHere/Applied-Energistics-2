@@ -89,31 +89,38 @@ public class PlatformInventoryWrapper implements InternalInventory {
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         try (var tx = Transaction.openOuter()) {
-            var slotView = handler.getSlot(slot);
-            var inserted = slotView.insert(ItemVariant.of(stack), stack.getCount(), tx);
-
             if (!simulate) {
+                var slotView = handler.getSlot(slot);
+                var inserted = slotView.insert(ItemVariant.of(stack), stack.getCount(), tx);
                 tx.commit();
+                stack.shrink((int) inserted);
+                return stack.isEmpty() ? ItemStack.EMPTY : stack;
+            } else {
+                var slotView = handler.getSlot(slot);
+                var inserted = Math.min(stack.getCount(), slotView.getCapacity() - slotView.getAmount());
+                var remaining = stack.copy();
+                remaining.shrink((int) inserted);
+                return remaining;
             }
-
-            stack.shrink((int) inserted);
-            return stack.isEmpty() ? ItemStack.EMPTY : stack;
         }
     }
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         try (var tx = Transaction.openOuter()) {
-            var slotView = handler.getSlot(slot);
-            var resource = slotView.getResource();
-            var extracted = slotView.extract(resource, amount, tx);
-
             if (!simulate) {
+                var slotView = handler.getSlot(slot);
+                var resource = slotView.getResource();
+                var extracted = slotView.extract(resource, amount, tx);
                 tx.commit();
+                return resource.toStack((int) extracted);
+            } else {
+                var slotView = handler.getSlot(slot);
+                var resource = slotView.getResource();
+                var extracted = Math.min(slotView.getAmount(), amount);
+                return resource.toStack((int) extracted);
             }
 
-            return resource.toStack((int) extracted);
         }
     }
-
 }

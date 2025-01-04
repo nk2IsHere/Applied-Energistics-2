@@ -58,13 +58,17 @@ public abstract class HandlerStrategy<C, S> {
             if (what instanceof AEItemKey itemKey) {
                 var stack = itemKey.toStack(Ints.saturatedCast(amount));
                 try (var tx = Transaction.openOuter()) {
-                    if (mode == Actionable.MODULATE) {
-                        var remainder = handler.insert(ItemVariant.of(stack.getItem()), stack.getCount(), tx);
-                        tx.commit();
-                        return amount - remainder;
+                    var variant = ItemVariant.of(stack.getItem());
+                    if(variant.isBlank()) {
+                        return amount; // Can't insert blank items
                     }
 
-                    return amount;
+                    var remainder = handler.insert(variant, stack.getCount(), tx);
+                    if(mode == Actionable.MODULATE) {
+                        tx.commit();
+                    }
+
+                    return amount - remainder;
                 }
             }
 
@@ -97,13 +101,17 @@ public abstract class HandlerStrategy<C, S> {
         public long insert(Storage<FluidVariant> handler, AEKey what, long amount, Actionable mode) {
             if (what instanceof AEFluidKey itemKey && amount > 0) {
                 try (var tx = Transaction.openOuter()) {
-                    if (mode == Actionable.MODULATE) {
-                        var remainder = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
-                        tx.commit();
-                        return amount - remainder;
+                    var variant = FluidVariant.of(itemKey.getFluid());
+                    if(variant.isBlank()) {
+                        return amount; // Can't insert blank fluids
                     }
 
-                    return amount;
+                    var remainder = handler.insert(FluidVariant.of(itemKey.getFluid()), amount, tx);
+                    if (mode == Actionable.MODULATE) {
+                        tx.commit();
+                    }
+
+                    return amount - remainder;
                 }
             }
 

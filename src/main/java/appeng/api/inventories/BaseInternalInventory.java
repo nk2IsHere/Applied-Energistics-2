@@ -43,6 +43,6 @@ public abstract class BaseInternalInventory implements InternalInventory {
     }
 
     protected Storage<ItemVariant> createStorage() {
-        return new InternalInventoryItemHandler(this);
+        return new InternalInventoryStorage(this);
     }
 }

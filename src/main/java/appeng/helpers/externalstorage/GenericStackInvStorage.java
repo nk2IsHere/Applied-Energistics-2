@@ -4,10 +4,8 @@ import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.stacks.AEKeyType;
 import appeng.api.stacks.GenericStack;
 import appeng.util.IVariantConversion;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.*;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ import java.util.Objects;
  * Adapts a {@link GenericStackInv} as {@link net.fabricmc.fabric.api.transfer.v1.storage.Storage} of the appropriate
  * type.
  */
-public class GenericStackInvStorage<V extends TransferVariant<?>> implements Storage<V> {
+public class GenericStackInvStorage<V extends TransferVariant<?>> implements SlottedStorage<V> {
     private final IVariantConversion<V> conversion;
     private final GenericInternalInventory inv;
     private final AEKeyType channel;
@@ -85,6 +83,55 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Sto
     @Override
     public Iterator<StorageView<V>> iterator() {
         return (Iterator) storageViews.iterator();
+    }
+
+    @Override
+    public int getSlotCount() {
+        return inv.size();
+    }
+
+    @Override
+    public SingleSlotStorage<V> getSlot(int slot) {
+        return new SingleSlot(slot);
+    }
+
+    private class SingleSlot implements SingleSlotStorage<V> {
+
+        private final View view;
+
+        private SingleSlot(int slotIndex) {
+            this.view = new View(slotIndex);
+        }
+
+        @Override
+        public long insert(V resource, long maxAmount, TransactionContext transaction) {
+            return view.insert(resource, maxAmount, transaction);
+        }
+
+        @Override
+        public long extract(V resource, long maxAmount, TransactionContext transaction) {
+            return view.extract(resource, maxAmount, transaction);
+        }
+
+        @Override
+        public boolean isResourceBlank() {
+            return view.isResourceBlank();
+        }
+
+        @Override
+        public V getResource() {
+            return view.getResource();
+        }
+
+        @Override
+        public long getAmount() {
+            return view.getAmount();
+        }
+
+        @Override
+        public long getCapacity() {
+            return view.getCapacity();
+        }
     }
 
     private class View implements StorageView<V> {

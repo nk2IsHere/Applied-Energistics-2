@@ -22,14 +22,14 @@ import appeng.parts.automation.StackWorldBehaviors;
 
 class PatternProviderTargetCache {
     private final BlockApiCache<MEStorage, Direction> cache;
+    private final Direction direction;
     private final IActionSource src;
     private final Map<AEKeyType, ExternalStorageStrategy> strategies;
-    private final Direction direction;
 
     PatternProviderTargetCache(ServerLevel l, BlockPos pos, Direction direction, IActionSource src) {
         this.cache = BlockApiCache.create(MEStorage.SIDED, l, pos);
-        this.src = src;
         this.direction = direction;
+        this.src = src;
         this.strategies = StackWorldBehaviors.createExternalStorageStrategies(l, pos, direction);
     }
 

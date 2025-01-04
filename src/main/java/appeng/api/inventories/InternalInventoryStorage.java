@@ -28,10 +28,11 @@ import java.util.NoSuchElementException;
 
 import com.google.common.base.Preconditions;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -40,15 +41,15 @@ import net.minecraft.world.item.ItemStack;
 
 import appeng.core.definitions.AEItems;
 
-class InternalInventoryItemHandler extends SnapshotParticipant<InternalInventoryItemHandler.Snapshot>
-        implements Storage<ItemVariant> {
+class InternalInventoryStorage extends SnapshotParticipant<InternalInventoryStorage.Snapshot>
+        implements SlottedStorage<ItemVariant> {
 
     private final InternalInventory inventory;
 
     @Nullable
     private Snapshot lastReleasedSnapshot;
 
-    public InternalInventoryItemHandler(InternalInventory inventory) {
+    public InternalInventoryStorage(InternalInventory inventory) {
         this.inventory = inventory;
     }
 
@@ -61,6 +62,17 @@ class InternalInventoryItemHandler extends SnapshotParticipant<InternalInventory
         updateSnapshots(transaction);
 
         var overflow = inventory.addItems(stack);
+        return maxAmount - overflow.getCount();
+    }
+
+    private long insert(int slot, ItemVariant resource, long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notBlankNotNegative(resource, maxAmount);
+
+        var stack = resource.toStack((int) Math.min(Integer.MAX_VALUE, maxAmount));
+
+        updateSnapshots(transaction);
+
+        var overflow = inventory.getSlotInv(slot).addItems(stack);
         return maxAmount - overflow.getCount();
     }
 
@@ -81,9 +93,77 @@ class InternalInventoryItemHandler extends SnapshotParticipant<InternalInventory
         return extracted.getCount();
     }
 
+    private long extract(int slot, ItemVariant resource, long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notBlankNotNegative(resource, maxAmount);
+
+        // Do not allow extraction of wrapped fluid stacks because they're an internal detail
+        if (resource.getItem() == AEItems.WRAPPED_GENERIC_STACK.asItem()) {
+            return 0;
+        }
+
+        updateSnapshots(transaction);
+
+        var amt = (int) Math.min(Integer.MAX_VALUE, maxAmount);
+        ItemStack extracted = inventory.getSlotInv(slot).removeItems(amt, resource.toStack(), null);
+
+        return extracted.getCount();
+    }
+
     @Override
     public Iterator<StorageView<ItemVariant>> iterator() {
         return new InventoryIterator();
+    }
+
+    @Override
+    public int getSlotCount() {
+        return inventory.size();
+    }
+
+    @Override
+    public SingleSlotStorage<ItemVariant> getSlot(int i) {
+        return new InventorySingleSlotStorage(inventory, i);
+    }
+
+    private class InventorySingleSlotStorage implements SingleSlotStorage<ItemVariant> {
+
+        private final InternalInventory inventory;
+        private final int slot;
+
+        public InventorySingleSlotStorage(InternalInventory inventory, int slot) {
+            this.inventory = inventory;
+            this.slot = slot;
+        }
+
+
+        @Override
+        public long insert(ItemVariant itemVariant, long l, TransactionContext transactionContext) {
+            return InternalInventoryStorage.this.insert(slot, itemVariant, l, transactionContext);
+        }
+
+        @Override
+        public long extract(ItemVariant itemVariant, long l, TransactionContext transactionContext) {
+            return InternalInventoryStorage.this.extract(slot, itemVariant, l, transactionContext);
+        }
+
+        @Override
+        public boolean isResourceBlank() {
+            return inventory.getStackInSlot(slot).isEmpty();
+        }
+
+        @Override
+        public ItemVariant getResource() {
+            return ItemVariant.of(inventory.getStackInSlot(slot));
+        }
+
+        @Override
+        public long getAmount() {
+            return inventory.getStackInSlot(slot).getCount();
+        }
+
+        @Override
+        public long getCapacity() {
+            return inventory.getSlotLimit(slot);
+        }
     }
 
     private class InventoryIterator implements Iterator<StorageView<ItemVariant>> {

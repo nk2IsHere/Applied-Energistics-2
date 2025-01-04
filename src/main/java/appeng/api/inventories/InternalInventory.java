@@ -71,7 +71,7 @@ public interface InternalInventory extends Iterable<ItemStack>, ItemTransfer {
     }
 
     default Storage<ItemVariant> toStorage() {
-        return new InternalInventoryItemHandler(this);
+        return new InternalInventoryStorage(this);
     }
 
     default Container toContainer() {

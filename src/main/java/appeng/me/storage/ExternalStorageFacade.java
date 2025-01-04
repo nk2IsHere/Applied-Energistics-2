@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.google.common.primitives.Ints;
 
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -95,25 +96,19 @@ public abstract class ExternalStorageFacade implements MEStorage {
     }
 
     private static class ItemHandlerFacade extends ExternalStorageFacade {
-        private final Storage<ItemVariant> handler;
+        private final SlottedStorage<ItemVariant> handler;
 
         public ItemHandlerFacade(Storage<ItemVariant> handler) {
-            this.handler = handler;
+            if(!(handler instanceof SlottedStorage<ItemVariant> slottedStorage)) {
+                throw new IllegalArgumentException("Item handler must be slotted");
+            }
+
+            this.handler = slottedStorage;
         }
 
         @Override
         public int getSlots() {
-            return handler instanceof SlottedStorage<ItemVariant> slotted ? slotted.getSlotCount() : 1;
-        }
-
-        private Storage<ItemVariant> getSlotStorage(int slot) {
-            return handler instanceof SlottedStorage<ItemVariant> slotted ? slotted.getSlot(slot) : handler;
-        }
-
-        private StorageView<ItemVariant> getSlotStorageView(int slot) {
-            return handler instanceof SlottedStorage<ItemVariant> slotted ? slotted.getSlot(slot)
-                    : handler.iterator()
-                            .next();
+            return handler.getSlotCount();
         }
 
         @Nullable
@@ -123,8 +118,9 @@ public abstract class ExternalStorageFacade implements MEStorage {
         }
 
         private ItemStack getItemStackInSlot(int slot) {
-            var amount = (int) getSlotStorageView(slot).getAmount();
-            return getSlotStorageView(slot).getResource().toStack(amount);
+            var slotView = handler.getSlot(slot);
+            var amount = (int) slotView.getAmount();
+            return slotView.getResource().toStack(amount);
         }
 
         @Override
@@ -145,10 +141,10 @@ public abstract class ExternalStorageFacade implements MEStorage {
             boolean simulate = mode == Actionable.SIMULATE;
 
             // This uses a brute force approach and tries to jam it in every slot the inventory exposes.
-            for (int i = 0; i < slotCount && !remaining.isEmpty(); i++) {
-                try (var tx = Transaction.openOuter()) {
-                    var insertedCount = (int) getSlotStorage(i).insert(ItemVariant.of(remaining), remaining.getCount(),
-                            tx);
+            try (var tx = Transaction.openOuter()) {
+                for (int i = 0; i < slotCount && !remaining.isEmpty(); i++) {
+                    var slotView = handler.getSlot(i);
+                    var insertedCount = (int) slotView.insert(ItemVariant.of(remaining), remaining.getCount(), tx);
                     remaining.shrink(insertedCount);
 
                     if (!simulate) {
@@ -179,74 +175,81 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
             final boolean simulate = mode == Actionable.SIMULATE;
 
-            for (int i = 0; i < getSlots(); i++) {
-                ItemStack stackInInventorySlot = getItemStackInSlot(i);
+            try (var tx = Transaction.openOuter()) {
+                for (int i = 0; i < getSlots(); i++) {
+                    ItemStack stackInInventorySlot = getItemStackInSlot(i);
 
-                if (!itemKey.matches(stackInInventorySlot)) {
-                    continue;
-                }
+                    if (!itemKey.matches(stackInInventorySlot)) {
+                        continue;
+                    }
 
-                ItemStack extracted;
-                int stackSizeCurrentSlot = stackInInventorySlot.getCount();
-                int remainingCurrentSlot = Math.min(remainingSize, stackSizeCurrentSlot);
+                    ItemStack extracted;
+                    int stackSizeCurrentSlot = stackInInventorySlot.getCount();
+                    int remainingCurrentSlot = Math.min(
+                        remainingSize,
+                        stackSizeCurrentSlot
+                    );
 
-                // We have to loop here because according to the docs, the handler shouldn't return a stack with
-                // size > maxSize, even if we request more. So even if it returns a valid stack, it might have more
-                // stuff.
-                do {
-                    try (var tx = Transaction.openOuter()) {
-                        var slot = getSlotStorageView(i);
-                        var extractedCount = (int) getSlotStorage(i).extract(slot.getResource(), remainingCurrentSlot,
-                                tx);
-                        extracted = slot.getResource().toStack(extractedCount);
+                    // We have to loop here because according to the docs, the handler shouldn't return a stack with
+                    // size > maxSize, even if we request more. So even if it returns a valid stack, it might have more
+                    // stuff.
+                    do {
+                        var slotView = handler.getSlot(i);
+                        var extractedCount = (int) slotView.extract(slotView.getResource(), remainingCurrentSlot, tx);
+                        extracted = slotView.getResource().toStack(extractedCount);
                         if (!simulate) {
                             tx.commit();
                         }
-                    }
 
-                    if (!extracted.isEmpty()) {
-                        // In order to guard against broken IItemHandler implementations, we'll try to guess if the
-                        // returned
-                        // stack (especially in simulate mode) is the same that was returned by getStackInSlot. This is
-                        // obviously not a precise science, but it would catch the previous Forge bug:
-                        // https://github.com/MinecraftForge/MinecraftForge/pull/6580
-                        if (extracted == stackInInventorySlot) {
-                            extracted = extracted.copy();
-                        }
+                        if (!extracted.isEmpty()) {
+                            // In order to guard against broken IItemHandler implementations, we'll try to guess if the
+                            // returned
+                            // stack (especially in simulate mode) is the same that was returned by getStackInSlot. This is
+                            // obviously not a precise science, but it would catch the previous Forge bug:
+                            // https://github.com/MinecraftForge/MinecraftForge/pull/6580
+                            if (extracted == stackInInventorySlot) {
+                                extracted = extracted.copy();
+                            }
 
-                        if (extracted.getCount() > remainingCurrentSlot) {
-                            // Something broke. It should never return more than we requested...
-                            // We're going to silently eat the remainder
-                            AELog.warn(
+                            if (extracted.getCount() > remainingCurrentSlot) {
+                                // Something broke. It should never return more than we requested...
+                                // We're going to silently eat the remainder
+                                AELog.warn(
                                     "Mod that provided item handler %s is broken. Returned %s items while only requesting %d.",
-                                    handler.getClass().getName(), extracted.toString(), remainingCurrentSlot);
-                            extracted.setCount(remainingCurrentSlot);
-                        }
+                                    handler
+                                        .getClass()
+                                        .getName(),
+                                    extracted.toString(),
+                                    remainingCurrentSlot
+                                );
+                                extracted.setCount(remainingCurrentSlot);
+                            }
 
-                        // Heuristic for simulation: looping in case of simulations is pointless, since the state of the
-                        // underlying inventory does not change after a simulated extraction. To still support
-                        // inventories
-                        // that report stacks that are larger than maxStackSize, we use this heuristic
-                        if (simulate && extracted.getCount() == extracted.getMaxStackSize()
+                            // Heuristic for simulation: looping in case of simulations is pointless, since the state of the
+                            // underlying inventory does not change after a simulated extraction. To still support
+                            // inventories
+                            // that report stacks that are larger than maxStackSize, we use this heuristic
+                            if (simulate && extracted.getCount() == extracted.getMaxStackSize()
                                 && remainingCurrentSlot > extracted.getMaxStackSize()) {
-                            extracted.setCount(remainingCurrentSlot);
-                        }
+                                extracted.setCount(remainingCurrentSlot);
+                            }
 
-                        // We're just gonna use the first stack we get our hands on as the template for the rest.
-                        if (gathered.isEmpty()) {
-                            gathered = extracted;
-                        } else {
-                            gathered.grow(extracted.getCount());
+                            // We're just gonna use the first stack we get our hands on as the template for the rest.
+                            if (gathered.isEmpty()) {
+                                gathered = extracted;
+                            } else {
+                                gathered.grow(extracted.getCount());
+                            }
+                            remainingCurrentSlot -= extracted.getCount();
                         }
-                        remainingCurrentSlot -= extracted.getCount();
+                    } while (!simulate && !extracted.isEmpty() && remainingCurrentSlot > 0);
+
+                    remainingSize -= stackSizeCurrentSlot - remainingCurrentSlot;
+
+                    // Done?
+                    if (remainingSize <= 0) {
+                        break;
                     }
-                } while (!simulate && !extracted.isEmpty() && remainingCurrentSlot > 0);
-
-                remainingSize -= stackSizeCurrentSlot - remainingCurrentSlot;
-
-                // Done?
-                if (remainingSize <= 0) {
-                    break;
                 }
             }
 
@@ -281,10 +284,10 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
                 if (extractableOnly) {
                     try (var tx = Transaction.openOuter()) {
-                        var extracted = getSlotStorage(i).extract(getSlotStorageView(i).getResource(), 1, tx);
+                        var slotView = handler.getSlot(i);
+                        var extracted = slotView.extract(slotView.getResource(), 1, tx);
                         if (extracted == 0L) {
-                            var extractedAll = getSlotStorage(i).extract(getSlotStorageView(i).getResource(),
-                                    stack.getCount(), tx);
+                            var extractedAll = slotView.extract(slotView.getResource(), stack.getCount(), tx);
                             if (extractedAll == 0L) {
                                 continue;
                             }
@@ -298,10 +301,15 @@ public abstract class ExternalStorageFacade implements MEStorage {
     }
 
     private static class FluidHandlerFacade extends ExternalStorageFacade {
-        private final Storage<FluidVariant> handler;
+        private final SlottedStorage<FluidVariant> handler;
 
         public FluidHandlerFacade(Storage<FluidVariant> handler) {
-            this.handler = handler;
+            if(!(handler instanceof SlottedStorage<FluidVariant> slottedStorage)) {
+                System.out.println(handler);
+                throw new IllegalArgumentException("Fluid handler must be slotted");
+            }
+
+            this.handler = slottedStorage;
         }
 
         @Override
@@ -309,27 +317,19 @@ public abstract class ExternalStorageFacade implements MEStorage {
             return handler instanceof SlottedStorage<FluidVariant> slotted ? slotted.getSlotCount() : 1;
         }
 
-        private Storage<FluidVariant> getSlotStorage(int slot) {
-            return handler instanceof SlottedStorage<FluidVariant> slotted ? slotted.getSlot(slot) : handler;
-        }
-
-        private StorageView<FluidVariant> getSlotStorageView(int slot) {
-            return handler instanceof SlottedStorage<FluidVariant> slotted ? slotted.getSlot(slot)
-                    : handler.iterator()
-                            .next();
-        }
-
         @Nullable
         @Override
         public GenericStack getStackInSlot(int slot) {
-            var fluid = getSlotStorageView(slot).getResource();
-            var amount = (int) getSlotStorageView(slot).getAmount();
+            var slotView = handler.getSlot(slot);
+            var fluid = slotView.getResource();
+            var amount = (int) slotView.getAmount();
             return GenericStack.fromFluidStack(FluidStack.create(fluid.getFluid(), amount));
         }
 
         private FluidStack getFluidInTank(int slot) {
-            var fluid = getSlotStorageView(slot).getResource();
-            var amount = (int) getSlotStorageView(slot).getAmount();
+            var slotView = handler.getSlot(slot);
+            var fluid = slotView.getResource();
+            var amount = (int) slotView.getAmount();
             return FluidStack.create(fluid.getFluid(), amount);
         }
 
@@ -345,7 +345,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
             }
 
             try (var tx = Transaction.openOuter()) {
-                var inserted = getSlotStorage(0).insert(fluidKey.toVariant(), amount, tx);
+                var inserted = handler.insert(fluidKey.toVariant(), amount, tx);
                 if (inserted == 0) {
                     return 0;
                 }
@@ -365,7 +365,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
             }
 
             try (var tx = Transaction.openOuter()) {
-                var extracted = getSlotStorage(0).extract(fluidKey.toVariant(), amount, tx);
+                var extracted = handler.extract(fluidKey.toVariant(), amount, tx);
                 if (extracted == 0) {
                     return 0;
                 }
@@ -393,24 +393,24 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         public void getAvailableStacks(KeyCounter out) {
-            for (int i = 0; i < getSlots(); i++) {
-                // Skip resources that cannot be extracted if that filter was enabled
-                var stack = getFluidInTank(i);
-                if (stack.isEmpty()) {
-                    continue;
-                }
+            try (var tx = Transaction.openOuter()) {
+                for (int i = 0; i < getSlots(); i++) {
+                    // Skip resources that cannot be extracted if that filter was enabled
+                    var stack = getFluidInTank(i);
+                    if (stack.isEmpty()) {
+                        continue;
+                    }
 
-                if (extractableOnly) {
-                    try (var tx = Transaction.openOuter()) {
-                        var extracted = getSlotStorage(i).extract(FluidVariant.of(stack.getFluid()), stack.getAmount(),
-                                tx);
+                    if (extractableOnly) {
+                        var slotView = handler.getSlot(i);
+                        var extracted = slotView.extract(FluidVariant.of(stack.getFluid()), stack.getAmount(), tx);
                         if (extracted == 0L) {
                             continue;
                         }
                     }
-                }
 
-                out.add(AEFluidKey.of(stack), stack.getAmount());
+                    out.add(AEFluidKey.of(stack), stack.getAmount());
+                }
             }
         }
     }
