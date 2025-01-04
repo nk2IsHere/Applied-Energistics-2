@@ -75,7 +75,7 @@ public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPa
                 try (CapabilityGuard capabilityGuard = target.getAdjacentCapability()) {
                     final var output = capabilityGuard.get();
                     final var toSend = amountPerOutput + overflow;
-                    final var received = output.extract(resource, toSend, transaction);
+                    final var received = output.insert(resource, toSend, transaction);
 
                     overflow = toSend - received;
                     total += received;
