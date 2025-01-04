@@ -18,11 +18,15 @@
 
 package appeng.parts.p2p;
 
+import java.util.Iterator;
 import java.util.List;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ExtractionOnlyStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.InsertionOnlyStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
@@ -54,7 +58,7 @@ public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPa
         return MODELS.getModel(this.isPowered(), this.isActive());
     }
 
-    private class InputFluidHandler implements SingleSlotStorage<FluidVariant> {
+    private class InputFluidHandler implements InsertionOnlyStorage<FluidVariant> {
 
         @Override
         public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
@@ -87,44 +91,9 @@ public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPa
 
             return total;
         }
-
-        @Override
-        public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-            return 0;
-        }
-
-        @Override
-        public boolean isResourceBlank() {
-            return true;
-        }
-
-        @Override
-        public FluidVariant getResource() {
-            return FluidVariant.blank();
-        }
-
-        @Override
-        public long getAmount() {
-            return 0;
-        }
-
-        @Override
-        public long getCapacity() {
-            return Integer.MAX_VALUE;
-        }
-
-        @Override
-        public boolean supportsExtraction() {
-            return false;
-        }
     }
 
-    private class OutputFluidHandler implements SingleSlotStorage<FluidVariant> {
-
-        @Override
-        public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-            return 0;
-        }
+    private class OutputFluidHandler implements ExtractionOnlyStorage<FluidVariant> {
 
         @Override
         public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
@@ -141,36 +110,10 @@ public class FluidP2PTunnelPart extends CapabilityP2PTunnelPart<FluidP2PTunnelPa
         }
 
         @Override
-        public boolean isResourceBlank() {
+        public Iterator<StorageView<FluidVariant>> iterator() {
             try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().isResourceBlank();
+                return input.get().iterator();
             }
-        }
-
-        @Override
-        public FluidVariant getResource() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getResource();
-            }
-        }
-
-        @Override
-        public long getAmount() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getAmount();
-            }
-        }
-
-        @Override
-        public long getCapacity() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getCapacity();
-            }
-        }
-
-        @Override
-        public boolean supportsInsertion() {
-            return false;
         }
     }
 }

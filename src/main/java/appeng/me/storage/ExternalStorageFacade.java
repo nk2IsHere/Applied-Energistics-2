@@ -4,14 +4,12 @@ import java.util.Set;
 
 import com.google.common.primitives.Ints;
 
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +51,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
         var inserted = insertExternal(what, Ints.saturatedCast(amount), mode);
+        System.out.println("ExternalStorageFacade.insert " + what + " " + amount + " " + mode + " " + inserted);
         if (inserted > 0 && mode == Actionable.MODULATE) {
             if (this.changeListener != null) {
                 this.changeListener.run();
@@ -64,6 +63,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
         var extracted = extractExternal(what, Ints.saturatedCast(amount), mode);
+        System.out.println("ExternalStorageFacade.extract " + what + " " + amount + " " + mode + " " + extracted);
         if (extracted > 0 && mode == Actionable.MODULATE) {
             if (this.changeListener != null) {
                 this.changeListener.run();
@@ -192,8 +192,9 @@ public abstract class ExternalStorageFacade implements MEStorage {
                     // stuff.
                     do {
                         var slotView = handler.getSlot(i);
-                        var extractedCount = (int) slotView.extract(slotView.getResource(), remainingCurrentSlot, tx);
-                        extracted = slotView.getResource().toStack(extractedCount);
+                        var resource = slotView.getResource();
+                        var extractedCount = (int) slotView.extract(resource, remainingCurrentSlot, tx);
+                        extracted = resource.toStack(extractedCount);
 
                         if (!extracted.isEmpty()) {
                             // In order to guard against broken IItemHandler implementations, we'll try to guess if the

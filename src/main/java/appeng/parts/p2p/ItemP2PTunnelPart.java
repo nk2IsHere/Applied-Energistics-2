@@ -18,11 +18,15 @@
 
 package appeng.parts.p2p;
 
+import java.util.Iterator;
 import java.util.List;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ExtractionOnlyStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.InsertionOnlyStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
@@ -54,7 +58,7 @@ public class ItemP2PTunnelPart extends CapabilityP2PTunnelPart<ItemP2PTunnelPart
         return MODELS.getModel(this.isPowered(), this.isActive());
     }
 
-    private class InputItemHandler implements SingleSlotStorage<ItemVariant> {
+    private class InputItemHandler implements InsertionOnlyStorage<ItemVariant> {
 
         @Override
         public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
@@ -78,13 +82,10 @@ public class ItemP2PTunnelPart extends CapabilityP2PTunnelPart<ItemP2PTunnelPart
                         break;
                     }
 
-                    // So the documentation says that copying the stack should not be necessary because it is not
-                    // supposed to be stored or modifed by insertItem. However, ItemStackHandler will gladly store
-                    // the stack so we need to do a defensive copy. Forgecord says this is the intended behavior,
-                    // and the documentation is wrong.
-                    final var sent = toSend - output.insert(resource, maxAmount, transaction);
+                    final var received = output.insert(resource, toSend, transaction);
+                    final var sent = toSend - received;
 
-                    overflow = toSend - sent;
+                    overflow = received;
                     remainder -= sent;
                 }
             }
@@ -98,44 +99,9 @@ public class ItemP2PTunnelPart extends CapabilityP2PTunnelPart<ItemP2PTunnelPart
 
             return remainder;
         }
-
-        @Override
-        public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-            return 0;
-        }
-
-        @Override
-        public boolean isResourceBlank() {
-            return true;
-        }
-
-        @Override
-        public ItemVariant getResource() {
-            return ItemVariant.blank();
-        }
-
-        @Override
-        public long getAmount() {
-            return 0;
-        }
-
-        @Override
-        public long getCapacity() {
-            return Integer.MAX_VALUE;
-        }
-
-        @Override
-        public boolean supportsExtraction() {
-            return false;
-        }
     }
 
-    private class OutputItemHandler implements SingleSlotStorage<ItemVariant> {
-
-        @Override
-        public long insert(ItemVariant resource, long maxAmount, TransactionContext transaction) {
-            return 0;
-        }
+    private class OutputItemHandler implements ExtractionOnlyStorage<ItemVariant> {
 
         @Override
         public long extract(ItemVariant resource, long maxAmount, TransactionContext transaction) {
@@ -152,36 +118,10 @@ public class ItemP2PTunnelPart extends CapabilityP2PTunnelPart<ItemP2PTunnelPart
         }
 
         @Override
-        public boolean isResourceBlank() {
+        public Iterator<StorageView<ItemVariant>> iterator() {
             try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().isResourceBlank();
+                return input.get().iterator();
             }
-        }
-
-        @Override
-        public ItemVariant getResource() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getResource();
-            }
-        }
-
-        @Override
-        public long getAmount() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getAmount();
-            }
-        }
-
-        @Override
-        public long getCapacity() {
-            try (CapabilityGuard input = getInputCapability()) {
-                return input.get().iterator().next().getCapacity();
-            }
-        }
-
-        @Override
-        public boolean supportsInsertion() {
-            return false;
         }
     }
 }
