@@ -135,7 +135,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
             }
 
             ItemStack orgInput = itemKey.toStack(Ints.saturatedCast(amount));
-            ItemStack remaining = orgInput;
+            ItemStack remaining = orgInput.copy();
 
             int slotCount = getSlots();
             boolean simulate = mode == Actionable.SIMULATE;
@@ -146,10 +146,10 @@ public abstract class ExternalStorageFacade implements MEStorage {
                     var slotView = handler.getSlot(i);
                     var insertedCount = (int) slotView.insert(ItemVariant.of(remaining), remaining.getCount(), tx);
                     remaining.shrink(insertedCount);
+                }
 
-                    if (!simulate) {
-                        tx.commit();
-                    }
+                if (!simulate) {
+                    tx.commit();
                 }
             }
 
@@ -185,10 +185,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
                     ItemStack extracted;
                     int stackSizeCurrentSlot = stackInInventorySlot.getCount();
-                    int remainingCurrentSlot = Math.min(
-                        remainingSize,
-                        stackSizeCurrentSlot
-                    );
+                    int remainingCurrentSlot = Math.min(remainingSize, stackSizeCurrentSlot);
 
                     // We have to loop here because according to the docs, the handler shouldn't return a stack with
                     // size > maxSize, even if we request more. So even if it returns a valid stack, it might have more
@@ -197,9 +194,6 @@ public abstract class ExternalStorageFacade implements MEStorage {
                         var slotView = handler.getSlot(i);
                         var extractedCount = (int) slotView.extract(slotView.getResource(), remainingCurrentSlot, tx);
                         extracted = slotView.getResource().toStack(extractedCount);
-                        if (!simulate) {
-                            tx.commit();
-                        }
 
                         if (!extracted.isEmpty()) {
                             // In order to guard against broken IItemHandler implementations, we'll try to guess if the
@@ -216,9 +210,7 @@ public abstract class ExternalStorageFacade implements MEStorage {
                                 // We're going to silently eat the remainder
                                 AELog.warn(
                                     "Mod that provided item handler %s is broken. Returned %s items while only requesting %d.",
-                                    handler
-                                        .getClass()
-                                        .getName(),
+                                    handler.getClass().getName(),
                                     extracted.toString(),
                                     remainingCurrentSlot
                                 );
@@ -250,6 +242,10 @@ public abstract class ExternalStorageFacade implements MEStorage {
                     if (remainingSize <= 0) {
                         break;
                     }
+                }
+
+                if (!simulate) {
+                    tx.commit();
                 }
             }
 
@@ -305,7 +301,6 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         public FluidHandlerFacade(Storage<FluidVariant> handler) {
             if(!(handler instanceof SlottedStorage<FluidVariant> slottedStorage)) {
-                System.out.println(handler);
                 throw new IllegalArgumentException("Fluid handler must be slotted");
             }
 
