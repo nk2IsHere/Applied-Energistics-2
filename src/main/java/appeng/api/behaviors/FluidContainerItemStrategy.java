@@ -56,9 +56,7 @@ class FluidContainerItemStrategy
                 return 0;
             }
 
-            System.out.println("fluidCapability: " + fluidCapability + " amt: " + fluidCapability.iterator().next().getAmount());
             var extracted = fluidCapability.extract(what.toVariant(), amount, tx);
-            System.out.println("extracted: " + extracted);
             if (mode == Actionable.MODULATE) {
                 tx.commit();
             }

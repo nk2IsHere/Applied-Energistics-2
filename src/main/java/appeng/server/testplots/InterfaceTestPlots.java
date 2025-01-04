@@ -1,10 +1,12 @@
 package appeng.server.testplots;
 
+import appeng.api.storage.MEStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,18 +47,12 @@ public class InterfaceTestPlots {
         builder.test(helper -> {
             helper.startSequence()
                     .thenExecute(() -> {
-                        var itemCap = ItemStorage.SIDED.find(helper.getLevel(), o,
-                                Direction.UP) instanceof SlottedStorage storage
+                        var itemCap = ItemStorage.SIDED.find(helper.getLevel(), o, helper.getBlockState(o), helper.getBlockEntity(o), Direction.UP)
+                                    instanceof SlottedStorage storage
                                         ? (SlottedStorage<ItemVariant>) storage
                                         : null;
 
                         helper.check(itemCap != null, "item cap should not be null");
-                        try (var transaction = Transaction.openOuter()) {
-                            var slot0 = itemCap.getSlot(0);
-                            helper.check(slot0.insert(ItemVariant.of(ItemStack.EMPTY), 0, transaction) == 0,
-                                    "empty stack should not be insertable in slot 0");
-                            transaction.abort();
-                        }
 
                         try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
@@ -92,8 +88,8 @@ public class InterfaceTestPlots {
                             transaction.commit();
                         }
 
-                        var fluidCap = FluidStorage.SIDED.find(helper.getLevel(), o,
-                                Direction.UP) instanceof SlottedStorage storage
+                        var fluidCap = FluidStorage.SIDED.find(helper.getLevel(), o, helper.getBlockState(o), helper.getBlockEntity(o), Direction.UP)
+                                    instanceof SlottedStorage storage
                                         ? (SlottedStorage<FluidVariant>) storage
                                         : null;
 

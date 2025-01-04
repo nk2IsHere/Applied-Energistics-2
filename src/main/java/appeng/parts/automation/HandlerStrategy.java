@@ -55,7 +55,6 @@ public abstract class HandlerStrategy<C, S> {
 
         @Override
         public long insert(Storage<ItemVariant> handler, AEKey what, long amount, Actionable mode) {
-            System.out.println("HandlerStrategy.insert (items) " + what + " " + amount + " " + mode);
             if (what instanceof AEItemKey itemKey) {
                 var stack = itemKey.toStack(Ints.saturatedCast(amount));
                 try (var tx = Transaction.openOuter()) {

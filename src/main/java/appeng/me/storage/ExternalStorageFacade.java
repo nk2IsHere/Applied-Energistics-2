@@ -51,7 +51,6 @@ public abstract class ExternalStorageFacade implements MEStorage {
     @Override
     public long insert(AEKey what, long amount, Actionable mode, IActionSource source) {
         var inserted = insertExternal(what, Ints.saturatedCast(amount), mode);
-        System.out.println("ExternalStorageFacade.insert " + what + " " + amount + " " + mode + " " + inserted);
         if (inserted > 0 && mode == Actionable.MODULATE) {
             if (this.changeListener != null) {
                 this.changeListener.run();
@@ -63,7 +62,6 @@ public abstract class ExternalStorageFacade implements MEStorage {
     @Override
     public long extract(AEKey what, long amount, Actionable mode, IActionSource source) {
         var extracted = extractExternal(what, Ints.saturatedCast(amount), mode);
-        System.out.println("ExternalStorageFacade.extract " + what + " " + amount + " " + mode + " " + extracted);
         if (extracted > 0 && mode == Actionable.MODULATE) {
             if (this.changeListener != null) {
                 this.changeListener.run();
@@ -336,7 +334,6 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         @Override
         protected int insertExternal(AEKey what, int amount, Actionable mode) {
-            System.out.println("FluidHandlerFacade.insertExternal " + what + " " + amount + " " + mode);
             if (!(what instanceof AEFluidKey fluidKey)) {
                 return 0;
             }
