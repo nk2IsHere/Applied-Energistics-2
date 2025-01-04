@@ -1,17 +1,18 @@
 package appeng.helpers.externalstorage;
 
-import appeng.api.behaviors.GenericInternalInventory;
-import appeng.api.stacks.AEKeyType;
-import appeng.api.stacks.GenericStack;
-import appeng.util.IVariantConversion;
-import net.fabricmc.fabric.api.transfer.v1.storage.*;
-import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+
+import net.fabricmc.fabric.api.transfer.v1.storage.*;
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+
+import appeng.api.behaviors.GenericInternalInventory;
+import appeng.api.stacks.AEKeyType;
+import appeng.api.stacks.GenericStack;
+import appeng.util.IVariantConversion;
 
 /**
  * Adapts a {@link GenericStackInv} as {@link net.fabricmc.fabric.api.transfer.v1.storage.Storage} of the appropriate
@@ -150,7 +151,7 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Slo
             long actuallyExtracted = Math.min(getAmount(), maxAmount);
 
             if (actuallyExtracted > 0) {
-//                inv.updateSnapshots(slotIndex, transaction);
+                inv.updateSnapshots(slotIndex, transaction);
                 var amount = getAmount() - actuallyExtracted;
                 inv.beginBatch();
                 if (amount <= 0) {
@@ -174,7 +175,7 @@ public class GenericStackInvStorage<V extends TransferVariant<?>> implements Slo
                 long inserted = Math.min(maxAmount, inv.getMaxAmount(key) - getAmount());
 
                 if (inserted > 0) {
-//                    inv.updateSnapshots(slotIndex, transaction);
+                    inv.updateSnapshots(slotIndex, transaction);
                     inv.beginBatch();
                     inv.setStack(slotIndex, new GenericStack(key, getAmount() + inserted));
                     inv.endBatchSuppressed();

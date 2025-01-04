@@ -1,5 +1,6 @@
 package appeng.api.behaviors;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,4 +102,9 @@ public interface GenericInternalInventory {
      * Send a change notification manually, for example because the automatic notification was suppressed.
      */
     void onChange();
+
+    /**
+     * Fabric only: call this before modifying a slot as part of a transaction.
+     */
+    void updateSnapshots(int slot, TransactionContext transaction);
 }

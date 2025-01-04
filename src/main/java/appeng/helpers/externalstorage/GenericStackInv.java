@@ -23,15 +23,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import appeng.api.stacks.*;
+import appeng.api.storage.AEKeySlotFilter;
+import appeng.core.definitions.AEItems;
 import com.google.common.base.Preconditions;
 
+import net.minecraft.core.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.HolderLookup;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
 
 import it.unimi.dsi.fastutil.objects.Reference2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2LongMap;
@@ -40,14 +46,14 @@ import appeng.api.behaviors.GenericInternalInventory;
 import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.stacks.*;
-import appeng.api.storage.AEKeySlotFilter;
+import appeng.api.storage.AEKeyFilter;
 import appeng.api.storage.MEStorage;
 import appeng.core.AELog;
 import appeng.util.ConfigMenuInventory;
 
 public class GenericStackInv implements MEStorage, GenericInternalInventory {
     protected final GenericStack[] stacks;
+    private final Participant[] participants;
     private final Runnable listener;
     private boolean suppressOnChange;
     private boolean onChangeSuppressed;
@@ -82,6 +88,7 @@ public class GenericStackInv implements MEStorage, GenericInternalInventory {
     public GenericStackInv(Set<AEKeyType> supportedKeyTypes, @Nullable Runnable listener, Mode mode, int size) {
         this.supportedKeyTypes = Set.copyOf(Objects.requireNonNull(supportedKeyTypes, "supportedKeyTypes"));
         this.stacks = new GenericStack[size];
+        this.participants = new Participant[size];
         this.listener = listener;
         this.mode = mode;
     }
@@ -198,8 +205,8 @@ public class GenericStackInv implements MEStorage, GenericInternalInventory {
                 var reallyExtracted = Math.max(0, currentAmount - getAmount(slot));
                 if (reallyExtracted != canExtract) {
                     AELog.warn(
-                            "GenericStackInv simulation/modulation extraction mismatch: canExtract=%d, reallyExtracted=%d",
-                            canExtract, reallyExtracted);
+                        "GenericStackInv simulation/modulation extraction mismatch: canExtract=%d, reallyExtracted=%d",
+                        canExtract, reallyExtracted);
                     canExtract = reallyExtracted;
                 }
             }
@@ -462,5 +469,46 @@ public class GenericStackInv implements MEStorage, GenericInternalInventory {
      */
     public void setDescription(Component description) {
         this.description = description;
+    }
+
+    @Override
+    public void updateSnapshots(int slot, TransactionContext transaction) {
+        if (participants[slot] == null) {
+            participants[slot] = new Participant(slot);
+        }
+        participants[slot].updateSnapshots(transaction);
+    }
+
+    private class Participant extends SnapshotParticipant<GenericStack> {
+        // SnapshotParticipant doesn't allow null snapshots so we use this marker stack
+        private static final GenericStack EMPTY_STACK = new GenericStack(AEItemKey.of(AEItems.MISSING_CONTENT), 0);
+
+        private final int slotIndex;
+
+        private Participant(int slotIndex) {
+            this.slotIndex = slotIndex;
+        }
+
+        @Override
+        protected GenericStack createSnapshot() {
+            var stack = getStack(slotIndex);
+            return stack != null ? stack : EMPTY_STACK;
+        }
+
+        @Override
+        protected void readSnapshot(GenericStack snapshot) {
+            beginBatch();
+            if (snapshot == EMPTY_STACK) {
+                setStack(slotIndex, null);
+            } else {
+                setStack(slotIndex, snapshot);
+            }
+            endBatchSuppressed();
+        }
+
+        @Override
+        protected void onFinalCommit() {
+            onChange();
+        }
     }
 }
