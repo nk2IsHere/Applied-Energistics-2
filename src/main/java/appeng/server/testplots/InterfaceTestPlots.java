@@ -1,5 +1,6 @@
 package appeng.server.testplots;
 
+import appeng.api.stacks.AEFluidKey;
 import appeng.api.storage.MEStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -42,6 +43,9 @@ public class InterfaceTestPlots {
         builder.blockEntity(o, AEBlocks.INTERFACE, iface -> {
             // Set slot 0 to sticks
             iface.getInterfaceLogic().getConfig().setStack(0, new GenericStack(AEItemKey.of(Items.STICK), 1));
+
+            // Set slot 2 to water
+            iface.getInterfaceLogic().getConfig().setStack(2, new GenericStack(AEFluidKey.of(Fluids.WATER), 1));
         });
         builder.hopper(o.above(), Direction.DOWN, Items.BRICK);
         builder.test(helper -> {
@@ -57,7 +61,7 @@ public class InterfaceTestPlots {
                         try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
                             helper.check(
-                                    slot0.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 0, transaction) == 0,
+                                    slot0.insert(ItemVariant.of(Items.STICK), 0, transaction) == 0,
                                     "stick should not be insertable in slot 0");
                             transaction.abort();
                         }
@@ -65,15 +69,15 @@ public class InterfaceTestPlots {
                         try (var transaction = Transaction.openOuter()) {
                             var slot1 = itemCap.getSlot(1);
                             helper.check(
-                                    slot1.insert(ItemVariant.of(Items.STICK.getDefaultInstance()), 1, transaction) == 1,
-                                    "stick should be insertable in slot 1");
+                                    slot1.insert(ItemVariant.of(Items.STICK), 1, transaction) == 0,
+                                    "stick should not be insertable in slot 1");
                             transaction.commit();
                         }
 
                         try (var transaction = Transaction.openOuter()) {
                             var slot0 = itemCap.getSlot(0);
                             helper.check(
-                                    slot0.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1,
+                                    slot0.insert(ItemVariant.of(Items.BRICK), 1,
                                             transaction) == 0,
                                     "bricks should not be insertable in slot 0");
                             transaction.abort();
@@ -82,7 +86,7 @@ public class InterfaceTestPlots {
                         try (var transaction = Transaction.openOuter()) {
                             var slot1 = itemCap.getSlot(1);
                             helper.check(
-                                    slot1.insert(ItemVariant.of(Blocks.BRICKS.asItem().getDefaultInstance()), 1,
+                                    slot1.insert(ItemVariant.of(Items.BRICK), 1,
                                             transaction) == 1,
                                     "bricks should be insertable in slot 1");
                             transaction.commit();
@@ -96,16 +100,16 @@ public class InterfaceTestPlots {
                         helper.check(fluidCap != null, "fluid cap should not be null");
 
                         try (var transaction = Transaction.openOuter()) {
-                            var slot0 = fluidCap.getSlot(0);
-                            helper.check(slot0.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 0,
-                                    "water should not be insertable in slot 0");
+                            var slot1 = fluidCap.getSlot(1);
+                            helper.check(slot1.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 0,
+                                    "water should not be insertable in slot 1");
                             transaction.abort();
                         }
 
                         try (var transaction = Transaction.openOuter()) {
-                            var slot1 = fluidCap.getSlot(1);
-                            helper.check(slot1.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 1,
-                                    "water should be insertable in slot 1");
+                            var slot2 = fluidCap.getSlot(2);
+                            helper.check(slot2.insert(FluidVariant.of(Fluids.WATER), 1, transaction) == 1,
+                                    "water should be insertable in slot 2");
                             transaction.commit();
                         }
                     })
