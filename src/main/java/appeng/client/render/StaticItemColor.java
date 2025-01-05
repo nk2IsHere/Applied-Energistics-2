@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 
 import appeng.api.util.AEColor;
 
+import static appeng.util.ColorUtil.toARGB;
+
 /**
  * Returns the shades of a single AE color for tint indices 0, 1, and 2.
  */
@@ -36,7 +38,7 @@ public class StaticItemColor implements ItemColor {
 
     @Override
     public int getColor(ItemStack stack, int tintIndex) {
-        return this.color.getVariantByTintIndex(tintIndex);
+        return toARGB(this.color.getVariantByTintIndex(tintIndex));
     }
 
 }

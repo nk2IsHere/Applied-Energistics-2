@@ -118,20 +118,20 @@ public class PartModelsHelper {
             return;
         }
 
-        if (value instanceof ResourceLocation) {
-            locations.add((ResourceLocation) value);
-        } else if (value instanceof IPartModel) {
-            locations.addAll(((IPartModel) value).getModels());
+        if (value instanceof ResourceLocation resourceLocation) {
+            locations.add(resourceLocation);
+        } else if (value instanceof IPartModel partModel) {
+            locations.addAll(partModel.getModels());
         } else if (value instanceof Collection<?> values) {
             // Check that each object is an IPartModel
             for (Object candidate : values) {
-                if (!(candidate instanceof IPartModel)) {
+                if (!(candidate instanceof IPartModel partModel)) {
                     AELog.error("List of locations obtained from {} contains a non resource location: {}", source,
                             candidate);
                     continue;
                 }
 
-                locations.addAll(((IPartModel) candidate).getModels());
+                locations.addAll(partModel.getModels());
             }
         }
     }

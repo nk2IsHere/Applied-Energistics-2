@@ -33,13 +33,12 @@ import appeng.client.render.tesr.CrankRenderer;
 public class InitAdditionalModels {
 
     public static void init() {
-        ModelLoadingPlugin.register((pluginContext) -> pluginContext.addModels(MolecularAssemblerRenderer.LIGHTS_MODEL,
-                CrankRenderer.BASE_MODEL, CrankRenderer.HANDLE_MODEL));
-
         ModelLoadingPlugin.register((pluginContext) -> {
+            pluginContext.addModels(MolecularAssemblerRenderer.LIGHTS_MODEL,
+                CrankRenderer.BASE_MODEL, CrankRenderer.HANDLE_MODEL);
+
             PartModelsInternal.freeze();
             pluginContext.addModels(PartModelsInternal.getModels());
         });
     }
-
 }
