@@ -19,7 +19,7 @@
 plugins {
     id "fabric-loom"
     id "maven-publish"
-    id "com.diffplug.spotless"
+//    id "com.diffplug.spotless"
     id "io.github.juuxel.loom-quiltflower"
     id "io.github.goooler.shadow"
     id "de.undercouch.download"
@@ -498,32 +498,32 @@ publishing {
 
 /////////////
 // Spotless
-spotless {
-
-    java {
-        target 'src/*/java/appeng/**/*.java'
-
-        endWithNewline()
-        indentWithSpaces()
-        removeUnusedImports()
-        toggleOffOn()
-        eclipse().configFile 'codeformat/codeformat.xml'
-        importOrderFile 'codeformat/ae2.importorder'
-
-        // courtesy of diffplug/spotless#240
-        // https://github.com/diffplug/spotless/issues/240#issuecomment-385206606
-        custom 'noWildcardImports', {
-            it
-        }
-        bumpThisNumberIfACustomStepChanges(2)
-    }
-
-    format 'json', {
-        target 'src/*/resources/**/*.json'
-        targetExclude 'src/generated/resources/**'
-        prettier().config(['parser': 'json'])
-    }
-}
+//spotless {
+//
+//    java {
+//        target 'src/*/java/appeng/**/*.java'
+//
+//        endWithNewline()
+//        indentWithSpaces()
+//        removeUnusedImports()
+//        toggleOffOn()
+//        eclipse().configFile 'codeformat/codeformat.xml'
+//        importOrderFile 'codeformat/ae2.importorder'
+//
+//        // courtesy of diffplug/spotless#240
+//        // https://github.com/diffplug/spotless/issues/240#issuecomment-385206606
+//        custom 'noWildcardImports', {
+//            it
+//        }
+//        bumpThisNumberIfACustomStepChanges(2)
+//    }
+//
+//    format 'json', {
+//        target 'src/*/resources/**/*.json'
+//        targetExclude 'src/generated/resources/**'
+//        prettier().config(['parser': 'json'])
+//    }
+//}
 
 ////////////////
 // Crowdin

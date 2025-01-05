@@ -1,7 +1,5 @@
 package appeng.api.behaviors;
 
-import com.google.common.primitives.Ints;
-
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage;
