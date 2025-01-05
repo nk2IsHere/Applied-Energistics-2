@@ -90,9 +90,9 @@ public class ItemTagsProvider extends FabricTagProvider.ItemTagProvider implemen
         getOrCreateTagBuilder(ConventionTags.ALL_FLUIX)
                 .add(AEItems.FLUIX_CRYSTAL.asItem());
         getOrCreateTagBuilder(ConventionTags.ALL_NETHER_QUARTZ)
-                .addOptionalTag(ConventionTags.NETHER_QUARTZ);
+                .forceAddTag(ConventionTags.NETHER_QUARTZ);
         getOrCreateTagBuilder(ConventionTags.ALL_QUARTZ)
-                .addOptionalTag(ConventionTags.NETHER_QUARTZ)
+                .forceAddTag(ConventionTags.NETHER_QUARTZ)
                 .addTag(ConventionTags.CERTUS_QUARTZ)
                 .add(AEItems.CERTUS_QUARTZ_CRYSTAL_CHARGED.asItem());
 
