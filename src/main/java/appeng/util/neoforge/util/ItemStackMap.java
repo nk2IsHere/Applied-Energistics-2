@@ -1,7 +1,7 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+/*
+ * Copyright (c) NeoForged and contributors
+ * SPDX-License-Identifier: LGPL-2.1-only
+ */
 
 package appeng.util.neoforge.util;
 
@@ -27,10 +27,10 @@ public class ItemStackMap {
     }
 
     public static <V> Map<ItemStack, V> createTypeAndTagLinkedMap() {
-        return new Object2ObjectLinkedOpenCustomHashMap(TYPE_AND_TAG);
+        return new Object2ObjectLinkedOpenCustomHashMap<>(TYPE_AND_TAG);
     }
 
     public static <V> Map<ItemStack, V> createTypeAndTagMap() {
-        return new Object2ObjectOpenCustomHashMap(TYPE_AND_TAG);
+        return new Object2ObjectOpenCustomHashMap<>(TYPE_AND_TAG);
     }
 }

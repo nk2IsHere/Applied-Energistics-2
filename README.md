@@ -181,7 +181,7 @@ This might not be possible for some languages. Should this be the case, please c
 
 ### Final Note
 
-If you have have issues localizing something feel free to contact us on IRC, at #AppliedEnergistics on Esper.net
+If you have issues localizing something feel free to contact us on IRC, at #AppliedEnergistics on Esper.net
 
 Thanks to everyone helping out to improve localization of AE2.
 
@@ -194,3 +194,4 @@ Thanks to
 * AlgorithmX2 for AppliedEnergistics2
 * [Ridanisaurus Rid](https://github.com/Ridanisaurus/) for the new 2020 textures
 * all [contributors](https://github.com/AppliedEnergistics/Applied-Energistics-2/graphs/contributors)
+* NeoForged and contributors for NeoForge
