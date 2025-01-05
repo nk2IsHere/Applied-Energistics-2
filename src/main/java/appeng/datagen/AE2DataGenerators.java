@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
+import appeng.util.neoforge.data.DatapackBuiltinEntriesProvider;
 
 import appeng.core.definitions.AEDamageTypes;
 import appeng.datagen.providers.advancements.AdvancementGenerator;

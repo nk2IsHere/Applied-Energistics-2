@@ -18,10 +18,10 @@
 
 package appeng.client.gui.implementations;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import appeng.client.gui.Icon;
 import appeng.client.gui.WidgetContainer;
@@ -55,7 +55,7 @@ public final class AESubScreen {
 
     public static void goBack() {
         ServerboundPacket message = SwitchGuisPacket.returnToParentMenu();
-        PacketDistributor.sendToServer(message);
+        ClientPlayNetworking.send(message);
     }
 
 }

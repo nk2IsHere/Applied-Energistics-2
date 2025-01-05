@@ -28,7 +28,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.util.ItemStackMap;
+import appeng.util.neoforge.util.ItemStackMap;
 
 import appeng.client.render.cablebus.FacadeBuilder;
 import appeng.items.parts.FacadeItem;

@@ -47,7 +47,7 @@ import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import appeng.util.neoforge.NeoForgeStreamCodecs;
 
 import appeng.core.AppEng;
 import appeng.items.tools.powered.EntropyManipulatorItem;

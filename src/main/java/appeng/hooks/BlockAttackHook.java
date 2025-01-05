@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import appeng.api.parts.IPartHost;
 import appeng.core.network.ServerboundPacket;
@@ -94,14 +94,14 @@ public final class BlockAttackHook {
 
             if (activated) {
                 ServerboundPacket message = new PartLeftClickPacket(hitResult, alternateUseMode);
-                PacketDistributor.sendToServer(message);
+                ClientPlayNetworking.send(message);
                 // Do not perform the default action (of spawning break particles and breaking the block)
                 return true;
             }
         } else if (p.facade != null) {
             if (p.facade.onClicked(player, localPos)) {
                 ServerboundPacket message = new PartLeftClickPacket(hitResult, false);
-                PacketDistributor.sendToServer(message);
+                ClientPlayNetworking.send(message);
                 // Do not perform the default action (of spawning break particles and breaking the block)
                 return true;
             }

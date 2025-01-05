@@ -34,7 +34,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
@@ -365,7 +365,7 @@ public class MEStorageMenu extends AEBaseMenu
     public final void handleInteraction(long serial, InventoryAction action) {
         if (isClientSide()) {
             ServerboundPacket message = new MEInteractionPacket(containerId, serial, action);
-            PacketDistributor.sendToServer(message);
+            ClientPlayNetworking.send(message);
             return;
         }
 

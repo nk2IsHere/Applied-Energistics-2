@@ -50,7 +50,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import appeng.api.behaviors.ContainerItemStrategies;
 import appeng.api.behaviors.EmptyingAction;
@@ -655,7 +655,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends AbstractContain
             }
 
             final InventoryActionPacket p = new InventoryActionPacket(action, slotIdx, 0);
-            PacketDistributor.sendToServer(p);
+            ClientPlayNetworking.send(p);
 
             return;
         }
@@ -663,7 +663,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends AbstractContain
         if (slot != null && InputConstants.isKeyDown(getMinecraft().getWindow().getWindow(), GLFW.GLFW_KEY_SPACE)) {
             int slotNum = slot.index;
             final InventoryActionPacket p = new InventoryActionPacket(InventoryAction.MOVE_REGION, slotNum, 0);
-            PacketDistributor.sendToServer(p);
+            ClientPlayNetworking.send(p);
             return;
         }
 
@@ -741,7 +741,7 @@ public abstract class AEBaseScreen<T extends AEBaseMenu> extends AbstractContain
                             if (s.slot == j
                                     && s.container == this.menu.getPlayerInventory()) {
                                 ServerboundPacket message = new SwapSlotsPacket(s.index, theSlot.index);
-                                PacketDistributor.sendToServer(message);
+                                ClientPlayNetworking.send(message);
                                 return true;
                             }
                         }

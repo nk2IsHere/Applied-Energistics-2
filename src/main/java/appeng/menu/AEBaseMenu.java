@@ -41,7 +41,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import it.unimi.dsi.fastutil.shorts.ShortOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.ShortSet;
@@ -940,7 +940,7 @@ public abstract class AEBaseMenu extends AbstractContainerMenu {
         }
 
         ServerboundPacket message = new GuiActionPacket(containerId, clientAction.name, jsonPayload);
-        PacketDistributor.sendToServer(message);
+        ClientPlayNetworking.send(message);
     }
 
     /**

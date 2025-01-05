@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package net.neoforged.neoforge.common.util;
+package appeng.util.neoforge.util;
 
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenCustomHashMap;

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-only
  */
 
-package net.neoforged.neoforge.network.codec;
+package appeng.util.neoforge;
 
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
@@ -11,7 +11,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.ChunkPos;
-import net.neoforged.neoforge.common.util.Lazy;
+import appeng.util.neoforge.util.Lazy;
 
 public final class NeoForgeStreamCodecs {
     public static final StreamCodec<FriendlyByteBuf, byte[]> UNBOUNDED_BYTE_ARRAY = new StreamCodec<>() {

@@ -30,7 +30,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
@@ -158,7 +158,7 @@ public class CraftingTermMenu extends MEStorageMenu implements ICraftingGridMenu
         Preconditions.checkState(isClientSide());
         CraftingMatrixSlot slot = craftingSlots[0];
         var p = new InventoryActionPacket(InventoryAction.MOVE_REGION, slot.index, 0);
-        PacketDistributor.sendToServer(p);
+        ClientPlayNetworking.send(p);
     }
 
     @Override

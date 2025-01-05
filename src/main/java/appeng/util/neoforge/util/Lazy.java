@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-only
  */
 
-package net.neoforged.neoforge.common.util;
+package appeng.util.neoforge.util;
 
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Nullable;

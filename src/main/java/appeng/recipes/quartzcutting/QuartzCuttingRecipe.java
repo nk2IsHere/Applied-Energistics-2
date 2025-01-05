@@ -15,7 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.RecipeMatcher;
+import appeng.util.neoforge.util.RecipeMatcher;
 
 import appeng.core.AppEng;
 import appeng.datagen.providers.tags.ConventionTags;

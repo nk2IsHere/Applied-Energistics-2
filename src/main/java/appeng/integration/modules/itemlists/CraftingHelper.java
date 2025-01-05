@@ -9,7 +9,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import appeng.api.stacks.AEItemKey;
 import appeng.core.AELog;
@@ -41,7 +41,7 @@ public final class CraftingHelper {
         }
 
         ServerboundPacket message = new FillCraftingGridFromRecipePacket(recipeId, templateItems, craftMissing);
-        PacketDistributor.sendToServer(message);
+        ClientPlayNetworking.send(message);
     }
 
     private static NonNullList<ItemStack> findGoodTemplateItems(Recipe<?> recipe, MEStorageMenu menu) {

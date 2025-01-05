@@ -32,7 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import appeng.util.neoforge.NeoForgeStreamCodecs;
 
 import appeng.core.AppEng;
 import appeng.recipes.AERecipeTypes;

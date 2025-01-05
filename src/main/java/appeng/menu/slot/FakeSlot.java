@@ -20,7 +20,7 @@ package appeng.menu.slot;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 import appeng.api.config.Actionable;
 import appeng.api.inventories.InternalInventory;
@@ -76,7 +76,7 @@ public class FakeSlot extends AppEngSlot {
     public void setFilterTo(ItemStack itemStack) {
         ServerboundPacket message = new InventoryActionPacket(InventoryAction.SET_FILTER,
                 index, itemStack);
-        PacketDistributor.sendToServer(message);
+        ClientPlayNetworking.send(message);
     }
 
     public void increase(ItemStack is) {

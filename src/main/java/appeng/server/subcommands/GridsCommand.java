@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import appeng.core.network.ServerboundPacket;
 import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.brigadier.LiteralMessage;
@@ -20,6 +21,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -37,7 +39,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import appeng.api.networking.GridHelper;
 import appeng.core.network.clientbound.ExportedGridContent;
@@ -160,7 +161,7 @@ public class GridsCommand implements ISubCommand {
 
         if (source.isPlayer()) {
             var player = source.getPlayerOrException();
-            PacketDistributor.sendToPlayer(player,
+            ServerPlayNetworking.send(player,
                     new ExportedGridContent(baseSerialNumber, ExportedGridContent.ContentType.FIRST_CHUNK,
                             new byte[0]));
 
@@ -243,7 +244,7 @@ public class GridsCommand implements ISubCommand {
             Preconditions.checkState(!closed, "stream already closed");
             bout.write(b);
             if (bout.size() > FLUSH_AFTER) {
-                PacketDistributor.sendToPlayer(player,
+                ServerPlayNetworking.send(player,
                         new ExportedGridContent(baseSerialNumber, ExportedGridContent.ContentType.CHUNK,
                                 bout.toByteArray()));
                 bout.reset();
@@ -255,7 +256,7 @@ public class GridsCommand implements ISubCommand {
             Preconditions.checkState(!closed, "stream already closed");
             bout.write(b, off, len);
             if (bout.size() > FLUSH_AFTER) {
-                PacketDistributor.sendToPlayer(player,
+                ServerPlayNetworking.send(player,
                         new ExportedGridContent(baseSerialNumber, ExportedGridContent.ContentType.CHUNK,
                                 bout.toByteArray()));
                 bout.reset();
@@ -266,7 +267,7 @@ public class GridsCommand implements ISubCommand {
         public void close() {
             if (!closed) {
                 closed = true;
-                PacketDistributor.sendToPlayer(player,
+                ServerPlayNetworking.send(player,
                         new ExportedGridContent(baseSerialNumber, ExportedGridContent.ContentType.LAST_CHUNK,
                                 bout.toByteArray()));
                 bout.reset();

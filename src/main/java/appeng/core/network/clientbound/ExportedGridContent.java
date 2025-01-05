@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import appeng.util.neoforge.NeoForgeStreamCodecs;
 
 import appeng.core.network.ClientboundPacket;
 import appeng.core.network.CustomAppEngPayload;
