@@ -11,6 +11,7 @@ based on v19.1.2-beta for v1.21.1 NeoForge
 i wanted to play AE2 on my tech modpack too hard :3. it's not official. future versions will be released whenever i have an urge to play minecraft again (prs are welcome).
 its half-broken, expect things breaking left and right. ill be fixing them as i play.
 
+[Find latest releases of Franken-AE2 here](https://github.com/nk2IsHere/Franken-AE2/releases/tag/fabric%2Fv19.1.2-franken)
 ![1.21.1 Fabric](https://raw.githubusercontent.com/nk2IsHere/Franken-AE2/refs/heads/fabric/1.21.1/docs/showcase.png)
 
 ## Table of Contents
