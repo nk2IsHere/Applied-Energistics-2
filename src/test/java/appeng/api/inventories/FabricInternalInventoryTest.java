@@ -74,7 +74,7 @@ class FabricInternalInventoryTest {
     }
 
     @Test
-    void testAbortedTransactionWithChangesToStackSize64() {
+    void  testAbortedTransactionWithChangesToStackSize64() {
         try (var tx = Transaction.openOuter()) {
             assertEquals(1, storage.extract(ItemVariant.of(stackable), 1, tx));
         }

@@ -24,14 +24,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.mockito.Mockito;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.repository.ServerPacksSource;
+import org.mockito.Mockito;
+
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.PathPackResources;
+import net.minecraft.server.packs.VanillaPackResourcesBuilder;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.util.Unit;
 
@@ -46,17 +47,17 @@ public final class MockResourceManager {
 
     public static ReloadableResourceManager create() {
 
-        var testResourceBasePath = AppEng.class.getResource("/META-INF/neoforge.mods.toml");
+        var testResourceBasePath = AppEng.class.getResource("/ae2.mixins.json");
         if (testResourceBasePath == null) {
             throw new IllegalStateException("Couldn't find root of assets");
         }
 
         Path assetRootPath;
         try {
-            assetRootPath = Paths.get(testResourceBasePath.toURI()).getParent().getParent();
+            assetRootPath = Paths.get(testResourceBasePath.toURI()).getParent();
         } catch (Exception e) {
             throw new IllegalStateException(
-                    "Failed to convert asset root to a path on disk. (" + testResourceBasePath + ")");
+                "Failed to convert asset root to a path on disk. (" + testResourceBasePath + ")");
         }
 
         var packResources = new PathPackResources(

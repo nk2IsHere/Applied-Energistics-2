@@ -22,16 +22,17 @@ import java.util.Arrays;
 
 import com.google.common.base.Preconditions;
 
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.component.ItemContainerContents;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.HolderLookup;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 
 import appeng.api.inventories.BaseInternalInventory;
 import appeng.util.inv.filter.IAEItemFilter;
@@ -85,6 +86,16 @@ public class AppEngInternalInventory extends BaseInternalInventory {
     }
 
     private void notifyContentsChanged(int slot) {
+        if (Transaction.isOpen()) {
+            // Notifications during transactions are handled in the adapter
+            return;
+        }
+
+        onContentsChanged(slot);
+    }
+
+    @Override
+    public void sendChangeNotification(int slot) {
         onContentsChanged(slot);
     }
 
