@@ -110,7 +110,8 @@ public class NavigationTree {
         // Construct the icon if set
         var icon = ItemStack.EMPTY;
         if (navigationEntry.iconItemId() != null) {
-            var iconItem = BuiltInRegistries.ITEM.getHolder(navigationEntry.iconItemId()).orElseThrow();
+            var iconItem = BuiltInRegistries.ITEM.getHolder(navigationEntry.iconItemId())
+                .orElseThrow(() -> new IllegalArgumentException("Unknown item " + navigationEntry.iconItemId() + " for icon"));
 
             if (navigationEntry.iconComponents() != null) {
                 var patch = DataComponentPatch.CODEC.parse(JavaOps.INSTANCE, navigationEntry.iconComponents())

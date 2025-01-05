@@ -5,9 +5,19 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import net.minecraft.world.level.validation.DirectoryValidator;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +27,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
+import net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LoadingOverlay;
@@ -33,7 +44,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.flag.FeatureFlagSet;
-import net.minecraft.world.level.validation.DirectoryValidator;
 
 import appeng.client.guidebook.compiler.PageCompiler;
 import appeng.client.guidebook.compiler.ParsedGuidePage;
@@ -70,11 +80,11 @@ public final class Guide implements PageCollection {
     private final String developmentSourceNamespace;
 
     private Guide(String defaultNamespace,
-            String folder,
-            @Nullable Path developmentSourceFolder,
-            @Nullable String developmentSourceNamespace,
-            Map<Class<?>, PageIndex> indices,
-            ExtensionCollection extensions) {
+                  String folder,
+                  @Nullable Path developmentSourceFolder,
+                  @Nullable String developmentSourceNamespace,
+                  Map<Class<?>, PageIndex> indices,
+                  ExtensionCollection extensions) {
         this.defaultNamespace = defaultNamespace;
         this.folder = folder;
         this.developmentSourceFolder = developmentSourceFolder;
@@ -102,10 +112,7 @@ public final class Guide implements PageCollection {
      * {@linkplain Builder#validateAllAtStartup validation} or the {@linkplain Builder#startupPage startup page}.
      */
     public static Builder builder(String defaultNamespace, String folder) {
-        return new Builder(defaultNamespace, folder)
-                .registerReloadListener(false)
-                .validateAllAtStartup(false)
-                .startupPage(null);
+        return new Builder(defaultNamespace, folder);
     }
 
     private static CompletableFuture<Minecraft> afterClientStart() {
@@ -142,32 +149,25 @@ public final class Guide implements PageCollection {
                     new ServerPacksSource(new DirectoryValidator(path -> false)),
                     new ModResourcePackCreator(PackType.SERVER_DATA));
             packRepository.reload();
-            packRepository.setSelected(packRepository.getAvailableIds());
+            packRepository.setSelected(ModResourcePackUtil.createDefaultDataConfiguration().dataPacks().getEnabled());
 
             var resourceManager = new MultiPackResourceManager(PackType.SERVER_DATA,
-                    packRepository.openAllSelected());
+                packRepository.openAllSelected());
 
             var worldgenLayer = RegistryDataLoader.load(
-                    resourceManager,
-                    layeredAccess.getAccessForLoading(RegistryLayer.WORLDGEN),
-                    RegistryDataLoader.WORLDGEN_REGISTRIES);
+                resourceManager,
+                layeredAccess.getAccessForLoading(RegistryLayer.WORLDGEN),
+                RegistryDataLoader.WORLDGEN_REGISTRIES);
             layeredAccess = layeredAccess.replaceFrom(RegistryLayer.WORLDGEN, worldgenLayer);
 
             var stuff = ReloadableServerResources.loadResources(
-                    resourceManager,
-                    layeredAccess,
-                    FeatureFlagSet.of(),
-                    Commands.CommandSelection.ALL,
-                    0,
-                    Util.backgroundExecutor(),
-                    command -> {
-                        try {
-                            command.run();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            throw e;
-                        }
-                    }).get();
+                resourceManager,
+                layeredAccess,
+                FeatureFlagSet.of(),
+                Commands.CommandSelection.ALL,
+                0,
+                Util.backgroundExecutor(),
+                Runnable::run).get();
             stuff.updateRegistryTags();
             Platform.fallbackClientRecipeManager = stuff.getRecipeManager();
             Platform.fallbackClientRegistryAccess = layeredAccess.compositeAccess();
@@ -271,7 +271,7 @@ public final class Guide implements PageCollection {
     }
 
     private class ReloadListener extends SimplePreparableReloadListener<Map<ResourceLocation, ParsedGuidePage>>
-            implements IdentifiableResourceReloadListener {
+        implements IdentifiableResourceReloadListener {
         private final ResourceLocation id;
 
         public ReloadListener(ResourceLocation id) {
@@ -285,12 +285,12 @@ public final class Guide implements PageCollection {
 
         @Override
         protected Map<ResourceLocation, ParsedGuidePage> prepare(ResourceManager resourceManager,
-                ProfilerFiller profiler) {
+                                                                 ProfilerFiller profiler) {
             profiler.startTick();
             Map<ResourceLocation, ParsedGuidePage> pages = new HashMap<>();
 
             var resources = resourceManager.listResources(folder,
-                    location -> location.getPath().endsWith(".md"));
+                location -> location.getPath().endsWith(".md"));
 
             for (var entry : resources.entrySet()) {
                 var pageId = ResourceLocation.fromNamespaceAndPath(
@@ -311,7 +311,7 @@ public final class Guide implements PageCollection {
 
         @Override
         protected void apply(Map<ResourceLocation, ParsedGuidePage> pages, ResourceManager resourceManager,
-                ProfilerFiller profiler) {
+                             ProfilerFiller profiler) {
             profiler.startTick();
             Guide.this.pages = pages;
             profiler.push("indices");
@@ -343,7 +343,7 @@ public final class Guide implements PageCollection {
                 applyChanges(changes);
             }
         });
-        Runtime.getRuntime().addShutdownHook(new Thread(watcher::close));
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> watcher.close());
         for (var page : watcher.loadAll()) {
             developmentPages.put(page.getId(), page);
         }
@@ -356,7 +356,7 @@ public final class Guide implements PageCollection {
             var pageId = change.pageId();
 
             var oldPage = change.newPage() != null ? developmentPages.put(pageId, change.newPage())
-                    : developmentPages.remove(pageId);
+                : developmentPages.remove(pageId);
             changes.set(i, new GuidePageChange(pageId, oldPage, change.newPage()));
         }
 
@@ -408,7 +408,7 @@ public final class Guide implements PageCollection {
         private boolean watchDevelopmentSources = true;
         private boolean disableDefaultExtensions = false;
         private final Set<ExtensionPoint<?>> disableDefaultsForExtensionPoints = Collections
-                .newSetFromMap(new IdentityHashMap<>());
+            .newSetFromMap(new IdentityHashMap<>());
 
         private Builder(String defaultNamespace, String folder) {
             this.defaultNamespace = Objects.requireNonNull(defaultNamespace, "defaultNamespace");
@@ -570,7 +570,7 @@ public final class Guide implements PageCollection {
             var extensionCollection = buildExtensions();
 
             var guide = new Guide(defaultNamespace, folder, developmentSourceFolder, developmentSourceNamespace,
-                    indices, extensionCollection);
+                indices, extensionCollection);
 
             if (registerReloadListener) {
                 guide.registerReloadListener();
@@ -589,7 +589,7 @@ public final class Guide implements PageCollection {
                     reloadFuture = reloadFuture.thenRun(() -> {
                         var client = Minecraft.getInstance();
                         client.setScreen(GuideScreen.openNew(guide, PageAnchor.page(startupPage),
-                                GlobalInMemoryHistory.INSTANCE));
+                            GlobalInMemoryHistory.INSTANCE));
                     });
                 }
                 reloadFuture.whenComplete((unused, throwable) -> {
