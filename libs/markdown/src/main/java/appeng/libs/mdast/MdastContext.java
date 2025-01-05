@@ -26,7 +26,7 @@ public interface MdastContext {
 
     List<MdAstNode> getStack();
 
-    List<MdastCompiler.TokenStackEntry> getTokenStack();
+    List<TokenStackEntry> getTokenStack();
 
     void buffer();
 
