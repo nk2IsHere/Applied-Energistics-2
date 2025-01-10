@@ -20,8 +20,6 @@ import dev.architectury.fluid.FluidStack;
 import appeng.util.BootstrapMinecraft;
 import appeng.util.CodecTestUtil;
 
-// TODO: Fix these tests
-@Disabled
 @BootstrapMinecraft
 class AEKeyTest {
     private RegistryAccess registries = RegistryAccess.EMPTY;

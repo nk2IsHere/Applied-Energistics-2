@@ -26,7 +26,7 @@ import appeng.core.AppEngBootstrap;
 
 public class BootstrapMinecraftExtension implements Extension, BeforeAllCallback, AfterAllCallback {
 
-    private static List<String> MOD_IDS_BLACKLIST = List.of("wthit_api", "error_notifier", "roughlyenoughitems");
+    private static final List<String> MOD_IDS_BLACKLIST = List.of("wthit_api");
 
     private static boolean modInitialized;
 
