@@ -10,7 +10,7 @@ public interface ServerboundPacket extends CustomAppEngPayload {
     Logger LOG = LoggerFactory.getLogger(ServerboundPacket.class);
 
     default void handleOnServer(MinecraftServer server, ServerPlayer player) {
-        LOG.info("Handling packet {} on server", this);
+        LOG.debug("Handling packet {} on server", this);
         server.execute(() -> handleOnServer(player));
     }
 

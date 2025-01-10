@@ -12,7 +12,7 @@ public interface ClientboundPacket extends CustomAppEngPayload {
 
     @Environment(EnvType.CLIENT)
     default void handleOnClient(Minecraft client, Player player) {
-        LOG.info("Handling packet {} on client", this);
+        LOG.debug("Handling packet {} on client", this);
         client.execute(() -> handleOnClient(player));
     }
 
