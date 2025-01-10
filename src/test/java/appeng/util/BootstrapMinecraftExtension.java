@@ -2,6 +2,7 @@ package appeng.util;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.google.common.io.MoreFiles;
@@ -24,6 +25,8 @@ import appeng.core.AEConfig;
 import appeng.core.AppEngBootstrap;
 
 public class BootstrapMinecraftExtension implements Extension, BeforeAllCallback, AfterAllCallback {
+
+    private static List<String> MOD_IDS_BLACKLIST = List.of("wthit_api", "error_notifier", "roughlyenoughitems");
 
     private static boolean modInitialized;
 
@@ -58,9 +61,11 @@ public class BootstrapMinecraftExtension implements Extension, BeforeAllCallback
         for (var container : entrypoints) {
             var modId = container.getProvider().getMetadata().getId();
             // Fix WTHIT API runtime protection messing our tests up
-            if (modId.equals("wthit_api")) {
+            if (MOD_IDS_BLACKLIST.contains(modId)) {
                 continue;
             }
+
+            System.out.println("Running " + name + " entrypoint for " + modId);
             invoker.accept(container.getEntrypoint());
         }
     }
