@@ -37,6 +37,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 
 import appeng.client.render.cablebus.FacadeBuilder;
 import appeng.items.parts.FacadeItem;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This model used the provided FacadeBuilder to "slice" the item quads for the facade provided.
@@ -106,7 +107,7 @@ public class FacadeBakedItemModel extends DelegateBakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
 }

@@ -20,12 +20,19 @@ package appeng.client.render.tesr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
+import appeng.client.render.DelegateBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -43,7 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import appeng.api.orientation.BlockOrientation;
 import appeng.blockentity.storage.MEChestBlockEntity;
 import appeng.client.render.BakedModelUnwrapper;
-import appeng.client.render.DelegateBakedModel;
 import appeng.client.render.model.DriveBakedModel;
 import appeng.core.definitions.AEBlocks;
 
@@ -101,8 +107,8 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<MEChestBloc
         // drive
         FaceRotatingModel rotatedModel = new FaceRotatingModel(cellModel, rotation);
         blockRenderer.tesselateBlock(level, rotatedModel, chest.getBlockState(), chest.getBlockPos(), poseStack, buffer,
-                false,
-                RandomSource.create(), 0L, combinedOverlay);
+            false,
+            RandomSource.create(), 0L, combinedOverlay);
 
         VertexConsumer ledBuffer = buffers.getBuffer(CellLedRenderer.RENDER_LAYER);
         CellLedRenderer.renderLed(chest, 0, ledBuffer, poseStack, partialTicks);
@@ -112,7 +118,7 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<MEChestBloc
 
     private DriveBakedModel getDriveModel() {
         BakedModel driveModel = modelManager.getBlockModelShaper()
-                .getBlockModel(AEBlocks.DRIVE.block().defaultBlockState());
+            .getBlockModel(AEBlocks.DRIVE.block().defaultBlockState());
         return BakedModelUnwrapper.unwrap(driveModel, DriveBakedModel.class);
     }
 
@@ -129,7 +135,7 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<MEChestBloc
         }
 
         @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
+        public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand) {
             if (side != null) {
                 side = r.resultingRotate(side); // This fixes the incorrect lightmap position
             }
@@ -138,7 +144,7 @@ public class ChestBlockEntityRenderer implements BlockEntityRenderer<MEChestBloc
             for (int i = 0; i < quads.size(); i++) {
                 BakedQuad quad = quads.get(i);
                 quads.set(i, new BakedQuad(quad.getVertices(), quad.getTintIndex(), r.rotate(quad.getDirection()),
-                        quad.getSprite(), quad.isShade()));
+                    quad.getSprite(), quad.isShade()));
             }
 
             return quads;

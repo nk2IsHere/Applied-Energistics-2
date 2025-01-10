@@ -28,6 +28,7 @@ import com.google.common.cache.LoadingCache;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -99,8 +100,8 @@ public class CableBusBakedModel implements IFabricBakedModel {
 
     private CableBusRenderState getRenderState(BlockAndTintGetter blockView, BlockPos pos) {
         var renderAttachment = blockView.getBlockEntityRenderData(pos);
-        if (renderAttachment instanceof CableBusRenderState) {
-            return (CableBusRenderState) renderAttachment;
+        if (renderAttachment instanceof CableBusRenderState cableBusRenderState) {
+            return cableBusRenderState;
         }
         return null;
     }
@@ -140,7 +141,15 @@ public class CableBusBakedModel implements IFabricBakedModel {
                 var spin = getPartSpin(partModelData);
 
                 context.pushTransform(QuadRotator.get(facing, spin));
-                bakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                if (bakedModel instanceof IFabricBakedModel dynamicPartBakedModel) {
+                    dynamicPartBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                } else if (WrapperBakedModel.unwrap(bakedModel) instanceof IFabricBakedModel dynamicPartBakedModel) {
+                    // Shitty workaround to make our custom part models work even when Continuity wraps them for its
+                    // emissive support.
+                    dynamicPartBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                } else {
+                    bakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                }
                 context.popTransform();
             }
         }

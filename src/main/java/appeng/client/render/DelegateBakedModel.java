@@ -21,22 +21,22 @@ package appeng.client.render;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.jetbrains.annotations.Nullable;
-
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.integration.abstraction.IFabricBakedModel;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class DelegateBakedModel implements IFabricBakedModel {
     private final BakedModel baseModel;
@@ -46,8 +46,12 @@ public abstract class DelegateBakedModel implements IFabricBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource rand) {
-        return baseModel.getQuads(state, direction, rand);
+    public @NotNull List<BakedQuad> getQuads(
+        @Nullable BlockState state,
+        @Nullable Direction direction,
+        RandomSource random
+    ) {
+        return baseModel.getQuads(state, direction, random);
     }
 
     @Override
@@ -82,17 +86,17 @@ public abstract class DelegateBakedModel implements IFabricBakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return baseModel.getOverrides();
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public @NotNull TextureAtlasSprite getParticleIcon() {
         return this.baseModel.getParticleIcon();
     }
 
     @Override
-    public ItemTransforms getTransforms() {
+    public @NotNull ItemTransforms getTransforms() {
         return this.baseModel.getTransforms();
     }
 

@@ -18,6 +18,7 @@
 
 package appeng.client.render;
 
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.resources.model.BakedModel;
 
 /**
@@ -33,8 +34,17 @@ public final class BakedModelUnwrapper {
             return targetClass.cast(model);
         }
 
-        if (model instanceof DelegateBakedModel) {
-            model = ((DelegateBakedModel) model).getBaseModel();
+        if(model instanceof ForwardingBakedModel forwardingBakedModel) {
+            model = forwardingBakedModel.getWrappedModel();
+            if (targetClass.isInstance(model)) {
+                return targetClass.cast(model);
+            } else {
+                return unwrap(model, targetClass);
+            }
+        }
+
+        if (model instanceof DelegateBakedModel delegateBakedModel) {
+            model = delegateBakedModel.getBaseModel();
             if (targetClass.isInstance(model)) {
                 return targetClass.cast(model);
             } else {
