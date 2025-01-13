@@ -209,17 +209,13 @@ public abstract class AppEngBase implements AppEng {
             return;
         }
         for (ServerPlayer o : getPlayers()) {
-            try (var otherPlayerLevel = o.level()) {
-                if (o != p && otherPlayerLevel == level) {
-                    final double dX = x - o.getX();
-                    final double dY = y - o.getY();
-                    final double dZ = z - o.getZ();
-                    if (dX * dX + dY * dY + dZ * dZ < dist * dist) {
-                        ServerPlayNetworking.send(o, packet);
-                    }
+            if (o != p && o.level() == level) {
+                final double dX = x - o.getX();
+                final double dY = y - o.getY();
+                final double dZ = z - o.getZ();
+                if (dX * dX + dY * dY + dZ * dZ < dist * dist) {
+                    ServerPlayNetworking.send(o, packet);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
         }
     }
