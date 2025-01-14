@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import appeng.client.render.cablebus.CubeBuilder;
 import appeng.core.AppEng;
 import appeng.helpers.Splotch;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 /**
  * Renders paint blocks, which render multiple "splotches" that have been applied to the sides of adjacent blocks using

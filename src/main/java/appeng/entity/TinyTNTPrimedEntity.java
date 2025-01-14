@@ -47,7 +47,7 @@ import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
 import appeng.core.definitions.AEEntities;
 import appeng.core.network.clientbound.MockExplosionPacket;
-import appeng.integration.abstraction.IFabricCustomEntity;
+import appeng.integration.fabric.IFabricCustomEntity;
 
 public final class TinyTNTPrimedEntity extends PrimedTnt implements IFabricCustomEntity {
 

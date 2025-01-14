@@ -41,7 +41,7 @@ import appeng.api.implementations.items.MemoryCardColors;
 import appeng.api.util.AEColor;
 import appeng.client.render.cablebus.CubeBuilder;
 import appeng.core.AELog;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 class MemoryCardBakedModel implements IFabricBakedModel {
     private final BakedModel baseModel;

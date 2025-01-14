@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 import appeng.parts.reporting.ReportingModelData;
 
 @Environment(EnvType.CLIENT)

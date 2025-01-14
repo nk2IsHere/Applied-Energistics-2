@@ -36,7 +36,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.api.util.AEColor;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 import appeng.util.Platform;
 
 public class P2PTunnelFrequencyBakedModel implements IFabricBakedModel {

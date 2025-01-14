@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import appeng.client.render.cablebus.CubeBuilder;
 import appeng.core.AppEng;
 import appeng.core.definitions.AEBlocks;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 class QnbFormedBakedModel implements IFabricBakedModel {
     private static final Material TEXTURE_LINK = new Material(TextureAtlas.LOCATION_BLOCKS,

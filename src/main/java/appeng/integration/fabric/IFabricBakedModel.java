@@ -1,4 +1,4 @@
-package appeng.integration.abstraction;
+package appeng.integration.fabric;
 
 import java.util.List;
 

@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.blockentity.crafting.CraftingCubeModelData;
 import appeng.client.render.cablebus.CubeBuilder;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 import appeng.util.Platform;
 
 /**

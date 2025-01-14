@@ -2,6 +2,7 @@ package appeng.me.storage;
 
 import java.util.Set;
 
+import appeng.integration.fabric.NonSlotStorageAdapter;
 import com.google.common.primitives.Ints;
 
 import org.jetbrains.annotations.Nullable;
@@ -98,7 +99,8 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         public ItemHandlerFacade(Storage<ItemVariant> handler) {
             if(!(handler instanceof SlottedStorage<ItemVariant> slottedStorage)) {
-                throw new IllegalArgumentException("Item handler must be slotted");
+                this.handler = new NonSlotStorageAdapter<>(handler);
+                return;
             }
 
             this.handler = slottedStorage;
@@ -300,7 +302,8 @@ public abstract class ExternalStorageFacade implements MEStorage {
 
         public FluidHandlerFacade(Storage<FluidVariant> handler) {
             if(!(handler instanceof SlottedStorage<FluidVariant> slottedStorage)) {
-                throw new IllegalArgumentException("Fluid handler must be slotted");
+                this.handler = new NonSlotStorageAdapter<>(handler);
+                return;
             }
 
             this.handler = slottedStorage;

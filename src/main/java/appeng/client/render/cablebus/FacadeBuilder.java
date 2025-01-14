@@ -18,7 +18,7 @@
 
 package appeng.client.render.cablebus;
 
-import static appeng.integration.abstraction.IFabricBakedModel.renderer;
+import static appeng.integration.fabric.IFabricBakedModel.renderer;
 
 import java.util.*;
 import java.util.Map.Entry;

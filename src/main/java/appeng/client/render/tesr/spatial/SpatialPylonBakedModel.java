@@ -41,7 +41,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.blockentity.spatial.SpatialPylonBlockEntity;
 import appeng.client.render.cablebus.CubeBuilder;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 /**
  * The baked model that will be used for rendering the spatial pylon.

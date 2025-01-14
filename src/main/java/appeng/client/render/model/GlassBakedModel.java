@@ -48,7 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.decorative.solid.GlassState;
 import appeng.decorative.solid.QuartzGlassBlock;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 class GlassBakedModel implements IFabricBakedModel {
 

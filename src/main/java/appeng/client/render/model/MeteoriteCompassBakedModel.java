@@ -43,7 +43,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.hooks.CompassManager;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 /**
  * This baked model combines the quads of a compass base and the quads of a compass pointer, which will be rotated

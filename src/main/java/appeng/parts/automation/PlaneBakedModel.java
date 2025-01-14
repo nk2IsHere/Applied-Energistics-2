@@ -32,7 +32,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import appeng.client.render.cablebus.CubeBuilder;
-import appeng.integration.abstraction.IFabricBakedModel;
+import appeng.integration.fabric.IFabricBakedModel;
 
 /**
  * Built-in model for annihilation planes that supports connected textures.
